@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vauchis - Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#1f6df0;
+      --blue-dark:#0f4f8a;
+      --green:#4fbb8c;
+      --pink:#e51687;
+      --yellow:#f2c84b;
+      --gray:#9c9c9c;
+      --text:#153f73;
+      --muted:#5e7390;
+      --bg:#f4f7fb;
+      --white:#ffffff;
+      --line:#e6edf6;
+      --soft-blue:#edf5ff;
+      --soft-green:#edf8f3;
+      --soft-pink:#fff0f8;
+      --shadow:0 18px 45px rgba(16,79,138,.08);
+      --radius-xl:32px;
+      --radius-lg:24px;
+      --radius-md:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      background:linear-gradient(180deg,#eef4fb 0%, #f8fbfe 100%);
+      color:var(--text);
+    }
+
+    a{text-decoration:none;color:inherit}
+
+    .container{
+      width:min(100%,1180px);
+      margin:0 auto;
+      padding:18px 14px 48px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:-0.05em;
+      font-size:2rem;
+      line-height:1;
+    }
+
+    .logo-word .vau{color:var(--blue)}
+    .logo-word .u{color:var(--green)}
+    .logo-word .ch{color:var(--gray)}
+    .logo-word .is{color:var(--pink)}
+
+    .gift-icon{
+      position:relative;
+      width:34px;
+      height:34px;
+      border-radius:8px;
+      background:
+        linear-gradient(to right, transparent 0 42%, #fff 42% 58%, transparent 58% 100%),
+        linear-gradient(to bottom, transparent 0 42%, #fff 42% 58%, transparent 58% 100%),
+        linear-gradient(135deg, var(--blue) 0 50%, var(--pink) 50% 100%);
+      overflow:visible;
+    }
+
+    .gift-icon::before,
+    .gift-icon::after{
+      content:"";
+      position:absolute;
+      top:-9px;
+      width:13px;
+      height:13px;
+      border:4px solid var(--pink);
+      border-radius:100% 100% 0 100%;
+      background:transparent;
+    }
+
+    .gift-icon::before{
+      left:5px;
+      transform:rotate(-35deg);
+    }
+
+    .gift-icon::after{
+      right:5px;
+      transform:scaleX(-1) rotate(-35deg);
+    }
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      min-height:48px;
+      padding:0 18px;
+      border-radius:14px;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:.18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:var(--blue);
+      color:#fff;
+      box-shadow:0 12px 28px rgba(31,109,240,.18);
+    }
+    .btn-secondary{
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--blue-dark);
+    }
+
+    .card{
+      background:var(--white);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius-xl);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:24px;
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      background:rgba(31,109,240,.06);
+      right:-130px;
+      top:-70px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      border-radius:50%;
+      background:rgba(79,187,140,.08);
+      left:-120px;
+      bottom:-120px;
+    }
+
+    .hero > *{position:relative;z-index:1}
+
+    .eyebrow{
+      display:inline-block;
+      font-size:.82rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      color:var(--pink);
+      margin-bottom:12px;
+    }
+
+    h1,h2,h3,p{margin:0}
+
+    .hero h1{
+      font-size:clamp(2.3rem, 5vw, 4.4rem);
+      line-height:.96;
+      letter-spacing:-.06em;
+      margin-bottom:16px;
+      max-width:650px;
+    }
+
+    .hero p{
+      font-size:1.08rem;
+      line-height:1.65;
+      color:var(--muted);
+      max-width:620px;
+    }
+
+    .hero-highlight{
+      color:var(--green);
+      font-weight:900;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .mini-points{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:26px;
+    }
+
+    .mini-point{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .mini-point strong{
+      display:block;
+      font-size:.96rem;
+      margin-bottom:4px;
+    }
+
+    .mini-point span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .hero-side{
+      display:grid;
+      align-content:center;
+      gap:14px;
+    }
+
+    .hero-stack{
+      background:linear-gradient(180deg,#f5f9ff 0%, #ffffff 100%);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:20px;
+    }
+
+    .voucher-preview{
+      border-radius:24px;
+      overflow:hidden;
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    .voucher-top{
+      background:var(--blue);
+      color:#fff;
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-weight:800;
+    }
+
+    .voucher-body{
+      padding:20px 18px;
+      background:#ede7d9;
+      color:var(--blue-dark);
+      display:grid;
+      gap:14px;
+      min-height:180px;
+    }
+
+    .voucher-note{
+      background:#ffffffd9;
+      color:var(--green);
+      padding:10px 12px;
+      border-radius:14px;
+      width:max-content;
+      max-width:100%;
+      font-weight:800;
+    }
+
+    .voucher-brand{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      padding:12px;
+      background:#fff;
+    }
+
+    .brand-photo{
+      min-height:126px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#d8e5f7,#f6fbff);
+    }
+
+    .brand-tile{
+      min-height:126px;
+      border-radius:18px;
+      background:#0b7a3b;
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-size:2rem;
+      font-weight:900;
+      letter-spacing:-.05em;
+    }
+
+    .section{
+      margin-top:20px;
+    }
+
+    .section-title{
+      margin-bottom:14px;
+    }
+
+    .section-title h2{
+      font-size:clamp(1.8rem,3.5vw,3rem);
+      line-height:1.02;
+      letter-spacing:-.05em;
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      color:var(--muted);
+      line-height:1.6;
+      max-width:760px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .info-card{
+      padding:22px 20px;
+      border-radius:26px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .info-card .tag{
+      display:inline-block;
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+      color:var(--blue);
+    }
+
+    .info-card h3{
+      font-size:1.4rem;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      margin-bottom:10px;
+    }
+
+    .info-card p{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .mission{background:var(--soft-blue)}
+    .joy{background:var(--soft-green)}
+    .local{background:#f4f8ff}
+
+    .categories{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .category{
+      padding:22px 20px;
+      border-radius:26px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .category.products h3{color:var(--blue)}
+    .category.experiences h3{color:#179651}
+    .category.impact h3{color:var(--pink)}
+
+    .category p{
+      color:var(--muted);
+      line-height:1.6;
+      margin-top:10px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      background:#f3f7fc;
+      font-size:.86rem;
+      font-weight:800;
+      color:var(--blue-dark);
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+
+    .step{
+      padding:18px 16px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .step-number{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:900;
+      margin-bottom:12px;
+      background:linear-gradient(135deg,var(--blue),#4a83f5);
+    }
+
+    .step h3{
+      font-size:1rem;
+      line-height:1.15;
+      margin-bottom:8px;
+    }
+
+    .step p{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.5;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .benefit-box{
+      padding:24px 22px;
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .benefit-box h3{
+      font-size:1.5rem;
+      line-height:1.05;
+      margin-bottom:10px;
+      letter-spacing:-.04em;
+    }
+
+    .benefit-box ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .cta-band{
+      margin-top:20px;
+      background:linear-gradient(135deg,var(--blue-dark),var(--blue));
+      color:#fff;
+      padding:28px 24px;
+      border-radius:32px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      box-shadow:0 20px 44px rgba(16,79,138,.18);
+    }
+
+    .cta-band p{
+      color:rgba(255,255,255,.86);
+      margin-top:8px;
+      line-height:1.6;
+      max-width:760px;
+    }
+
+    .cta-band .btn{
+      background:#fff;
+      color:var(--blue-dark);
+      flex-shrink:0;
+    }
+
+    .footer{
+      text-align:center;
+      padding:28px 8px 8px;
+      color:var(--muted);
+    }
+
+    .footer-links{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:16px;
+      margin:14px 0 10px;
+    }
+
+    .footer-links a{
+      color:var(--blue-dark);
+      font-weight:800;
+    }
+
+    @media (max-width: 980px){
+      .hero,
+      .split{
+        grid-template-columns:1fr;
+      }
+      .grid-3,
+      .categories{
+        grid-template-columns:1fr;
+      }
+      .steps{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      .container{padding:14px 12px 34px}
+      .logo{font-size:1.65rem}
+      .hero{padding:22px 18px}
+      .hero-actions{flex-direction:column}
+      .hero .btn{width:100%}
+      .mini-points,
+      .steps{
+        grid-template-columns:1fr;
+      }
+      .cta-band{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .cta-band .btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="logo">
+        <div class="logo-word">
+          <span class="vau">va</span><span class="u">u</span><span class="ch">ch</span><span class="is">is</span>
+        </div>
+        <div class="gift-icon"></div>
+      </div>
+      <div class="nav-actions">
+        <a href="#" class="btn btn-secondary">Ingresar</a>
+        <a href="#" class="btn btn-primary">Explorar vouchers</a>
+      </div>
+    </header>
+
+    <section class="hero card">
+      <div>
+        <span class="eyebrow">Cultura del regalo</span>
+        <h1>Conectamos personas a través de vouchers para regalos</h1>
+        <p>
+          Vauchis es una plataforma para <span class="hero-highlight">comprar y enviar vouchers</span>
+          de forma simple, acceder a propuestas exclusivas y descubrir una comunidad
+          de comercios y emprendedores seleccionados para regalar mejor.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#" class="btn btn-primary">Quiero regalar</a>
+          <a href="#" class="btn btn-secondary">Ver categorías</a>
+        </div>
+
+        <div class="mini-points">
+          <div class="mini-point">
+            <strong>Simple</strong>
+            <span>Compras, personalizas y envías desde cualquier dispositivo.</span>
+          </div>
+          <div class="mini-point">
+            <strong>Curado</strong>
+            <span>Comercios y experiencias con valor real para regalar.</span>
+          </div>
+          <div class="mini-point">
+            <strong>Local</strong>
+            <span>Impulsa emprendedores y comercios de Salta y la región.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="hero-stack">
+          <div class="voucher-preview">
+            <div class="voucher-top">
+              <span>vauchis</span>
+              <span>$50.000 AR</span>
+            </div>
+            <div class="voucher-body">
+              <div>DE <strong>Sole Ruiz</strong></div>
+              <div>PARA <strong>Claudia Fernández</strong></div>
+              <div class="voucher-note">Amiga, muy feliz cumpleaños</div>
+            </div>
+            <div class="voucher-brand">
+              <div class="brand-photo"></div>
+              <div class="brand-tile">CUMBRES</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Más que una tienda online</h2>
+        <p>
+          Somos un puente entre el entusiasmo de dar, la emoción de recibir y una red
+          de negocios capaces de transformar lo que hacen en una experiencia valiosa para regalar.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="info-card mission">
+          <span class="tag">Misión</span>
+          <h3>Cultura del regalo</h3>
+          <p>Generar una movida vibrante alrededor del regalo, haciendo que más personas se sientan conectadas a través de un gesto con intención.</p>
+        </article>
+
+        <article class="info-card joy">
+          <span class="tag">Propósito</span>
+          <h3>Bienestar compartido</h3>
+          <p>Ayudar a regalar algo más personal, simple y significativo, resolviendo el proceso sin perder emoción.</p>
+        </article>
+
+        <article class="info-card local">
+          <span class="tag">Impacto</span>
+          <h3>Economía local viva</h3>
+          <p>Impulsar comercios y emprendedores locales conectando lo digital y lo presencial para generar movimiento real.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Categorías para regalar</h2>
+        <p>Una home que deja visible el universo de Vauchis desde el inicio.</p>
+      </div>
+
+      <div class="categories">
+        <article class="category products">
+          <h3>Vauchis de Productos</h3>
+          <p>Deportes y outdoor, ropa y accesorios, gastronomía, libros y juguetes, deco y hogar, electrónica, flores, bebés, mascotas, arte y más.</p>
+          <div class="chips">
+            <span class="chip">Deportes</span>
+            <span class="chip">Moda</span>
+            <span class="chip">Gastronomía</span>
+            <span class="chip">Hogar</span>
+            <span class="chip">Arte</span>
+          </div>
+        </article>
+
+        <article class="category experiences">
+          <h3>Vauchis de Experiencias</h3>
+          <p>Belleza y relax, disfrute gourmet, estadías, turismo, entretenimiento, aprender y crear.</p>
+          <div class="chips">
+            <span class="chip">Relax</span>
+            <span class="chip">Gourmet</span>
+            <span class="chip">Turismo</span>
+            <span class="chip">Experiencias</span>
+          </div>
+        </article>
+
+        <article class="category impact">
+          <h3>Vauchis de Impacto Social</h3>
+          <p>Fundaciones locales, artesanos de Salta y proyectos comunitarios para regalar con propósito.</p>
+          <div class="chips">
+            <span class="chip">Fundaciones</span>
+            <span class="chip">Artesanos</span>
+            <span class="chip">Comunidad</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Cómo compra una persona en Vauchis</h2>
+        <p>Un recorrido simple y efectivo desde la inspiración hasta la entrega digital.</p>
+      </div>
+
+      <div class="steps">
+        <article class="step">
+          <div class="step-number">1</div>
+          <h3>Ingresa a la plataforma</h3>
+          <p>Desde celular o computadora, en una experiencia intuitiva y amigable.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">2</div>
+          <h3>Elige el rubro</h3>
+          <p>Encuentra el negocio o experiencia que mejor se ajuste a la ocasión.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">3</div>
+          <h3>Selecciona el voucher</h3>
+          <p>Puede ser por monto, a elección o asociado a una propuesta especial.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">4</div>
+          <h3>Compra segura</h3>
+          <p>Finaliza el pago y obtén el voucher digital al instante.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">5</div>
+          <h3>Entrega digital</h3>
+          <p>Envíalo directamente a la persona por WhatsApp o el canal que prefieras.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section split">
+      <article class="benefit-box">
+        <h3>Para las personas</h3>
+        <ul>
+          <li>Regalar de manera ágil y fácil.</li>
+          <li>Más opciones para cada ocasión.</li>
+          <li>Evitar regalos inadecuados o poco prácticos.</li>
+          <li>Resolver la compra y el envío sin fricción.</li>
+        </ul>
+      </article>
+
+      <article class="benefit-box">
+        <h3>Para negocios y comunidad</h3>
+        <ul>
+          <li>Nueva vitrina digital para vender vouchers.</li>
+          <li>Mayor visibilidad y flujo hacia el local físico.</li>
+          <li>Financiamiento anticipado por venta de vouchers.</li>
+          <li>Más movimiento económico local y oportunidades de crecimiento.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="cta-band">
+      <div>
+        <h2>El futuro del regalo, más simple y significativo</h2>
+        <p>Una home que mezcla marca, propósito, categorías y funcionamiento, con un tono muy alineado al PDF y al universo visual de Vauchis.</p>
+      </div>
+      <a href="#" class="btn">Comenzar ahora</a>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#">Cómo funciona</a>
+        <a href="#">Categorías</a>
+        <a href="#">Negocios asociados</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div>© 2026 Vauchis</div>
+    </footer>
+  </div>
+</body>
+</html>

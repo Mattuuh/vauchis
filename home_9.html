@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vauchis - Home Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#2f61c8;
+      --green:#43c59e;
+      --pink:#ef4c96;
+      --yellow:#f4c84d;
+      --text:#24324a;
+      --muted:#72809a;
+      --bg:#f4f7fb;
+      --white:#ffffff;
+      --line:#e7edf5;
+      --soft-blue:#edf3ff;
+      --soft-green:#eef9f4;
+      --soft-pink:#fff1f7;
+      --shadow:0 16px 40px rgba(47,97,200,.08);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      background:linear-gradient(180deg,#eef2f8 0%, #f8fafc 100%);
+      color:var(--text);
+    }
+
+    a{text-decoration:none;color:inherit}
+
+    .app{
+      width:min(100%,430px);
+      margin:0 auto;
+      padding:14px 12px 32px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:1.9rem;
+      font-weight:900;
+      letter-spacing:-.05em;
+      line-height:1;
+    }
+
+    .logo .vau{color:var(--blue)}
+    .logo .chis{color:var(--green)}
+    .logo .gift{
+      width:28px;
+      height:28px;
+      border-radius:7px;
+      position:relative;
+      background:
+        linear-gradient(to right, transparent 0 42%, #fff 42% 58%, transparent 58%),
+        linear-gradient(to bottom, transparent 0 42%, #fff 42% 58%, transparent 58%),
+        linear-gradient(135deg, var(--green) 0 50%, var(--pink) 50% 100%);
+    }
+
+    .logo .gift:before,
+    .logo .gift:after{
+      content:"";
+      position:absolute;
+      top:-7px;
+      width:10px;
+      height:10px;
+      border:3px solid var(--pink);
+      border-radius:100% 100% 0 100%;
+    }
+
+    .logo .gift:before{
+      left:4px;
+      transform:rotate(-35deg);
+    }
+
+    .logo .gift:after{
+      right:4px;
+      transform:scaleX(-1) rotate(-35deg);
+    }
+
+    .login{
+      padding:10px 14px;
+      background:var(--blue);
+      color:#fff;
+      border-radius:12px;
+      font-weight:800;
+      font-size:.95rem;
+      box-shadow:0 10px 22px rgba(47,97,200,.18);
+    }
+
+    .card{
+      background:var(--white);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius-xl);
+    }
+
+    .hero{
+      padding:20px 18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero:before{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      background:rgba(47,97,200,.06);
+      border-radius:50%;
+      right:-60px;
+      top:-30px;
+    }
+
+    .hero:after{
+      content:"";
+      position:absolute;
+      width:140px;
+      height:140px;
+      background:rgba(67,197,158,.08);
+      border-radius:50%;
+      left:-50px;
+      bottom:-50px;
+    }
+
+    .hero > *{position:relative;z-index:1}
+
+    .eyebrow{
+      display:inline-block;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:900;
+      color:var(--pink);
+      margin-bottom:10px;
+    }
+
+    h1,h2,h3,p{margin:0}
+
+    .hero h1{
+      font-size:2.15rem;
+      line-height:1.02;
+      letter-spacing:-.05em;
+      margin-bottom:10px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:16px;
+    }
+
+    .hero-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .btn{
+      min-height:50px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:14px;
+      font-weight:800;
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--green),#62d7b4);
+      color:#fff;
+    }
+
+    .btn-secondary{
+      background:var(--soft-blue);
+      color:var(--blue);
+    }
+
+    .search{
+      margin-top:12px;
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:13px 14px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    section{margin-top:18px}
+
+    .section-title{
+      margin-bottom:12px;
+      padding:0 2px;
+    }
+
+    .section-title h2{
+      font-size:1.65rem;
+      line-height:1.06;
+      letter-spacing:-.04em;
+      margin-bottom:6px;
+    }
+
+    .section-title p{
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.96rem;
+    }
+
+    .categories{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .category{
+      padding:16px 14px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:#fff;
+      min-height:124px;
+    }
+
+    .category.products{background:linear-gradient(180deg,#f5f9ff,#fff)}
+    .category.experiences{background:linear-gradient(180deg,#eefaf4,#fff)}
+    .category.gastronomia{background:linear-gradient(180deg,#fff8ea,#fff)}
+    .category.social{background:linear-gradient(180deg,#fff1f7,#fff)}
+
+    .category .icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-size:1.25rem;
+      margin-bottom:10px;
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    .category h3{
+      font-size:1rem;
+      line-height:1.1;
+      margin-bottom:6px;
+    }
+
+    .category p{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .brands-row{
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:140px;
+      gap:12px;
+      overflow:auto;
+      padding-bottom:4px;
+    }
+
+    .brand-card{
+      min-height:88px;
+      display:grid;
+      place-items:center;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      font-weight:900;
+      font-size:1.1rem;
+      color:var(--blue);
+    }
+
+    .popular-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .popular-card{
+      display:grid;
+      grid-template-columns:84px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:12px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .popular-thumb{
+      height:84px;
+      border-radius:18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .thumb-blue{background:linear-gradient(135deg,var(--blue),#7aa0ef)}
+    .thumb-green{background:linear-gradient(135deg,var(--green),#96e5ca)}
+    .thumb-pink{background:linear-gradient(135deg,var(--pink),#ffa0cb)}
+
+    .popular-thumb:before{
+      content:"";
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      width:40px;
+      height:30px;
+      border-radius:8px;
+      background:
+        linear-gradient(to right, transparent 0 42%, #fff 42% 58%, transparent 58%),
+        linear-gradient(to bottom, transparent 0 42%, #fff 42% 58%, transparent 58%),
+        rgba(255,255,255,.25);
+      border:2px solid rgba(255,255,255,.7);
+    }
+
+    .popular-card h3{
+      font-size:1rem;
+      line-height:1.15;
+      margin-bottom:4px;
+    }
+
+    .popular-card p{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+      margin-bottom:8px;
+    }
+
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .tag{
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.75rem;
+      font-weight:900;
+      background:var(--soft-blue);
+      color:var(--blue);
+    }
+
+    .price{
+      font-size:.88rem;
+      font-weight:900;
+      color:var(--green);
+    }
+
+    .tutorial{
+      display:grid;
+      gap:10px;
+    }
+
+    .step{
+      position:relative;
+      padding:16px 14px 16px 52px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .step-number{
+      position:absolute;
+      left:14px;
+      top:14px;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--blue),#4c7de3);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-size:.9rem;
+      font-weight:900;
+    }
+
+    .step h3{
+      font-size:.98rem;
+      margin-bottom:4px;
+    }
+
+    .step p{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.45;
+    }
+
+    .objective{
+      padding:20px 18px;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--blue),#4c7de3);
+      color:#fff;
+      box-shadow:0 18px 36px rgba(47,97,200,.18);
+    }
+
+    .objective h2{
+      font-size:1.6rem;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      margin-bottom:8px;
+    }
+
+    .objective p{
+      color:rgba(255,255,255,.86);
+      line-height:1.55;
+      margin-bottom:14px;
+    }
+
+    .objective .btn{
+      background:#fff;
+      color:var(--blue);
+    }
+
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      padding:24px 4px 8px;
+    }
+
+    @media (min-width: 768px){
+      .app{
+        width:min(100%,1100px);
+        padding:24px;
+      }
+
+      .hero-actions{
+        grid-template-columns:auto auto;
+      }
+
+      .categories{
+        grid-template-columns:repeat(4,1fr);
+      }
+
+      .popular-list{
+        grid-template-columns:repeat(3,1fr);
+      }
+
+      .popular-card{
+        grid-template-columns:1fr;
+      }
+
+      .popular-thumb{
+        height:160px;
+      }
+
+      .tutorial{
+        grid-template-columns:repeat(4,1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="logo">
+        <span class="vau">vau</span><span class="chis">chis</span>
+        <span class="gift"></span>
+      </div>
+      <a href="#" class="login">Ingresar</a>
+    </header>
+
+    <section class="hero card">
+      <span class="eyebrow">Vouchers de regalo</span>
+      <h1>Encuentra y envía el voucher ideal</h1>
+      <p>
+        Explora rubros, marcas asociadas y los vouchers más elegidos
+        desde una experiencia pensada casi por completo para celular.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#categorias" class="btn btn-primary">Explorar categorías</a>
+        <a href="#populares" class="btn btn-secondary">Ver más comprados</a>
+      </div>
+
+      <div class="search">🔎 Buscar marca, rubro o tipo de voucher</div>
+    </section>
+
+    <section id="categorias">
+      <div class="section-title">
+        <h2>Rubros disponibles</h2>
+        <p>Lo primero que ve el usuario: los tipos de vouchers que puede comprar.</p>
+      </div>
+
+      <div class="categories">
+        <article class="category products">
+          <div class="icon">🛍️</div>
+          <h3>Productos</h3>
+          <p>Moda, hogar, tecnología y más.</p>
+        </article>
+
+        <article class="category experiences">
+          <div class="icon">✨</div>
+          <h3>Experiencias</h3>
+          <p>Relax, turismo y momentos especiales.</p>
+        </article>
+
+        <article class="category gastronomia">
+          <div class="icon">🍽️</div>
+          <h3>Gastronomía</h3>
+          <p>Cafés, restaurantes y propuestas gourmet.</p>
+        </article>
+
+        <article class="category social">
+          <div class="icon">💝</div>
+          <h3>Impacto social</h3>
+          <p>Opciones con propósito y valor local.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="marcas">
+      <div class="section-title">
+        <h2>Marcas asociadas</h2>
+        <p>Empresas y comercios que forman parte de Vauchis.</p>
+      </div>
+
+      <div class="brands-row">
+        <div class="brand-card">Starbucks</div>
+        <div class="brand-card">Adidas</div>
+        <div class="brand-card">Nike</div>
+        <div class="brand-card">Cumbres</div>
+        <div class="brand-card">Falabella</div>
+      </div>
+    </section>
+
+    <section id="populares">
+      <div class="section-title">
+        <h2>Vouchers más comprados</h2>
+        <p>Los más elegidos por otros usuarios.</p>
+      </div>
+
+      <div class="popular-list">
+        <article class="popular-card">
+          <div class="popular-thumb thumb-blue"></div>
+          <div>
+            <h3>Voucher Cumbres</h3>
+            <p>Ideal para ropa outdoor, accesorios y aventura.</p>
+            <div class="meta">
+              <span class="tag">Más vendido</span>
+              <span class="price">Monto libre</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="popular-card">
+          <div class="popular-thumb thumb-green"></div>
+          <div>
+            <h3>Voucher Relax & Spa</h3>
+            <p>Una de las opciones favoritas para regalar bienestar.</p>
+            <div class="meta">
+              <span class="tag">Top experiencia</span>
+              <span class="price">Desde $25.000</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="popular-card">
+          <div class="popular-thumb thumb-pink"></div>
+          <div>
+            <h3>Voucher Gourmet</h3>
+            <p>Perfecto para cenas, cafés y momentos compartidos.</p>
+            <div class="meta">
+              <span class="tag">Muy pedido</span>
+              <span class="price">Desde $18.000</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="como-comprar">
+      <div class="section-title">
+        <h2>Cómo comprar</h2>
+        <p>Tutorial resumido para que el proceso sea evidente.</p>
+      </div>
+
+      <div class="tutorial">
+        <article class="step">
+          <div class="step-number">1</div>
+          <h3>Elige un rubro</h3>
+          <p>Explora categorías y encuentra el tipo de regalo ideal.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">2</div>
+          <h3>Selecciona la marca</h3>
+          <p>Ingresa a una empresa asociada y revisa sus opciones.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">3</div>
+          <h3>Compra el voucher</h3>
+          <p>Define el monto o el regalo y completa el pago.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">4</div>
+          <h3>Envíalo al instante</h3>
+          <p>Compártelo por WhatsApp, email o mensaje.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="objective">
+      <h2>¿Para qué existe Vauchis?</h2>
+      <p>
+        Para hacer más simple regalar vouchers de comercios y marcas asociadas,
+        ayudando a que las personas encuentren opciones útiles, rápidas y fáciles de enviar.
+      </p>
+      <a href="#" class="btn">Explorar vouchers</a>
+    </section>
+
+    <footer class="footer">
+      © 2026 Vauchis
+    </footer>
+  </div>
+</body>
+</html>
