@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vauchis - App Moderna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#2f61c8;
+      --green:#43c59e;
+      --pink:#ef4c96;
+      --yellow:#f4c84d;
+      --text:#24324a;
+      --muted:#71809a;
+      --bg:#f4f7fb;
+      --white:#ffffff;
+      --line:#e7edf5;
+      --shadow:0 18px 40px rgba(47,97,200,.08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      background:linear-gradient(180deg,#eef2f8 0%,#f8fafc 100%);
+      color:var(--text);
+    }
+    .app{
+      width:min(100%,430px);
+      margin:0 auto;
+      padding:16px 14px 34px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .logo{
+      font-size:1.9rem;
+      font-weight:800;
+      letter-spacing:-.05em;
+    }
+    .logo .a{color:var(--blue)}
+    .logo .b{color:var(--green)}
+    .login{
+      background:var(--blue);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:800;
+      text-decoration:none;
+    }
+    .card{
+      background:var(--white);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+    }
+    .hero{
+      padding:22px 18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute;
+      right:-70px;
+      top:-30px;
+      width:180px;
+      height:180px;
+      background:rgba(47,97,200,.06);
+      border-radius:50%;
+    }
+    .hero:after{
+      content:"";
+      position:absolute;
+      left:-60px;
+      bottom:-60px;
+      width:160px;
+      height:160px;
+      background:rgba(67,197,158,.08);
+      border-radius:50%;
+    }
+    .hero > *{position:relative;z-index:1}
+    .eyebrow{
+      display:inline-block;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:800;
+      color:var(--green);
+      margin-bottom:10px;
+    }
+    h1,h2,h3,p{margin:0}
+    .hero h1{
+      font-size:2.2rem;
+      line-height:1.02;
+      letter-spacing:-.05em;
+      margin-bottom:12px;
+    }
+    .hero p{
+      color:var(--muted);
+      line-height:1.55;
+    }
+    .actions{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+    .btn{
+      min-height:50px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:14px;
+      font-weight:800;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--green),#60d7b3);
+      color:#fff;
+    }
+    .btn-secondary{
+      background:#edf3ff;
+      color:var(--blue);
+    }
+    .search{
+      margin-top:16px;
+      background:#f7faff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 14px;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:18px;
+    }
+    .mini{
+      padding:18px 14px;
+    }
+    .icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      margin-bottom:12px;
+      font-size:1.2rem;
+      background:linear-gradient(135deg,rgba(47,97,200,.1),rgba(239,76,150,.08));
+    }
+    .mini h3{
+      font-size:1.05rem;
+      margin-bottom:6px;
+    }
+    .mini p{
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.45;
+    }
+    section{margin-top:18px}
+    .section-title{
+      margin-bottom:12px;
+    }
+    .section-title h2{
+      font-size:1.9rem;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      margin-bottom:8px;
+    }
+    .section-title p{
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .chips{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom:4px;
+    }
+    .chip{
+      white-space:nowrap;
+      padding:11px 14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-weight:800;
+      color:var(--blue);
+    }
+    .brands{
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:150px;
+      gap:12px;
+      overflow:auto;
+    }
+    .brand{
+      min-height:92px;
+      display:grid;
+      place-items:center;
+      font-size:1.1rem;
+      font-weight:800;
+      color:var(--text);
+    }
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+    .step{
+      padding:18px 16px 18px 58px;
+      position:relative;
+    }
+    .num{
+      position:absolute;
+      top:16px;
+      left:16px;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--blue),#4c7de3);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+    }
+    .step h3{margin-bottom:6px}
+    .step p{color:var(--muted);line-height:1.5}
+    .cta{
+      background:linear-gradient(135deg,var(--blue),#4c7de3);
+      color:#fff;
+      padding:22px 18px;
+    }
+    .cta p{
+      color:rgba(255,255,255,.82);
+      margin-top:10px;
+      line-height:1.5;
+    }
+    .cta .btn{
+      margin-top:16px;
+      background:#fff;
+      color:var(--blue);
+    }
+    .footer{
+      text-align:center;
+      padding:24px 4px 6px;
+      color:var(--muted);
+    }
+    .links{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:14px;
+      margin:12px 0;
+    }
+    .links a{
+      text-decoration:none;
+      color:var(--blue);
+      font-weight:800;
+    }
+    @media(min-width:768px){
+      .app{width:min(100%,1100px);padding:24px}
+      .actions{grid-template-columns:auto auto}
+      .grid2{grid-template-columns:repeat(4,1fr)}
+      .steps{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="logo"><span class="a">vau</span><span class="b">chis</span> 🎁</div>
+      <a href="#" class="login">Ingresar</a>
+    </header>
+
+    <section class="hero card">
+      <span class="eyebrow">Vouchers digitales</span>
+      <h1>Regala en segundos desde tu celular</h1>
+      <p>Explora vouchers de empresas adheridas y envía un regalo útil, rápido y simple desde una experiencia pensada para mobile.</p>
+
+      <div class="actions">
+        <a href="#" class="btn btn-primary">Explorar empresas</a>
+        <a href="#" class="btn btn-secondary">Cómo funciona</a>
+      </div>
+
+      <div class="search">🔎 Buscar empresa o voucher</div>
+    </section>
+
+    <section class="grid2">
+      <article class="mini card">
+        <div class="icon">⚡</div>
+        <h3>Entrega rápida</h3>
+        <p>El voucher llega en pocos minutos.</p>
+      </article>
+      <article class="mini card">
+        <div class="icon">🏢</div>
+        <h3>Empresas adheridas</h3>
+        <p>Marcas reales y opciones confiables.</p>
+      </article>
+      <article class="mini card">
+        <div class="icon">🎁</div>
+        <h3>Regalo práctico</h3>
+        <p>Ideal para resolver cualquier ocasión.</p>
+      </article>
+      <article class="mini card">
+        <div class="icon">📱</div>
+        <h3>100% mobile</h3>
+        <p>Fácil de usar desde el celular.</p>
+      </article>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Categorías</h2>
+        <p>Encuentra rápido lo que quieres regalar.</p>
+      </div>
+      <div class="chips">
+        <div class="chip">Café</div>
+        <div class="chip">Moda</div>
+        <div class="chip">Deportes</div>
+        <div class="chip">Tecnología</div>
+        <div class="chip">Restaurantes</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Empresas destacadas</h2>
+        <p>Explora vouchers de marcas disponibles.</p>
+      </div>
+      <div class="brands">
+        <div class="brand card">Starbucks</div>
+        <div class="brand card">Adidas</div>
+        <div class="brand card">Nike</div>
+        <div class="brand card">Falabella</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Cómo funciona</h2>
+      </div>
+      <div class="steps">
+        <article class="step card">
+          <div class="num">1</div>
+          <h3>Elige una empresa</h3>
+          <p>Explora las opciones disponibles.</p>
+        </article>
+        <article class="step card">
+          <div class="num">2</div>
+          <h3>Compra tu voucher</h3>
+          <p>Selecciona el monto y completa el pago.</p>
+        </article>
+        <article class="step card">
+          <div class="num">3</div>
+          <h3>Envía tu regalo</h3>
+          <p>Compártelo por email o mensaje.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta card">
+      <h2>Un regalo útil, simple y rápido</h2>
+      <p>Una experiencia moderna para comprar vouchers de empresas adheridas sin complicaciones.</p>
+      <a href="#" class="btn">Ver vouchers</a>
+    </section>
+
+    <footer class="footer">
+      <div class="logo"><span class="a">vau</span><span class="b">chis</span> 🎁</div>
+      <div class="links">
+        <a href="#">Cómo funciona</a>
+        <a href="#">Empresas</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div>© 2026 Vauchis</div>
+    </footer>
+  </div>
+</body>
+</html>

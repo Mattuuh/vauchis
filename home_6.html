@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vauchis - Premium Limpio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#2f61c8;
+      --green:#43c59e;
+      --pink:#ef4c96;
+      --yellow:#f4c84d;
+      --text:#202c42;
+      --muted:#74829b;
+      --bg:#f6f8fc;
+      --white:#fff;
+      --line:#e8edf5;
+      --shadow:0 18px 46px rgba(41,72,141,.06);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .page{
+      width:min(100%,430px);
+      margin:0 auto;
+      padding:18px 16px 36px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:28px;
+    }
+    .logo{
+      font-size:1.85rem;
+      font-weight:800;
+      letter-spacing:-.05em;
+    }
+    .logo .one{color:var(--blue)}
+    .logo .two{color:var(--green)}
+    .login{
+      text-decoration:none;
+      color:var(--blue);
+      font-weight:800;
+    }
+    .hero{
+      padding:4px 0 22px;
+    }
+    .eyebrow{
+      color:var(--pink);
+      text-transform:uppercase;
+      font-size:.78rem;
+      letter-spacing:.09em;
+      font-weight:800;
+      display:inline-block;
+      margin-bottom:12px;
+    }
+    h1,h2,h3,p{margin:0}
+    h1{
+      font-size:2.5rem;
+      line-height:.98;
+      letter-spacing:-.06em;
+      margin-bottom:14px;
+      max-width:320px;
+    }
+    .hero p{
+      color:var(--muted);
+      line-height:1.6;
+      max-width:360px;
+    }
+    .buttons{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+    .btn{
+      min-height:52px;
+      text-decoration:none;
+      border-radius:14px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn-primary{
+      background:var(--blue);
+      color:#fff;
+    }
+    .btn-secondary{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+    }
+    .visual{
+      margin-top:28px;
+      height:220px;
+      border-radius:34px;
+      background:
+        radial-gradient(circle at top right, rgba(47,97,200,.12), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(67,197,158,.16), transparent 32%),
+        #fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .shape-a,.shape-b,.shape-c,.shape-d{
+      position:absolute;
+      border-radius:22px;
+    }
+    .shape-a{width:130px;height:130px;background:var(--blue);top:24px;left:24px}
+    .shape-b{width:90px;height:90px;background:var(--green);top:38px;right:36px}
+    .shape-c{width:110px;height:40px;background:var(--pink);bottom:34px;left:28px}
+    .shape-d{width:70px;height:70px;background:var(--yellow);bottom:26px;right:72px;border-radius:50%}
+    section{margin-top:28px}
+    .title{
+      margin-bottom:14px;
+    }
+    .title h2{
+      font-size:1.85rem;
+      line-height:1.04;
+      letter-spacing:-.05em;
+      margin-bottom:8px;
+    }
+    .title p{
+      color:var(--muted);
+      line-height:1.55;
+    }
+    .features{
+      display:grid;
+      gap:12px;
+    }
+    .feature{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px 16px;
+    }
+    .feature h3{
+      font-size:1.05rem;
+      margin-bottom:6px;
+    }
+    .feature p{
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .brands{
+      display:grid;
+      gap:10px;
+    }
+    .brand{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:var(--shadow);
+    }
+    .brand strong{
+      font-size:1rem;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:800;
+      color:var(--blue);
+      background:#eef4ff;
+    }
+    .closing{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:22px 18px;
+      box-shadow:var(--shadow);
+    }
+    .closing h2{
+      font-size:1.9rem;
+      line-height:1.04;
+      letter-spacing:-.05em;
+      margin-bottom:10px;
+    }
+    .closing p{
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:16px;
+    }
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:28px;
+      font-size:.95rem;
+    }
+    @media(min-width:768px){
+      .page{width:min(100%,1000px);padding:28px}
+      .buttons{grid-template-columns:auto auto;justify-content:start}
+      .features{grid-template-columns:repeat(3,1fr)}
+      .brands{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="logo"><span class="one">vau</span><span class="two">chis</span> 🎁</div>
+      <a href="#" class="login">Ingresar</a>
+    </header>
+
+    <section class="hero">
+      <span class="eyebrow">Vouchers de empresas adheridas</span>
+      <h1>Una forma elegante de regalar</h1>
+      <p>Compra y envía vouchers digitales desde una experiencia limpia, moderna y enfocada en celular.</p>
+
+      <div class="buttons">
+        <a href="#" class="btn btn-primary">Explorar vouchers</a>
+        <a href="#" class="btn btn-secondary">Ver empresas</a>
+      </div>
+
+      <div class="visual">
+        <div class="shape-a"></div>
+        <div class="shape-b"></div>
+        <div class="shape-c"></div>
+        <div class="shape-d"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="title">
+        <h2>Por qué funciona</h2>
+        <p>Una propuesta más sobria, con el mismo negocio y la misma paleta.</p>
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <h3>Rápido</h3>
+          <p>Resuelve regalos en pocos pasos.</p>
+        </article>
+        <article class="feature">
+          <h3>Claro</h3>
+          <p>Empresas adheridas visibles y proceso simple.</p>
+        </article>
+        <article class="feature">
+          <h3>Flexible</h3>
+          <p>Ideal para distintos tipos de ocasión.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="title">
+        <h2>Empresas disponibles</h2>
+        <p>Una lista simple y limpia para explorar.</p>
+      </div>
+
+      <div class="brands">
+        <div class="brand"><strong>Starbucks</strong><span class="pill">Café</span></div>
+        <div class="brand"><strong>Adidas</strong><span class="pill">Moda</span></div>
+        <div class="brand"><strong>Nike</strong><span class="pill">Deportes</span></div>
+        <div class="brand"><strong>Falabella</strong><span class="pill">Retail</span></div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <h2>Regalos digitales sin complicaciones</h2>
+      <p>Elige una empresa adherida, compra tu voucher y compártelo al instante desde tu celular.</p>
+      <a href="#" class="btn btn-primary">Comenzar ahora</a>
+    </section>
+
+    <footer class="footer">
+      © 2026 Vauchis
+    </footer>
+  </div>
+</body>
+</html>

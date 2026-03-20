@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vauchis - Catálogo Visual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#2f61c8;
+      --green:#43c59e;
+      --pink:#ef4c96;
+      --yellow:#f4c84d;
+      --text:#24324a;
+      --muted:#72819a;
+      --bg:#f4f7fb;
+      --white:#fff;
+      --line:#e7edf5;
+      --shadow:0 16px 36px rgba(47,97,200,.07);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Nunito',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      width:min(100%,430px);
+      margin:0 auto;
+      padding:16px 14px 32px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+    }
+    .logo{
+      font-size:1.9rem;
+      font-weight:800;
+      letter-spacing:-.05em;
+    }
+    .logo .x{color:var(--blue)}
+    .logo .y{color:var(--green)}
+    .btn-login{
+      text-decoration:none;
+      background:var(--blue);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:800;
+    }
+    .hero{
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:22px 18px;
+      margin-bottom:18px;
+    }
+    .eyebrow{
+      color:var(--pink);
+      font-size:.78rem;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      display:inline-block;
+      margin-bottom:10px;
+    }
+    h1,h2,h3,p{margin:0}
+    .hero h1{
+      font-size:2.1rem;
+      line-height:1.02;
+      letter-spacing:-.05em;
+      margin-bottom:10px;
+    }
+    .hero p{
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:16px;
+    }
+    .hero .cta{
+      display:flex;
+      gap:10px;
+      flex-direction:column;
+    }
+    .btn{
+      min-height:50px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      font-weight:800;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--pink),#ff6aa7);
+      color:#fff;
+    }
+    .btn-soft{
+      background:#edf3ff;
+      color:var(--blue);
+    }
+    .filters{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      margin-bottom:18px;
+    }
+    .filter{
+      white-space:nowrap;
+      padding:11px 14px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--line);
+      font-weight:800;
+      color:var(--text);
+    }
+    .section-title{
+      margin-bottom:12px;
+    }
+    .section-title h2{
+      font-size:1.8rem;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      margin-bottom:8px;
+    }
+    .section-title p{
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .catalog{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .item{
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:22px;
+      overflow:hidden;
+    }
+    .thumb{
+      height:104px;
+      position:relative;
+    }
+    .thumb.blue{background:linear-gradient(135deg,var(--blue),#7aa1ef)}
+    .thumb.green{background:linear-gradient(135deg,var(--green),#94ebcf)}
+    .thumb.pink{background:linear-gradient(135deg,var(--pink),#ff9cc7)}
+    .thumb.yellow{background:linear-gradient(135deg,var(--yellow),#ffe19b)}
+    .gift{
+      width:54px;
+      height:40px;
+      background:#fff;
+      border-radius:10px;
+      position:absolute;
+      right:14px;
+      bottom:14px;
+    }
+    .gift:before,.gift:after{
+      content:"";
+      position:absolute;
+      background:rgba(47,97,200,.9);
+    }
+    .gift:before{width:8px;height:100%;left:23px;top:0}
+    .gift:after{height:8px;width:100%;left:0;top:16px}
+    .content{
+      padding:14px;
+    }
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.75rem;
+      font-weight:800;
+      margin-bottom:8px;
+      background:#f3f7ff;
+      color:var(--blue);
+    }
+    .content h3{
+      font-size:1.02rem;
+      margin-bottom:4px;
+    }
+    .content p{
+      color:var(--muted);
+      font-size:.92rem;
+      margin-bottom:10px;
+    }
+    .price{
+      font-weight:800;
+      color:var(--green);
+    }
+    .banner{
+      margin-top:18px;
+      padding:20px 18px;
+      border-radius:28px;
+      background:linear-gradient(135deg,var(--blue),#4d7de3);
+      color:#fff;
+    }
+    .banner p{
+      color:rgba(255,255,255,.84);
+      line-height:1.5;
+      margin:10px 0 16px;
+    }
+    .banner .btn{
+      background:#fff;
+      color:var(--blue);
+    }
+    .footer{
+      text-align:center;
+      padding:24px 4px 6px;
+      color:var(--muted);
+    }
+    @media(min-width:768px){
+      .wrap{width:min(100%,1100px);padding:24px}
+      .hero .cta{flex-direction:row}
+      .catalog{grid-template-columns:repeat(4,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo"><span class="x">vau</span><span class="y">chis</span> 🎁</div>
+      <a href="#" class="btn-login">Ingresar</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">Catálogo de vouchers</span>
+      <h1>Encuentra el voucher ideal</h1>
+      <p>Explora empresas adheridas y compra regalos digitales en una experiencia clara, rápida y pensada para celular.</p>
+      <div class="cta">
+        <a href="#" class="btn btn-primary">Explorar vouchers</a>
+        <a href="#" class="btn btn-soft">Ver empresas</a>
+      </div>
+    </section>
+
+    <div class="filters">
+      <div class="filter">Todos</div>
+      <div class="filter">Café</div>
+      <div class="filter">Moda</div>
+      <div class="filter">Deportes</div>
+      <div class="filter">Tecnología</div>
+    </div>
+
+    <section>
+      <div class="section-title">
+        <h2>Vouchers destacados</h2>
+        <p>Diseño tipo catálogo para ir directo a la conversión.</p>
+      </div>
+
+      <div class="catalog">
+        <article class="item">
+          <div class="thumb blue"><div class="gift"></div></div>
+          <div class="content">
+            <span class="tag">Café</span>
+            <h3>Starbucks</h3>
+            <p>Ideal para un regalo rápido.</p>
+            <div class="price">Desde $10</div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="thumb green"><div class="gift"></div></div>
+          <div class="content">
+            <span class="tag">Moda</span>
+            <h3>Adidas</h3>
+            <p>Un clásico para regalar.</p>
+            <div class="price">Desde $25</div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="thumb pink"><div class="gift"></div></div>
+          <div class="content">
+            <span class="tag">Deportes</span>
+            <h3>Nike</h3>
+            <p>Opciones para cualquier ocasión.</p>
+            <div class="price">Desde $20</div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="thumb yellow"><div class="gift"></div></div>
+          <div class="content">
+            <span class="tag">Retail</span>
+            <h3>Falabella</h3>
+            <p>Más libertad para elegir.</p>
+            <div class="price">Desde $15</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="banner">
+      <h2>Compra, envía y sorprende</h2>
+      <p>Elige una empresa adherida, compra tu voucher y compártelo por email o mensaje en pocos pasos.</p>
+      <a href="#" class="btn">Cómo funciona</a>
+    </section>
+
+    <footer class="footer">
+      © 2026 Vauchis
+    </footer>
+  </div>
+</body>
+</html>
