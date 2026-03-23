@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VAUCHIS | Demo Híbrida</title>
+  <style>
+    :root {
+      --blue: #0d6efd;
+      --green: #48b38a;
+      --pink: #e50087;
+      --gray: #98a2b3;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --bg: #f4f7fb;
+      --white: #ffffff;
+      --line: rgba(15, 23, 42, 0.06);
+      --soft-pink: #fff1f8;
+      --soft-blue: #eef6ff;
+      --soft-green: #edf9f3;
+      --soft-dark: #101828;
+      --shadow-sm: 0 10px 24px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.1);
+      --shadow-lg: 0 24px 50px rgba(13, 110, 253, 0.18);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max-width: 430px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(13, 110, 253, 0.07), transparent 26%),
+        radial-gradient(circle at top right, rgba(229, 0, 135, 0.05), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #eef3f9 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width);
+      min-height: 100vh;
+      padding: 14px 14px 110px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding-bottom: 12px;
+      background: linear-gradient(180deg, rgba(248, 251, 255, 0.96), rgba(248, 251, 255, 0.82));
+      backdrop-filter: blur(14px);
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 12px 14px;
+      border-radius: 22px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .logo {
+      width: 134px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .header span {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .hero {
+      margin-top: 2px;
+      padding: 20px;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 28%),
+        linear-gradient(135deg, var(--blue), #4f8ff9 44%, var(--pink));
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -50px;
+      top: -42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      left: -34px;
+      bottom: -52px;
+      border-radius: 50%;
+      background: rgba(72,179,138,0.22);
+      filter: blur(6px);
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.73rem;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+      max-width: 290px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      font-size: 0.92rem;
+      margin: 12px 0 0;
+      line-height: 1.5;
+      max-width: 300px;
+      color: rgba(255,255,255,0.9);
+      position: relative;
+      z-index: 1;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      padding: 14px;
+      border-radius: 16px;
+      border: none;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      background: #fff;
+      color: #111827;
+      box-shadow: 0 12px 24px rgba(255,255,255,0.16);
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 12px 10px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-stat span {
+      display: block;
+      font-size: 0.7rem;
+      line-height: 1.2;
+      margin-top: 4px;
+      color: rgba(255,255,255,0.86);
+      font-weight: 600;
+    }
+
+    .search {
+      margin-top: 14px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search input {
+      border: none;
+      width: 100%;
+      font: inherit;
+      color: var(--text);
+      background: #f3f6fb;
+      border-radius: 14px;
+      padding: 14px;
+      outline: none;
+    }
+
+    .search button {
+      border: none;
+      background: var(--soft-dark);
+      color: #fff;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: -0.04em;
+    }
+
+    .section-link {
+      text-decoration: none;
+      color: var(--pink);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .row,
+    .brands {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .row::-webkit-scrollbar,
+    .brands::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card-mini {
+      background: #fff;
+      padding: 14px 12px;
+      border-radius: 20px;
+      min-width: 124px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+      flex: 0 0 auto;
+    }
+
+    .card-mini-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    .bg-pink { background: var(--soft-pink); }
+    .bg-blue { background: var(--soft-blue); }
+    .bg-green { background: var(--soft-green); }
+
+    .card-mini strong {
+      display: block;
+      font-size: 0.88rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .card-mini span {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 5px;
+    }
+
+    .promo-strip {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #111827, #334155);
+      color: #fff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .promo-strip strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .promo-strip span {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.35;
+    }
+
+    .promo-pill {
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .feature {
+      background: #fff;
+      border-radius: 28px;
+      margin-top: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .cover {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 28%),
+        linear-gradient(135deg, #ffd3ea, #e5f1ff 58%, #d9f8ea);
+      padding: 18px;
+      min-height: 180px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      right: -38px;
+      bottom: -38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.24);
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(0,0,0,0.04);
+      font-size: 0.74rem;
+      font-weight: 900;
+      color: var(--pink);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover h3 {
+      margin: 18px 0 0;
+      font-size: 1.6rem;
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      max-width: 235px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover p {
+      margin: 10px 0 0;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      max-width: 250px;
+      color: #5b6472;
+      position: relative;
+      z-index: 1;
+    }
+
+    .body {
+      padding: 16px;
+    }
+
+    .body-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .price-box small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .price {
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: -0.04em;
+      margin-top: 4px;
+    }
+
+    .cta {
+      background: linear-gradient(135deg, var(--soft-dark), #334155);
+      color: #fff;
+      padding: 13px 16px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: 900;
+      min-width: 150px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .item {
+      background: #fff;
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .item-cover {
+      min-height: 86px;
+      border-radius: 16px;
+      padding: 10px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .item-cover::after {
+      content: "";
+      position: absolute;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      right: -22px;
+      bottom: -26px;
+      background: rgba(255,255,255,0.22);
+    }
+
+    .cover-rose { background: linear-gradient(135deg, #ffd3ea, #ffe7f3); }
+    .cover-sky { background: linear-gradient(135deg, #ddebff, #eef6ff); }
+    .cover-mint { background: linear-gradient(135deg, #d9f6ea, #ecfcf5); }
+    .cover-dark { background: linear-gradient(135deg, #111827, #374151); color: #fff; }
+
+    .item-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: 999px;
+      padding: 7px 9px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+      color: #111827;
+    }
+
+    .cover-dark .item-badge {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .item-copy {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      line-height: 1.02;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      max-width: 110px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .item h4 {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .item-brand {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .item p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.38;
+      margin: 8px 0 0;
+      min-height: 42px;
+    }
+
+    .item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .item .price {
+      font-size: 0.98rem;
+      margin: 0;
+    }
+
+    .btn2 {
+      font-size: 0.76rem;
+      background: var(--pink);
+      color: #fff;
+      padding: 9px 10px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 900;
+      min-width: 78px;
+    }
+
+    .brand {
+      background: #fff;
+      padding: 14px 12px;
+      border-radius: 18px;
+      min-width: 112px;
+      text-align: center;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+      flex: 0 0 auto;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      margin: 0 auto 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-blue { background: linear-gradient(135deg, var(--blue), #6da7ff); }
+    .brand-pink { background: linear-gradient(135deg, var(--pink), #ff62bc); }
+    .brand-green { background: linear-gradient(135deg, var(--green), #7cd1b0); }
+    .brand-dark { background: linear-gradient(135deg, #111827, #374151); }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.7rem;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .compare-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .compare-card {
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .compare-market { background: var(--soft-blue); }
+    .compare-gift { background: var(--soft-pink); }
+
+    .compare-card strong {
+      display: block;
+      font-size: 0.88rem;
+      margin-bottom: 5px;
+      letter-spacing: -0.03em;
+    }
+
+    .compare-card span {
+      display: block;
+      font-size: 0.76rem;
+      line-height: 1.35;
+      color: #5f6673;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: calc(var(--max-width) - 10px);
+      background: rgba(255,255,255,0.94);
+      padding: 10px 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+      border-radius: 22px;
+      backdrop-filter: blur(16px);
+      z-index: 40;
+    }
+
+    .nav span {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .nav span:first-child {
+      background: #eef4fb;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="header">
+        <img src="logo-vauchis.jpeg" class="logo" alt="Logo VAUCHIS" />
+        <span>Regalá o usá vouchers en segundos, con experiencia emocional y compra simple.</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-badges">
+        <div class="hero-badge">🎁 Para regalar</div>
+        <div class="hero-badge">⚡ Compra rápida</div>
+        <div class="hero-badge">🏷️ Marcas asociadas</div>
+      </div>
+      <h1>Regalos y vouchers al instante</h1>
+      <p>Elegí una experiencia o producto, regalalo o usalo vos. Descubrí marcas, precios claros y recibí QR inmediato después del pago.</p>
+      <div class="actions">
+        <button class="btn primary">Comprar</button>
+        <button class="btn secondary">Regalar</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>+50</strong><span>marcas activas</span></div>
+        <div class="hero-stat"><strong>+200</strong><span>vouchers</span></div>
+        <div class="hero-stat"><strong>24/7</strong><span>online</span></div>
+      </div>
+    </section>
+
+    <div class="search">
+      <input placeholder="Buscar experiencias, marcas o categorías" />
+      <button>Buscar</button>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="title">🎯 Ocasiones</div>
+        <a href="#" class="section-link">Ver todas</a>
+      </div>
+      <div class="row">
+        <div class="card-mini">
+          <div class="card-mini-icon bg-pink">🎂</div>
+          <strong>Cumpleaños</strong>
+          <span>Ideas listas para sorprender sin complicarte.</span>
+        </div>
+        <div class="card-mini">
+          <div class="card-mini-icon bg-blue">💙</div>
+          <strong>Pareja</strong>
+          <span>Experiencias pensadas para compartir.</span>
+        </div>
+        <div class="card-mini">
+          <div class="card-mini-icon bg-green">✨</div>
+          <strong>Gracias</strong>
+          <span>Detalles simples con valor emocional.</span>
+        </div>
+      </div>
+      <div class="promo-strip">
+        <div>
+          <strong>Semana VAUCHIS</strong>
+          <span>La mezcla ideal entre regalos memorables y promociones para comprar ya.</span>
+        </div>
+        <div class="promo-pill">Hasta -20%</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="title">⭐ Destacado</div>
+        <a href="#" class="section-link">Ver detalle</a>
+      </div>
+      <div class="feature">
+        <div class="cover">
+          <div class="cover-badge">Experiencia destacada</div>
+          <h3>Día de spa para desconectar</h3>
+          <p>Una propuesta ideal para regalar bienestar con una experiencia simple de elegir y hermosa de recibir.</p>
+        </div>
+        <div class="body">
+          <div class="body-meta"><span>Aqua Zen • Spa & bienestar</span><span>Ideal para regalar</span></div>
+          <p>Incluye circuito hídrico, masaje y un momento pensado para salir de la rutina. También se puede comprar para uso propio.</p>
+          <div class="price-row">
+            <div class="price-box">
+              <small>Desde</small>
+              <div class="price">$42.000</div>
+            </div>
+            <div class="cta">Comprar o regalar</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="title">🔥 Populares</div>
+        <a href="#" class="section-link">Más vendidos</a>
+      </div>
+      <div class="grid">
+        <div class="item">
+          <div class="item-cover cover-sky">
+            <div class="item-badge">Producto</div>
+            <div class="item-copy">Voucher moda</div>
+          </div>
+          <h4>Moda con elección libre</h4>
+          <div class="item-brand">Urban Wear</div>
+          <p>Ideal para regalar sin preocuparte por talle o modelo.</p>
+          <div class="item-footer">
+            <div class="price">$30.000</div>
+            <div class="btn2">Comprar</div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="item-cover cover-rose">
+            <div class="item-badge">Experiencia</div>
+            <div class="item-copy">Escapada</div>
+          </div>
+          <h4>Fin de semana para dos</h4>
+          <div class="item-brand">Casa Bosque</div>
+          <p>Un regalo con impacto emocional y precio visible para decidir rápido.</p>
+          <div class="item-footer">
+            <div class="price">$95.000</div>
+            <div class="btn2">Regalar</div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="item-cover cover-dark">
+            <div class="item-badge">Tecnología</div>
+            <div class="item-copy">Electro</div>
+          </div>
+          <h4>Voucher tecnología</h4>
+          <div class="item-brand">ElectroNow</div>
+          <p>Más racional, más práctico, pero dentro de una propuesta cuidada.</p>
+          <div class="item-footer">
+            <div class="price">$50.000</div>
+            <div class="btn2">Comprar</div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="item-cover cover-mint">
+            <div class="item-badge">Impacto</div>
+            <div class="item-copy">Solidario</div>
+          </div>
+          <h4>Voucher con causa</h4>
+          <div class="item-brand">Red Solidaria</div>
+          <p>Una opción con propósito que mantiene el gesto emocional del regalo.</p>
+          <div class="item-footer">
+            <div class="price">$20.000</div>
+            <div class="btn2">Regalar</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="title">🏷️ Marcas</div>
+        <a href="#" class="section-link">Ver todas</a>
+      </div>
+      <div class="brands">
+        <div class="brand">
+          <div class="brand-mark brand-blue">AZ</div>
+          Aqua Zen
+          <small>Spa</small>
+        </div>
+        <div class="brand">
+          <div class="brand-mark brand-dark">EN</div>
+          ElectroNow
+          <small>Tecno</small>
+        </div>
+        <div class="brand">
+          <div class="brand-mark brand-pink">UW</div>
+          Urban Wear
+          <small>Moda</small>
+        </div>
+        <div class="brand">
+          <div class="brand-mark brand-green">CB</div>
+          Casa Bosque
+          <small>Estadías</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="compare-box">
+        <div class="title">💡 Qué resuelve esta versión</div>
+        <div class="compare-grid">
+          <div class="compare-card compare-market">
+            <strong>Compra rápida</strong>
+            <span>Busca, compara y ve precios claros como en un marketplace.</span>
+          </div>
+          <div class="compare-card compare-gift">
+            <strong>Regalo emocional</strong>
+            <span>Presenta experiencias y ocasiones con una capa más aspiracional.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav">
+    <span>Inicio</span>
+    <span>Categorías</span>
+    <span>Carrito</span>
+    <span>Cuenta</span>
+  </div>
+</body>
+</html>
