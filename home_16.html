@@ -34,9 +34,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -77,12 +75,7 @@
       border: 1px solid rgba(0, 0, 0, 0.04);
     }
 
-    .logo {
-      width: 134px;
-      height: auto;
-      display: block;
-      object-fit: contain;
-    }
+    .logo { width: 134px; height: auto; display: block; object-fit: contain; }
 
     .header span {
       font-size: 0.76rem;
@@ -188,21 +181,9 @@
       transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .primary {
-      background: #fff;
-      color: #111827;
-      box-shadow: 0 12px 24px rgba(255,255,255,0.16);
-    }
-
-    .secondary {
-      background: rgba(255,255,255,0.16);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.18);
-    }
+    .btn:active { transform: scale(0.98); }
+    .primary { background: #fff; color: #111827; box-shadow: 0 12px 24px rgba(255,255,255,0.16); }
+    .secondary { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.18); }
 
     .hero-stats {
       display: grid;
@@ -222,12 +203,7 @@
       backdrop-filter: blur(10px);
     }
 
-    .hero-stat strong {
-      display: block;
-      font-size: 1rem;
-      letter-spacing: -0.04em;
-    }
-
+    .hero-stat strong { display: block; font-size: 1rem; letter-spacing: -0.04em; }
     .hero-stat span {
       display: block;
       font-size: 0.7rem;
@@ -270,10 +246,7 @@
       cursor: pointer;
     }
 
-    .section {
-      margin-top: 18px;
-    }
-
+    .section { margin-top: 18px; }
     .section-head {
       display: flex;
       align-items: center;
@@ -281,21 +254,10 @@
       margin-bottom: 12px;
     }
 
-    .title {
-      font-weight: 900;
-      font-size: 1.05rem;
-      letter-spacing: -0.04em;
-    }
+    .title { font-weight: 900; font-size: 1.05rem; letter-spacing: -0.04em; }
+    .section-link { text-decoration: none; color: var(--pink); font-size: 0.8rem; font-weight: 800; }
 
-    .section-link {
-      text-decoration: none;
-      color: var(--pink);
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-
-    .row,
-    .brands {
+    .row, .brands {
       display: flex;
       gap: 10px;
       overflow-x: auto;
@@ -303,10 +265,7 @@
       scrollbar-width: none;
     }
 
-    .row::-webkit-scrollbar,
-    .brands::-webkit-scrollbar {
-      display: none;
-    }
+    .row::-webkit-scrollbar, .brands::-webkit-scrollbar { display: none; }
 
     .card-mini {
       background: #fff;
@@ -316,6 +275,14 @@
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(0,0,0,0.04);
       flex: 0 0 auto;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .card-mini.active {
+      transform: translateY(-2px);
+      border-color: rgba(229, 0, 135, 0.22);
+      box-shadow: 0 14px 26px rgba(229, 0, 135, 0.1);
     }
 
     .card-mini-icon {
@@ -333,21 +300,8 @@
     .bg-blue { background: var(--soft-blue); }
     .bg-green { background: var(--soft-green); }
 
-    .card-mini strong {
-      display: block;
-      font-size: 0.88rem;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-    }
-
-    .card-mini span {
-      display: block;
-      font-size: 0.73rem;
-      color: var(--muted);
-      font-weight: 600;
-      line-height: 1.3;
-      margin-top: 5px;
-    }
+    .card-mini strong { display: block; font-size: 0.88rem; line-height: 1.12; letter-spacing: -0.03em; }
+    .card-mini span { display: block; font-size: 0.73rem; color: var(--muted); font-weight: 600; line-height: 1.3; margin-top: 5px; }
 
     .promo-strip {
       margin-top: 14px;
@@ -362,19 +316,8 @@
       align-items: center;
     }
 
-    .promo-strip strong {
-      display: block;
-      font-size: 1rem;
-      letter-spacing: -0.03em;
-      margin-bottom: 4px;
-    }
-
-    .promo-strip span {
-      display: block;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.82);
-      line-height: 1.35;
-    }
+    .promo-strip strong { display: block; font-size: 1rem; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .promo-strip span { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.82); line-height: 1.35; }
 
     .promo-pill {
       background: #fef3c7;
@@ -451,10 +394,7 @@
       z-index: 1;
     }
 
-    .body {
-      padding: 16px;
-    }
-
+    .body { padding: 16px; }
     .body-meta {
       display: flex;
       align-items: center;
@@ -466,12 +406,7 @@
       margin-bottom: 10px;
     }
 
-    .body p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.5;
-      margin: 0;
-    }
+    .body p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; margin: 0; }
 
     .price-row {
       display: flex;
@@ -481,19 +416,8 @@
       margin-top: 14px;
     }
 
-    .price-box small {
-      display: block;
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .price {
-      font-weight: 900;
-      font-size: 1.2rem;
-      letter-spacing: -0.04em;
-      margin-top: 4px;
-    }
+    .price-box small { display: block; font-size: 0.72rem; color: var(--muted); font-weight: 700; }
+    .price { font-weight: 900; font-size: 1.2rem; letter-spacing: -0.04em; margin-top: 4px; }
 
     .cta {
       background: linear-gradient(135deg, var(--soft-dark), #334155);
@@ -503,6 +427,7 @@
       text-align: center;
       font-weight: 900;
       min-width: 150px;
+      cursor: pointer;
     }
 
     .grid {
@@ -519,6 +444,8 @@
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(0,0,0,0.04);
     }
+
+    .item.hidden { display: none; }
 
     .item-cover {
       min-height: 86px;
@@ -575,27 +502,9 @@
       z-index: 1;
     }
 
-    .item h4 {
-      margin: 0;
-      font-size: 0.96rem;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-    }
-
-    .item-brand {
-      font-size: 0.74rem;
-      color: var(--muted);
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .item p {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.38;
-      margin: 8px 0 0;
-      min-height: 42px;
-    }
+    .item h4 { margin: 0; font-size: 0.96rem; line-height: 1.12; letter-spacing: -0.03em; }
+    .item-brand { font-size: 0.74rem; color: var(--muted); font-weight: 700; margin-top: 4px; }
+    .item p { font-size: 0.78rem; color: var(--muted); line-height: 1.38; margin: 8px 0 0; min-height: 42px; }
 
     .item-footer {
       display: flex;
@@ -605,10 +514,7 @@
       margin-top: 12px;
     }
 
-    .item .price {
-      font-size: 0.98rem;
-      margin: 0;
-    }
+    .item .price { font-size: 0.98rem; margin: 0; }
 
     .btn2 {
       font-size: 0.76rem;
@@ -619,6 +525,7 @@
       text-align: center;
       font-weight: 900;
       min-width: 78px;
+      cursor: pointer;
     }
 
     .brand {
@@ -631,6 +538,7 @@
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(0,0,0,0.04);
       flex: 0 0 auto;
+      cursor: pointer;
     }
 
     .brand-mark {
@@ -649,14 +557,7 @@
     .brand-pink { background: linear-gradient(135deg, var(--pink), #ff62bc); }
     .brand-green { background: linear-gradient(135deg, var(--green), #7cd1b0); }
     .brand-dark { background: linear-gradient(135deg, #111827, #374151); }
-
-    .brand small {
-      display: block;
-      color: var(--muted);
-      font-size: 0.7rem;
-      margin-top: 4px;
-      font-weight: 600;
-    }
+    .brand small { display: block; color: var(--muted); font-size: 0.7rem; margin-top: 4px; font-weight: 600; }
 
     .compare-box {
       background: #fff;
@@ -673,27 +574,185 @@
       margin-top: 12px;
     }
 
-    .compare-card {
-      border-radius: 18px;
+    .compare-card { border-radius: 18px; padding: 14px; }
+    .compare-market { background: var(--soft-blue); }
+    .compare-gift { background: var(--soft-pink); }
+    .compare-card strong { display: block; font-size: 0.88rem; margin-bottom: 5px; letter-spacing: -0.03em; }
+    .compare-card span { display: block; font-size: 0.76rem; line-height: 1.35; color: #5f6673; }
+
+    .empty-state {
+      display: none;
+      background: #fff;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .empty-state.show { display: block; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.34);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.25s ease;
+      z-index: 49;
+    }
+
+    .overlay.show { opacity: 1; visibility: visible; }
+
+    .sheet {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      width: 100%;
+      max-width: var(--max-width);
+      transform: translate(-50%, 105%);
+      transition: transform 0.3s ease;
+      background: rgba(255,255,255,0.98);
+      border-radius: 28px 28px 0 0;
+      box-shadow: 0 -20px 40px rgba(15, 23, 42, 0.2);
+      z-index: 50;
+      padding: 16px 16px 22px;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .sheet.open { transform: translate(-50%, 0); }
+    .sheet-handle { width: 52px; height: 6px; border-radius: 999px; background: #d0d5dd; margin: 0 auto 14px; }
+
+    .sheet-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-title { font-size: 1.15rem; font-weight: 900; letter-spacing: -0.03em; }
+    .sheet-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: none;
+      background: #f3f4f6;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .form-group { margin-bottom: 12px; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 800; margin-bottom: 7px; }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 14px;
+      font: inherit;
+      background: #fafafa;
+      color: var(--text);
+      outline: none;
+    }
+
+    .textarea { min-height: 88px; resize: vertical; }
+    .input:focus, .select:focus, .textarea:focus {
+      background: #fff;
+      border-color: rgba(13, 110, 253, 0.3);
+      box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.08);
+    }
+
+    .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .summary-box {
+      margin-top: 14px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
       padding: 14px;
     }
 
-    .compare-market { background: var(--soft-blue); }
-    .compare-gift { background: var(--soft-pink); }
-
-    .compare-card strong {
-      display: block;
+    .summary-title { font-size: 0.92rem; font-weight: 900; margin-bottom: 8px; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
       font-size: 0.88rem;
-      margin-bottom: 5px;
-      letter-spacing: -0.03em;
     }
 
-    .compare-card span {
-      display: block;
-      font-size: 0.76rem;
-      line-height: 1.35;
-      color: #5f6673;
+    .summary-row.total {
+      border-top: 1px dashed #d0d5dd;
+      margin-top: 6px;
+      padding-top: 10px;
+      font-weight: 900;
     }
+
+    .sheet-actions { display: grid; gap: 10px; margin-top: 16px; }
+    .pay-btn {
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      color: #fff;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(229, 0, 135, 0.18);
+    }
+
+    .secondary-action {
+      background: #f3f4f6;
+      color: var(--text);
+      border: none;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .qr-box {
+      display: none;
+      text-align: center;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 22px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .qr-box.show { display: block; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(72,179,138,0.12);
+      color: #1c7c5d;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .qr-wrap {
+      display: inline-block;
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      margin-top: 10px;
+    }
+
+    .voucher-code { margin-top: 10px; font-size: 0.82rem; color: var(--muted); }
 
     .nav {
       position: fixed;
@@ -721,12 +780,10 @@
       font-size: 0.74rem;
       font-weight: 800;
       color: var(--muted);
+      cursor: pointer;
     }
 
-    .nav span:first-child {
-      background: #eef4fb;
-      color: var(--text);
-    }
+    .nav span.active { background: #eef4fb; color: var(--text); }
   </style>
 </head>
 <body>
@@ -747,8 +804,8 @@
       <h1>Regalos y vouchers al instante</h1>
       <p>Elegí una experiencia o producto, regalalo o usalo vos. Descubrí marcas, precios claros y recibí QR inmediato después del pago.</p>
       <div class="actions">
-        <button class="btn primary">Comprar</button>
-        <button class="btn secondary">Regalar</button>
+        <button class="btn primary" id="heroBuyBtn">Comprar</button>
+        <button class="btn secondary" id="heroGiftBtn">Regalar</button>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>+50</strong><span>marcas activas</span></div>
@@ -758,27 +815,27 @@
     </section>
 
     <div class="search">
-      <input placeholder="Buscar experiencias, marcas o categorías" />
-      <button>Buscar</button>
+      <input id="searchInput" placeholder="Buscar experiencias, marcas o categorías" />
+      <button id="searchBtn">Buscar</button>
     </div>
 
     <section class="section">
       <div class="section-head">
         <div class="title">🎯 Ocasiones</div>
-        <a href="#" class="section-link">Ver todas</a>
+        <a href="#" class="section-link" id="resetFiltersLink">Ver todas</a>
       </div>
       <div class="row">
-        <div class="card-mini">
+        <div class="card-mini active" data-filter="todos">
           <div class="card-mini-icon bg-pink">🎂</div>
           <strong>Cumpleaños</strong>
           <span>Ideas listas para sorprender sin complicarte.</span>
         </div>
-        <div class="card-mini">
+        <div class="card-mini" data-filter="pareja">
           <div class="card-mini-icon bg-blue">💙</div>
           <strong>Pareja</strong>
           <span>Experiencias pensadas para compartir.</span>
         </div>
-        <div class="card-mini">
+        <div class="card-mini" data-filter="gracias">
           <div class="card-mini-icon bg-green">✨</div>
           <strong>Gracias</strong>
           <span>Detalles simples con valor emocional.</span>
@@ -796,9 +853,9 @@
     <section class="section">
       <div class="section-head">
         <div class="title">⭐ Destacado</div>
-        <a href="#" class="section-link">Ver detalle</a>
+        <a href="#" class="section-link" id="featuredAction">Ver detalle</a>
       </div>
-      <div class="feature">
+      <div class="feature" data-item="spa" data-brand="Aqua Zen" data-title="Día de spa para desconectar" data-price="42000" data-mode="regalo">
         <div class="cover">
           <div class="cover-badge">Experiencia destacada</div>
           <h3>Día de spa para desconectar</h3>
@@ -812,7 +869,7 @@
               <small>Desde</small>
               <div class="price">$42.000</div>
             </div>
-            <div class="cta">Comprar o regalar</div>
+            <div class="cta" id="featuredCta">Comprar o regalar</div>
           </div>
         </div>
       </div>
@@ -823,8 +880,8 @@
         <div class="title">🔥 Populares</div>
         <a href="#" class="section-link">Más vendidos</a>
       </div>
-      <div class="grid">
-        <div class="item">
+      <div class="grid" id="productGrid">
+        <div class="item" data-search="voucher moda urban wear producto cumpleaños gracias" data-brand="Urban Wear" data-title="Moda con elección libre" data-price="30000" data-type="producto" data-occasion="cumpleanos" data-mode="comprar">
           <div class="item-cover cover-sky">
             <div class="item-badge">Producto</div>
             <div class="item-copy">Voucher moda</div>
@@ -834,11 +891,11 @@
           <p>Ideal para regalar sin preocuparte por talle o modelo.</p>
           <div class="item-footer">
             <div class="price">$30.000</div>
-            <div class="btn2">Comprar</div>
+            <div class="btn2 action-btn">Comprar</div>
           </div>
         </div>
 
-        <div class="item">
+        <div class="item" data-search="escapada casa bosque experiencia pareja regalo" data-brand="Casa Bosque" data-title="Fin de semana para dos" data-price="95000" data-type="experiencia" data-occasion="pareja" data-mode="regalo">
           <div class="item-cover cover-rose">
             <div class="item-badge">Experiencia</div>
             <div class="item-copy">Escapada</div>
@@ -848,11 +905,11 @@
           <p>Un regalo con impacto emocional y precio visible para decidir rápido.</p>
           <div class="item-footer">
             <div class="price">$95.000</div>
-            <div class="btn2">Regalar</div>
+            <div class="btn2 action-btn">Regalar</div>
           </div>
         </div>
 
-        <div class="item">
+        <div class="item" data-search="voucher tecnologia electronow electro comprar practico" data-brand="ElectroNow" data-title="Voucher tecnología" data-price="50000" data-type="producto" data-occasion="gracias" data-mode="comprar">
           <div class="item-cover cover-dark">
             <div class="item-badge">Tecnología</div>
             <div class="item-copy">Electro</div>
@@ -862,11 +919,11 @@
           <p>Más racional, más práctico, pero dentro de una propuesta cuidada.</p>
           <div class="item-footer">
             <div class="price">$50.000</div>
-            <div class="btn2">Comprar</div>
+            <div class="btn2 action-btn">Comprar</div>
           </div>
         </div>
 
-        <div class="item">
+        <div class="item" data-search="voucher con causa red solidaria impacto social regalo gracias" data-brand="Red Solidaria" data-title="Voucher con causa" data-price="20000" data-type="impacto" data-occasion="gracias" data-mode="regalo">
           <div class="item-cover cover-mint">
             <div class="item-badge">Impacto</div>
             <div class="item-copy">Solidario</div>
@@ -876,10 +933,11 @@
           <p>Una opción con propósito que mantiene el gesto emocional del regalo.</p>
           <div class="item-footer">
             <div class="price">$20.000</div>
-            <div class="btn2">Regalar</div>
+            <div class="btn2 action-btn">Regalar</div>
           </div>
         </div>
       </div>
+      <div class="empty-state" id="emptyState">No encontramos resultados con ese filtro. Probá con otra búsqueda o volvé a ver todas las opciones.</div>
     </section>
 
     <section class="section">
@@ -888,22 +946,22 @@
         <a href="#" class="section-link">Ver todas</a>
       </div>
       <div class="brands">
-        <div class="brand">
+        <div class="brand" data-brand-filter="Aqua Zen">
           <div class="brand-mark brand-blue">AZ</div>
           Aqua Zen
           <small>Spa</small>
         </div>
-        <div class="brand">
+        <div class="brand" data-brand-filter="ElectroNow">
           <div class="brand-mark brand-dark">EN</div>
           ElectroNow
           <small>Tecno</small>
         </div>
-        <div class="brand">
+        <div class="brand" data-brand-filter="Urban Wear">
           <div class="brand-mark brand-pink">UW</div>
           Urban Wear
           <small>Moda</small>
         </div>
-        <div class="brand">
+        <div class="brand" data-brand-filter="Casa Bosque">
           <div class="brand-mark brand-green">CB</div>
           Casa Bosque
           <small>Estadías</small>
@@ -928,11 +986,406 @@
     </section>
   </div>
 
-  <div class="nav">
-    <span>Inicio</span>
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sheet" id="voucherSheet" aria-hidden="true">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title" id="sheetTitle">Seleccionar voucher</div>
+        <div class="sheet-subtitle" id="sheetSubtitle">Completá los datos para continuar</div>
+      </div>
+      <button class="close-btn" id="closeSheet">✕</button>
+    </div>
+
+    <form id="voucherForm">
+      <div class="form-group">
+        <label class="form-label">¿Cómo querés usarlo?</label>
+        <select class="select" id="usageMode">
+          <option value="regalo">Comprar para regalar</option>
+          <option value="propio">Comprar para usar yo</option>
+        </select>
+      </div>
+
+      <div class="two-cols">
+        <div class="form-group">
+          <label class="form-label">Nombre de quien compra</label>
+          <input class="input" id="buyerName" type="text" placeholder="Ej: Martina" required />
+        </div>
+        <div class="form-group" id="recipientNameGroup">
+          <label class="form-label">Destinatario</label>
+          <input class="input" id="recipientName" type="text" placeholder="Ej: Sofía" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="input" id="emailInput" type="email" placeholder="email@ejemplo.com" required />
+      </div>
+
+      <div class="two-cols">
+        <div class="form-group">
+          <label class="form-label">Fecha de envío</label>
+          <input class="input" id="sendDate" type="date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cantidad</label>
+          <select class="select" id="quantitySelect">
+            <option value="1">1 voucher</option>
+            <option value="2">2 vouchers</option>
+            <option value="3">3 vouchers</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" id="messageGroup">
+        <label class="form-label">Dedicatoria</label>
+        <textarea class="textarea" id="messageInput" placeholder="Escribí un mensaje especial..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Método de pago</label>
+        <select class="select">
+          <option>Tarjeta de crédito / débito</option>
+          <option>Mercado Pago</option>
+          <option>Transferencia</option>
+        </select>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-title">Resumen</div>
+        <div class="summary-row">
+          <span id="summaryProduct">Voucher seleccionado</span>
+          <strong id="summaryPrice">$0</strong>
+        </div>
+        <div class="summary-row">
+          <span>Modo</span>
+          <span id="summaryMode">Regalo</span>
+        </div>
+        <div class="summary-row">
+          <span>Cantidad</span>
+          <span id="summaryQty">1</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span id="summaryTotal">$0</span>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="submit" class="pay-btn">Pagar y generar QR</button>
+        <button type="button" class="secondary-action" id="cancelSheet">Cancelar</button>
+      </div>
+    </form>
+
+    <div class="qr-box" id="qrBox">
+      <div class="status-badge">✅ Pago simulado con éxito</div>
+      <div class="sheet-title">Voucher listo para canjear</div>
+      <div class="sheet-subtitle">La marca asociada podrá validarlo desde la plataforma VAUCHIS.</div>
+      <div class="qr-wrap">
+        <canvas id="qrCanvas" width="220" height="220"></canvas>
+      </div>
+      <div class="voucher-code" id="voucherCode"></div>
+      <div class="sheet-actions">
+        <button type="button" class="pay-btn" id="newPurchaseBtn">Crear otro voucher</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="nav" id="bottomNav">
+    <span class="active">Inicio</span>
     <span>Categorías</span>
     <span>Carrito</span>
     <span>Cuenta</span>
   </div>
+
+  <script>
+    const items = Array.from(document.querySelectorAll('.item'));
+    const filterCards = Array.from(document.querySelectorAll('.card-mini'));
+    const brandCards = Array.from(document.querySelectorAll('.brand'));
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const emptyState = document.getElementById('emptyState');
+    const overlay = document.getElementById('overlay');
+    const sheet = document.getElementById('voucherSheet');
+    const closeSheet = document.getElementById('closeSheet');
+    const cancelSheet = document.getElementById('cancelSheet');
+    const voucherForm = document.getElementById('voucherForm');
+    const qrBox = document.getElementById('qrBox');
+    const usageMode = document.getElementById('usageMode');
+    const recipientNameGroup = document.getElementById('recipientNameGroup');
+    const messageGroup = document.getElementById('messageGroup');
+    const quantitySelect = document.getElementById('quantitySelect');
+    const summaryProduct = document.getElementById('summaryProduct');
+    const summaryPrice = document.getElementById('summaryPrice');
+    const summaryMode = document.getElementById('summaryMode');
+    const summaryQty = document.getElementById('summaryQty');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const sheetTitle = document.getElementById('sheetTitle');
+    const sheetSubtitle = document.getElementById('sheetSubtitle');
+    const voucherCode = document.getElementById('voucherCode');
+    const newPurchaseBtn = document.getElementById('newPurchaseBtn');
+    const featuredCta = document.getElementById('featuredCta');
+    const featuredAction = document.getElementById('featuredAction');
+    const heroBuyBtn = document.getElementById('heroBuyBtn');
+    const heroGiftBtn = document.getElementById('heroGiftBtn');
+    const resetFiltersLink = document.getElementById('resetFiltersLink');
+
+    let selectedFilter = 'todos';
+    let selectedBrand = '';
+    let selectedItem = {
+      title: 'Día de spa para desconectar',
+      brand: 'Aqua Zen',
+      price: 42000,
+      mode: 'regalo'
+    };
+
+    function formatPrice(value) {
+      return new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function normalize(text) {
+      return (text || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function applyFilters() {
+      const query = normalize(searchInput.value);
+      let visibleCount = 0;
+
+      items.forEach(item => {
+        const text = normalize(item.dataset.search);
+        const brand = normalize(item.dataset.brand);
+        const occasion = normalize(item.dataset.occasion);
+
+        const matchesQuery = !query || text.includes(query) || brand.includes(query);
+        const matchesFilter = selectedFilter === 'todos' || occasion.includes(selectedFilter);
+        const matchesBrand = !selectedBrand || brand === normalize(selectedBrand);
+        const visible = matchesQuery && matchesFilter && matchesBrand;
+
+        item.classList.toggle('hidden', !visible);
+        if (visible) visibleCount += 1;
+      });
+
+      emptyState.classList.toggle('show', visibleCount === 0);
+    }
+
+    function setActiveFilter(filter) {
+      selectedFilter = filter;
+      filterCards.forEach(card => card.classList.toggle('active', card.dataset.filter === filter));
+      applyFilters();
+    }
+
+    filterCards.forEach(card => {
+      card.addEventListener('click', () => {
+        selectedBrand = '';
+        setActiveFilter(card.dataset.filter);
+      });
+    });
+
+    brandCards.forEach(card => {
+      card.addEventListener('click', () => {
+        selectedBrand = card.dataset.brandFilter;
+        searchInput.value = selectedBrand;
+        applyFilters();
+        document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    searchBtn.addEventListener('click', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyFilters();
+      }
+    });
+
+    resetFiltersLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      selectedBrand = '';
+      searchInput.value = '';
+      setActiveFilter('todos');
+    });
+
+    function openSheet(data) {
+      selectedItem = {
+        title: data.title,
+        brand: data.brand,
+        price: Number(data.price),
+        mode: data.mode || 'regalo'
+      };
+
+      usageMode.value = selectedItem.mode === 'comprar' ? 'propio' : 'regalo';
+      sheetTitle.textContent = selectedItem.title;
+      sheetSubtitle.textContent = `${selectedItem.brand} · completá los datos para continuar`;
+      summaryProduct.textContent = selectedItem.title;
+      summaryPrice.textContent = formatPrice(selectedItem.price);
+      summaryQty.textContent = quantitySelect.value;
+      updateModeFields();
+      updateSummary();
+
+      voucherForm.style.display = 'block';
+      qrBox.classList.remove('show');
+      overlay.classList.add('show');
+      sheet.classList.add('open');
+      sheet.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVoucherSheet() {
+      overlay.classList.remove('show');
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function updateModeFields() {
+      const isGift = usageMode.value === 'regalo';
+      recipientNameGroup.style.display = isGift ? 'block' : 'none';
+      messageGroup.style.display = isGift ? 'block' : 'none';
+      document.getElementById('recipientName').required = isGift;
+      summaryMode.textContent = isGift ? 'Regalo' : 'Uso propio';
+    }
+
+    function updateSummary() {
+      const qty = Number(quantitySelect.value);
+      summaryQty.textContent = qty;
+      summaryTotal.textContent = formatPrice(selectedItem.price * qty);
+    }
+
+    function extractItemData(el) {
+      if (!el) return null;
+      return {
+        title: el.dataset.title,
+        brand: el.dataset.brand,
+        price: el.dataset.price,
+        mode: el.dataset.mode
+      };
+    }
+
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.item');
+        const data = extractItemData(item);
+        if (data) openSheet(data);
+      });
+    });
+
+    featuredCta.addEventListener('click', () => {
+      const data = extractItemData(document.querySelector('.feature'));
+      if (data) openSheet(data);
+    });
+
+    featuredAction.addEventListener('click', (e) => {
+      e.preventDefault();
+      const data = extractItemData(document.querySelector('.feature'));
+      if (data) openSheet(data);
+    });
+
+    heroBuyBtn.addEventListener('click', () => {
+      openSheet({
+        title: 'Voucher libre VAUCHIS',
+        brand: 'VAUCHIS',
+        price: 25000,
+        mode: 'comprar'
+      });
+    });
+
+    heroGiftBtn.addEventListener('click', () => {
+      openSheet({
+        title: 'Regalo libre VAUCHIS',
+        brand: 'VAUCHIS',
+        price: 25000,
+        mode: 'regalo'
+      });
+    });
+
+    closeSheet.addEventListener('click', closeVoucherSheet);
+    cancelSheet.addEventListener('click', closeVoucherSheet);
+    overlay.addEventListener('click', closeVoucherSheet);
+    usageMode.addEventListener('change', () => { updateModeFields(); updateSummary(); });
+    quantitySelect.addEventListener('change', updateSummary);
+
+    voucherForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = `VAU-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 90 + 10)}`;
+      drawFakeQR(code);
+      voucherCode.textContent = `Código de voucher: ${code}`;
+      voucherForm.style.display = 'none';
+      qrBox.classList.add('show');
+    });
+
+    newPurchaseBtn.addEventListener('click', () => {
+      voucherForm.reset();
+      quantitySelect.value = '1';
+      usageMode.value = selectedItem.mode === 'comprar' ? 'propio' : 'regalo';
+      updateModeFields();
+      updateSummary();
+      qrBox.classList.remove('show');
+      voucherForm.style.display = 'block';
+    });
+
+    function drawFakeQR(text) {
+      const canvas = document.getElementById('qrCanvas');
+      const ctx = canvas.getContext('2d');
+      const size = 220;
+      const cells = 22;
+      const cell = size / cells;
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, size, size);
+
+      function finder(x, y) {
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(x * cell, y * cell, 7 * cell, 7 * cell);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect((x + 1) * cell, (y + 1) * cell, 5 * cell, 5 * cell);
+        ctx.fillStyle = '#111111';
+        ctx.fillRect((x + 2) * cell, (y + 2) * cell, 3 * cell, 3 * cell);
+      }
+
+      finder(1, 1);
+      finder(cells - 8, 1);
+      finder(1, cells - 8);
+
+      function seeded(x, y, seed) {
+        let val = 0;
+        for (let i = 0; i < seed.length; i += 1) val += seed.charCodeAt(i) * (i + 3);
+        return ((x * 19 + y * 23 + val) % 7) < 3;
+      }
+
+      for (let y = 0; y < cells; y += 1) {
+        for (let x = 0; x < cells; x += 1) {
+          const inFinder =
+            (x >= 1 && x <= 7 && y >= 1 && y <= 7) ||
+            (x >= cells - 8 && x <= cells - 2 && y >= 1 && y <= 7) ||
+            (x >= 1 && x <= 7 && y >= cells - 8 && y <= cells - 2);
+          if (inFinder) continue;
+          if (seeded(x, y, text)) {
+            ctx.fillStyle = '#111111';
+            ctx.fillRect(Math.round(x * cell), Math.round(y * cell), Math.ceil(cell), Math.ceil(cell));
+          }
+        }
+      }
+    }
+
+    document.querySelectorAll('#bottomNav span').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#bottomNav span').forEach(el => el.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    updateModeFields();
+    updateSummary();
+    applyFilters();
+  </script>
 </body>
 </html>
