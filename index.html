@@ -3,93 +3,147 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vauchis — Índice de alternativas</title>
+  <title>Vauchis — Alternativa 1 Clásica</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body{font-family:Montserrat,Arial,sans-serif;background:#eef2f8;margin:0;padding:32px;color:#172033}
-    .wrap{max-width:980px;margin:0 auto;background:#fff;border-radius:24px;padding:32px;box-shadow:0 20px 60px rgba(17,37,77,.08)}
-    h1{margin:0 0 10px;font-size:42px;letter-spacing:-.04em;color:#022d73}
-    p{color:#4b5563;line-height:1.6}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
-    .card{border:1px solid #e5e7eb;border-radius:18px;padding:20px}
-    .card h2{font-size:24px;margin:0 0 8px}
-    .btn{display:inline-block;margin-top:12px;background:#1664f5;color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;text-decoration:none}
-    @media(max-width:800px){.grid{grid-template-columns:1fr}}
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <h1>Vauchis — 3 alternativas de Home</h1>
-    <p>Acá tenés las tres propuestas en HTML5 + CSS, armadas sobre la estética del home deseado, la tipografía Montserrat y la lógica de marca definida en tus adjuntos.</p>
-    <div class="grid">
-      <div class="card">
-        <h2>Alternativa 1</h2>
-        <p>La más fiel al home adjunto. Limpia, sobria y segura.</p>
-        <a class="btn" href="alternativa-1-clasica.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>Alternativa 2</h2>
-        <p>Misma base, con mejor foco comercial y bloque para empresas.</p>
-        <a class="btn" href="alternativa-2-comercial.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>Alternativa 3</h2>
-        <p>La más moderna, con lógica de catálogo y vouchers destacados.</p>
-        <a class="btn" href="alternativa-3-marketplace.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 1</h2>
-        <p>.</p>
-        <a class="btn" href="home_1.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 3</h2>
-        <p>.</p>
-        <a class="btn" href="home_3.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 7</h2>
-        <p>Home “marca + propósito”.</p>
-        <a class="btn" href="home_7.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 8</h2>
-        <p>Home “más comercial + exploración”.</p>
-        <a class="btn" href="home_8.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 9</h2>
-        <p>Home mobile tipo catálogo.</p>
-        <a class="btn" href="home_9.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 10</h2>
-        <p>Home mobile tipo marketplace.</p>
-        <a class="btn" href="home_10.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 11</h2>
-        <p>Home funcional.</p>
-        <a class="btn" href="home_11.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 14</h2>
-        <p>Tono visual marketplace masivo.</p>
-        <a class="btn" href="home_14.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 15</h2>
-        <p>Tono e-commerce de regalos.</p>
-        <a class="btn" href="home_15.html">Abrir</a>
-      </div>
-      <div class="card">
-        <h2>HOME 16</h2>
-        <p>Hibrido entre tono marketplane masivo y e-commerce de regalos.</p>
-        <a class="btn" href="home_16.html">Abrir</a>
-      </div>
+  <main class="page">
+    <div class="container">
+      <header class="header">
+        <a class="logo" href="#"><img src="logo-vauchis.jpeg" alt="Logo Vauchis"></a>
+        <nav class="nav">
+          <a href="#inicio">Inicio</a>
+          <a href="#funciona">Cómo funciona</a>
+          <a href="#categorias">Categorías</a>
+          <a href="#marcas">Marcas</a>
+          <a href="#" class="btn btn-primary">Ingresar</a>
+        </nav>
+      </header>
+
+      <section id="inicio" class="hero">
+        <div class="hero-copy">
+          <h1>El placer de regalar, simplificado</h1>
+          <p>Comprá, enviá y recibí vouchers de regalos fácil. Una propuesta clara para usuarios finales, comercios y empresas.</p>
+          <div class="hero-cta">
+            <a href="#categorias" class="btn btn-primary">Explora Vauchis</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-blob"></div>
+
+          <div class="phone-mockup">
+            <div class="hero-card-floating">
+              <small>voucher digital</small>
+              <strong>Regalá en segundos</strong>
+              <div class="hero-dots">
+                <span class="green"></span>
+                <span class="pink"></span>
+                <span class="blue"></span>
+                <span class="yellow"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="gift-stack">
+            <div class="gift-box gift-sm"></div>
+            <div class="gift-box gift-md"></div>
+            <div class="gift-box gift-lg"></div>
+          </div>
+        </div>
+      </section>
     </div>
-  </div>
+
+    <section id="funciona" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Cómo funciona</h2>
+          <p>Una navegación simple y directa, fiel al home de referencia.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card">
+            <div class="step-illus"><span class="mini-gift"></span></div>
+            <h4>Elegí tu voucher</h4>
+            <p>Explorá categorías, marcas y propuestas según el tipo de regalo que querés hacer.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-illus"><span class="mini-phone"></span></div>
+            <h4>Comprá online</h4>
+            <p>Seleccioná el voucher, visualizá el precio y completá la compra desde cualquier dispositivo.</p>
+          </article>
+          <article class="step-card">
+            <div class="step-illus"><span class="mini-gift"></span></div>
+            <h4>Enviá el regalo</h4>
+            <p>Mandalo al destinatario de forma simple y rápida, con una experiencia 100% digital.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="categorias" class="section" style="padding-top:10px;">
+      <div class="container">
+        <div class="section-title">
+          <h2>Elegí qué regalar</h2>
+        </div>
+        <div class="categories">
+          <article class="category-card">
+            <div class="category-media"><div class="mini-gift" style="transform:scale(1.35)"></div></div>
+            <h4 style="color:var(--primary-dark)">Vauchis de Objetos</h4>
+            <p>Elegí productos físicos de marcas seleccionadas y regalá algo concreto a quien querés sorprender.</p>
+            <span class="price-tag price-blue">Desde $25.000</span>
+            <div><a href="objetos.html" class="btn btn-primary">Ver más</a></div>
+          </article>
+          <article class="category-card">
+            <div class="category-media"><div style="width:120px;height:78px;border-radius:20px;background:linear-gradient(135deg,var(--secondary),#74ceb0);position:relative;box-shadow:var(--shadow-soft)"></div></div>
+            <h4 style="color:var(--secondary-dark)">Vauchis de Experiencias</h4>
+            <p>Regalá momentos, talleres, salidas o actividades pensadas para disfrutar y crear recuerdos.</p>
+            <span class="price-tag price-green">Desde $18.000</span>
+            <div><a href="experiencias.html" class="btn btn-secondary">Ver más</a></div>
+          </article>
+          <article class="category-card">
+            <div class="category-media"><div style="width:114px;height:114px;border-radius:50%;background:linear-gradient(135deg,#ff8dbf,var(--accent));box-shadow:var(--shadow-soft);position:relative"></div></div>
+            <h4 style="color:var(--accent-dark)">Vauchis de Impacto Social</h4>
+            <p>Transformá tu regalo en una acción con propósito apoyando causas que generan impacto positivo.</p>
+            <span class="price-tag price-pink">Desde $10.000</span>
+            <div><a href="impacto-social.html" class="btn btn-accent">Ver más</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="marcas" class="section" style="padding-top:18px;">
+      <div class="container">
+        <div class="section-title"><h2>Marcas destacadas</h2></div>
+        <div class="brands-box">
+          <div class="brand-item">Starbucks</div>
+          <div class="brand-item">adidas</div>
+          <div class="brand-item">Nike</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="newsletter">
+      <div class="container">
+        <div class="newsletter-grid">
+          <div>
+            <h3>Recibe nuestras novedades</h3>
+            <p>Promociones, nuevas marcas y novedades de Vauchis en un solo lugar.</p>
+          </div>
+          <form class="news-form">
+            <input type="email" placeholder="Tu correo electrónico">
+            <button type="button" class="btn btn-accent">Suscribirme</button>
+          </form>
+        </div>
+        <div class="footer-meta">
+          <div class="footer-links"><a href="#funciona">Cómo funciona</a><a href="#marcas">Marcas</a><a href="#">Contacto</a></div>
+          <div>© 2026 Vauchis</div>
+          <div class="socials"><span>f</span><span>in</span><span>✉</span></div>
+        </div>
+      </div>
+    </footer>
+    <div class="variant-note">Alternativa 1: la más parecida al home adjunto. Sobria, clara y segura.</div>
+  </main>
 </body>
 </html>
