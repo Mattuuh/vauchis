@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAUCHIS - Comparación estilos</title>
+<style>
+body {margin:0;font-family:Arial, sans-serif;background:#f5f5f7;}
+.container {display:flex;flex-direction:column;gap:30px;padding:16px;max-width:430px;margin:auto;}
+.section {background:white;border-radius:20px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+.title {font-weight:800;font-size:18px;margin-bottom:12px;}
+.logo {width:140px;margin-bottom:10px;}
+
+/* MARKETPLACE */
+.market-grid {display:flex;flex-direction:column;gap:10px;}
+.card {background:#fff;border-radius:16px;padding:12px;border:1px solid #eee;}
+.price {font-weight:800;color:#111;}
+.badge {background:#ff0055;color:#fff;padding:4px 8px;border-radius:999px;font-size:12px;}
+.btn {margin-top:10px;background:black;color:white;padding:10px;border-radius:12px;text-align:center;font-weight:700;}
+
+/* REGALOS */
+.gift-card {background:linear-gradient(135deg,#fce7f3,#e0f2fe);border-radius:20px;padding:16px;margin-bottom:10px;}
+.gift-title {font-weight:800;font-size:16px;}
+.gift-desc {font-size:13px;color:#555;margin-top:6px;}
+.gift-btn {margin-top:12px;background:#e50087;color:#fff;padding:12px;border-radius:14px;text-align:center;font-weight:700;}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- MARKETPLACE -->
+<div class="section">
+<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/..." class="logo"/>
+<div class="title">🛒 Estilo Marketplace</div>
+
+<div class="market-grid">
+<div class="card">
+<div class="badge">-20%</div>
+<h4>Voucher Spa</h4>
+<p>Relajación completa</p>
+<div class="price">$42.000</div>
+<div class="btn">Comprar ahora</div>
+</div>
+
+<div class="card">
+<h4>Voucher Electro</h4>
+<p>Gadgets y tecnología</p>
+<div class="price">$50.000</div>
+<div class="btn">Comprar ahora</div>
+</div>
+
+</div>
+</div>
+
+<!-- REGALOS -->
+<div class="section">
+<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/..." class="logo"/>
+<div class="title">🎁 Estilo Regalos</div>
+
+<div class="gift-card">
+<div class="gift-title">Un día de spa para desconectar</div>
+<div class="gift-desc">Regalá una experiencia única para alguien especial</div>
+<div class="gift-btn">Regalar experiencia</div>
+</div>
+
+<div class="gift-card">
+<div class="gift-title">Escapada romántica</div>
+<div class="gift-desc">Una experiencia inolvidable para dos</div>
+<div class="gift-btn">Regalar experiencia</div>
+</div>
+
+</div>
+
+</div>
+</body>
+</html>

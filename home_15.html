@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VAUCHIS | Demo E-commerce de Regalos</title>
+  <style>
+    :root {
+      --blue: #0d6efd;
+      --green: #48b38a;
+      --gray: #9ca3af;
+      --pink: #e50087;
+      --text: #241f2a;
+      --muted: #7b7286;
+      --line: #eee7f2;
+      --bg: #fbf8fd;
+      --white: #ffffff;
+      --soft-pink: #fff0f7;
+      --soft-blue: #eef6ff;
+      --soft-green: #eefbf6;
+      --soft-lilac: #f6f0ff;
+      --shadow-sm: 0 8px 20px rgba(74, 42, 94, 0.07);
+      --shadow-md: 0 18px 38px rgba(74, 42, 94, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max-width: 430px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(229,0,135,0.06), transparent 28%),
+        linear-gradient(180deg, #fffdfd 0%, #f8f4fb 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width);
+      min-height: 100vh;
+      padding: 14px 14px 110px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding-bottom: 12px;
+      background: linear-gradient(180deg, rgba(255,253,253,0.96), rgba(255,253,253,0.82));
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: 22px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-logo {
+      width: 132px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .brand-copy {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.55), transparent 26%),
+        linear-gradient(135deg, #fff1f7, #f7f0ff 52%, #eef8ff);
+      border-radius: 32px;
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(229,0,135,0.06);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      right: -30px;
+      top: -26px;
+      border-radius: 50%;
+      background: rgba(229,0,135,0.08);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--pink);
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2.15rem;
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+      max-width: 290px;
+    }
+
+    .hero-accent {
+      background: linear-gradient(90deg, var(--pink), var(--blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: block;
+    }
+
+    .hero p {
+      margin: 13px 0 0;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 300px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pink), #ff57b7);
+      color: white;
+      box-shadow: 0 14px 28px rgba(229,0,135,0.18);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.86);
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .hero-note {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .hero-note-card {
+      background: rgba(255,255,255,0.78);
+      border-radius: 18px;
+      padding: 12px 10px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-note-card strong {
+      display: block;
+      font-size: 0.98rem;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-note-card span {
+      display: block;
+      font-size: 0.71rem;
+      line-height: 1.25;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .section { margin-top: 18px; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.06rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .section-link {
+      text-decoration: none;
+      color: var(--pink);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .occasion-row,
+    .brand-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .occasion-row::-webkit-scrollbar,
+    .brand-row::-webkit-scrollbar { display: none; }
+
+    .occasion-card {
+      flex: 0 0 auto;
+      width: 126px;
+      background: white;
+      border-radius: 22px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .occasion-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .bg-pink { background: var(--soft-pink); }
+    .bg-blue { background: var(--soft-blue); }
+    .bg-green { background: var(--soft-green); }
+    .bg-lilac { background: var(--soft-lilac); }
+
+    .occasion-card strong {
+      display: block;
+      font-size: 0.9rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .occasion-card span {
+      display: block;
+      font-size: 0.73rem;
+      line-height: 1.3;
+      color: var(--muted);
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
+    .story-banner {
+      background: linear-gradient(135deg, #fff6fb, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .story-banner strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      letter-spacing: -0.03em;
+    }
+
+    .story-banner span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .story-pill {
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--pink);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.73rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .featured-card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.04);
+      margin-top: 12px;
+    }
+
+    .featured-cover {
+      min-height: 180px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 26%),
+        linear-gradient(135deg, #f9cae3, #f0d9ff 48%, #dfefff);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-cover::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -36px;
+      bottom: -36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+    }
+
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(0,0,0,0.04);
+      font-size: 0.74rem;
+      font-weight: 900;
+      color: var(--pink);
+    }
+
+    .featured-title {
+      margin: 18px 0 0;
+      max-width: 230px;
+      font-size: 1.55rem;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+    }
+
+    .featured-sub {
+      margin-top: 8px;
+      max-width: 250px;
+      color: #5f566a;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      position: relative;
+      z-index: 1;
+    }
+
+    .featured-body {
+      padding: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .featured-copy {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .price-block small {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .price {
+      font-size: 1.18rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin-top: 3px;
+    }
+
+    .gift-btn {
+      border: none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, var(--pink), #ff5aba);
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      min-width: 146px;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .gift-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .gift-cover {
+      min-height: 116px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gift-cover::after {
+      content: "";
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      right: -24px;
+      bottom: -28px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .cover-rose { background: linear-gradient(135deg, #f9cde4, #ffdff0); }
+    .cover-sky { background: linear-gradient(135deg, #ddecff, #edf5ff); }
+    .cover-mint { background: linear-gradient(135deg, #d7f5e9, #ecfcf5); }
+    .cover-lilac { background: linear-gradient(135deg, #eadcff, #f4ecff); }
+
+    .cover-chip {
+      display: inline-block;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: 999px;
+      padding: 7px 9px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-copy {
+      margin-top: 24px;
+      font-size: 1rem;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      max-width: 120px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gift-body {
+      padding: 14px;
+    }
+
+    .gift-brand {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .gift-title {
+      font-size: 0.96rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+      margin: 0;
+    }
+
+    .gift-desc {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+      min-height: 44px;
+    }
+
+    .gift-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .gift-price {
+      font-size: 0.98rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .gift-link {
+      font-size: 0.78rem;
+      color: var(--pink);
+      font-weight: 900;
+    }
+
+    .brand-card {
+      flex: 0 0 auto;
+      width: 124px;
+      background: white;
+      border-radius: 20px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .brand-mark {
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .mark-pink { background: linear-gradient(135deg, var(--pink), #ff62bc); }
+    .mark-blue { background: linear-gradient(135deg, var(--blue), #6da7ff); }
+    .mark-green { background: linear-gradient(135deg, var(--green), #78d3af); }
+    .mark-gray { background: linear-gradient(135deg, #5b5564, #8e8698); }
+
+    .brand-card strong {
+      display: block;
+      font-size: 0.9rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-card span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      color: white;
+      font-weight: 900;
+    }
+
+    .step-card strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .step-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: calc(var(--max-width) - 10px);
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 28px rgba(74,42,94,0.12);
+      border-radius: 22px;
+      padding: 10px 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-item {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      background: #f8f1f7;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand-bar">
+        <img src="logo-vauchis.jpeg" alt="Logo VAUCHIS" class="brand-logo" />
+        <div class="brand-copy">Regalos con intención, experiencias memorables y vouchers listos para sorprender.</div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">🎁 E-commerce de regalos</div>
+      <h1>Regalá algo que <span class="hero-accent">sí se recuerde</span></h1>
+      <p>Elegí experiencias, productos o causas con significado. Personalizá el envío y compartí un voucher pensado para emocionar.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary">Elegir regalo</button>
+        <button class="btn btn-secondary">Ver ocasiones</button>
+      </div>
+      <div class="hero-note">
+        <div class="hero-note-card"><strong>Para regalar</strong><span>con dedicatoria</span></div>
+        <div class="hero-note-card"><strong>QR inmediato</strong><span>envío simple</span></div>
+        <div class="hero-note-card"><strong>Curado</strong><span>para sorprender</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Regalá según la ocasión</div>
+        <a href="#" class="section-link">Ver más</a>
+      </div>
+      <div class="occasion-row">
+        <article class="occasion-card">
+          <div class="occasion-icon bg-pink">💝</div>
+          <strong>Aniversarios</strong>
+          <span>Regalos con una intención especial.</span>
+        </article>
+        <article class="occasion-card">
+          <div class="occasion-icon bg-blue">🎂</div>
+          <strong>Cumpleaños</strong>
+          <span>Ideas para sorprender fácil y lindo.</span>
+        </article>
+        <article class="occasion-card">
+          <div class="occasion-icon bg-green">✨</div>
+          <strong>Gracias</strong>
+          <span>Un detalle con valor emocional.</span>
+        </article>
+        <article class="occasion-card">
+          <div class="occasion-icon bg-lilac">🌿</div>
+          <strong>Bienestar</strong>
+          <span>Experiencias para bajar un cambio.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="story-banner">
+        <div>
+          <strong>Más que un voucher, una experiencia</strong>
+          <span>Diseñado para regalar algo significativo, flexible y simple de canjear.</span>
+        </div>
+        <div class="story-pill">Curado para regalar</div>
+      </div>
+
+      <article class="featured-card">
+        <div class="featured-cover">
+          <div class="featured-badge">⭐ Regalo destacado</div>
+          <div class="featured-title">Un día de spa para desconectar</div>
+          <div class="featured-sub">Una propuesta para regalar bienestar, pausa y disfrute en una sola experiencia.</div>
+        </div>
+        <div class="featured-body">
+          <div class="meta-row"><span>Aqua Zen • Spa & bienestar</span><span>Ideal para regalar</span></div>
+          <div class="featured-copy">Incluye acceso a circuito hídrico, masaje relajante y un momento pensado para salir de la rutina.</div>
+          <div class="price-row">
+            <div class="price-block">
+              <small>Desde</small>
+              <div class="price">$42.000</div>
+            </div>
+            <button class="gift-btn">Regalar experiencia</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Ideas para sorprender</div>
+        <a href="#" class="section-link">Explorar</a>
+      </div>
+      <div class="grid-two">
+        <article class="gift-card">
+          <div class="gift-cover cover-rose">
+            <div class="cover-chip">Experiencia</div>
+            <div class="cover-copy">Escapada romántica</div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-brand">Casa Bosque</div>
+            <h3 class="gift-title">Fin de semana para dos</h3>
+            <div class="gift-desc">Un regalo pensado para compartir descanso, naturaleza y tiempo juntos.</div>
+            <div class="gift-footer">
+              <div class="gift-price">$95.000</div>
+              <div class="gift-link">Regalar</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="gift-card">
+          <div class="gift-cover cover-sky">
+            <div class="cover-chip">Producto</div>
+            <div class="cover-copy">Moda con elección libre</div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-brand">Urban Wear</div>
+            <h3 class="gift-title">Voucher moda</h3>
+            <div class="gift-desc">Para regalar una prenda ideal sin tener que elegir talle, color o modelo.</div>
+            <div class="gift-footer">
+              <div class="gift-price">$30.000</div>
+              <div class="gift-link">Regalar</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="gift-card">
+          <div class="gift-cover cover-mint">
+            <div class="cover-chip">Impacto social</div>
+            <div class="cover-copy">Regalo con propósito</div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-brand">Red Solidaria</div>
+            <h3 class="gift-title">Voucher con causa</h3>
+            <div class="gift-desc">Una opción para transformar un gesto en apoyo concreto a proyectos reales.</div>
+            <div class="gift-footer">
+              <div class="gift-price">$20.000</div>
+              <div class="gift-link">Regalar</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="gift-card">
+          <div class="gift-cover cover-lilac">
+            <div class="cover-chip">Experiencia</div>
+            <div class="cover-copy">Turismo para descubrir</div>
+          </div>
+          <div class="gift-body">
+            <div class="gift-brand">Ruta Viva</div>
+            <h3 class="gift-title">Experiencia turística</h3>
+            <div class="gift-desc">Para regalar una salida distinta, memorable y fácil de disfrutar.</div>
+            <div class="gift-footer">
+              <div class="gift-price">$38.000</div>
+              <div class="gift-link">Regalar</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Marcas con experiencias lindas</div>
+        <a href="#" class="section-link">Ver todas</a>
+      </div>
+      <div class="brand-row">
+        <article class="brand-card">
+          <div class="brand-mark mark-pink">AZ</div>
+          <strong>Aqua Zen</strong>
+          <span>Spa y relax</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-mark mark-green">CB</div>
+          <strong>Casa Bosque</strong>
+          <span>Estadías</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-mark mark-blue">RV</div>
+          <strong>Ruta Viva</strong>
+          <span>Turismo</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-mark mark-gray">RS</div>
+          <strong>Red Solidaria</strong>
+          <span>Impacto social</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Cómo se regala</div>
+      </div>
+      <div class="steps">
+        <article class="step-card">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Elegís una experiencia o voucher</strong>
+            <span>Explorás ideas por ocasión, estilo de regalo o marca asociada.</span>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Lo personalizás</strong>
+            <span>Agregás destinatario, dedicatoria y definís cuándo querés enviarlo.</span>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Pagás y enviás</strong>
+            <span>Se genera un QR para canjear, simple para quien lo recibe y para la marca.</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active">Inicio</a>
+    <a href="#" class="nav-item">Ocasiones</a>
+    <a href="#" class="nav-item">Regalos</a>
+    <a href="#" class="nav-item">Cuenta</a>
+  </nav>
+</body>
+</html>

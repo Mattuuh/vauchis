@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VAUCHIS | Vouchers para regalar, disfrutar e impactar</title>
+  <style>
+    :root {
+      --blue: #0d6efd;
+      --green: #48b38a;
+      --gray: #a9a9a9;
+      --pink: #e50087;
+      --text: #3f3f46;
+      --muted: #71717a;
+      --bg: #f5f5f7;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --max-width: 430px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f9fafb 0%, #f2f4f7 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width);
+      min-height: 100vh;
+      background: transparent;
+      padding: 16px 16px 110px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 10px 0 14px;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(245,245,247,0.95) 0%, rgba(245,245,247,0.85) 100%);
+    }
+
+    .brand-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark .v { color: var(--blue); }
+    .brand-mark .au { color: var(--green); }
+    .brand-mark .ch { color: var(--gray); }
+    .brand-mark .is { color: var(--pink); }
+
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .hero {
+      padding: 10px 0 14px;
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top left, rgba(13,110,253,0.12), transparent 38%),
+                  radial-gradient(circle at top right, rgba(229,0,135,0.12), transparent 34%),
+                  radial-gradient(circle at bottom left, rgba(72,179,138,0.12), transparent 36%),
+                  var(--white);
+      border-radius: 32px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.25rem;
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .gradient-title {
+      display: block;
+      background: linear-gradient(90deg, var(--blue), var(--green), var(--gray), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--pink));
+      color: white;
+      box-shadow: 0 10px 22px rgba(13,110,253,0.22);
+    }
+
+    .btn-secondary {
+      background: #f4f4f5;
+      color: var(--text);
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .section-link {
+      font-size: 0.82rem;
+      color: var(--pink);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .category-card {
+      background: var(--white);
+      border-radius: 22px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+
+    .category-card.active {
+      outline: 2px solid rgba(229,0,135,0.18);
+      transform: translateY(-2px);
+    }
+
+    .category-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+    }
+
+    .category-card:nth-child(1) .category-icon { background: rgba(13,110,253,0.12); }
+    .category-card:nth-child(2) .category-icon { background: rgba(72,179,138,0.14); }
+    .category-card:nth-child(3) .category-icon { background: rgba(229,0,135,0.12); }
+
+    .category-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-top: 10px;
+    }
+
+    .category-desc {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .pill {
+      white-space: nowrap;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: var(--white);
+      color: var(--text);
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+
+    .pill.active {
+      background: var(--text);
+      color: var(--white);
+    }
+
+    .vouchers {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .voucher-card {
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .voucher-media {
+      height: 130px;
+      border-radius: 18px;
+      padding: 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      color: white;
+      font-weight: 800;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .voucher-media::after {
+      content: "";
+      position: absolute;
+      inset: auto -10px -20px auto;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .theme-productos { background: linear-gradient(135deg, var(--blue), #5ea3ff); }
+    .theme-experiencias { background: linear-gradient(135deg, var(--green), #78d1ac); }
+    .theme-impacto { background: linear-gradient(135deg, var(--pink), #ff59b7); }
+
+    .voucher-tag {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .voucher-brand {
+      font-size: 1.05rem;
+      max-width: 70%;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .voucher-body {
+      padding: 12px 4px 2px;
+    }
+
+    .voucher-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .voucher-meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    .voucher-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      gap: 10px;
+    }
+
+    .voucher-price {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .voucher-price small {
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .voucher-price strong {
+      font-size: 1.08rem;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: var(--text);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .process-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .process-step {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--pink));
+    }
+
+    .process-step h4 {
+      margin: 2px 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .process-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .sheet {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      width: 100%;
+      max-width: var(--max-width);
+      transform: translate(-50%, 105%);
+      background: rgba(255,255,255,0.98);
+      border-radius: 28px 28px 0 0;
+      padding: 18px 16px 22px;
+      box-shadow: 0 -20px 40px rgba(0,0,0,0.14);
+      z-index: 60;
+      transition: transform 0.3s ease;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .sheet.open {
+      transform: translate(-50%, 0);
+    }
+
+    .sheet-handle {
+      width: 54px;
+      height: 6px;
+      border-radius: 999px;
+      background: #d4d4d8;
+      margin: 0 auto 14px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .sheet-title {
+      font-size: 1.16rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .close-btn {
+      border: none;
+      background: #f4f4f5;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid #e4e4e7;
+      border-radius: 16px;
+      padding: 14px 14px;
+      font: inherit;
+      background: #fafafa;
+      color: var(--text);
+      outline: none;
+    }
+
+    .textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: rgba(13,110,253,0.35);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(13,110,253,0.08);
+    }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .summary-box,
+    .qr-box {
+      margin-top: 14px;
+      background: #fafafa;
+      border: 1px solid #ececf0;
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.9rem;
+      padding: 6px 0;
+    }
+
+    .summary-total {
+      border-top: 1px dashed #d4d4d8;
+      margin-top: 6px;
+      padding-top: 10px;
+      font-weight: 900;
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pay-btn {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(72,179,138,0.2);
+    }
+
+    .secondary-action {
+      background: #f4f4f5;
+      color: var(--text);
+      border: none;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(24,24,27,0.32);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.25s ease;
+      z-index: 50;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .qr-box {
+      text-align: center;
+      display: none;
+    }
+
+    .qr-box.show {
+      display: block;
+    }
+
+    .qr-canvas-wrap {
+      background: white;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid #ececf0;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(72,179,138,0.12);
+      color: #1c7c5d;
+      margin-bottom: 8px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: calc(var(--max-width) - 18px);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border-radius: 22px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      z-index: 45;
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-item {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 8px 4px;
+      border-radius: 16px;
+    }
+
+    .nav-item.active {
+      background: #f4f4f5;
+      color: var(--text);
+    }
+
+    .empty-state {
+      background: white;
+      border-radius: 20px;
+      padding: 20px 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    @media (min-width: 431px) {
+      body {
+        background: linear-gradient(135deg, #f4f5f7, #eef1f5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand-chip">
+        <div class="brand-mark" aria-label="Logo Vauchis">
+          <span class="v">v</span><span class="au">au</span><span class="ch">ch</span><span class="is">is</span>
+        </div>
+        <div class="brand-sub">Vouchers móviles para regalar, disfrutar e impactar</div>
+      </div>
+    </header>
+
+    <section class="hero" id="inicio">
+      <div class="hero-card">
+        <div class="badge">✨ Comprá en minutos · Recibí QR al instante</div>
+        <h1>
+          Regalá algo que <span class="gradient-title">sí quieran usar</span>
+        </h1>
+        <p>
+          Elegí un voucher, personalizalo, pagalo desde el celular y obtené un QR listo para canjear en marcas y experiencias asociadas a VAUCHIS.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="document.getElementById('categorias').scrollIntoView({behavior:'smooth'})">Explorar vouchers</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">Cómo funciona</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="categorias">
+      <div class="section-header">
+        <div class="section-title">Categorías principales</div>
+        <a href="#listado" class="section-link">Ver opciones</a>
+      </div>
+      <div class="categories">
+        <article class="category-card active" data-category="productos">
+          <div class="category-icon">🎁</div>
+          <div>
+            <div class="category-name">Productos</div>
+            <div class="category-desc">Deportes, electro, ropa y juguetes.</div>
+          </div>
+        </article>
+        <article class="category-card" data-category="experiencias">
+          <div class="category-icon">✨</div>
+          <div>
+            <div class="category-name">Experiencias</div>
+            <div class="category-desc">Spa, estadías, turismo y bienestar.</div>
+          </div>
+        </article>
+        <article class="category-card" data-category="impacto">
+          <div class="category-icon">💚</div>
+          <div>
+            <div class="category-name">Impacto social</div>
+            <div class="category-desc">ONG, artesanos y proyectos con propósito.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="listado">
+      <div class="section-header">
+        <div class="section-title">Vouchers destacados</div>
+        <a href="#" class="section-link">Filtrar</a>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="vouchers" id="voucherList"></div>
+    </section>
+
+    <section class="section" id="como-funciona">
+      <div class="section-header">
+        <div class="section-title">Cómo funciona</div>
+      </div>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div>
+            <h4>Elegís un voucher</h4>
+            <p>Navegás por categoría, subcategoría o marca hasta encontrar la opción ideal.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div>
+            <h4>Completás los datos</h4>
+            <p>Cargás nombre del destinatario, dedicatoria, email y el monto o producto seleccionado.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div>
+            <h4>Pagás y recibís el QR</h4>
+            <p>Luego del pago se genera un código QR único para canjear en la empresa asociada.</p>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div>
+            <h4>La marca lo valida</h4>
+            <p>Cada empresa asociada accede a la plataforma VAUCHIS para escanear y canjear el voucher.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sheet" id="voucherSheet" aria-hidden="true">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title" id="sheetVoucherTitle">Seleccionar voucher</div>
+        <div style="color: var(--muted); font-size: 0.84rem; margin-top: 4px;" id="sheetVoucherMeta"></div>
+      </div>
+      <button class="close-btn" id="closeSheet">✕</button>
+    </div>
+
+    <form id="voucherForm">
+      <div class="two-cols">
+        <div class="form-group">
+          <label class="form-label">Nombre de quien regala</label>
+          <input class="input" type="text" placeholder="Ej: Martina" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre destinatario</label>
+          <input class="input" type="text" placeholder="Ej: Sofía" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email de envío</label>
+        <input class="input" type="email" placeholder="destinatario@email.com" required />
+      </div>
+
+      <div class="two-cols">
+        <div class="form-group">
+          <label class="form-label">Fecha de entrega</label>
+          <input class="input" type="date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cantidad</label>
+          <select class="select" id="quantitySelect">
+            <option value="1">1 voucher</option>
+            <option value="2">2 vouchers</option>
+            <option value="3">3 vouchers</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dedicatoria</label>
+        <textarea class="textarea" placeholder="Escribí un mensaje para acompañar el voucher..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Método de pago</label>
+        <select class="select">
+          <option>Tarjeta de crédito / débito</option>
+          <option>Mercado Pago</option>
+          <option>Transferencia</option>
+        </select>
+      </div>
+
+      <div class="summary-box">
+        <div style="font-weight: 900; margin-bottom: 6px;">Resumen</div>
+        <div class="summary-line">
+          <span id="summaryName">Voucher seleccionado</span>
+          <strong id="summaryPrice">$ 0</strong>
+        </div>
+        <div class="summary-line">
+          <span>Cantidad</span>
+          <span id="summaryQty">1</span>
+        </div>
+        <div class="summary-line summary-total">
+          <span>Total</span>
+          <span id="summaryTotal">$ 0</span>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="submit" class="pay-btn">Pagar y generar QR</button>
+        <button type="button" class="secondary-action" id="cancelSheet">Cancelar</button>
+      </div>
+    </form>
+
+    <div class="qr-box" id="qrBox">
+      <div class="status-badge">✅ Pago simulado con éxito</div>
+      <div class="sheet-title">Voucher listo para canjear</div>
+      <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.5; margin: 10px 0 0;">
+        Este QR representa el voucher generado. La empresa asociada podrá escanearlo desde su panel de validación en VAUCHIS.
+      </p>
+      <div class="qr-canvas-wrap">
+        <canvas id="qrCanvas" width="220" height="220"></canvas>
+      </div>
+      <div style="margin-top: 12px; font-size: 0.82rem; color: var(--muted);" id="voucherCodeText"></div>
+      <div class="sheet-actions">
+        <button type="button" class="pay-btn" id="newVoucherBtn">Crear otro voucher</button>
+      </div>
+    </div>
+  </aside>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <a class="nav-item active" href="#inicio">Inicio</a>
+    <a class="nav-item" href="#categorias">Categorías</a>
+    <a class="nav-item" href="#listado">Vouchers</a>
+    <a class="nav-item" href="#como-funciona">Proceso</a>
+  </nav>
+
+  <script>
+    const vouchers = [
+      {
+        id: 1,
+        category: 'productos',
+        subcategory: 'deportes',
+        brand: 'Sport Club',
+        title: 'Voucher deportivo',
+        description: 'Canjeable en indumentaria, accesorios y productos fitness seleccionados.',
+        price: 25000,
+        tag: 'Productos',
+        theme: 'theme-productos'
+      },
+      {
+        id: 2,
+        category: 'productos',
+        subcategory: 'electro',
+        brand: 'ElectroNow',
+        title: 'Voucher tecnología',
+        description: 'Ideal para pequeños electrodomésticos, audio y gadgets.',
+        price: 50000,
+        tag: 'Electro',
+        theme: 'theme-productos'
+      },
+      {
+        id: 3,
+        category: 'productos',
+        subcategory: 'ropa',
+        brand: 'Urban Wear',
+        title: 'Voucher moda',
+        description: 'Una opción flexible para regalar prendas, calzado y accesorios.',
+        price: 30000,
+        tag: 'Ropa',
+        theme: 'theme-productos'
+      },
+      {
+        id: 4,
+        category: 'experiencias',
+        subcategory: 'spa',
+        brand: 'Aqua Zen',
+        title: 'Día de spa',
+        description: 'Masajes, circuito hídrico y una experiencia de bienestar completa.',
+        price: 42000,
+        tag: 'Spa',
+        theme: 'theme-experiencias'
+      },
+      {
+        id: 5,
+        category: 'experiencias',
+        subcategory: 'estadias',
+        brand: 'Casa Bosque',
+        title: 'Escapada de fin de semana',
+        description: 'Estadía para dos con desayuno en alojamiento boutique.',
+        price: 95000,
+        tag: 'Estadías',
+        theme: 'theme-experiencias'
+      },
+      {
+        id: 6,
+        category: 'experiencias',
+        subcategory: 'turismo',
+        brand: 'Ruta Viva',
+        title: 'Experiencia turística',
+        description: 'Tours, paseos y actividades para descubrir nuevos destinos.',
+        price: 38000,
+        tag: 'Turismo',
+        theme: 'theme-experiencias'
+      },
+      {
+        id: 7,
+        category: 'impacto',
+        subcategory: 'ong',
+        brand: 'Red Solidaria',
+        title: 'Voucher con causa',
+        description: 'Convertí tu regalo en una contribución concreta a una ONG aliada.',
+        price: 20000,
+        tag: 'ONG',
+        theme: 'theme-impacto'
+      },
+      {
+        id: 8,
+        category: 'impacto',
+        subcategory: 'artesanos',
+        brand: 'Manos Locales',
+        title: 'Artesanía con impacto',
+        description: 'Apoyá productores y artesanos con vouchers de compra responsable.',
+        price: 18000,
+        tag: 'Artesanos',
+        theme: 'theme-impacto'
+      },
+      {
+        id: 9,
+        category: 'impacto',
+        subcategory: 'proyectos',
+        brand: 'Futuro Vivo',
+        title: 'Proyecto transformador',
+        description: 'Un voucher que financia iniciativas con propósito social y ambiental.',
+        price: 35000,
+        tag: 'Proyectos',
+        theme: 'theme-impacto'
+      }
+    ];
+
+    const categoryLabels = {
+      productos: ['Todos', 'Deportes', 'Electro', 'Ropa', 'Juguetes'],
+      experiencias: ['Todos', 'Spa', 'Estadías', 'Turismo'],
+      impacto: ['Todos', 'ONG', 'Artesanos', 'Proyectos']
+    };
+
+    let selectedCategory = 'productos';
+    let selectedFilter = 'Todos';
+    let selectedVoucher = null;
+
+    const voucherList = document.getElementById('voucherList');
+    const filtersContainer = document.getElementById('filters');
+    const categoryCards = document.querySelectorAll('.category-card');
+    const sheet = document.getElementById('voucherSheet');
+    const overlay = document.getElementById('overlay');
+    const closeSheet = document.getElementById('closeSheet');
+    const cancelSheet = document.getElementById('cancelSheet');
+    const voucherForm = document.getElementById('voucherForm');
+    const qrBox = document.getElementById('qrBox');
+    const quantitySelect = document.getElementById('quantitySelect');
+    const summaryQty = document.getElementById('summaryQty');
+    const summaryName = document.getElementById('summaryName');
+    const summaryPrice = document.getElementById('summaryPrice');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const sheetVoucherTitle = document.getElementById('sheetVoucherTitle');
+    const sheetVoucherMeta = document.getElementById('sheetVoucherMeta');
+    const voucherCodeText = document.getElementById('voucherCodeText');
+    const newVoucherBtn = document.getElementById('newVoucherBtn');
+
+    function formatPrice(value) {
+      return new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function renderFilters() {
+      filtersContainer.innerHTML = '';
+      categoryLabels[selectedCategory].forEach(filter => {
+        const button = document.createElement('button');
+        button.className = `pill ${filter === selectedFilter ? 'active' : ''}`;
+        button.textContent = filter;
+        button.addEventListener('click', () => {
+          selectedFilter = filter;
+          renderFilters();
+          renderVouchers();
+        });
+        filtersContainer.appendChild(button);
+      });
+    }
+
+    function renderVouchers() {
+      const filtered = vouchers.filter(v => {
+        const matchesCategory = v.category === selectedCategory;
+        const matchesSubcategory = selectedFilter === 'Todos' || v.subcategory.toLowerCase() === selectedFilter.toLowerCase();
+        return matchesCategory && matchesSubcategory;
+      });
+
+      if (!filtered.length) {
+        voucherList.innerHTML = `<div class="empty-state">Todavía no cargamos vouchers para este filtro. En la versión final se pueden mostrar marcas, empresas y promociones reales.</div>`;
+        return;
+      }
+
+      voucherList.innerHTML = filtered.map(voucher => `
+        <article class="voucher-card">
+          <div class="voucher-media ${voucher.theme}">
+            <div class="voucher-brand">${voucher.brand}</div>
+            <div class="voucher-tag">${voucher.tag}</div>
+          </div>
+          <div class="voucher-body">
+            <h3 class="voucher-title">${voucher.title}</h3>
+            <div class="voucher-meta">${voucher.description}</div>
+            <div class="voucher-footer">
+              <div class="voucher-price">
+                <small>Desde</small>
+                <strong>${formatPrice(voucher.price)}</strong>
+              </div>
+              <button class="mini-btn" onclick="openVoucher(${voucher.id})">Elegir</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    categoryCards.forEach(card => {
+      card.addEventListener('click', () => {
+        categoryCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        selectedCategory = card.dataset.category;
+        selectedFilter = 'Todos';
+        renderFilters();
+        renderVouchers();
+      });
+    });
+
+    window.openVoucher = function(id) {
+      selectedVoucher = vouchers.find(v => v.id === id);
+      if (!selectedVoucher) return;
+
+      sheetVoucherTitle.textContent = selectedVoucher.title;
+      sheetVoucherMeta.textContent = `${selectedVoucher.brand} · ${selectedVoucher.tag}`;
+      summaryName.textContent = selectedVoucher.title;
+      summaryPrice.textContent = formatPrice(selectedVoucher.price);
+      summaryQty.textContent = quantitySelect.value;
+      summaryTotal.textContent = formatPrice(selectedVoucher.price * Number(quantitySelect.value));
+      voucherForm.style.display = 'block';
+      qrBox.classList.remove('show');
+      openSheet();
+    }
+
+    function openSheet() {
+      sheet.classList.add('open');
+      overlay.classList.add('show');
+      sheet.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVoucherSheet() {
+      sheet.classList.remove('open');
+      overlay.classList.remove('show');
+      sheet.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    closeSheet.addEventListener('click', closeVoucherSheet);
+    cancelSheet.addEventListener('click', closeVoucherSheet);
+    overlay.addEventListener('click', closeVoucherSheet);
+
+    quantitySelect.addEventListener('change', () => {
+      if (!selectedVoucher) return;
+      const qty = Number(quantitySelect.value);
+      summaryQty.textContent = qty;
+      summaryTotal.textContent = formatPrice(selectedVoucher.price * qty);
+    });
+
+    voucherForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!selectedVoucher) return;
+
+      const code = `VAU-${selectedVoucher.id}-${Date.now().toString().slice(-6)}`;
+      drawFakeQR(code);
+      voucherCodeText.textContent = `Código de voucher: ${code}`;
+      voucherForm.style.display = 'none';
+      qrBox.classList.add('show');
+    });
+
+    newVoucherBtn.addEventListener('click', () => {
+      voucherForm.reset();
+      quantitySelect.value = '1';
+      summaryQty.textContent = '1';
+      if (selectedVoucher) {
+        summaryName.textContent = selectedVoucher.title;
+        summaryPrice.textContent = formatPrice(selectedVoucher.price);
+        summaryTotal.textContent = formatPrice(selectedVoucher.price);
+      }
+      qrBox.classList.remove('show');
+      voucherForm.style.display = 'block';
+    });
+
+    function drawFakeQR(text) {
+      const canvas = document.getElementById('qrCanvas');
+      const ctx = canvas.getContext('2d');
+      const size = 220;
+      const cells = 22;
+      const cell = size / cells;
+
+      ctx.clearRect(0, 0, size, size);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, size, size);
+
+      function seededValue(x, y, seed) {
+        let val = 0;
+        for (let i = 0; i < seed.length; i++) val += seed.charCodeAt(i) * (i + 1);
+        return ((x * 17 + y * 31 + val) % 7) < 3;
+      }
+
+      function drawFinder(startX, startY) {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(startX * cell, startY * cell, 7 * cell, 7 * cell);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect((startX + 1) * cell, (startY + 1) * cell, 5 * cell, 5 * cell);
+        ctx.fillStyle = '#111';
+        ctx.fillRect((startX + 2) * cell, (startY + 2) * cell, 3 * cell, 3 * cell);
+      }
+
+      drawFinder(1, 1);
+      drawFinder(cells - 8, 1);
+      drawFinder(1, cells - 8);
+
+      for (let y = 0; y < cells; y++) {
+        for (let x = 0; x < cells; x++) {
+          const inFinder =
+            (x >= 1 && x <= 7 && y >= 1 && y <= 7) ||
+            (x >= cells - 8 && x <= cells - 2 && y >= 1 && y <= 7) ||
+            (x >= 1 && x <= 7 && y >= cells - 8 && y <= cells - 2);
+
+          if (inFinder) continue;
+          if (seededValue(x, y, text)) {
+            ctx.fillStyle = '#111';
+            ctx.fillRect(Math.round(x * cell), Math.round(y * cell), Math.ceil(cell), Math.ceil(cell));
+          }
+        }
+      }
+    }
+
+    renderFilters();
+    renderVouchers();
+  </script>
+</body>
+</html>

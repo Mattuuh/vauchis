@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VAUCHIS | Demo Marketplace Masivo</title>
+  <style>
+    :root {
+      --blue: #0d6efd;
+      --green: #48b38a;
+      --gray: #9ca3af;
+      --pink: #e50087;
+      --text: #18181b;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f3f4f6;
+      --white: #ffffff;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --shadow-sm: 0 8px 20px rgba(17, 24, 39, 0.06);
+      --shadow-md: 0 16px 36px rgba(17, 24, 39, 0.1);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max-width: 430px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(13,110,253,0.07), transparent 30%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: var(--max-width);
+      min-height: 100vh;
+      padding: 14px 14px 110px;
+      position: relative;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding-bottom: 12px;
+      background: linear-gradient(180deg, rgba(248,250,252,0.96), rgba(248,250,252,0.82));
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 22px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-logo {
+      width: 132px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-copy {
+      font-size: 0.76rem;
+      line-height: 1.25;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 28%),
+        linear-gradient(135deg, var(--blue), #4f8ff9 48%, var(--pink));
+      color: white;
+      border-radius: 30px;
+      padding: 18px;
+      box-shadow: 0 20px 40px rgba(13,110,253,0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -22px;
+      bottom: -22px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .hero-badge {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.73rem;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      max-width: 290px;
+    }
+
+    .hero p {
+      margin: 12px 0 0;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      max-width: 290px;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 14px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--text);
+      box-shadow: 0 10px 20px rgba(255,255,255,0.2);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.16);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .search-wrap {
+      margin-top: 14px;
+      background: white;
+      border-radius: 20px;
+      padding: 12px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-input {
+      border: none;
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 14px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+
+    .search-btn {
+      border: none;
+      background: var(--text);
+      color: white;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 18px;
+      padding: 12px 10px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-card span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .section { margin-top: 18px; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .section-link {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--pink);
+    }
+
+    .chips, .brands-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar, .brands-row::-webkit-scrollbar { display: none; }
+
+    .chip {
+      flex: 0 0 auto;
+      border: none;
+      border-radius: 999px;
+      background: white;
+      box-shadow: var(--shadow-sm);
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .chip.active { background: var(--text); color: white; }
+    .chip.offer { background: #fff1f2; color: #be123c; }
+
+    .brand-card {
+      flex: 0 0 auto;
+      width: 124px;
+      background: white;
+      border-radius: 20px;
+      padding: 14px 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .brand-logo-fake {
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-logo-blue { background: linear-gradient(135deg, var(--blue), #69a2ff); }
+    .brand-logo-pink { background: linear-gradient(135deg, var(--pink), #ff4fb2); }
+    .brand-logo-green { background: linear-gradient(135deg, var(--green), #73cfaa); }
+    .brand-logo-dark { background: linear-gradient(135deg, #111827, #374151); }
+
+    .brand-card strong {
+      display: block;
+      font-size: 0.9rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-card span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .promo-banner {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #111827, #374151);
+      color: white;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .promo-banner strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .promo-banner span {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.35;
+    }
+
+    .promo-tag {
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    .product-cover {
+      min-height: 132px;
+      padding: 14px;
+      color: white;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-cover::after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      right: -28px;
+      bottom: -34px;
+      background: rgba(255,255,255,0.14);
+    }
+
+    .cover-blue { background: linear-gradient(135deg, var(--blue), #67a4ff); }
+    .cover-pink { background: linear-gradient(135deg, var(--pink), #ff66bc); }
+    .cover-green { background: linear-gradient(135deg, var(--green), #7cd5b1); }
+    .cover-dark { background: linear-gradient(135deg, #111827, #374151); }
+
+    .discount-badge,
+    .top-badge {
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.16);
+      align-self: flex-start;
+    }
+
+    .voucher-brand {
+      max-width: 64%;
+      font-size: 1.08rem;
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .product-body {
+      padding: 14px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .product-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .product-desc {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .price-block small {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .old-price {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .price {
+      font-size: 1.22rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .buy-btn {
+      border: none;
+      border-radius: 16px;
+      background: var(--text);
+      color: white;
+      padding: 12px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      min-width: 124px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: white;
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 0.9rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .mini-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: calc(var(--max-width) - 10px);
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 28px rgba(17,24,39,0.12);
+      border-radius: 22px;
+      padding: 10px 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-item {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand-bar">
+        <img src="logo-vauchis.jpeg" alt="Logo VAUCHIS" class="brand-logo" />
+        <div class="brand-copy">Vouchers para comprar, regalar o usar desde el celu en segundos.</div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-badges">
+        <div class="hero-badge">🔥 Ofertas del día</div>
+        <div class="hero-badge">⚡ QR inmediato</div>
+        <div class="hero-badge">🏷️ Marcas asociadas</div>
+      </div>
+      <h1>Comprá vouchers rápido y al mejor precio</h1>
+      <p>Explorá marcas, filtrá por categoría y resolvé tu compra en pocos pasos. Después del pago recibís el QR listo para canjear.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary">Comprar ahora</button>
+        <button class="btn btn-secondary">Ver marcas</button>
+      </div>
+    </section>
+
+    <div class="search-wrap">
+      <input class="search-input" placeholder="Buscar vouchers, marcas o categorías" />
+      <button class="search-btn">Buscar</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><strong>+50</strong><span>empresas asociadas</span></div>
+      <div class="stat-card"><strong>+200</strong><span>vouchers activos</span></div>
+      <div class="stat-card"><strong>24/7</strong><span>compra online</span></div>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Categorías rápidas</div>
+        <a href="#" class="section-link">Ver todo</a>
+      </div>
+      <div class="chips">
+        <button class="chip active">Todos</button>
+        <button class="chip offer">Ofertas</button>
+        <button class="chip">Spa</button>
+        <button class="chip">Electro</button>
+        <button class="chip">Ropa</button>
+        <button class="chip">Turismo</button>
+        <button class="chip">Impacto social</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Marcas destacadas</div>
+        <a href="#" class="section-link">Explorar</a>
+      </div>
+      <div class="brands-row">
+        <article class="brand-card">
+          <div class="brand-logo-fake brand-logo-blue">AZ</div>
+          <strong>Aqua Zen</strong>
+          <span>Spa y bienestar</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-logo-fake brand-logo-dark">EN</div>
+          <strong>ElectroNow</strong>
+          <span>Tecno y electro</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-logo-fake brand-logo-pink">UW</div>
+          <strong>Urban Wear</strong>
+          <span>Moda y accesorios</span>
+        </article>
+        <article class="brand-card">
+          <div class="brand-logo-fake brand-logo-green">CB</div>
+          <strong>Casa Bosque</strong>
+          <span>Estadías</span>
+        </article>
+      </div>
+
+      <div class="promo-banner">
+        <div>
+          <strong>Semana VAUCHIS</strong>
+          <span>Vouchers seleccionados con beneficios exclusivos y descuentos por tiempo limitado.</span>
+        </div>
+        <div class="promo-tag">Hasta -30%</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Vouchers populares</div>
+        <a href="#" class="section-link">Más vendidos</a>
+      </div>
+      <div class="cards">
+        <article class="product-card">
+          <div class="product-cover cover-pink">
+            <div class="voucher-brand">Aqua Zen</div>
+            <div class="discount-badge">-20%</div>
+          </div>
+          <div class="product-body">
+            <div class="meta-row"><span>Spa • Experiencias</span><span>4.8 ★</span></div>
+            <h3 class="product-title">Voucher Spa Premium</h3>
+            <div class="product-desc">Circuito hídrico, masaje y relax para una experiencia completa de bienestar.</div>
+            <div class="price-row">
+              <div class="price-block">
+                <div class="old-price">$52.000</div>
+                <small>Precio final</small>
+                <div class="price">$42.000</div>
+              </div>
+              <button class="buy-btn">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-cover cover-dark">
+            <div class="voucher-brand">ElectroNow</div>
+            <div class="top-badge">TOP</div>
+          </div>
+          <div class="product-body">
+            <div class="meta-row"><span>Electro • Productos</span><span>Envío digital</span></div>
+            <h3 class="product-title">Voucher Tecnología</h3>
+            <div class="product-desc">Ideal para regalar gadgets, audio y pequeños electrodomésticos de marcas asociadas.</div>
+            <div class="price-row">
+              <div class="price-block">
+                <small>Desde</small>
+                <div class="price">$50.000</div>
+              </div>
+              <button class="buy-btn">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-cover cover-blue">
+            <div class="voucher-brand">Urban Wear</div>
+            <div class="discount-badge">Nuevo</div>
+          </div>
+          <div class="product-body">
+            <div class="meta-row"><span>Moda • Productos</span><span>Canje flexible</span></div>
+            <h3 class="product-title">Voucher Moda</h3>
+            <div class="product-desc">Prendas, calzado y accesorios en una experiencia de compra simple y rápida.</div>
+            <div class="price-row">
+              <div class="price-block">
+                <small>Desde</small>
+                <div class="price">$30.000</div>
+              </div>
+              <button class="buy-btn">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-cover cover-green">
+            <div class="voucher-brand">Casa Bosque</div>
+            <div class="discount-badge">-15%</div>
+          </div>
+          <div class="product-body">
+            <div class="meta-row"><span>Turismo • Estadías</span><span>Limitado</span></div>
+            <h3 class="product-title">Escapada fin de semana</h3>
+            <div class="product-desc">Una opción ideal para regalar o disfrutar una experiencia de descanso para dos personas.</div>
+            <div class="price-row">
+              <div class="price-block">
+                <div class="old-price">$112.000</div>
+                <small>Promo VAUCHIS</small>
+                <div class="price">$95.000</div>
+              </div>
+              <button class="buy-btn">Comprar</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="section-title">Comprá como quieras</div>
+      </div>
+      <div class="mini-grid">
+        <article class="mini-card">
+          <strong>Para regalar</strong>
+          <span>Completás datos del destinatario y enviás un voucher con QR.</span>
+        </article>
+        <article class="mini-card">
+          <strong>Para usar vos</strong>
+          <span>Comprás desde el celu y lo canjeás directo en la marca asociada.</span>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active">Inicio</a>
+    <a href="#" class="nav-item">Categorías</a>
+    <a href="#" class="nav-item">Carrito</a>
+    <a href="#" class="nav-item">Cuenta</a>
+  </nav>
+</body>
+</html>
