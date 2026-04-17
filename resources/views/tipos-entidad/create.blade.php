@@ -26,7 +26,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('organizacion.store') }}">
+    <form method="POST" action="{{ route('tipos-entidad.store') }}">
         @csrf
 
         <!-- CARD -->

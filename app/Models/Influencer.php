@@ -17,6 +17,9 @@ class Influencer extends Model
         'inf_nombre',
         'inf_apellido',
         'inf_nombre_fantasia',
+        'pais_id',
+        'provincia_id',
+        'inf_ciudad',
         'inf_instagram',
         'inf_facebook',
         'inf_whatsapp',
@@ -36,5 +39,9 @@ class Influencer extends Model
         'inf_usu_mod',
         'inf_fecha_baja',
         'inf_usu_baja',
+    ];
+
+    protected $casts = [
+        'inf_fecha_alta' => 'datetime',
     ];
 }

@@ -1,240 +1,533 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Voucher</title>
+@extends('layouts.app')
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@section('title', 'Nuevo tipo de entidad')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/vouchers/vouchers.css') }}">
+@endpush
 
-    <link rel="stylesheet" href="{{ asset('css/vouchers/create.css') }}">
-</head>
-<body>
-    <div class="voucher-page">
-        <div class="container-fluid px-0">
-            <div class="voucher-shell">
+@section('content')
 
-                <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm sticky-top">
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-                            <img src="{{ asset('images/logo-vauchis.jpg') }}" alt="Vauchis" height="40">
-                        </a>
+@include('partials.navbar')
 
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+<div class="container py-3">
+    <section class="vch-hero">
+        <div class="vch-hero__content">
+            <h1 class="vch-title">Nuevo voucher</h1>
 
-                        <div class="collapse navbar-collapse" id="mainNavbar">
-                            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
-                                <li class="nav-item"><a class="nav-link fw-semibold" href="#">Inicio</a></li>
-                                <li class="nav-item"><a class="nav-link fw-semibold" href="#como-funciona">Cómo funciona</a></li>
-                                <li class="nav-item"><a class="nav-link fw-semibold" href="#marcas">Marcas</a></li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle fw-semibold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Admin
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('commerces.index') }}">
-                                                Comercios
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="{{-- {{ route('vouchers.index') }} --}}">
-                                                Vouchers
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+            <div class="vch-hero-wave vch-hero-wave--one"></div>
+            <div class="vch-hero-wave vch-hero-wave--two"></div>
 
-                                <li class="nav-item">
-                                    <a href="{{ route('login') }}" class="btn btn-primary px-4 rounded-pill">Ingresar</a>
-                                </li>
-                            </ul>
+            <span class="vch-dot vch-dot--pink-left"></span>
+            <span class="vch-dot vch-dot--blue-left"></span>
+            <span class="vch-dot vch-dot--yellow"></span>
+            <span class="vch-dot vch-dot--blue"></span>
+            <span class="vch-dot vch-dot--green"></span>
+            <span class="vch-dot vch-dot--pink"></span>
+            <span class="vch-dot vch-dot--blue-small"></span>
+        </div>
+    </section>
+
+    <form method="POST" action="{{ route('vouchers.store') }}" enctype="multipart/form-data" id="form_main">
+        @csrf
+
+        <!-- CARD -->
+        <div class="card card-custom p-3 mb-3">
+
+            <h6 class="fw-bold mb-3">Datos del voucher</h6>
+
+            <div class="row g-4">
+
+                <div class="col-12">
+                    <label class="form-label required-label">Nombre publico:</label>
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre publico" required>
+
+                    @error('f_nombre')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- NOMBRE -->
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Entidad:</label>
+                    <select name="f_ent_id" class="form-select field-required" required>
+                        <option value="">Selecciona la Entidad</option>
+                        @foreach($entidades as $entidad)
+                            <option value="{{ $entidad['id'] }}">{{ $entidad['nombre'] }} - {{ $entidad['direccion'] }}</option>
+                        @endforeach
+                    </select>
+                    @error('f_ent_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Influencer:</label>
+                    <select name="f_inf_id" class="form-select field-required" required>
+                        <option value="">Selecciona el Influencer</option>
+                        @foreach($influencers as $id => $nombre)
+                            <option value="{{ $id }}">{{ $nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('f_inf_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Modalidad:</label>
+                    <select name="f_mod_id" class="form-select field-required" required>
+                        <option value="">Selecciona el Modalidad</option>
+                        @foreach($modalidades as $modalidad)
+                            <option value="{{ $modalidad['mod_id'] }}">{{ $modalidad['mod_codigo'] }} - {{ $modalidad['mod_nombre'] }}</option>
+                        @endforeach
+                    </select>
+                    @error('f_mod_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Categoría:</label>
+                    <select name="f_cv_id" class="form-select field-required" required>
+                        <option value="">Selecciona el Categoria</option>
+                        @foreach($categorias as $id => $nombre)
+                            <option value="{{ $id }}">{{ $nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('f_cv_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto total:</label>
+                    <input type="text" name="f_monto_total" class="form-control field-required" value="{{ old('f_monto_total') }}" placeholder="1.01" required>
+
+                    @error('f_monto_total')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock:</label>
+                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0" required>
+
+                    @error('stock')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Fecha de inicio:</label>
+                    <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy" required>
+                    <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
+
+                    @error('f_fecha_ini')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Fecha de vencimiento:</label>
+                    <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy" required>
+                    <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
+
+                    @error('f_fecha_fin')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Permite personalización</label>
+                    <select name="f_permite_personalizacion" class="form-select field-required" required>
+                        <option value="0">NO</option>
+                        <option value="1">SI</option>
+                    </select>
+                    @error('f_permite_personalizacion')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Descripcion:</label>
+                    <textarea id="description" name="description" rows="4" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher.">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Terminos y condiciones:</label>
+                    <textarea id="terms" name="terms" rows="4" class="form-control voucher-textarea" placeholder="Términos y condiciones&#10;Incluye aqui los terminos y condiciones para este voucher (opcional).">{{ old('terms') }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Banners:</label>
+                    <div id="banners-wrapper">
+                        <div class="banner-item mb-2">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-md-10">
+                                    <input type="file" name="banners[]" class="form-control field-required" required>
+                                </div>
+                                <div class="col-md-2">
+                                    {{-- El primero no se puede eliminar --}}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </nav>
 
-                <section class="voucher-hero">
+                    @error('banners')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
 
-                    <h1 class="voucher-title">Crear Voucher</h1>
+                    @error('banners.*')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
 
-                    <p class="voucher-subtitle">
-                        Completa los siguientes campos para crear un nuevo voucher
-                        dentro de la plataforma Vauchis.
-                    </p>
-
-                    <span class="voucher-hero-wave voucher-hero-wave--one"></span>
-                    <span class="voucher-hero-wave voucher-hero-wave--two"></span>
-
-                    <span class="voucher-dot voucher-dot--yellow"></span>
-                    <span class="voucher-dot voucher-dot--green"></span>
-                    <span class="voucher-dot voucher-dot--pink"></span>
-                    <span class="voucher-dot voucher-dot--blue"></span>
-
-                    <span class="voucher-dot voucher-dot--left-pink"></span>
-                    <span class="voucher-dot voucher-dot--left-blue"></span>
-                    <span class="voucher-dot voucher-dot--right-blue"></span>
-                </section>
-
-                <section class="voucher-form-section">
-                    <div class="voucher-card">
-                        <form action="{{ route('vouchers.store') }}" method="POST" class="voucher-form">
-                            @csrf
-
-                            <div class="mb-4">
-                                <label class="voucher-label" for="commerce_id">Comercio</label>
-                                <div class="voucher-field voucher-field--icon">
-                                    <i class="bi bi-search"></i>
-                                    <select id="commerce_id" name="commerce_id" class="form-select voucher-control">
-                                        <option value="">Selecciona el comercio</option>
-                                        @foreach(($commerces ?? []) as $commerce)
-                                            <option value="{{ $commerce->id }}">{{ $commerce->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="category_id">Categoría de voucher <span>*</span></label>
-                                    <div class="voucher-field voucher-field--icon">
-                                        <i class="bi bi-briefcase-fill voucher-icon-blue"></i>
-                                        <select id="category_id" name="category_id" class="form-select voucher-control">
-                                            <option value="">Selecciona la categoría de voucher</option>
-                                            @foreach(($categories ?? []) as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="influencer_id">Influencer (opcional)</label>
-                                    <select id="influencer_id" name="influencer_id" class="form-select voucher-control">
-                                        <option value="">Selecciona un influencer</option>
-                                        @foreach(($influencers ?? []) as $influencer)
-                                            <option value="{{ $influencer->id }}">{{ $influencer->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="name">Nombre del voucher <span>*</span></label>
-                                    <input type="text" id="name" name="name" class="form-control voucher-control">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="short_description">Descripción <span>*</span></label>
-                                    <input type="text" id="short_description" name="short_description" class="form-control voucher-control">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="type">Tipo o modalidad <span>*</span></label>
-                                    <div class="voucher-field voucher-field--icon">
-                                        <i class="bi bi-globe-americas voucher-icon-green"></i>
-                                        <select id="type" name="type" class="form-select voucher-control">
-                                            <option value="">Selecciona la modalidad del voucher</option>
-                                            <option value="fisico">Físico</option>
-                                            <option value="digital">Digital</option>
-                                            <option value="codigo">Código</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="fixed_amount_top">Monto fijo <span>*</span></label>
-                                    <div class="input-group voucher-money-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="number" step="0.01" min="0" id="fixed_amount_top" name="fixed_amount_top" value="0.00" class="form-control voucher-control">
-                                        <span class="input-group-text">USD</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="fixed_amount">Monto fijo <span>*</span></label>
-                                    <div class="input-group voucher-money-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="number" step="0.01" min="0" id="fixed_amount" name="fixed_amount" value="0.00" class="form-control voucher-control">
-                                        <span class="input-group-text">USD</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="promo_price">Precio promocional <span>*</span></label>
-                                    <div class="input-group voucher-money-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="number" step="0.01" min="0" id="promo_price" name="promo_price" value="0.00" class="form-control voucher-control">
-                                        <span class="input-group-text">USD</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="currency">Moneda <span>*</span></label>
-                                    <div class="voucher-field voucher-field--icon">
-                                        <span class="voucher-currency-icon"></span>
-                                        <select id="currency" name="currency" class="form-select voucher-control">
-                                            <option value="MXN">MXN</option>
-                                            <option value="USD">USD</option>
-                                            <option value="ARS">ARS</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 d-flex align-items-center">
-                                    <div class="form-check voucher-check mt-md-4 pt-md-2">
-                                        <input class="form-check-input" type="checkbox" id="allow_customization" name="allow_customization" value="1">
-                                        <label class="form-check-label" for="allow_customization">
-                                            Permite personalización
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="stock">Stock</label>
-                                    <input type="number" min="0" id="stock" name="stock" value="0" class="form-control voucher-stock-input">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="voucher-label" for="start_date">Fecha de inicio <span>*</span></label>
-                                    <input type="text" id="start_date" name="start_date" placeholder="dd/mm/yyyy" class="form-control voucher-date-input">
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="voucher-featured-row">
-                                        <span class="voucher-label mb-0">Destacado</span>
-                                        <div class="form-check form-switch voucher-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="featured" name="featured" value="1">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <textarea id="description" name="description" rows="4" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher."></textarea>
-                                </div>
-
-                                <div class="col-12">
-                                    <textarea id="terms" name="terms" rows="4" class="form-control voucher-textarea" placeholder="Términos y condiciones&#10;Incluye aqui los terminos y condiciones para este voucher (opcional)."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="voucher-actions">
-                                <a href="{{ url()->previous() }}" class="btn voucher-btn-cancel">Cancelar</a>
-                                <button type="submit" class="btn voucher-btn-submit">Crear Voucher</button>
-                            </div>
-                        </form>
+                    <div class="mt-2 text-end">
+                        <button type="button" class="btn btn-primary" onclick="addBanner()">
+                            Agregar banner
+                        </button>
                     </div>
-                </section>
+                </div>
 
+                <!-- OBSERVACIONES -->
+                <div class="col-12">
+                    <label class="form-label">Observaciones internas</label>
+                    <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
+
+                    @error('observaciones')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        <div class="card card-custom p-3 mb-3">
+            <h6 class="fw-bold mb-2">Etiquetas</h6>
+
+            <p class="text-muted small mb-3">
+                Seleccioná etiquetas existentes o creá nuevas para este voucher.
+            </p>
+
+            {{-- NUEVA ETIQUETA --}}
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Nueva etiqueta</label>
+                <div class="d-flex gap-2">
+                    <input
+                        type="text"
+                        id="nueva-etiqueta-input"
+                        class="form-control"
+                        placeholder="Ej: Promoción, Regalo, Gourmet"
+                    >
+                    <button type="button" class="btn btn-primary" onclick="agregarNuevaEtiqueta()">
+                        Agregar
+                    </button>
+                </div>
+            </div>
+
+            {{-- SELECCIONADAS --}}
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Etiquetas seleccionadas</label>
+
+                <div id="selected-etiquetas" class="chips-box chips-box--selected">
+                    <span class="chips-empty-text">No hay etiquetas seleccionadas.</span>
+                </div>
+
+                {{-- INPUTS HIDDEN EXISTENTES --}}
+                <div id="etiquetas-hidden-inputs"></div>
+
+                {{-- INPUTS HIDDEN NUEVAS --}}
+                <div id="etiquetas-nuevas-hidden-inputs"></div>
+            </div>
+
+            {{-- DISPONIBLES --}}
+            <div>
+                <label class="form-label fw-semibold">Etiquetas disponibles</label>
+
+                <div class="chips-box">
+                    @foreach($etiquetasDisponibles as $etiqueta)
+                        <button
+                            type="button"
+                            class="chip-option"
+                            data-id="{{ $etiqueta->eti_id }}"
+                            data-name="{{ $etiqueta->eti_nombre }}"
+                            onclick="addEtiquetaExistente(this)"
+                        >
+                            {{ $etiqueta->eti_nombre }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            @error('etiquetas')
+                <div class="text-required mt-2">{{ $message }}</div>
+            @enderror
+
+            @error('etiquetas.*')
+                <div class="text-required mt-2">{{ $message }}</div>
+            @enderror
+
+            @error('etiquetas_nuevas')
+                <div class="text-required mt-2">{{ $message }}</div>
+            @enderror
+
+            @error('etiquetas_nuevas.*')
+                <div class="text-required mt-2">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex justify-content-between">
+            <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
+                Cancelar
+            </a>
+
+            <button type="submit" class="btn btn-success" id="btn_guardar">
+                Guardar
+            </button>
+        </div>
+
+    </form>
+
+</div>
+@push('scripts')
+<script>
+    function addBanner() {
+        const wrapper = document.getElementById('banners-wrapper');
+
+        const item = document.createElement('div');
+        item.classList.add('banner-item', 'mb-2');
+
+        item.innerHTML = `
+            <div class="row g-2 align-items-center">
+                <div class="col-md-10">
+                    <input type="file" name="banners[]" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger w-100" onclick="removeBanner(this)">
+                        Quitar
+                    </button>
+                </div>
+            </div>
+        `;
+
+        wrapper.appendChild(item);
+    }
+
+    function removeBanner(button) {
+        const item = button.closest('.banner-item');
+        if (item) {
+            item.remove();
+        }
+    }
+
+    $(document).ready(function () {
+        let fpFechaFin = $("#f_fecha_fin_lab").flatpickr({
+            dateFormat: "d/m/Y",
+            altInput: false,
+            locale: "es",
+            onChange: function (selectedDates) {
+                let fecha = selectedDates[0];
+
+                if (fecha) {
+                    let yyyy = fecha.getFullYear();
+                    let mm = String(fecha.getMonth() + 1).padStart(2, '0');
+                    let dd = String(fecha.getDate()).padStart(2, '0');
+
+                    $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
+
+                    fpFechaIni[0].set("maxDate", fecha);
+
+                    let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
+                    if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
+                        fpFechaIni[0].clear();
+                        $("#f_fecha_ini").val("");
+                    }
+                } else {
+                    $("#f_fecha_fin").val("");
+                }
+            }
+        });
+
+        let fpFechaIni = $("#f_fecha_ini_lab").flatpickr({
+            dateFormat: "d/m/Y",
+            altInput: false,
+            locale: "es",
+            onChange: function (selectedDates) {
+                let fecha = selectedDates[0];
+
+                if (fecha) {
+                    let yyyy = fecha.getFullYear();
+                    let mm = String(fecha.getMonth() + 1).padStart(2, '0');
+                    let dd = String(fecha.getDate()).padStart(2, '0');
+
+                    $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
+
+                    // La fecha fin no puede ser menor a la fecha inicio
+                    fpFechaFin[0].set("minDate", fecha);
+
+                    // Si la fecha fin actual quedó inválida, la limpiamos
+                    let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
+                    if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
+                        fpFechaFin[0].clear();
+                        $("#f_fecha_fin").val("");
+                    }
+                } else {
+                    $("#f_fecha_ini").val("");
+                    fpFechaFin[0].set("minDate", null);
+                }
+            }
+        });
+    });
+
+</script>
+<script>
+    let etiquetasExistentes = @json(old('etiquetas', $etiquetasSeleccionadas ?? []));
+    let etiquetasNuevas = @json(old('etiquetas_nuevas', []));
+
+    function normalizarEtiquetasExistentes() {
+        if (!Array.isArray(etiquetasExistentes)) {
+            etiquetasExistentes = [];
+            return;
+        }
+
+        etiquetasExistentes = etiquetasExistentes.map(item => {
+            // Si viene como objeto {id, name}
+            if (typeof item === 'object' && item !== null) {
+                return {
+                    id: Number(item.id),
+                    name: item.name
+                };
+            }
+
+            // Si viene solo como id desde old()
+            const boton = document.querySelector(`.chip-option[data-id="${item}"]`);
+            return {
+                id: Number(item),
+                name: boton ? boton.dataset.name : `Etiqueta ${item}`
+            };
+        });
+    }
+
+    function renderEtiquetas() {
+        const box = document.getElementById('selected-etiquetas');
+        const hiddenExistentes = document.getElementById('etiquetas-hidden-inputs');
+        const hiddenNuevos = document.getElementById('etiquetas-nuevas-hidden-inputs');
+
+        box.innerHTML = '';
+        hiddenExistentes.innerHTML = '';
+        hiddenNuevos.innerHTML = '';
+
+        if (etiquetasExistentes.length === 0 && etiquetasNuevas.length === 0) {
+            box.innerHTML = '<span class="chips-empty-text">No hay etiquetas seleccionadas.</span>';
+        }
+
+        // EXISTENTES
+        etiquetasExistentes.forEach(item => {
+            const chip = document.createElement('span');
+            chip.className = 'chip-selected';
+            chip.innerHTML = `
+                ${item.name}
+                <button type="button" class="chip-remove-btn" onclick="removeEtiquetaExistente(${item.id})">&times;</button>
+            `;
+            box.appendChild(chip);
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'etiquetas[]';
+            input.value = item.id;
+            hiddenExistentes.appendChild(input);
+        });
+
+        // NUEVAS
+        etiquetasNuevas.forEach((nombre, index) => {
+            const chip = document.createElement('span');
+            chip.className = 'chip-selected';
+            chip.innerHTML = `
+                ${nombre}
+                <button type="button" class="chip-remove-btn" onclick="removeEtiquetaNueva(${index})">&times;</button>
+            `;
+            box.appendChild(chip);
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'etiquetas_nuevas[]';
+            input.value = nombre;
+            hiddenNuevos.appendChild(input);
+        });
+
+        actualizarEtiquetasDisponibles();
+    }
+
+    function addEtiquetaExistente(button) {
+        const id = Number(button.dataset.id);
+        const name = button.dataset.name;
+
+        if (etiquetasExistentes.some(e => e.id === id)) {
+            return;
+        }
+
+        etiquetasExistentes.push({ id, name });
+        renderEtiquetas();
+    }
+
+    function removeEtiquetaExistente(id) {
+        etiquetasExistentes = etiquetasExistentes.filter(e => e.id !== id);
+        renderEtiquetas();
+    }
+
+    function agregarNuevaEtiqueta() {
+        const input = document.getElementById('nueva-etiqueta-input');
+        const nombre = input.value.trim();
+
+        if (!nombre) {
+            return;
+        }
+
+        const yaExisteNueva = etiquetasNuevas.some(
+            e => e.toLowerCase() === nombre.toLowerCase()
+        );
+
+        const yaExisteSeleccionada = etiquetasExistentes.some(
+            e => e.name.toLowerCase() === nombre.toLowerCase()
+        );
+
+        const yaExisteDisponible = Array.from(document.querySelectorAll('.chip-option')).some(
+            btn => btn.dataset.name.toLowerCase() === nombre.toLowerCase()
+        );
+
+        if (yaExisteNueva || yaExisteSeleccionada || yaExisteDisponible) {
+            input.value = '';
+            return;
+        }
+
+        etiquetasNuevas.push(nombre);
+        input.value = '';
+        renderEtiquetas();
+    }
+
+    function removeEtiquetaNueva(index) {
+        etiquetasNuevas.splice(index, 1);
+        renderEtiquetas();
+    }
+
+    function actualizarEtiquetasDisponibles() {
+        const botones = document.querySelectorAll('.chip-option');
+
+        botones.forEach(btn => {
+            const id = Number(btn.dataset.id);
+            const seleccionada = etiquetasExistentes.some(e => e.id === id);
+
+            btn.classList.toggle('is-disabled', seleccionada);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        normalizarEtiquetasExistentes();
+        renderEtiquetas();
+    });
+</script>
+@endpush
+@endsection

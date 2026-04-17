@@ -9,50 +9,14 @@ class TipoEntidadController extends Controller
 {
     public function index()
     {
-        $tipos = collect([
-            [
-                'nombre' => 'Empresa',
-                'descripcion' => 'Personas jurídicas y empresas registradas.',
-                'fecha' => '15/01/2024',
-                'status' => 'Activo',
-                'icono' => 'bi-building'
-            ],
-            [
-                'nombre' => 'Persona Natural',
-                'descripcion' => 'Personas naturales con identificación.',
-                'fecha' => '22/02/2024',
-                'status' => 'Activo',
-                'icono' => 'bi-person'
-            ],
-            [
-                'nombre' => 'Comercio',
-                'descripcion' => 'Negocios y comercios asociados.',
-                'fecha' => '10/03/2024',
-                'status' => 'Activo',
-                'icono' => 'bi-shop'
-            ],
-            [
-                'nombre' => 'Institución Educativa',
-                'descripcion' => 'Centros educativos y universidades.',
-                'fecha' => '05/04/2024',
-                'status' => 'Activo',
-                'icono' => 'bi-bank'
-            ],
-            [
-                'nombre' => 'Organización Sin Fines de Lucro',
-                'descripcion' => 'Fundaciones y organizaciones sociales.',
-                'fecha' => '18/04/2024',
-                'status' => 'Inactivo',
-                'icono' => 'bi-heart-pulse'
-            ],
-            [
-                'nombre' => 'Entidad Gubernamental',
-                'descripcion' => 'Entidades estatales y gubernamentales.',
-                'fecha' => '30/04/2024',
-                'status' => 'Activo',
-                'icono' => 'bi-building-gear'
-            ],
-        ]);
+        $tipos = TipoEntidad::orderBy('tipo_ent_id','desc')
+            ->get([
+                'tipo_ent_id', 
+                'tipo_ent_nombre', 
+                'tipo_ent_observacion', 
+                'tipo_ent_estado', 
+                'tipo_ent_fecha_alta',
+            ]);
 
         return view('tipos-entidad.index', compact('tipos'));
     }
@@ -64,18 +28,74 @@ class TipoEntidadController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'observaciones' => 'nullable|string',
-        ]);
+        try {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'observaciones' => 'nullable|string',
+            ]);
 
-        TipoEntidad::create([
-            'nombre' => $request->nombre,
-            'observaciones' => $request->observaciones,
-        ]);
+            TipoEntidad::create([
+                'tipo_ent_nombre' => $request->nombre,
+                'tipo_ent_observacion' => $request->observaciones,
+                'tipo_ent_fecha_alta' => now(),
+                'tipo_ent_usu_alta' => '1',
+            ]);
 
-        return redirect()
-            ->route('tipos-entidad.index')
-            ->with('success', 'Tipo de entidad creado correctamente');
+            return redirect()
+                ->route('tipos-entidad.index')
+                ->with('success', 'Tipo de entidad creado correctamente');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+    public function edit($id)
+    {
+        $tipo = TipoEntidad::findOrFail($id);
+
+        return view('tipos-entidad.edit', compact('tipo'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'observaciones' => 'nullable|string',
+            ]);
+
+            $tipo = TipoEntidad::findOrFail($id);
+
+            $tipo->update([
+                'tipo_ent_nombre' => $request->nombre,
+                'tipo_ent_observacion' => $request->observaciones,
+            ]);
+
+            return redirect()
+                ->route('tipos-entidad.index')
+                ->with('success', 'Tipo de entidad actualizado correctamente');
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $tipo_entidad = TipoEntidad::findOrFail($id);
+
+            $tipo_entidad->update([
+                'tipo_ent_estado' => 0,
+                'tipo_ent_fecha_baja' => now(),
+                'tipo_ent_usu_baja' => 1,
+            ]);
+
+            return redirect()
+                ->route('tipos-entidad.index')
+                ->with('success', 'Tipo entidad eliminado correctamente');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 }

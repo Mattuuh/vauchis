@@ -17,6 +17,12 @@ class Organizacion extends Model
         'org_nombre_fantasia',
         'org_nombre',
         'org_razon_social',
+        'pais_id',
+        'provincia_id',
+        'org_ciudad',
+        'org_codigo_postal',
+        'org_barrio',
+        'org_direccion',
         'org_email1',
         'org_email2',
         'org_telefono1',
@@ -33,5 +39,9 @@ class Organizacion extends Model
         'org_usu_mod',
         'org_fecha_baja',
         'org_usu_baja',
+    ];
+
+    protected $casts = [
+        'org_fecha_alta' => 'datetime',
     ];
 }

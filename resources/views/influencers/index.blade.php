@@ -40,7 +40,7 @@
                     <div class="commerce-toolbar__left">
                         <div class="commerce-search">
                             <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar marca...">
+                            <input type="text" class="form-control" placeholder="Buscar influencer...">
                         </div>
 
                         <button class="btn commerce-filter-btn" type="button">
@@ -59,65 +59,79 @@
                 </div>
 
                 <div class="commerce-table-wrap">
-                    <div class="commerce-table-head d-none d-lg-grid">
-                        <div>TIPO DE ENTIDAD</div>
-                        <div>FECHA DE ALTA</div>
-                        <div>ESTADO</div>
-                        <div>ACCIONES</div>
-                    </div>
+                    <table class="commerce-table">
+                        <thead>
+                            <tr class="commerce-table-head">
+                                <th style="width: 40px">ID</th>
+                                <th style="width: 160px">NOMBRE FANTASIA</th>
+                                <th style="width: 60px">FECHA DE ALTA</th>
+                                <th style="width: 80px">REDES</th>
+                                <th style="width: 60px">ESTADO</th>
+                                <th style="width: 60px">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($influencers as $influencer)
+                                <tr class="commerce-row">
 
-                    @foreach($influencers as $tipo)
-                        <div class="commerce-row">
-                            <div class="commerce-col commerce-col--brand">
-                                <div class="commerce-brand">
-                                    <div class="commerce-brand__logo">
-                                        {{-- <img src="{{ $commerce['logo'] }}" alt="{{ $commerce['name'] }}"> --}}
-                                        <i class="bi {{ $tipo['icono'] }}"></i>
-                                    </div>
-                                    <div class="commerce-brand__text">
-                                        <h3>{{ $tipo['nombre'] }}</h3>
-                                        <p>{{ $tipo['descripcion'] }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                                    <td class="commerce-col" data-label="ID">
+                                        <span class="commerce-mobile-label">ID</span>
+                                        <span>{{ $influencer['inf_id'] }}</span>
+                                    </td>
 
-                            <div class="commerce-col" data-label="Fecha de alta">
-                                <span class="commerce-mobile-label">Fecha de alta</span>
-                                <span>{{ $tipo['fecha'] }}</span>
-                            </div>
+                                    <td class="commerce-col" data-label="Nombre">
+                                        <span class="commerce-mobile-label">Nombre</span>
+                                        <span>{{ $influencer['inf_nombre_fantasia'] }}</span>
+                                    </td>
 
-                            <div class="commerce-col" data-label="Estado">
-                                <span class="commerce-mobile-label">Estado</span>
+                                    <td class="commerce-col" data-label="Fecha de alta">
+                                        <span class="commerce-mobile-label">Fecha de alta</span>
+                                        <span>{{ $influencer['inf_fecha_alta']->format('d/m/Y') }}</span>
+                                    </td>
 
-                                @php
-                                    $statusClass = match($tipo['status']) {
-                                        'activo' => 'is-active',
-                                        'pendiente' => 'is-pending',
-                                        'inactivo' => 'is-inactive',
-                                        default => 'is-active',
-                                    };
-                                @endphp
+                                    <td class="commerce-col" data-label="Redes">
+                                        <span class="commerce-mobile-label">Redes</span>
+                                        <span><i class="bi bi-instagram"></i> {{ $influencer[''] }}</span>
+                                        <span><i class="bi bi-facebook"></i> {{ $influencer[''] }}</span>
+                                        <span><i class="bi bi-tiktok"></i> {{ $influencer[''] }}</span>
+                                        <span><i class="bi bi-twitter-x"></i> {{ $influencer[''] }}</span>
+                                        <span><i class="bi bi-whatsapp"></i> {{ $influencer[''] }}</span>
+                                    </td>
 
-                                <span class="commerce-status {{ $statusClass }}">
-                                    <i class="bi bi-circle-fill"></i>
-                                    {{ ucfirst($tipo['status']) }}
-                                </span>
-                            </div>
+                                    <td class="commerce-col" data-label="Estado">
+                                        <span class="commerce-mobile-label">Estado</span>
 
-                            <div class="commerce-col commerce-col--actions" data-label="Acciones">
-                                <span class="commerce-mobile-label">Acciones</span>
-                                <a href="#" class="btn commerce-edit-btn">
-                                    <i class="bi bi-pencil"></i>
-                                    Editar
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
+                                        @php
+                                            $statusClass = match($influencer['inf_estado']) {
+                                                'activo' => 'is-active',
+                                                'pendiente' => 'is-pending',
+                                                'inactivo' => 'is-inactive',
+                                                default => 'is-active',
+                                            };
+                                        @endphp
+
+                                        <span class="commerce-status {{ $statusClass }}">
+                                            <i class="bi bi-circle-fill"></i>
+                                            {{ ucfirst($influencer['inf_estado']) }}
+                                        </span>
+                                    </td>
+
+                                    <td class="commerce-col commerce-col--actions" data-label="Acciones">
+                                        <span class="commerce-mobile-label">Acciones</span>
+                                        <a href="{{ route('influencers.edit', $influencer->inf_id) }}" class="btn commerce-edit-btn">
+                                            <i class="bi bi-pencil"></i>
+                                            Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $influencers->count() }} de 25 marcas
+                        Mostrando 1 a {{ $influencers->count() }} de 25 registros
                     </div>
 
                     <div class="commerce-pagination">

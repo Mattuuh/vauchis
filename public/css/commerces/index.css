@@ -293,7 +293,6 @@ body {
 }
 
 .commerce-table-head {
-    display: grid;
     grid-template-columns: 2.1fr 2fr 1.1fr 1.5fr 1fr 1fr;
     background: #f2f5fc;
     border-radius: 12px;
@@ -305,7 +304,6 @@ body {
 }
 
 .commerce-row {
-    display: grid;
     grid-template-columns: 2.1fr 2fr 1.1fr 1.5fr 1fr 1fr;
     align-items: center;
     gap: 16px;
@@ -464,30 +462,37 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .commerce-title {
-        font-size: 44px;
-    }
-
-    .commerce-subtitle {
-        font-size: 18px;
-    }
-
     .commerce-card {
         padding: 18px;
     }
 
-    .commerce-table-head {
-        display: none !important;
+    .commerce-table thead {
+        display: none;
     }
 
-    .commerce-row {
-        grid-template-columns: 1fr;
-        gap: 12px;
+    .commerce-table,
+    .commerce-table tbody,
+    .commerce-table tr,
+    .commerce-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .commerce-table tbody tr {
         border: 1px solid #e8eef8;
         border-radius: 16px;
         padding: 18px;
         margin-bottom: 14px;
         background: #fff;
+    }
+
+    .commerce-table tbody td {
+        border: none;
+        padding: 0 0 12px;
+    }
+
+    .commerce-table tbody td:last-child {
+        padding-bottom: 0;
     }
 
     .commerce-mobile-label {
@@ -547,3 +552,64 @@ body {
         align-items: flex-start;
     }
 }
+
+
+.commerce-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.commerce-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.commerce-table thead th {
+    background: #f2f5fc;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #7b86a2;
+    text-align: left;
+    border: none;
+}
+
+.commerce-table thead th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.commerce-table thead th:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.commerce-table tbody td {
+    padding: 18px 16px;
+    border-bottom: 1px solid #edf1f8;
+    vertical-align: middle;
+    font-size: 15px;
+    font-weight: 600;
+    color: #6c7793;
+}
+
+/* anchos similares al grid anterior */
+.commerce-table thead th:nth-child(1),
+.commerce-table tbody td:nth-child(1) { width: 25%; }
+
+.commerce-table thead th:nth-child(2),
+.commerce-table tbody td:nth-child(2) { width: 23%; }
+
+.commerce-table thead th:nth-child(3),
+.commerce-table tbody td:nth-child(3) { width: 13%; }
+
+.commerce-table thead th:nth-child(4),
+.commerce-table tbody td:nth-child(4) { width: 16%; }
+
+.commerce-table thead th:nth-child(5),
+.commerce-table tbody td:nth-child(5) { width: 11%; }
+
+.commerce-table thead th:nth-child(6),
+.commerce-table tbody td:nth-child(6) { width: 12%; }

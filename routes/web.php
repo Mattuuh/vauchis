@@ -12,10 +12,13 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
-use App\Http\Controllers\ComercioController;
+use App\Http\Controllers\EntidadController;
 
-Route::get('/comercios/create', [ComercioController::class, 'create'])->name('comercios.create');
-Route::post('/comercios', [ComercioController::class, 'store'])->name('comercios.store');
+// Route::get('/comercios', [EntidadController::class, 'index'])->name('entidades.index');
+// Route::get('/comercios/create', [EntidadController::class, 'create'])->name('entidades.create');
+// Route::post('/comercios', [EntidadController::class, 'store'])->name('entidades.store');
+Route::resource('entidades', EntidadController::class);
+Route::post('/entidades/{id}/delete', [EntidadController::class, 'delete'])->name('entidades.delete');
 
 
 Route::get('/login', function () { return view('auth.login'); })->name('login');
@@ -89,31 +92,71 @@ Route::post('/reset-password', function (Request $request) {
 
 use App\Http\Controllers\VoucherController;
 
-Route::get('/vouchers/create', [VoucherController::class, 'create'])->name('vouchers.create');
-Route::post('/vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
+// Route::get('/vouchers/create', [VoucherController::class, 'create'])->name('vouchers.create');
+// Route::post('/vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
+Route::resource('vouchers', VoucherController::class);
+Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
 
-
-use App\Http\Controllers\CommerceController;
-
-Route::get('/commercios', [CommerceController::class, 'index'])->name('commerces.index');
+// opcional
+Route::delete('/vouchers/banner/{id}', [VoucherController::class, 'destroyBanner'])->name('vouchers.banner.destroy');
 
 
 use App\Http\Controllers\TipoEntidadController;
 
-Route::get('/tipos-entidad', [TipoEntidadController::class, 'index'])->name('tipos-entidad.index');
-Route::get('/tipos-entidad/create', [TipoEntidadController::class, 'create'])->name('tipos-entidad.create');
-Route::post('/tipos-entidad', [TipoEntidadController::class, 'store'])->name('tipos-entidad.store');
+// Route::get('/tipos-entidad', [TipoEntidadController::class, 'index'])->name('tipos-entidad.index');
+// Route::get('/tipos-entidad/create', [TipoEntidadController::class, 'create'])->name('tipos-entidad.create');
+// Route::post('/tipos-entidad', [TipoEntidadController::class, 'store'])->name('tipos-entidad.store');
+Route::resource('tipos-entidad', TipoEntidadController::class);
+Route::post('/tipos-entidad/{id}/delete', [TipoEntidadController::class, 'delete'])->name('tipos-entidad.delete');
 
 
 use App\Http\Controllers\OrganizacionController;
 
-Route::get('/organizacion', [OrganizacionController::class, 'index'])->name('organizacion.index');
-Route::get('/organizacion/create', [OrganizacionController::class, 'create'])->name('organizacion.create');
-Route::post('/organizacion', [OrganizacionController::class, 'store'])->name('organizacion.store');
+// Route::get('/organizacion', [OrganizacionController::class, 'index'])->name('organizacion.index');
+// Route::get('/organizacion/create', [OrganizacionController::class, 'create'])->name('organizacion.create');
+// Route::post('/organizacion', [OrganizacionController::class, 'store'])->name('organizacion.store');
+Route::resource('organizacion', OrganizacionController::class);
+Route::post('/organizacion/{id}/delete', [OrganizacionController::class, 'delete'])->name('organizacion.delete');
 
 
 use App\Http\Controllers\InfluencerController;
 
-Route::get('/influencers', [InfluencerController::class, 'index'])->name('influencers.index');
-Route::get('/influencers/create', [InfluencerController::class, 'create'])->name('influencers.create');
-Route::post('/influencers', [InfluencerController::class, 'store'])->name('influencers.store');
+// Route::get('/influencers', [InfluencerController::class, 'index'])->name('influencers.index');
+// Route::get('/influencers/create', [InfluencerController::class, 'create'])->name('influencers.create');
+// Route::post('/influencers', [InfluencerController::class, 'store'])->name('influencers.store');
+// Route::get('/influencers/{id}/edit', [InfluencerController::class, 'edit'])->name('influencers.edit');
+// Route::put('/influencers/{id}', [InfluencerController::class, 'update'])->name('influencers.update');
+Route::resource('influencers', InfluencerController::class);
+Route::post('/influencers/{id}/delete', [InfluencerController::class, 'delete'])->name('influencers.delete');
+
+
+use App\Http\Controllers\RubroController;
+
+// Route::get('/rubros', [RubroController::class, 'index'])->name('rubros.index');
+// Route::get('/rubros/create', [RubroController::class, 'create'])->name('rubros.create');
+// Route::post('/rubros', [RubroController::class, 'store'])->name('rubros.store');
+// Route::get('/rubros/{id}/edit', [RubroController::class, 'edit'])->name('rubros.edit');
+// Route::put('/rubros/{id}', [RubroController::class, 'update'])->name('rubros.update');
+Route::resource('rubros', RubroController::class);
+Route::post('/rubros/{id}/delete', [RubroController::class, 'delete'])->name('rubros.delete');
+
+
+use App\Http\Controllers\ModalidadController;
+
+Route::resource('modalidades', ModalidadController::class);
+Route::post('/modalidades/{id}/delete', [ModalidadController::class, 'delete'])->name('modalidades.delete');
+
+
+use App\Http\Controllers\VoucherEmisionController;
+
+Route::resource('voucher_emisiones', VoucherEmisionController::class);
+Route::get('/voucher_emisiones/{id}', [VoucherEmisionController::class, 'show'])->name('voucher_emisiones.show');
+Route::get('/voucher_emisiones/{id}/pdf', [VoucherEmisionController::class, 'pdf'])->name('voucher_emisiones.pdf');
+
+
+use App\Http\Controllers\VoucherPlantillaController;
+
+Route::resource('voucher_plantillas', VoucherPlantillaController::class);
+Route::get('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'builder'])->name('voucher_plantillas.builder');
+Route::post('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'saveBuilder'])->name('voucher_plantillas.builder.save');
+Route::get('/voucher_plantillas/{id}/preview', [VoucherPlantillaController::class, 'preview'])->name('voucher_plantillas.preview');

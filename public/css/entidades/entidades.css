@@ -1,0 +1,285 @@
+body {
+    background: #f5f7fb;
+}
+
+.card-custom {
+    border-radius: 12px;
+}
+
+.btn-primary {
+    background-color: #2f6fed;
+    border: none;
+}
+
+.btn-success {
+    background-color: #38b593;
+    border: none;
+}
+
+.logo {
+    height: 40px;
+}
+
+.required-label::after {
+    content: ' *';
+    color: #dc3545;
+    font-weight: 700;
+}
+
+.sucursal-card {
+    border: 1px solid #d9e1ec;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.sucursal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.btn-delete-sucursal {
+    border: none;
+    background: transparent;
+    color: #dc3545;
+    font-weight: 600;
+    padding: 0;
+}
+
+.btn-delete-sucursal:hover {
+    color: #b02a37;
+}
+
+.field-required {
+    border-left: 3px solid #dc3545;
+}
+
+.text-required {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.tags-selected-box,
+.tags-available-box {
+    border: 1px solid #d9e1ec;
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px;
+    min-height: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.tags-selected-box {
+    background: #fbfcff;
+}
+
+.tags-empty-text {
+    color: #8a94a6;
+    font-size: 0.95rem;
+}
+
+.tag-option,
+.tag-selected {
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.tag-option {
+    border: 1px solid #d7e4ff;
+    background: #eef4ff;
+    color: #2f6fed;
+    cursor: pointer;
+}
+
+.tag-option:hover {
+    background: #e3edff;
+    border-color: #bdd3ff;
+}
+
+.tag-option.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tag-selected {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #cfe0ff;
+    background: #2f6fed;
+    color: #fff;
+}
+
+.tag-remove-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.tag-remove-btn:hover {
+    opacity: 1;
+}
+
+
+.subrubros-selected-box,
+.subrubros-available-box {
+    border: 1px solid #d9e1ec;
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px;
+    min-height: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.subrubros-selected-box {
+    background: #fbfcff;
+}
+
+.subrubros-empty-text {
+    color: #8a94a6;
+    font-size: 0.95rem;
+}
+
+.subrubro-option,
+.subrubro-selected {
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.subrubro-option {
+    border: 1px solid #d7e4ff;
+    background: #eef4ff;
+    color: #2f6fed;
+    cursor: pointer;
+}
+
+.subrubro-option:hover {
+    background: #e3edff;
+    border-color: #bdd3ff;
+}
+
+.subrubro-option.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.subrubro-selected {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #cfe0ff;
+    background: #2f6fed;
+    color: #fff;
+}
+
+.subrubro-remove-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.subrubro-remove-btn:hover {
+    opacity: 1;
+}
+
+.rubros-selected-box,
+.rubros-available-box {
+    border: 1px solid #d9e1ec;
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px;
+    min-height: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.rubros-selected-box {
+    background: #fbfcff;
+}
+
+.rubros-empty-text {
+    color: #8a94a6;
+    font-size: 0.95rem;
+}
+
+.rubro-option,
+.rubro-selected {
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.rubro-option {
+    border: 1px solid #d7e4ff;
+    background: #eef4ff;
+    color: #2f6fed;
+    cursor: pointer;
+}
+
+.rubro-option:hover {
+    background: #e3edff;
+    border-color: #bdd3ff;
+}
+
+.rubro-option.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.rubro-selected {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #cfe0ff;
+    background: #2f6fed;
+    color: #fff;
+}
+
+.rubro-remove-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.rubro-remove-btn:hover {
+    opacity: 1;
+}

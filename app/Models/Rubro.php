@@ -20,5 +20,15 @@ class Rubro extends Model
         'rub_descripcion_corta',
         'rub_estado',
         'rub_estado2',
+        'rub_fecha_alta',
+        'rub_usu_alta',
+        'rub_fecha_mod',
+        'rub_usu_mod',
+        'rub_fecha_baja',
+        'rub_usu_baja',
+    ];
+
+    protected $casts = [
+        'rub_fecha_alta' => 'datetime',
     ];
 }
