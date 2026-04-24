@@ -103,9 +103,16 @@ class EntidadController extends Controller
         //     ],
         // ]);
 
-        $entidades = Entidad::orderBy('ent_id')
+        $entidades = Entidad::with('tipo_entidad')
+            ->with('tipo_responsabilidad')
+            ->withCount('domicilios')
+            ->withCount('vouchersActivos')
+            // ->where('ent_estado', 1)
+            ->orderBy('ent_id', 'desc')
             ->get([
                 'ent_id', 
+                'tipo_ent_id', 
+                'tipo_resp_id', 
                 'ent_nombre_fantasia', 
                 'ent_nombre', 
                 'ent_razon_social', 
@@ -232,6 +239,7 @@ class EntidadController extends Controller
             }
 
             $entId = DB::table('entidades')->insertGetId([
+                'tipo_ent_id' => $request->tipo_entidad_id,
                 'tipo_resp_id' => $request->tipo_resp_id,
                 'tipo_doc_id' => $request->tipo_doc_id,
                 'ent_documento' => $request->com_documento,

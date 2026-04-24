@@ -45,4 +45,20 @@ class Entidad extends Model
     {
         return $this->belongsTo(TipoResponsabilidad::class, 'tipo_resp_id', 'tipo_resp_id');
     }
+
+    public function domicilios()
+    {
+        return $this->hasMany(Entidad_domicilio::class, 'ent_id', 'ent_id');
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class, 'ent_id', 'ent_id');
+    }
+
+    public function vouchersActivos()
+    {
+        return $this->hasMany(Voucher::class, 'ent_id', 'ent_id')
+            ->where('vou_estado', 1);
+    }
 }

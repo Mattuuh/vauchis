@@ -173,71 +173,100 @@
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">País</label>
-                    <select name="f_pais_id" id="f_pais_id" class="form-select pais field-required" required>
-                        <option value="">Selecciona el país</option>
-                        @foreach($paises as $id => $nombre)
-                            <option value="{{ $id }}" {{ old('f_pais_id', $organizacion->pais_id) == $id || $id == 5 ? 'selected' : '' }}>
-                                {{ $nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('f_pais_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                <div class="row g-3">
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Provincia</label>
-                    <select name="f_provincia_id" id="f_provincia_id" class="form-select provincia field-required" required>
-                        <option value="">Selecciona la provincia</option>
-                    </select>
-                    @error('f_provincia_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <!-- COLUMNA IZQUIERDA (FORM) -->
+                    <div class="col-12 col-lg-6">
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Ciudad</label>
-                    <input type="text" name="f_ciudad" class="form-control field-required" value="{{ old('f_ciudad', $organizacion->org_ciudad) }}" required>
-                    @error('f_ciudad')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                        <div class="row g-2">
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Código postal</label>
-                    <input type="text" name="f_codigo_postal" class="form-control" value="{{ old('f_codigo_postal', $organizacion->org_codigo_postal) }}">
-                </div>
+                            <div class="col-12">
+                                <label class="form-label required-label">País</label>
+                                <select name="f_pais_id" id="f_pais_id" class="form-select pais field-required" required>
+                                    <option value="">Selecciona el país</option>
+                                    @foreach($paises as $id => $nombre)
+                                        <option value="{{ $id }}" {{ old('f_pais_id', $organizacion->pais_id) == $id || $id == 5 ? 'selected' : '' }}>
+                                            {{ $nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('f_pais_id')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Barrio</label>
-                    <input type="text" name="f_barrio" class="form-control" value="{{ old('f_barrio', $organizacion->org_barrio) }}">
-                </div>
+                            <div class="col-12">
+                                <label class="form-label required-label">Provincia</label>
+                                <select name="f_provincia_id" id="f_provincia_id" class="form-select provincia field-required" required>
+                                    <option value="">Selecciona la provincia</option>
+                                </select>
+                                @error('f_provincia_id')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Dirección</label>
-                    <input type="text" name="f_direccion" class="form-control field-required" value="{{ old('f_direccion', $organizacion->org_direccion) }}" required>
-                    @error('f_direccion')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                            <div class="col-12">
+                                <label class="form-label required-label">Ciudad</label>
+                                <input type="text" name="f_ciudad" class="form-control field-required" value="{{ old('f_ciudad', $organizacion->org_ciudad) }}" required>
+                                @error('f_ciudad')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Latitud</label>
-                    <input type="text" name="f_latitud" class="form-control" value="{{ old('f_latitud', $organizacion->org_latitud) }}">
-                    @error('f_latitud')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                            <div class="col-12">
+                                <label class="form-label">Código postal</label>
+                                <input type="text" name="f_codigo_postal" class="form-control" value="{{ old('f_codigo_postal', $organizacion->org_codigo_postal) }}">
+                            </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label">Longitud</label>
-                    <input type="text" name="f_longitud" class="form-control" value="{{ old('f_longitud', $organizacion->org_longitud) }}">
-                    @error('f_longitud')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                            <div class="col-12">
+                                <label class="form-label">Barrio</label>
+                                <input type="text" name="f_barrio" class="form-control" value="{{ old('f_barrio', $organizacion->org_barrio) }}">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label required-label">Dirección</label>
+                                <input type="text" name="f_direccion" class="form-control field-required" value="{{ old('f_direccion', $organizacion->org_direccion) }}" required>
+                                @error('f_direccion')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA DERECHA (MAPA) -->
+                    <div class="col-12 col-lg-6">
+
+                        <label class="form-label">Mapa</label>
+
+                        <div class="col-12 col-md-3" hidden>
+                            <input
+                                type="text"
+                                name="f_latitud"
+                                id="f_latitud"
+                                value="{{ old('f_latitud', '-24.782127') }}"
+                                hidden
+                            >
+
+                            <input
+                                type="text"
+                                name="f_longitud"
+                                id="f_longitud"
+                                value="{{ old('f_longitud', '-65.423198') }}"
+                                hidden
+                            >
+                        </div>
+
+                        <div id="map"
+                            style="width: 100%; height: 85%; min-height: 420px; border-radius: 14px; overflow: hidden; border: 1px solid #e5e7eb;">
+                        </div>
+
+                        <small class="text-muted">
+                            Puedes escribir una dirección, arrastrar el pin o hacer click en el mapa.
+                        </small>
+
+                    </div>
+
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -353,6 +382,7 @@
     </form>
 </div>
 
+@push('scripts')
 <script>
     const provincias = @json($provincias);
     const paisSeleccionado = "{{ old('f_pais_id', $organizacion->pais_id) }}";
@@ -481,4 +511,135 @@ $(document).on('click', '#btn_eliminar', function (e) {
     });
 });
 </script>
+<script>
+
+    let map;
+    let marker;
+    let autocomplete;
+    let geocoder;
+
+    async function initMap() {
+        const initialPosition = {
+            lat: parseFloat(document.getElementById('f_latitud').value) || -24.782127,
+            lng: parseFloat(document.getElementById('f_longitud').value) || -65.423198
+        };
+
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+        await google.maps.importLibrary("places");
+
+        geocoder = new google.maps.Geocoder();
+
+        map = new Map(document.getElementById("map"), {
+            center: initialPosition,
+            zoom: 14,
+            mapId: "DEMO_MAP_ID"
+        });
+
+        marker = new AdvancedMarkerElement({
+            map,
+            position: initialPosition,
+            gmpDraggable: true,
+            title: "Ubicación seleccionada"
+        });
+
+        updateLatLngInputs(initialPosition);
+
+        const direccionInput = document.getElementById("f_direccion");
+
+        autocomplete = new google.maps.places.Autocomplete(direccionInput, {
+            fields: ["formatted_address", "geometry", "name"]
+        });
+
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry || !place.geometry.location) {
+                return;
+            }
+
+            const newPosition = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng()
+            };
+
+            marker.position = newPosition;
+            map.setCenter(newPosition);
+            map.setZoom(17);
+
+            if (place.formatted_address) {
+                direccionInput.value = place.formatted_address;
+            }
+
+            updateLatLngInputs(newPosition);
+        });
+
+        marker.addListener("dragend", async () => {
+            const pos = marker.position;
+
+            const newPosition = {
+                lat: pos.lat,
+                lng: pos.lng
+            };
+
+            updateLatLngInputs(newPosition);
+            await updateAddressFromCoordinates(newPosition);
+        });
+
+        map.addListener("click", async (e) => {
+            const clickedPosition = {
+                lat: e.latLng.lat(),
+                lng: e.latLng.lng()
+            };
+
+            marker.position = clickedPosition;
+            updateLatLngInputs(clickedPosition);
+            await updateAddressFromCoordinates(clickedPosition);
+        });
+    }
+
+    function updateLatLngInputs(position) {
+        document.getElementById("f_latitud").value = Number(position.lat).toFixed(6);
+        document.getElementById("f_longitud").value = Number(position.lng).toFixed(6);
+    }
+
+    async function updateAddressFromCoordinates(position) {
+        try {
+            const response = await geocoder.geocode({
+                location: position
+            });
+
+            if (response.results && response.results.length > 0) {
+                document.getElementById("f_direccion").value = response.results[0].formatted_address;
+            }
+        } catch (error) {
+            console.error("No se pudo obtener la dirección desde las coordenadas", error);
+        }
+    }
+</script>
+
+<script>
+    (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+            m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+            u = () => h || (h = new Promise(async (f, n) => {
+                await (a = m.createElement("script"));
+                e.set("key", "{{ config('services.google_maps.api_key') }}");
+                e.set("v", "weekly");
+                e.set("libraries", "places");
+                e.set("callback", c + ".maps." + q);
+                a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                d[q] = f;
+                a.onerror = () => h = n(Error(p + " no se pudo cargar."));
+                m.head.append(a);
+            }));
+        d[l] ? console.warn(p + " solo carga una vez.") :
+            d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
+    })({});
+
+    initMap();
+</script>
+@endpush
 @endsection

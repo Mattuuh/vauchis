@@ -65,9 +65,10 @@
                             <tr class="commerce-table-head">
                                 <th style="width: 50px">ID</th>
                                 <th>MARCA</th>
-                                <th>EMAIL</th>
-                                <th>FECHA DE ALTA</th>
+                                <th>TIPO</th>
+                                <th>CANT. DOMICILIOS</th>
                                 <th>VOUCHERS VINCULADOS</th>
+                                <th>FECHA DE ALTA</th>
                                 <th>ESTADO</th>
                                 <th>ACCIONES</th>
                             </tr>
@@ -75,6 +76,9 @@
 
                         <tbody>
                             @foreach($entidades as $entidad)
+                            {{-- @php
+                                dd($entidad);
+                            @endphp --}}
                                 <tr class="commerce-row">
 
                                     <td class="commerce-col" data-label="ID">
@@ -96,36 +100,35 @@
                                         </div>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Email">
-                                        <span class="commerce-mobile-label">Email</span>
-                                        <span>{{ $entidad['ent_email'] }}</span>
+                                    <td class="commerce-col" data-label="Tipo">
+                                        <span class="commerce-mobile-label">Tipo</span>
+                                        <span>{{ $entidad['tipo_entidad']['tipo_ent_nombre'] }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Fecha de alta">
+                                    <td class="commerce-col text-center" data-label="Domicilios">
+                                        <span class="commerce-mobile-label">Domicilios</span>
+                                        <span class="commerce-badge-count">{{ $entidad['domicilios_count'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col text-center" data-label="Vouchers">
+                                        <span class="commerce-mobile-label">Vouchers</span>
+                                        <span class="commerce-badge-count">{{ $entidad['vouchers_activos_count'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col text-center" data-label="Fecha de alta">
                                         <span class="commerce-mobile-label">Fecha de alta</span>
                                         <span>{{ $entidad['ent_fecha_alta']->format('d/m/Y') }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Vouchers">
-                                        <span class="commerce-mobile-label">Vouchers</span>
-                                        <span class="commerce-badge-count">{{ $entidad['vouchers_count'] }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Estado">
+                                    <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $statusClass = match($entidad['ent_estado']) {
-                                                'activo' => 'is-active',
-                                                'pendiente' => 'is-pending',
-                                                'inactivo' => 'is-inactive',
-                                                default => 'is-active',
-                                            };
+                                            $estado = estado($entidad['ent_estado']);
                                         @endphp
 
-                                        <span class="commerce-status {{ $statusClass }}">
-                                            <i class="bi bi-circle-fill"></i>
-                                            {{ ucfirst($entidad['ent_estado']) }}
+                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
                                         </span>
                                     </td>
 
@@ -133,7 +136,6 @@
                                         <span class="commerce-mobile-label">Acciones</span>
                                         <a href="{{ route('entidades.edit', $entidad->ent_id) }}" class="btn commerce-edit-btn">
                                             <i class="bi bi-pencil"></i>
-                                            Editar
                                         </a>
                                     </td>
                                 </tr>

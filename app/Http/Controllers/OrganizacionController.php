@@ -59,7 +59,8 @@ class OrganizacionController extends Controller
         //     ],
         // ]);
 
-        $organizaciones = Organizacion::orderBy('org_id','desc')
+        $organizaciones = Organizacion::where('org_estado', 1)
+            ->orderBy('org_id','desc')
             ->get([
                 'org_id', 
                 'org_nombre_fantasia', 

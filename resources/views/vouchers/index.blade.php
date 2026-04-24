@@ -114,21 +114,15 @@
                                         <span class="commerce-badge-count">{{ $voucher['vou_stock'] }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Estado">
+                                    <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $statusClass = match($voucher['vou_estado']) {
-                                                'activo' => 'is-active',
-                                                'pendiente' => 'is-pending',
-                                                'inactivo' => 'is-inactive',
-                                                default => 'is-active',
-                                            };
+                                            $estado = estado($voucher['vou_estado']);
                                         @endphp
 
-                                        <span class="commerce-status {{ $statusClass }}">
-                                            <i class="bi bi-circle-fill"></i>
-                                            {{ ucfirst($voucher['vou_estado']) }}
+                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
                                         </span>
                                     </td>
 

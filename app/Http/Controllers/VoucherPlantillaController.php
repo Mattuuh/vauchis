@@ -135,6 +135,25 @@ class VoucherPlantillaController extends Controller
             ->with('success', 'Plantilla actualizada correctamente.');
     }
 
+    public function delete($id)
+    {
+        try {
+            $plantilla = VoucherPlantilla::findOrFail($id);
+
+            $plantilla->update([
+                'vlp_estado' => 0,
+                'vlp_fecha_baja' => now(),
+                'vlp_usu_baja' => 1,
+            ]);
+
+            return redirect()
+                ->route('voucher_plantillas.index')
+                ->with('success', 'Plantilla eliminado correctamente');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
     public function builder($id)
     {
         $plantilla = VoucherPlantilla::findOrFail($id);

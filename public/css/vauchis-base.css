@@ -438,3 +438,13 @@ body {
         width: 100%;
     }
 }
+
+
+.text-required {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+/* .form-select .form-control {
+    color: #1e32c7 !important;
+} */

@@ -30,7 +30,7 @@
                     <select name="tipo_entidad_id" class="form-select field-required" required>
                         <option value="">Selecciona el tipo de entidad</option>
                         @foreach($tiposEntidad as $id => $nombre)
-                            <option value="{{ $id }}" {{ old('tipo_entidad_id', $entidad->tipo_ent_id ?? '') == $id ? 'selected' : '' }}>
+                            <option value="{{ $id }}" {{ old('tipo_entidad_id', $entidad->tipo_ent_id) == $id ? 'selected' : '' }}>
                                 {{ $nombre }}
                             </option>
                         @endforeach

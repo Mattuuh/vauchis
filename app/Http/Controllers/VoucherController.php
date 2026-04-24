@@ -9,6 +9,7 @@ use App\Models\Entidad_domicilio;
 use App\Models\Etiqueta;
 use App\Models\Influencer;
 use App\Models\Modalidad;
+use App\Models\ModalidadCampo;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,19 +24,19 @@ class VoucherController extends Controller
 
     private function validarVoucher(Request $request)
     {
-        return $request->validate([
+        $rules = [
             'f_nombre' => 'required|string|max:255',
 
             'f_ent_id' => 'required|integer',
-            'f_inf_id' => 'required|integer',
-            'f_mod_id' => 'required|integer',
+            'f_inf_id' => 'nullable|integer',
+            'f_mod_id' => 'required|integer|exists:modalidades,mod_id',
             'f_cv_id' => 'required|integer',
 
             'f_monto_total' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
 
             'f_fecha_ini_lab' => 'required|date_format:d/m/Y',
-            'f_fecha_fin_lab' => 'required|date_format:d/m/Y|after_or_equal:f_fecha_ini',
+            'f_fecha_fin_lab' => 'required|date_format:d/m/Y|after_or_equal:f_fecha_ini_lab',
 
             'f_permite_personalizacion' => 'required|in:0,1',
 
@@ -45,14 +46,18 @@ class VoucherController extends Controller
 
             'etiquetas' => 'nullable|array',
             'etiquetas.*' => 'integer|exists:etiquetas,eti_id',
-            
+
             'etiquetas_nuevas' => 'nullable|array',
             'etiquetas_nuevas.*' => 'string|max:100',
 
             'banners' => 'required|array|min:1',
             'banners.0' => 'required|file|mimes:jpg,jpeg,png,webp|max:5120',
             'banners.*' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
-        ], [
+
+            'modalidad_valores' => 'nullable|array',
+        ];
+
+        $messages = [
             'f_nombre.required' => 'Debes ingresar el nombre del voucher.',
             'banners.required' => 'Debes subir al menos un banner.',
             'banners.array' => 'El formato de banners no es válido.',
@@ -60,7 +65,50 @@ class VoucherController extends Controller
             'banners.0.required' => 'El primer banner es obligatorio.',
             'banners.*.mimes' => 'Los banners deben ser archivos jpg, jpeg, png o webp.',
             'banners.*.max' => 'Cada banner puede pesar hasta 5MB.',
-        ]);
+        ];
+
+        if ($request->filled('f_mod_id')) {
+            $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
+                ->where('mca_estado', 1)
+                ->orderBy('mca_orden')
+                ->get();
+
+            foreach ($camposModalidad as $campo) {
+                $field = 'modalidad_valores.' . $campo->mca_codigo;
+                $fieldRules = [];
+
+                if ((int) $campo->mca_requerido === 1) {
+                    $fieldRules[] = 'required';
+                } else {
+                    $fieldRules[] = 'nullable';
+                }
+
+                switch ($campo->mca_tipo) {
+                    case 'number':
+                        $fieldRules[] = 'integer';
+                        break;
+
+                    case 'decimal':
+                    case 'money':
+                        $fieldRules[] = 'numeric';
+                        break;
+
+                    case 'boolean':
+                        $fieldRules[] = 'in:0,1';
+                        break;
+
+                    default:
+                        $fieldRules[] = 'string';
+                        $fieldRules[] = 'max:5000';
+                        break;
+                }
+
+                $rules[$field] = implode('|', $fieldRules);
+                $messages[$field . '.required'] = 'Debes completar el campo "' . $campo->mca_label . '".';
+            }
+        }
+
+        return $request->validate($rules, $messages);
     }
 
     public function index()
@@ -104,32 +152,54 @@ class VoucherController extends Controller
             ->toArray();
 
         $influencers = Influencer::where('inf_estado', 1)
-            ->orderBy('inf_id','desc')
+            ->orderBy('inf_id', 'desc')
             ->pluck('inf_nombre_fantasia', 'inf_id');
 
-        // $modalidades = Modalidad::where('inf_estado', 1)
-        //     ->orderBy('inf_id','desc')
-        //     ->pluck('inf_nombre_fantasia', 'inf_id');
-
-        $modalidades = Modalidad::where('mod_estado', 1)
-            ->orderBy('mod_id','desc')
-            ->get(['mod_nombre', 'mod_codigo', 'mod_id']);
+        $modalidades = Modalidad::with(['campos' => function ($query) {
+                $query->where('mca_estado', 1)
+                    ->orderBy('mca_orden')
+                    ->orderBy('mca_id');
+            }])
+            ->where('mod_estado', 1)
+            ->orderBy('mod_id', 'desc')
+            ->get(['mod_id', 'mod_nombre', 'mod_codigo']);
 
         $categorias = Categoria::where('cv_estado', 1)
-            ->orderBy('cv_id','desc')
+            ->orderBy('cv_id', 'desc')
             ->pluck('cv_nombre', 'cv_id');
 
         $etiquetasDisponibles = Etiqueta::where('eti_estado', 1)
             ->orderBy('eti_nombre')
             ->get(['eti_nombre', 'eti_id']);
 
-        // Idealmente traer datos reales de DB
+        $modalidadesCamposJson = $modalidades
+            ->mapWithKeys(function ($modalidad) {
+                return [
+                    $modalidad->mod_id => $modalidad->campos->map(function ($campo) {
+                        return [
+                            'mca_id' => $campo->mca_id,
+                            'mca_codigo' => $campo->mca_codigo,
+                            'mca_nombre' => $campo->mca_nombre,
+                            'mca_tipo' => $campo->mca_tipo,
+                            'mca_label' => $campo->mca_label,
+                            'mca_placeholder' => $campo->mca_placeholder,
+                            'mca_requerido' => $campo->mca_requerido,
+                            'mca_orden' => $campo->mca_orden,
+                            'mca_opciones' => $campo->mca_opciones,
+                            'mca_ayuda' => $campo->mca_ayuda,
+                        ];
+                    })->values(),
+                ];
+            })
+            ->toJson();
+
         return view('vouchers.create', compact(
             'entidades',
             'influencers',
             'modalidades',
             'categorias',
             'etiquetasDisponibles',
+            'modalidadesCamposJson',
         ));
     }
 
@@ -140,11 +210,17 @@ class VoucherController extends Controller
         DB::beginTransaction();
 
         try {
-
             $usuarioId = Auth::id() ?? 1;
 
+            $entidad = DB::table('entidades_domicilios')
+                ->where('ed_id', $request->f_ent_id)
+                ->get([
+                    'ent_id',
+                ]);
+
             $vouId = DB::table('vouchers')->insertGetId([
-                'ent_id' => $request->f_ent_id,
+                'ent_id' => $entidad->ent_id,
+                'ed_id' => $request->f_ent_id,
                 'tv_id' => null,
                 'cv_id' => $request->f_cv_id,
                 'inf_id' => $request->f_inf_id,
@@ -202,16 +278,33 @@ class VoucherController extends Controller
 
             DB::table('vouchers_detalles')->insert($detalles);
 
+            $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
+                ->where('mca_estado', 1)
+                ->orderBy('mca_orden')
+                ->get();
+
+            foreach ($camposModalidad as $campo) {
+                $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
+
+                if ($campo->mca_tipo === 'boolean') {
+                    $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
+                }
+
+                DB::table('vouchers_modalidad_valores')->insert([
+                    'vou_id' => $vouId,
+                    'mca_id' => $campo->mca_id,
+                    'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
+                    'vmv_estado' => 1,
+                    'vmv_fecha_alta' => now(),
+                    'vmv_usu_alta' => $usuarioId,
+                ]);
+            }
+
             $etiquetasIds = collect($request->etiquetas ?? [])
                 ->map(fn ($id) => (int) $id)
                 ->unique()
                 ->values();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Crear etiquetas nuevas
-            |--------------------------------------------------------------------------
-            */
             if ($request->filled('etiquetas_nuevas')) {
                 foreach ($request->etiquetas_nuevas as $nombreNueva) {
                     $nombreNueva = trim($nombreNueva);
@@ -247,11 +340,6 @@ class VoucherController extends Controller
 
             $etiquetasIds = $etiquetasIds->unique()->values();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Vincular etiquetas al voucher
-            |--------------------------------------------------------------------------
-            */
             if ($etiquetasIds->isNotEmpty()) {
                 $rowsEtiquetas = [];
 
@@ -268,11 +356,6 @@ class VoucherController extends Controller
                 DB::table('etiquetas_vouchers')->insert($rowsEtiquetas);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Guardar banners
-            |--------------------------------------------------------------------------
-            */
             if ($request->hasFile('banners')) {
                 foreach ($request->file('banners') as $archivo) {
                     if (!$archivo) {
@@ -282,10 +365,8 @@ class VoucherController extends Controller
                     $nombreOriginal = $archivo->getClientOriginalName();
                     $extension = $archivo->getClientOriginalExtension();
                     $size = $archivo->getSize();
-
                     $nombreArchivo = uniqid('voucher_') . '.' . $extension;
 
-                    // guarda en storage/app/public/vouchers/banners
                     $path = $archivo->storeAs('vouchers/banners', $nombreArchivo, 'public');
 
                     DB::table('vouchers_files')->insert([
@@ -311,11 +392,12 @@ class VoucherController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
 
-            // return redirect()
-            //     ->back()
-            //     ->withInput()
-            //     ->with('error', 'Ocurrió un error al guardar el voucher: ' . $e->getMessage());
-            dd($e->getMessage());
+            // dd($e->getMessage());
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Ocurrió un error al guardar el voucher: ' . $e->getMessage());
         }
     }
 
@@ -337,25 +419,37 @@ class VoucherController extends Controller
             ->orderBy('vf_id')
             ->get();
 
-        $entidades = DB::table('entidades as e')
-            ->leftJoin('entidades_domicilios as ed', 'ed.ent_id', '=', 'e.ent_id')
+        $entidades = DB::table('entidades_domicilios as ed')
+            ->join('entidades as e', 'e.ent_id', '=', 'ed.ent_id')
+            ->where('ed.ed_estado', 1)
+            ->where('e.ent_estado', 1)
             ->select(
-                'e.ent_id as id',
+                'ed.ed_id as id',
                 'e.ent_nombre_fantasia as nombre',
                 'ed.ed_direccion as direccion'
             )
-            ->where('e.ent_estado', 1)
-            ->get();
+            ->orderBy('e.ent_nombre_fantasia')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'nombre' => $item->nombre,
+                'direccion' => $item->direccion,
+            ])
+            ->toArray();
 
         $influencers = DB::table('influencers')
             ->where('inf_estado', 1)
             ->orderBy('inf_nombre_fantasia')
             ->pluck('inf_nombre_fantasia', 'inf_id');
 
-        $modalidades = DB::table('modalidades')
+        $modalidades = Modalidad::with(['campos' => function ($query) {
+                $query->where('mca_estado', 1)
+                    ->orderBy('mca_orden')
+                    ->orderBy('mca_id');
+            }])
             ->where('mod_estado', 1)
             ->orderBy('mod_nombre')
-            ->get(['mod_nombre', 'mod_codigo', 'mod_id']);
+            ->get(['mod_id', 'mod_nombre', 'mod_codigo']);
 
         $categorias = DB::table('categorias_vouchers')
             ->where('cv_estado', 1)
@@ -404,6 +498,34 @@ class VoucherController extends Controller
                 'vd_fecha_alta',
             ]);
 
+        $voucherModalidadValores = DB::table('vouchers_modalidad_valores as vmv')
+            ->join('modalidades_campos as mc', 'mc.mca_id', '=', 'vmv.mca_id')
+            ->where('vmv.vou_id', $id)
+            ->where('vmv.vmv_estado', 1)
+            ->pluck('vmv.vmv_valor', 'mc.mca_codigo')
+            ->toArray();
+
+        $modalidadesCamposJson = $modalidades
+            ->mapWithKeys(function ($modalidad) {
+                return [
+                    $modalidad->mod_id => $modalidad->campos->map(function ($campo) {
+                        return [
+                            'mca_id' => $campo->mca_id,
+                            'mca_codigo' => $campo->mca_codigo,
+                            'mca_nombre' => $campo->mca_nombre,
+                            'mca_tipo' => $campo->mca_tipo,
+                            'mca_label' => $campo->mca_label,
+                            'mca_placeholder' => $campo->mca_placeholder,
+                            'mca_requerido' => $campo->mca_requerido,
+                            'mca_orden' => $campo->mca_orden,
+                            'mca_opciones' => $campo->mca_opciones,
+                            'mca_ayuda' => $campo->mca_ayuda,
+                        ];
+                    })->values(),
+                ];
+            })
+            ->toJson();
+
         return view('vouchers.edit', compact(
             'voucher',
             'banners',
@@ -413,7 +535,9 @@ class VoucherController extends Controller
             'categorias',
             'etiquetasDisponibles',
             'etiquetasSeleccionadas',
-            'voucherDetalles'
+            'voucherDetalles',
+            'voucherModalidadValores',
+            'modalidadesCamposJson'
         ));
     }
 
@@ -434,8 +558,8 @@ class VoucherController extends Controller
         DB::beginTransaction();
 
         try {
-            $fechaInicio = Carbon::createFromFormat('d/m/Y', $request->f_fecha_ini)->format('Y-m-d');
-            $fechaFin = Carbon::createFromFormat('d/m/Y', $request->f_fecha_fin)->format('Y-m-d');
+            $fechaInicio = $request->f_fecha_ini;
+            $fechaFin = $request->f_fecha_fin;
             $usuarioId = Auth::id() ?? 1;
 
             /*
@@ -526,7 +650,11 @@ class VoucherController extends Controller
 
                 DB::table('vouchers_detalles')
                     ->whereIn('vd_id', $idsEliminar)
-                    ->delete();
+                    ->update([
+                        'vd_estado' => 0,
+                        'vd_fecha_baja' => now(),
+                        'vd_usu_baja' => 1
+                    ]);
             }
 
             /*
@@ -548,7 +676,11 @@ class VoucherController extends Controller
             */
             DB::table('etiquetas_vouchers')
                 ->where('vou_id', $id)
-                ->delete();
+                ->update([
+                    'ev_estado' => 0,
+                    'ev_fecha_baja' => now(),
+                    'ev_usu_baja' => 1
+                ]);
 
             if ($request->filled('etiquetas')) {
                 $rowsEtiquetas = [];
@@ -557,9 +689,9 @@ class VoucherController extends Controller
                     $rowsEtiquetas[] = [
                         'vou_id' => $id,
                         'eti_id' => $etiId,
-                        've_estado' => 1,
-                        've_fecha_alta' => now(),
-                        've_usu_alta' => $usuarioId,
+                        'ev_estado' => 1,
+                        'ev_fecha_alta' => now(),
+                        'ev_usu_alta' => $usuarioId,
                     ];
                 }
 
@@ -577,16 +709,20 @@ class VoucherController extends Controller
                     ->whereIn('vf_id', $request->delete_banners)
                     ->get();
 
-                foreach ($bannersEliminar as $banner) {
-                    if (!empty($banner->vf_img_path) && Storage::disk('public')->exists($banner->vf_img_path)) {
-                        Storage::disk('public')->delete($banner->vf_img_path);
-                    }
-                }
+                // foreach ($bannersEliminar as $banner) {
+                //     if (!empty($banner->vf_img_path) && Storage::disk('public')->exists($banner->vf_img_path)) {
+                //         Storage::disk('public')->delete($banner->vf_img_path);
+                //     }
+                // }
 
                 DB::table('vouchers_files')
                     ->where('vou_id', $id)
                     ->whereIn('vf_id', $request->delete_banners)
-                    ->delete();
+                    ->update([
+                        'vf_estado' => 0,
+                        'vf_fecha_baja' => now(),
+                        'vf_usu_baja' => 1
+                    ]);
             }
 
             /*
@@ -640,11 +776,48 @@ class VoucherController extends Controller
                     ->with('error', 'El voucher debe tener al menos un banner.');
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | Actualizar valores dinámicos de modalidad
+            |--------------------------------------------------------------------------
+            */
+            $camposModalidad = DB::table('modalidades_campos')
+                ->where('mod_id', $request->f_mod_id)
+                ->where('mca_estado', 1)
+                ->orderBy('mca_orden')
+                ->get();
+
+            DB::table('vouchers_modalidad_valores')
+                ->where('vou_id', $id)
+                ->update([
+                    'vmv_estado' => 0,
+                    'vmv_fecha_baja' => now(),
+                    'vmv_usu_baja' => 1
+                ]);
+
+            foreach ($camposModalidad as $campo) {
+                $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
+
+                if ($campo->mca_tipo === 'boolean') {
+                    $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
+                }
+
+                DB::table('vouchers_modalidad_valores')->insert([
+                    'vou_id' => $id,
+                    'mca_id' => $campo->mca_id,
+                    'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
+                    'vmv_estado' => 1,
+                    'vmv_fecha_alta' => now(),
+                    'vmv_usu_alta' => $usuarioId,
+                ]);
+            }
+
             DB::commit();
 
             return redirect()
                 ->route('vouchers.index')
                 ->with('success', 'Voucher actualizado correctamente.');
+
         } catch (\Throwable $e) {
             DB::rollBack();
 
@@ -671,13 +844,17 @@ class VoucherController extends Controller
             return redirect()->back()->with('error', 'El voucher debe conservar al menos un banner.');
         }
 
-        if (!empty($banner->vf_img_path) && Storage::disk('public')->exists($banner->vf_img_path)) {
-            Storage::disk('public')->delete($banner->vf_img_path);
-        }
+        // if (!empty($banner->vf_img_path) && Storage::disk('public')->exists($banner->vf_img_path)) {
+        //     Storage::disk('public')->delete($banner->vf_img_path);
+        // }
 
         DB::table('vouchers_files')
             ->where('vf_id', $id)
-            ->delete();
+            ->update([
+                'vf_estado' => 0,
+                'vf_fecha_baja' => now(),
+                'vf_usu_baja' => 1
+            ]);
 
         return redirect()->back()->with('success', 'Banner eliminado correctamente.');
     }

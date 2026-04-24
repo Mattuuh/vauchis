@@ -11,7 +11,7 @@ class RubroController extends Controller
     public function index()
     {
         $rubros = Rubro::orderBy('rub_id','desc')
-            ->where('rub_estado',1)
+            // ->where('rub_estado',1)
             ->get([
                 'rub_id', 
                 'rub_nombre', 

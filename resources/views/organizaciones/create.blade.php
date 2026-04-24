@@ -95,6 +95,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('f_pais_id')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="col-12">
@@ -102,11 +105,17 @@
                                 <select name="f_provincia_id" id="f_provincia_id" class="form-select field-required" required>
                                     <option value="">Selecciona la provincia</option>
                                 </select>
+                                @error('f_provincia_id')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label required-label">Ciudad</label>
                                 <input type="text" name="f_ciudad" class="form-control field-required" required>
+                                @error('f_ciudad')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="col-12">
@@ -121,14 +130,10 @@
 
                             <div class="col-12">
                                 <label class="form-label required-label">Dirección</label>
-                                <input
-                                    type="text"
-                                    name="f_direccion"
-                                    id="f_direccion"
-                                    class="form-control field-required"
-                                    placeholder="Escribe una dirección"
-                                    required
-                                >
+                                <input type="text" name="f_direccion" id="f_direccion" class="form-control field-required" placeholder="Escribe una dirección" required>
+                                @error('f_direccion')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
                             </div>
 
                         </div>

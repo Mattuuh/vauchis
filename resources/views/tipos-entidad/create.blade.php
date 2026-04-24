@@ -26,7 +26,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('tipos-entidad.store') }}">
+    <form method="POST" action="{{ route('tipos-entidad.store') }}" id="form_main">
         @csrf
 
         <!-- CARD -->

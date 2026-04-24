@@ -157,6 +157,7 @@ Route::get('/voucher_emisiones/{id}/pdf', [VoucherEmisionController::class, 'pdf
 use App\Http\Controllers\VoucherPlantillaController;
 
 Route::resource('voucher_plantillas', VoucherPlantillaController::class);
+Route::post('/voucher_plantillas/{id}/delete', [VoucherPlantillaController::class, 'delete'])->name('voucher_plantillas.delete');
 Route::get('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'builder'])->name('voucher_plantillas.builder');
 Route::post('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'saveBuilder'])->name('voucher_plantillas.builder.save');
 Route::get('/voucher_plantillas/{id}/preview', [VoucherPlantillaController::class, 'preview'])->name('voucher_plantillas.preview');

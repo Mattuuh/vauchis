@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nuevo tipo de entidad')
+@section('title', 'Nuevo voucher')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/vouchers/vouchers.css') }}">
@@ -31,29 +31,28 @@
     <form method="POST" action="{{ route('vouchers.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
 
-        <!-- CARD -->
         <div class="card card-custom p-3 mb-3">
-
             <h6 class="fw-bold mb-3">Datos del voucher</h6>
 
             <div class="row g-4">
 
                 <div class="col-12">
-                    <label class="form-label required-label">Nombre publico:</label>
-                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre publico" required>
+                    <label class="form-label required-label">Nombre público:</label>
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre público" required>
 
                     @error('f_nombre')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- NOMBRE -->
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Entidad:</label>
                     <select name="f_ent_id" class="form-select field-required" required>
-                        <option value="">Selecciona la Entidad</option>
+                        <option value="">Selecciona la entidad</option>
                         @foreach($entidades as $entidad)
-                            <option value="{{ $entidad['id'] }}">{{ $entidad['nombre'] }} - {{ $entidad['direccion'] }}</option>
+                            <option value="{{ $entidad['id'] }}" {{ old('f_ent_id') == $entidad['id'] ? 'selected' : '' }}>
+                                {{ $entidad['nombre'] }} - {{ $entidad['direccion'] }}
+                            </option>
                         @endforeach
                     </select>
                     @error('f_ent_id')
@@ -63,10 +62,12 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Influencer:</label>
-                    <select name="f_inf_id" class="form-select field-required" required>
-                        <option value="">Selecciona el Influencer</option>
+                    <select name="f_inf_id" class="form-select field-required">
+                        <option value="">Selecciona el influencer</option>
                         @foreach($influencers as $id => $nombre)
-                            <option value="{{ $id }}">{{ $nombre }}</option>
+                            <option value="{{ $id }}" {{ old('f_inf_id') == $id ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
                         @endforeach
                     </select>
                     @error('f_inf_id')
@@ -75,24 +76,13 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Modalidad:</label>
-                    <select name="f_mod_id" class="form-select field-required" required>
-                        <option value="">Selecciona el Modalidad</option>
-                        @foreach($modalidades as $modalidad)
-                            <option value="{{ $modalidad['mod_id'] }}">{{ $modalidad['mod_codigo'] }} - {{ $modalidad['mod_nombre'] }}</option>
-                        @endforeach
-                    </select>
-                    @error('f_mod_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-12 col-md-6">
                     <label class="form-label required-label">Categoría:</label>
                     <select name="f_cv_id" class="form-select field-required" required>
-                        <option value="">Selecciona el Categoria</option>
+                        <option value="">Selecciona la categoría</option>
                         @foreach($categorias as $id => $nombre)
-                            <option value="{{ $id }}">{{ $nombre }}</option>
+                            <option value="{{ $id }}" {{ old('f_cv_id') == $id ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
                         @endforeach
                     </select>
                     @error('f_cv_id')
@@ -118,48 +108,47 @@
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Fecha de inicio:</label>
-                    <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy" required>
-                    <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Fecha de inicio:</label>
+                        <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy" required>
+                        <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
 
-                    @error('f_fecha_ini')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                        @error('f_fecha_ini')
+                            <div class="text-required">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Fecha de vencimiento:</label>
-                    <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy" required>
-                    <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Fecha de vencimiento:</label>
+                        <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy" required>
+                        <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
 
-                    @error('f_fecha_fin')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                        @error('f_fecha_fin')
+                            <div class="text-required">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Permite personalización</label>
                     <select name="f_permite_personalizacion" class="form-select field-required" required>
-                        <option value="0">NO</option>
-                        <option value="1">SI</option>
+                        <option value="0" {{ old('f_permite_personalizacion') === '0' ? 'selected' : '' }}>NO</option>
+                        <option value="1" {{ old('f_permite_personalizacion') === '1' ? 'selected' : '' }}>SI</option>
                     </select>
                     @error('f_permite_personalizacion')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
-                </div>
-
                 <div class="col-12">
-                    <label class="form-label required-label">Descripcion:</label>
+                    <label class="form-label required-label">Descripción:</label>
                     <textarea id="description" name="description" rows="4" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher.">{{ old('description') }}</textarea>
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label required-label">Terminos y condiciones:</label>
-                    <textarea id="terms" name="terms" rows="4" class="form-control voucher-textarea" placeholder="Términos y condiciones&#10;Incluye aqui los terminos y condiciones para este voucher (opcional).">{{ old('terms') }}</textarea>
+                    <label class="form-label">Términos y condiciones:</label>
+                    <textarea id="terms" name="terms" rows="4" class="form-control voucher-textarea" placeholder="Términos y condiciones&#10;Incluye aquí los términos y condiciones para este voucher (opcional).">{{ old('terms') }}</textarea>
                 </div>
 
                 <div class="col-12">
@@ -170,9 +159,7 @@
                                 <div class="col-md-10">
                                     <input type="file" name="banners[]" class="form-control field-required" required>
                                 </div>
-                                <div class="col-md-2">
-                                    {{-- El primero no se puede eliminar --}}
-                                </div>
+                                <div class="col-md-2"></div>
                             </div>
                         </div>
                     </div>
@@ -192,7 +179,6 @@
                     </div>
                 </div>
 
-                <!-- OBSERVACIONES -->
                 <div class="col-12">
                     <label class="form-label">Observaciones internas</label>
                     <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
@@ -204,6 +190,37 @@
             </div>
         </div>
 
+        {{-- CAMPOS DINÁMICOS DE MODALIDAD --}}
+        <div class="card card-custom p-3 mb-3">
+            <h6 class="fw-bold mb-2">Configuración de la modalidad</h6>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Modalidad:</label>
+                <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
+                    <option value="">Selecciona la modalidad</option>
+                    @foreach($modalidades as $modalidad)
+                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id') == $modalidad->mod_id ? 'selected' : '' }}>
+                            {{ $modalidad->mod_codigo }} - {{ $modalidad->mod_nombre }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('f_mod_id')
+                    <div class="text-required">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <p class="text-muted small mb-3">
+                Al seleccionar una modalidad, se mostrarán aquí los campos específicos que debe completar este voucher.
+            </p>
+
+            <div id="modalidad-campos-container">
+                <div id="modalidad-empty-state" class="text-muted small">
+                    Seleccioná una modalidad para completar su configuración específica.
+                </div>
+            </div>
+        </div>
+
+        {{-- ETIQUETAS --}}
         <div class="card card-custom p-3 mb-3">
             <h6 class="fw-bold mb-2">Etiquetas</h6>
 
@@ -211,41 +228,23 @@
                 Seleccioná etiquetas existentes o creá nuevas para este voucher.
             </p>
 
-            {{-- NUEVA ETIQUETA --}}
             <div class="mb-3">
                 <label class="form-label fw-semibold">Nueva etiqueta</label>
                 <div class="d-flex gap-2">
-                    <input
-                        type="text"
-                        id="nueva-etiqueta-input"
-                        class="form-control"
-                        placeholder="Ej: Promoción, Regalo, Gourmet"
-                    >
+                    <input type="text" id="nueva-etiqueta-input" class="form-control" placeholder="Ej: Promoción, Regalo, Gourmet">
                     <button type="button" class="btn btn-primary" onclick="agregarNuevaEtiqueta()">
                         Agregar
                     </button>
                 </div>
             </div>
 
-            {{-- SELECCIONADAS --}}
             <div class="mb-3">
                 <label class="form-label fw-semibold">Etiquetas seleccionadas</label>
-
-                <div id="selected-etiquetas" class="chips-box chips-box--selected">
-                    <span class="chips-empty-text">No hay etiquetas seleccionadas.</span>
-                </div>
-
-                {{-- INPUTS HIDDEN EXISTENTES --}}
-                <div id="etiquetas-hidden-inputs"></div>
-
-                {{-- INPUTS HIDDEN NUEVAS --}}
-                <div id="etiquetas-nuevas-hidden-inputs"></div>
+                <div id="selected-etiquetas" class="d-flex flex-wrap gap-2"></div>
             </div>
 
-            {{-- DISPONIBLES --}}
             <div>
                 <label class="form-label fw-semibold">Etiquetas disponibles</label>
-
                 <div class="chips-box">
                     @foreach($etiquetasDisponibles as $etiqueta)
                         <button
@@ -260,69 +259,224 @@
                     @endforeach
                 </div>
             </div>
-
-            @error('etiquetas')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
-
-            @error('etiquetas.*')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
-
-            @error('etiquetas_nuevas')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
-
-            @error('etiquetas_nuevas.*')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
         </div>
 
-        <!-- BOTONES -->
         <div class="d-flex justify-content-between">
             <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 
-            <button type="submit" class="btn btn-success" id="btn_guardar">
+            <button type="submit" class="btn btn-success">
                 Guardar
             </button>
         </div>
-
     </form>
-
 </div>
+
+<script id="modalidades-campos-json" type="application/json">
+{!! $modalidadesCamposJson !!}
+</script>
+@endsection
+
 @push('scripts')
 <script>
+    const modalidadesCampos = JSON.parse(document.getElementById('modalidades-campos-json').textContent || '{}');
+
     function addBanner() {
         const wrapper = document.getElementById('banners-wrapper');
-
-        const item = document.createElement('div');
-        item.classList.add('banner-item', 'mb-2');
-
-        item.innerHTML = `
+        const div = document.createElement('div');
+        div.className = 'banner-item mb-2';
+        div.innerHTML = `
             <div class="row g-2 align-items-center">
                 <div class="col-md-10">
                     <input type="file" name="banners[]" class="form-control">
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-outline-danger w-100" onclick="removeBanner(this)">
-                        Quitar
-                    </button>
+                    <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.banner-item').remove()">Quitar</button>
                 </div>
             </div>
         `;
-
-        wrapper.appendChild(item);
+        wrapper.appendChild(div);
     }
 
-    function removeBanner(button) {
-        const item = button.closest('.banner-item');
-        if (item) {
-            item.remove();
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function renderCampoInput(campo, oldValues = {}) {
+        const value = oldValues[campo.mca_codigo] ?? '';
+        const checked = oldValues[campo.mca_codigo] == 1 || oldValues[campo.mca_codigo] === '1';
+
+        let html = '';
+
+        if (campo.mca_tipo === 'textarea') {
+            html = `
+                <textarea
+                    name="modalidad_valores[${campo.mca_codigo}]"
+                    class="form-control"
+                    rows="3"
+                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
+                    ${campo.mca_requerido ? 'required' : ''}
+                >${escapeHtml(value)}</textarea>
+            `;
+        } else if (campo.mca_tipo === 'select') {
+            const opciones = (campo.mca_opciones || '')
+                .split(',')
+                .map(item => item.trim())
+                .filter(item => item !== '');
+
+            html = `
+                <select
+                    name="modalidad_valores[${campo.mca_codigo}]"
+                    class="form-select"
+                    ${campo.mca_requerido ? 'required' : ''}
+                >
+                    <option value="">Seleccionar...</option>
+                    ${opciones.map(opcion => `
+                        <option value="${escapeHtml(opcion)}" ${value == opcion ? 'selected' : ''}>
+                            ${escapeHtml(opcion)}
+                        </option>
+                    `).join('')}
+                </select>
+            `;
+        } else if (campo.mca_tipo === 'boolean') {
+            html = `
+                <div class="form-check form-switch mt-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="modalidad_valores[${campo.mca_codigo}]"
+                        value="1"
+                        ${checked ? 'checked' : ''}
+                    >
+                    <label class="form-check-label">Sí</label>
+                </div>
+            `;
+        } else {
+            let inputType = 'text';
+
+            if (campo.mca_tipo === 'number') inputType = 'number';
+            if (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') inputType = 'number';
+
+            const step = (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') ? 'step="0.01"' : '';
+
+            html = `
+                <input
+                    type="${inputType}"
+                    name="modalidad_valores[${campo.mca_codigo}]"
+                    class="form-control"
+                    value="${escapeHtml(value)}"
+                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
+                    ${step}
+                    ${campo.mca_requerido ? 'required' : ''}
+                >
+            `;
         }
+
+        return `
+            <div class="col-12 col-md-6">
+                <label class="form-label ${campo.mca_requerido ? 'required-label' : ''}">
+                    ${escapeHtml(campo.mca_label || campo.mca_nombre)}
+                </label>
+                ${html}
+                ${campo.mca_ayuda ? `<div class="form-text">${escapeHtml(campo.mca_ayuda)}</div>` : ''}
+            </div>
+        `;
     }
 
+    function renderModalidadCampos(modalidadId) {
+        const container = document.getElementById('modalidad-campos-container');
+        const oldValues = @json(old('modalidad_valores', []));
+
+        if (!modalidadId || !modalidadesCampos[modalidadId] || !modalidadesCampos[modalidadId].length) {
+            container.innerHTML = `
+                <div id="modalidad-empty-state" class="text-muted small">
+                    Esta modalidad no tiene campos configurados.
+                </div>
+            `;
+            return;
+        }
+
+        const campos = modalidadesCampos[modalidadId];
+
+        container.innerHTML = `
+            <div class="row g-3">
+                ${campos.map(campo => renderCampoInput(campo, oldValues)).join('')}
+            </div>
+        `;
+    }
+
+    function addEtiquetaExistente(button) {
+        const id = button.dataset.id;
+        const name = button.dataset.name;
+        const container = document.getElementById('selected-etiquetas');
+
+        if (document.getElementById('tag-selected-' + id)) {
+            return;
+        }
+
+        const badge = document.createElement('div');
+        badge.className = 'badge bg-primary d-flex align-items-center gap-2';
+        badge.id = 'tag-selected-' + id;
+        badge.innerHTML = `
+            <span>${name}</span>
+            <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Quitar"></button>
+            <input type="hidden" name="etiquetas[]" value="${id}">
+        `;
+
+        badge.querySelector('button').addEventListener('click', function () {
+            badge.remove();
+        });
+
+        container.appendChild(badge);
+    }
+
+    function agregarNuevaEtiqueta() {
+        const input = document.getElementById('nueva-etiqueta-input');
+        const nombre = input.value.trim();
+        const container = document.getElementById('selected-etiquetas');
+
+        if (!nombre) return;
+
+        const uniqueId = 'new-' + Date.now();
+
+        const badge = document.createElement('div');
+        badge.className = 'badge bg-success d-flex align-items-center gap-2';
+        badge.id = 'tag-selected-' + uniqueId;
+        badge.innerHTML = `
+            <span>${nombre}</span>
+            <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Quitar"></button>
+            <input type="hidden" name="etiquetas_nuevas[]" value="${nombre}">
+        `;
+
+        badge.querySelector('button').addEventListener('click', function () {
+            badge.remove();
+        });
+
+        container.appendChild(badge);
+        input.value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalidadSelect = document.getElementById('f_mod_id');
+
+        modalidadSelect.addEventListener('change', function () {
+            renderModalidadCampos(this.value);
+        });
+
+        if (modalidadSelect.value) {
+            renderModalidadCampos(modalidadSelect.value);
+        }
+    });
+</script>
+
+<script>
     $(document).ready(function () {
         let fpFechaFin = $("#f_fecha_fin_lab").flatpickr({
             dateFormat: "d/m/Y",
@@ -381,153 +535,5 @@
             }
         });
     });
-
-</script>
-<script>
-    let etiquetasExistentes = @json(old('etiquetas', $etiquetasSeleccionadas ?? []));
-    let etiquetasNuevas = @json(old('etiquetas_nuevas', []));
-
-    function normalizarEtiquetasExistentes() {
-        if (!Array.isArray(etiquetasExistentes)) {
-            etiquetasExistentes = [];
-            return;
-        }
-
-        etiquetasExistentes = etiquetasExistentes.map(item => {
-            // Si viene como objeto {id, name}
-            if (typeof item === 'object' && item !== null) {
-                return {
-                    id: Number(item.id),
-                    name: item.name
-                };
-            }
-
-            // Si viene solo como id desde old()
-            const boton = document.querySelector(`.chip-option[data-id="${item}"]`);
-            return {
-                id: Number(item),
-                name: boton ? boton.dataset.name : `Etiqueta ${item}`
-            };
-        });
-    }
-
-    function renderEtiquetas() {
-        const box = document.getElementById('selected-etiquetas');
-        const hiddenExistentes = document.getElementById('etiquetas-hidden-inputs');
-        const hiddenNuevos = document.getElementById('etiquetas-nuevas-hidden-inputs');
-
-        box.innerHTML = '';
-        hiddenExistentes.innerHTML = '';
-        hiddenNuevos.innerHTML = '';
-
-        if (etiquetasExistentes.length === 0 && etiquetasNuevas.length === 0) {
-            box.innerHTML = '<span class="chips-empty-text">No hay etiquetas seleccionadas.</span>';
-        }
-
-        // EXISTENTES
-        etiquetasExistentes.forEach(item => {
-            const chip = document.createElement('span');
-            chip.className = 'chip-selected';
-            chip.innerHTML = `
-                ${item.name}
-                <button type="button" class="chip-remove-btn" onclick="removeEtiquetaExistente(${item.id})">&times;</button>
-            `;
-            box.appendChild(chip);
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'etiquetas[]';
-            input.value = item.id;
-            hiddenExistentes.appendChild(input);
-        });
-
-        // NUEVAS
-        etiquetasNuevas.forEach((nombre, index) => {
-            const chip = document.createElement('span');
-            chip.className = 'chip-selected';
-            chip.innerHTML = `
-                ${nombre}
-                <button type="button" class="chip-remove-btn" onclick="removeEtiquetaNueva(${index})">&times;</button>
-            `;
-            box.appendChild(chip);
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'etiquetas_nuevas[]';
-            input.value = nombre;
-            hiddenNuevos.appendChild(input);
-        });
-
-        actualizarEtiquetasDisponibles();
-    }
-
-    function addEtiquetaExistente(button) {
-        const id = Number(button.dataset.id);
-        const name = button.dataset.name;
-
-        if (etiquetasExistentes.some(e => e.id === id)) {
-            return;
-        }
-
-        etiquetasExistentes.push({ id, name });
-        renderEtiquetas();
-    }
-
-    function removeEtiquetaExistente(id) {
-        etiquetasExistentes = etiquetasExistentes.filter(e => e.id !== id);
-        renderEtiquetas();
-    }
-
-    function agregarNuevaEtiqueta() {
-        const input = document.getElementById('nueva-etiqueta-input');
-        const nombre = input.value.trim();
-
-        if (!nombre) {
-            return;
-        }
-
-        const yaExisteNueva = etiquetasNuevas.some(
-            e => e.toLowerCase() === nombre.toLowerCase()
-        );
-
-        const yaExisteSeleccionada = etiquetasExistentes.some(
-            e => e.name.toLowerCase() === nombre.toLowerCase()
-        );
-
-        const yaExisteDisponible = Array.from(document.querySelectorAll('.chip-option')).some(
-            btn => btn.dataset.name.toLowerCase() === nombre.toLowerCase()
-        );
-
-        if (yaExisteNueva || yaExisteSeleccionada || yaExisteDisponible) {
-            input.value = '';
-            return;
-        }
-
-        etiquetasNuevas.push(nombre);
-        input.value = '';
-        renderEtiquetas();
-    }
-
-    function removeEtiquetaNueva(index) {
-        etiquetasNuevas.splice(index, 1);
-        renderEtiquetas();
-    }
-
-    function actualizarEtiquetasDisponibles() {
-        const botones = document.querySelectorAll('.chip-option');
-
-        botones.forEach(btn => {
-            const id = Number(btn.dataset.id);
-            const seleccionada = etiquetasExistentes.some(e => e.id === id);
-
-            btn.classList.toggle('is-disabled', seleccionada);
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        normalizarEtiquetasExistentes();
-        renderEtiquetas();
-    });
 </script>
 @endpush
-@endsection

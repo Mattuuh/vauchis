@@ -2,61 +2,155 @@
 
 @section('title', 'Plantillas de vouchers')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Plantillas de vouchers</h1>
-        <a href="{{ route('voucher_plantillas.create') }}" class="btn btn-primary">
-            Nueva plantilla
-        </a>
-    </div>
+<main class="commerce-page">
+    <section class="commerce-hero">
+        <div class="commerce-hero__content">
+            <h1 class="commerce-title">Plantillas de vouchers</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <div class="card">
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Dimensiones</th>
-                        <th>Fondo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($plantillas as $plantilla)
-                        <tr>
-                            <td>{{ $plantilla->vpl_id }}</td>
-                            <td>{{ $plantilla->vpl_nombre }}</td>
-                            <td>{{ $plantilla->vpl_ancho }} x {{ $plantilla->vpl_alto }}</td>
-                            <td>
-                                @if($plantilla->vpl_fondo_path)
-                                    <img src="{{ asset($plantilla->vpl_fondo_path) }}" alt="" style="height:60px;border-radius:6px;">
-                                @else
-                                    <span class="text-muted">Sin fondo</span>
-                                @endif
-                            </td>
-                            <td class="d-flex gap-2 flex-wrap">
-                                <a href="{{ route('voucher_plantillas.edit', $plantilla->vpl_id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
-                                <a href="{{ route('voucher_plantillas.builder', $plantilla->vpl_id) }}" class="btn btn-sm btn-outline-primary">Builder</a>
-                                <a href="{{ route('voucher_plantillas.preview', $plantilla->vpl_id) }}" class="btn btn-sm btn-outline-success" target="_blank">Preview</a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center text-muted py-4">No hay plantillas registradas.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <p class="commerce-subtitle">
+                Consulta y administra todos los plantillas disponibles en la plataforma Vauchis.
+            </p>
         </div>
-    </div>
-</div>
+
+        <span class="commerce-hero-wave commerce-hero-wave--one"></span>
+        <span class="commerce-hero-wave commerce-hero-wave--two"></span>
+
+        <span class="commerce-dot commerce-dot--pink-left"></span>
+        <span class="commerce-dot commerce-dot--blue-left"></span>
+        <span class="commerce-dot commerce-dot--yellow"></span>
+        <span class="commerce-dot commerce-dot--blue"></span>
+        <span class="commerce-dot commerce-dot--green"></span>
+        <span class="commerce-dot commerce-dot--pink"></span>
+        <span class="commerce-dot commerce-dot--blue-small"></span>
+    </section>
+
+    <section class="commerce-list-section">
+        <div class="container">
+            <div class="commerce-card">
+                <div class="commerce-toolbar">
+                    <div class="commerce-toolbar__left">
+                        <div class="commerce-search">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control" placeholder="Buscar plantilla...">
+                        </div>
+
+                        <button class="btn commerce-filter-btn" type="button">
+                            <i class="bi bi-funnel"></i>
+                            Filtro
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                    </div>
+
+                    <div class="commerce-toolbar__right">
+                        <a href="{{ route('voucher_plantillas.create') }}" class="btn commerce-new-btn">
+                            <i class="bi bi-plus-lg"></i>
+                            Nueva plantilla
+                        </a>
+                    </div>
+                </div>
+
+                <div class="commerce-table-wrap">
+                    <table class="commerce-table">
+                        <thead>
+                            <tr class="commerce-table-head">
+                                <th style="width: 40px">ID</th>
+                                <th style="width: 130px">NOMBRE</th>
+                                <th style="width: 80px">DIMENSIONES</th>
+                                <th style="width: 110px">FONDO</th>
+                                <th style="width: 60px">FECHA DE ALTA</th>
+                                <th style="width: 60px" class="text-center">ESTADO</th>
+                                <th style="width: 110px">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($plantillas as $plantilla)
+                                <tr class="commerce-row">
+                                    <td class="commerce-col" data-label="ID">
+                                        <span class="commerce-mobile-label">ID</span>
+                                        <span>{{ $plantilla['vpl_id'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col" data-label="Nombre">
+                                        <span class="commerce-mobile-label">Nombre</span>
+                                        <span>{{ $plantilla['vpl_nombre'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col" data-label="Dimensiones">
+                                        <span class="commerce-mobile-label">Dimensiones</span>
+                                        <span>{{ $plantilla['vpl_ancho'] }} x {{ $plantilla['vpl_alto'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col" data-label="Fondo">
+                                        <span class="commerce-mobile-label">Fondo</span>
+                                        @if($plantilla['vpl_fondo_path'])
+                                            <img src="{{ asset($plantilla['vpl_fondo_path']) }}" alt="" style="height:60px;border-radius:6px;">
+                                        @else
+                                            <span class="text-muted">Sin fondo</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="commerce-col text-center" data-label="Fecha de alta">
+                                        <span class="commerce-mobile-label">Fecha de alta</span>
+                                        <span>{{ $plantilla['vpl_fecha_alta']->format('d/m/Y') }}</span>
+                                    </td>
+
+                                    <td class="commerce-col text-center" data-label="Estado">
+                                        <span class="commerce-mobile-label">Estado</span>
+
+                                        @php
+                                            $estado = estado($plantilla['vpl_estado']);
+                                        @endphp
+
+                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
+                                        </span>
+                                    </td>
+
+                                    <td class="commerce-col commerce-col--actions" data-label="Acciones">
+                                        <span class="commerce-mobile-label">Acciones</span>
+                                        <a href="{{ route('voucher_plantillas.edit', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{{ route('voucher_plantillas.builder', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Builder">
+                                            <i class="bi bi-gear"></i>
+                                        </a>
+                                        <a href="{{ route('voucher_plantillas.preview', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" target="_blank" title="Preview">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="commerce-footer">
+                    <div class="commerce-footer__text">
+                        Mostrando 1 a {{ $plantillas->count() }} de 25 registros
+                    </div>
+
+                    <div class="commerce-pagination">
+                        <button class="btn commerce-page-arrow" disabled>
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button class="btn commerce-page-btn active">1</button>
+                        <button class="btn commerce-page-btn">2</button>
+                        <button class="btn commerce-page-btn">3</button>
+                        <button class="btn commerce-page-arrow">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 @endsection

@@ -83,34 +83,27 @@
                                         <span>{{ $tipo['tipo_ent_nombre'] }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Fecha de alta">
+                                    <td class="commerce-col text-center" data-label="Fecha de alta">
                                         <span class="commerce-mobile-label">Fecha de alta</span>
                                         <span>{{ $tipo['tipo_ent_fecha_alta']->format('d/m/Y') }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Estado">
+                                    <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $statusClass = match($tipo['tipo_ent_estado']) {
-                                                'activo' => 'is-active',
-                                                'pendiente' => 'is-pending',
-                                                'inactivo' => 'is-inactive',
-                                                default => 'is-active',
-                                            };
+                                            $estado = estado($tipo['tipo_ent_estado']);
                                         @endphp
 
-                                        <span class="commerce-status {{ $statusClass }}">
-                                            <i class="bi bi-circle-fill"></i>
-                                            {{ ucfirst($tipo['tipo_ent_estado']) }}
+                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
                                         </span>
                                     </td>
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('tipos-entidad.edit', $tipo->tipo_ent_id) }}" class="btn commerce-edit-btn">
+                                        <a href="{{ route('tipos-entidad.edit', $tipo->tipo_ent_id) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
-                                            Editar
                                         </a>
                                     </td>
                                 </tr>

@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 @include('partials.navbar')
 
 <section class="hero-section py-5 py-lg-6">
@@ -18,7 +19,7 @@
                     de forma fácil y rápida.
                 </p>
 
-                <a href="#" class="btn btn-success btn-lg px-4">Explora Vauchis</a>
+                <a href="#" class="btn btn-success btn-lg px-4" id="btn_explorar">Explora Vauchis</a>
             </div>
 
             <div class="col-12 col-lg-6 order-1 order-lg-2 text-center">
@@ -30,7 +31,7 @@
     </div>
 </section>
 
-<section id="como-funciona" class="py-5 bg-white" hidden>
+<section id="como-funciona" class="py-5 bg-white" style="display: none;">
     <div class="container text-center">
         <h2 class="section-title">¿Cómo funciona Vauchis?</h2>
         <p class="section-subtitle">Sigue estos simples pasos para regalar vouchers fácilmente</p>
@@ -379,3 +380,15 @@
     </div>
 </footer>
 @endsection
+
+@push('scripts')
+<script>
+    $('#btn_explorar').on('click', function () {
+        $('#como-funciona').slideDown();
+
+        $('html, body').animate({
+            scrollTop: $('#como-funciona').offset().top
+        }, 600);
+    });
+</script>
+@endpush

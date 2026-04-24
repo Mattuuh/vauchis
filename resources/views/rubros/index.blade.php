@@ -65,7 +65,7 @@
                                 <th style="width: 40px">ID</th>
                                 <th style="width: 160px">NOMBRE</th>
                                 <th style="width: 60px">FECHA DE ALTA</th>
-                                <th style="width: 60px">ESTADO</th>
+                                <th style="width: 60px" class="text-center">ESTADO</th>
                                 <th style="width: 60px">ACCIONES</th>
                             </tr>
                         </thead>
@@ -82,34 +82,27 @@
                                         <span>{{ $rubro['rub_nombre'] }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Fecha de alta">
+                                    <td class="commerce-col text-center" data-label="Fecha de alta">
                                         <span class="commerce-mobile-label">Fecha de alta</span>
                                         <span>{{ $rubro['rub_fecha_alta']->format('d/m/Y') }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Estado">
+                                    <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $statusClass = match($rubro['rub_estado']) {
-                                                'activo' => 'is-active',
-                                                'pendiente' => 'is-pending',
-                                                'inactivo' => 'is-inactive',
-                                                default => 'is-active',
-                                            };
+                                            $estado = estado($rubro['rub_estado']);
                                         @endphp
 
-                                        <span class="commerce-status {{ $statusClass }}">
-                                            <i class="bi bi-circle-fill"></i>
-                                            {{ ucfirst($rubro['rub_estado']) }}
+                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
                                         </span>
                                     </td>
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('rubros.edit', $rubro['rub_id']) }}" class="btn commerce-edit-btn">
+                                        <a href="{{ route('rubros.edit', $rubro['rub_id']) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
-                                            Editar
                                         </a>
                                     </td>
                                 </tr>

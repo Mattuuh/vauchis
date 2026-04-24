@@ -27,6 +27,7 @@ class VoucherPlantilla extends Model
 
     protected $casts = [
         'vpl_config_json' => 'array',
+        'vpl_fecha_alta' => 'datetime',
     ];
 
     public function emisiones()
