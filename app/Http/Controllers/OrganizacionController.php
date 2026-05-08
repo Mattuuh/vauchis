@@ -149,6 +149,16 @@ class OrganizacionController extends Controller
         try {
             $this->validarOrganizacion($request);
 
+            $logoPath = null;
+
+            if ($request->hasFile('logo')) {
+                $name_legible = $request->file('logo')->getClientOriginalName();
+                $type = $request->file('logo')->getMimeType();
+                $size = $request->file('logo')->getSize();
+                $format = $request->file('logo')->getClientOriginalExtension();
+                $logoPath = $request->file('logo')->store('org_logos', 'public');
+            }
+
             $organizacion = Organizacion::create([
                 'tipo_doc_id' => $request->tipo_doc_id,
                 'org_documento' => $request->f_documento,
@@ -169,6 +179,11 @@ class OrganizacionController extends Controller
                 'org_longitud' => $request->f_longitud,
                 'org_descripcion_publica' => $request->f_descripcion_publica,
                 'org_descripcion_interna' => $request->f_descripcion_interna,
+                'org_img_nombre_legible' => $name_legible,
+                'org_img_name' => $name_legible,
+                'org_img_path' => $logoPath,
+                'org_img_format' => $format,
+                'org_img_size' => $size,
                 'org_estado' => '1',
                 'org_estado2' => null,
                 'org_fecha_alta' => now(),
@@ -182,7 +197,11 @@ class OrganizacionController extends Controller
                 ->with('success', 'Organizacion creada correctamente');
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Ocurrió un error al guardar: ' . $e->getMessage());
         }
     }
 
@@ -259,6 +278,24 @@ class OrganizacionController extends Controller
 
             $organizacion = Organizacion::findOrFail($id);
 
+            $logoPath = null;
+
+            if ($request->hasFile('logo')) {
+                $name_legible = $request->file('logo')->getClientOriginalName();
+                $type = $request->file('logo')->getMimeType();
+                $size = $request->file('logo')->getSize();
+                $format = $request->file('logo')->getClientOriginalExtension();
+                $logoPath = $request->file('logo')->store('org_logos', 'public');
+
+                $organizacion->update([
+                    'org_img_nombre_legible' => $name_legible,
+                    'org_img_name' => $name_legible,
+                    'org_img_path' => $logoPath,
+                    'org_img_format' => $format,
+                    'org_img_size' => $size,
+                ]);
+            }
+
             $organizacion->update([
                 'tipo_doc_id' => $request->tipo_doc_id,
                 'org_documento' => $request->f_documento,
@@ -279,6 +316,8 @@ class OrganizacionController extends Controller
                 'org_longitud' => $request->f_longitud,
                 'org_descripcion_publica' => $request->f_descripcion_publica,
                 'org_descripcion_interna' => $request->f_descripcion_interna,
+                'org_fecha_mod' => now(),
+                'org_usu_mod' => 1,
             ]);
 
             $domiciliosIds = $request->input('domicilios', []);
@@ -296,7 +335,7 @@ class OrganizacionController extends Controller
             }
 
             return redirect()
-                ->route('organizacion.index')
+                ->route('organizacion.edit', $id)
                 ->with('success', 'Organización actualizada correctamente');
 
         } catch (\Exception $e) {

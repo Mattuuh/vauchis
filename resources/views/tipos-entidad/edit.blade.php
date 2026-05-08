@@ -6,22 +6,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar tipo de entidad</h1>
             <p class="vch-subtitle">Modifica los datos del tipo de entidad seleccionado.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
@@ -29,7 +30,7 @@
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold mb-3">Datos del tipo de entidad</h6>
 
@@ -69,7 +70,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_ent_id }}" data-url="{{ route('tipos-entidad.delete', $tipo->tipo_ent_id) }}" id="btn_eliminar">
                 Eliminar
@@ -80,7 +81,7 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
             </div>

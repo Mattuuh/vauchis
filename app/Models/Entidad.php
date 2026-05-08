@@ -48,7 +48,7 @@ class Entidad extends Model
 
     public function domicilios()
     {
-        return $this->hasMany(Entidad_domicilio::class, 'ent_id', 'ent_id');
+        return $this->hasMany(EntidadDomicilio::class, 'ent_id', 'ent_id')->where('ed_estado', 1);
     }
 
     public function vouchers()
@@ -60,5 +60,20 @@ class Entidad extends Model
     {
         return $this->hasMany(Voucher::class, 'ent_id', 'ent_id')
             ->where('vou_estado', 1);
+    }
+
+    public function organizacion()
+    {
+        return $this->belongsTo(Organizacion::class, 'org_id');
+    }
+    
+    public function imagenes()
+    {
+        return $this->hasMany(EntidadImagen::class, 'ent_id', 'ent_id')->where('ef_estado', 1);
+    }
+
+    public function imagenPrincipal()
+    {
+        return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1);
     }
 }

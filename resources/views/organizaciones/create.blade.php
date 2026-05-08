@@ -6,29 +6,30 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Nueva organizacion</h1>
             <p class="vch-subtitle">Consulta y administra los tipos de entidad disponibles en la plataforma.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
-    <form method="POST" action="{{ route('organizacion.store') }}" id="form_main">
+    <form method="POST" action="{{ route('organizacion.store') }}" id="form_main" enctype="multipart/form-data">
         @csrf
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold">Datos de la organizacion</h6>
 
             <div class="row g-2">
@@ -48,7 +49,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">N° de documento</label>
-                    <input type="text" name="f_documento" class="form-control field-required" required>
+                    <input type="text" name="f_documento" class="form-control field-required" required value="{{ old('f_documento') }}">
                     @error('f_documento')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -56,7 +57,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre de fantasía</label>
-                    <input type="text" name="f_nombre_fantasia" class="form-control field-required" required>
+                    <input type="text" name="f_nombre_fantasia" class="form-control field-required" required value="{{ old('f_nombre_fantasia') }}">
                     @error('f_nombre_fantasia')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -64,7 +65,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre</label>
-                    <input type="text" name="f_nombre" class="form-control field-required" required>
+                    <input type="text" name="f_nombre" class="form-control field-required" required value="{{ old('f_nombre') }}">
                     @error('f_nombre')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -72,10 +73,15 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Razón social</label>
-                    <input type="text" name="f_razon_social" class="form-control field-required" required>
+                    <input type="text" name="f_razon_social" class="form-control field-required" required value="{{ old('f_razon_social') }}">
                     @error('f_razon_social')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Logo</label>
+                    <input type="file" name="logo" class="form-control" value="{{ old('logo') }}">
                 </div>
 
                 <div class="row g-3">
@@ -112,7 +118,7 @@
 
                             <div class="col-12">
                                 <label class="form-label required-label">Ciudad</label>
-                                <input type="text" name="f_ciudad" class="form-control field-required" required>
+                                <input type="text" name="f_ciudad" class="form-control field-required" required value="{{ old('f_ciudad') }}">
                                 @error('f_ciudad')
                                     <div class="text-required">{{ $message }}</div>
                                 @enderror
@@ -120,17 +126,17 @@
 
                             <div class="col-12">
                                 <label class="form-label">Código postal</label>
-                                <input type="text" name="f_codigo_postal" class="form-control">
+                                <input type="text" name="f_codigo_postal" class="form-control" value="{{ old('f_codigo_postal') }}">
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">Barrio</label>
-                                <input type="text" name="f_barrio" class="form-control">
+                                <input type="text" name="f_barrio" class="form-control" value="{{ old('f_barrio') }}">
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label required-label">Dirección</label>
-                                <input type="text" name="f_direccion" id="f_direccion" class="form-control field-required" placeholder="Escribe una dirección" required>
+                                <input type="text" name="f_direccion" id="f_direccion" class="form-control field-required" placeholder="Escribe una dirección" required value="{{ old('f_direccion') }}">
                                 @error('f_direccion')
                                     <div class="text-required">{{ $message }}</div>
                                 @enderror
@@ -176,7 +182,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Email 1</label>
-                    <input type="text" name="f_email1" class="form-control field-required" required>
+                    <input type="text" name="f_email1" class="form-control field-required" required value="{{ old('f_email1') }}">
                     @error('f_email1')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -184,7 +190,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label">Email 2</label>
-                    <input type="text" name="f_email2" class="form-control">
+                    <input type="text" name="f_email2" class="form-control" value="{{ old('f_email2') }}">
                     @error('f_email2')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -192,7 +198,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Telefono 1</label>
-                    <input type="text" name="f_telefono1" class="form-control field-required" required>
+                    <input type="text" name="f_telefono1" class="form-control field-required" required value="{{ old('f_telefono1') }}">
                     @error('f_telefono1')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -200,7 +206,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label">Telefono 2</label>
-                    <input type="text" name="f_telefono2" class="form-control">
+                    <input type="text" name="f_telefono2" class="form-control" value="{{ old('f_telefono2') }}">
                     @error('f_telefono2')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -208,7 +214,7 @@
 
                 <div class="col-12 col-md-12">
                     <label class="form-label required-label">Descripcion publica</label>
-                    <input type="text" name="f_descripcion_publica" class="form-control field-required" required>
+                    <input type="text" name="f_descripcion_publica" class="form-control field-required" required value="{{ old('f_descripcion_publica') }}">
                     @error('f_descripcion_publica')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -216,7 +222,7 @@
 
                 <div class="col-12 col-md-12">
                     <label class="form-label required-label">Descripcion detallada</label>
-                    <input type="text" name="f_descripcion_interna" class="form-control field-required" required>
+                    <input type="text" name="f_descripcion_interna" class="form-control field-required" required value="{{ old('f_descripcion_interna') }}">
                     @error('f_descripcion_interna')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -225,7 +231,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('organizacion.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>

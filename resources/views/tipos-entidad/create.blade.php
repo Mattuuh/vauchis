@@ -7,22 +7,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Nuevo tipo de entidad</h1>
-            <p class="vch-subtitle">Consulta y administra los tipos de entidad disponibles en la plataforma.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <p class="vch-subtitle">Permiten categorizar las entidades por tipo de actividad, como restaurantes, comercios, ONGs, entre otros.</p>
         </div>
     </section>
 
@@ -30,7 +31,7 @@
         @csrf
 
         <!-- CARD -->
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold mb-3">Datos del tipo de entidad</h6>
 
@@ -72,7 +73,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('tipos-entidad.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>

@@ -1,0 +1,22 @@
+7) Reglas sugeridas para usar en voucher_reglas
+
+Acá no te dejo inserts fijos porque esta tabla guarda reglas por voucher, pero sí te dejo un catálogo lógico de vre_codigo que vas a poder usar de forma consistente.
+
+Códigos sugeridos
+limite_por_usuario
+dias_validos
+horario_desde
+horario_hasta
+requiere_reserva
+acumulable
+primera_compra
+solo_sucursal_especifica
+sucursales_habilitadas
+stock_total
+stock_por_dia
+vigencia_desde
+vigencia_hasta
+excluye_feriados
+canal_uso
+edad_minima
+observaciones_uso

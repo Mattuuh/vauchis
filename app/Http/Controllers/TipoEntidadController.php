@@ -72,7 +72,7 @@ class TipoEntidadController extends Controller
             ]);
 
             return redirect()
-                ->route('tipos-entidad.index')
+                ->route('tipos-entidad.edit', $id)
                 ->with('success', 'Tipo de entidad actualizado correctamente');
 
         } catch (\Exception $e) {

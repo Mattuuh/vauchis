@@ -170,7 +170,7 @@ class RubroController extends Controller
             }
 
             return redirect()
-                ->route('rubros.index')
+                ->route('rubros.edit', $id)
                 ->with('success', 'Rubro actualizado correctamente');
 
         } catch (\Exception $e) {

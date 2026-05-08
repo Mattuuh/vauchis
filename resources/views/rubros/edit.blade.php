@@ -84,22 +84,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<main class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar rubro</h1>
             <p class="vch-subtitle">Modifica los datos del rubro seleccionado.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
@@ -107,7 +108,7 @@
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-3">Datos del rubro</h6>
 
             <div class="row g-3">
@@ -162,7 +163,7 @@
 
             </div>
         </div>
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Subrubros</h6>
 
             <p class="text-muted small mb-3">
@@ -224,7 +225,7 @@
         
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $rubro->rub_id }}" data-url="{{ route('rubros.delete', $rubro->rub_id) }}" id="btn_eliminar">
                 Eliminar
@@ -235,14 +236,14 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
             </div>
 
         </div>
     </form>
-</div>
+</main>
 
 <script>
     let subrubrosExistentes = @json(old('subrubros', $subrubrosSeleccionados ?? []));

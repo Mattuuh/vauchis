@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Entidad;
 use App\Models\Organization;
 use App\Models\Influencer;
+use App\Models\Organizacion;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -67,59 +70,74 @@ class HomeController extends Controller
             ]
         ]);
 
-        $featuredBrands = collect([
-            (object)['name' => 'Adidas', 'logo' => 'logos/adidas-logo.png'],
-            (object)['name' => 'Apple', 'logo' => 'logos/apple-logo.png'],
-            (object)['name' => 'Nike', 'logo' => 'logos/nike-logo.png'],
-            (object)['name' => 'Starbucks', 'logo' => 'logos/starbucks-logo.png'],
-            (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
-            (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
-            (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
-        ]);
+        // $featuredBrands = collect([
+        //     (object)['name' => 'Adidas', 'logo' => 'logos/adidas-logo.png'],
+        //     (object)['name' => 'Apple', 'logo' => 'logos/apple-logo.png'],
+        //     (object)['name' => 'Nike', 'logo' => 'logos/nike-logo.png'],
+        //     (object)['name' => 'Starbucks', 'logo' => 'logos/starbucks-logo.png'],
+        //     (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
+        //     (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
+        //     (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
+        // ]);
 
-        $organizations = collect([
-            (object)[
-                'name' => 'Alto NOA',
-                'logo' => 'logos/alto-noa-logo.png',
-                'brands' => collect([
-                    (object)['name' => 'Adidas', 'logo' => 'logos/adidas-logo.png'],
-                    (object)['name' => 'Apple', 'logo' => 'logos/apple-logo.png'],
-                    (object)['name' => 'Nike', 'logo' => 'logos/nike-logo.png'],
-                    (object)['name' => 'Starbucks', 'logo' => 'logos/starbucks-logo.png'],
-                    (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
-                    (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
-                    (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
-                ])
-            ],
-            (object)[
-                'name' => 'Paseo Salta',
-                'logo' => 'logos/paseo-libertad.png',
-                'brands' => collect([
-                    (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
-                    (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
-                    (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
-                ])
-            ],
-            (object)[
-                'name' => 'El Punto',
-                'logo' => 'logos/el-punto.jpg',
-                'brands' => collect([
-                    (object)['name' => 'Apple', 'logo' => 'logos/apple-logo.png'],
-                    (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
-                    (object)['name' => 'Nike', 'logo' => 'logos/nike-logo.png'],
-                    (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
-                ])
-            ],
-            (object)[
-                'name' => 'San Lorenzo',
-                'logo' => 'logos/san-lorenzo.png',
-                'brands' => collect([
-                    (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
-                    (object)['name' => 'Adidas', 'logo' => 'logos/adidas-logo.png'],
-                    (object)['name' => 'Starbucks', 'logo' => 'logos/starbucks-logo.png'],
-                ])
-            ]
-        ]);
+        // $featuredBrands = Entidad::where('ent_estado', 1)
+        //     ->get([
+        //         'ent_id',
+        //         DB::raw('ent_nombre_fantasia as name'),
+        //         DB::raw('ent_logo_url as logo'),
+        //     ]);
+
+        $featuredBrands = Entidad::where('ent_estado', 1)
+            ->with('imagenPrincipal')
+            ->get()
+            ->map(function ($ent) {
+                return (object)[
+                    'name' => $ent->ent_nombre_fantasia,
+                    'logo' => $ent->imagenPrincipal
+                        ? $ent->imagenPrincipal->ef_img_path
+                        : 'default.png',
+                ];
+            });
+
+        // $organizations = collect([
+        //     (object)[
+        //         'name' => 'Alto NOA',
+        //         'logo' => 'logos/alto-noa-logo.png',
+        //         'brands' => collect([
+        //             (object)['name' => 'Adidas', 'logo' => 'logos/adidas-logo.png'],
+        //             (object)['name' => 'Apple', 'logo' => 'logos/apple-logo.png'],
+        //             (object)['name' => 'Nike', 'logo' => 'logos/nike-logo.png'],
+        //             (object)['name' => 'Starbucks', 'logo' => 'logos/starbucks-logo.png'],
+        //             (object)['name' => 'Mc Donalds', 'logo' => 'logos/mc-donalds.png'],
+        //             (object)['name' => 'Marathon', 'logo' => 'logos/marathon.png'],
+        //             (object)['name' => 'Mostaza', 'logo' => 'logos/mostaza.png'],
+        //         ])
+        //     ]
+        // ]);
+
+        $organizations = Organizacion::with([
+                'domicilios.entidad' => function ($q) {
+                    $q->where('ent_estado', 1);
+                }
+            ])
+            ->where('org_estado', 1)
+            ->get()
+            ->map(function ($org) {
+                return (object)[
+                    'name' => $org->org_nombre,
+                    'logo' => $org->org_img_path,
+                    'brands' => $org->domicilios
+                        ->filter(fn ($domicilio) => $domicilio->entidad)
+                        ->map(function ($domicilio) {
+                            return (object)[
+                                'name' => $domicilio->entidad->ent_nombre_fantasia,
+                                'logo' => $domicilio->entidad->ent_logo_url,
+                            ];
+                        })
+                        ->unique('name')
+                        ->values(),
+                ];
+            });
 
         $collections = collect([
             (object)[
@@ -144,13 +162,30 @@ class HomeController extends Controller
             ],
         ]);
 
-        $influencers = collect([
-            (object)[
-                'name' => 'Cami Román',
-                'photo' => null,
-                'description' => 'Experiencias únicas'
-            ]
-        ]);
+        // $influencers = collect([
+        //     (object)[
+        //         'name' => 'Cami Román',
+        //         'photo' => 'influencers/cami_perez.png',
+        //         'description' => 'Experiencias únicas'
+        //     ],
+        //     (object)[
+        //         'name' => 'Juan Perez',
+        //         'photo' => 'influencers/juan_perez.png',
+        //         'description' => 'Equipamiento deportivo.'
+        //     ],
+        // ]);
+
+        $influencers = Influencer::with('imagenPrincipal')
+            ->get()
+            ->map(function ($inf) {
+                return (object)[
+                    'name' => $inf->inf_nombre_fantasia,
+                    'photo' => $inf->imagenPrincipal
+                        ? $inf->imagenPrincipal->if_img_path
+                        : 'default.png',
+                    'description' => $inf->inf_descripcion_publica,
+                ];
+            });
 
         return view('home', compact(
             'categories',

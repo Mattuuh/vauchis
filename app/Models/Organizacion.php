@@ -31,6 +31,11 @@ class Organizacion extends Model
         'org_longitud',
         'org_descripcion_publica',
         'org_descripcion_interna',
+        'org_img_nombre_legible',
+        'org_img_name',
+        'org_img_path',
+        'org_img_format',
+        'org_img_size',
         'org_estado',
         'org_estado2',
         'org_fecha_alta',
@@ -44,4 +49,9 @@ class Organizacion extends Model
     protected $casts = [
         'org_fecha_alta' => 'datetime',
     ];
+
+    public function domicilios()
+    {
+        return $this->hasMany(EntidadDomicilio::class, 'org_id', 'org_id');
+    }
 }

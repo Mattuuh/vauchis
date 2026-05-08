@@ -32,9 +32,10 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
                         <li><a class="dropdown-item" href="{{ route('vouchers.index') }}">Vouchers</a></li>
                         <li><a class="dropdown-item" href="{{ route('modalidades.index') }}">Modalidades</a></li>
-                        <li><a class="dropdown-item" href="{{ route('modalidades.index') }}">Etiquetas</a></li>
+                        <li><a class="dropdown-item" href="{{ route('etiquetas.index') }}">Etiquetas</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('voucher_emisiones.index') }}">Emision</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('voucher_plantillas.index') }}">Plantillas</a></li>
+                        <li><a class="dropdown-item" href="{{ route('biblioteca_fondos.create') }}">Fondos</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

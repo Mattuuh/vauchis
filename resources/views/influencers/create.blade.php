@@ -7,22 +7,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Nuevo influencer</h1>
-            <p class="vch-subtitle">Consulta y administra los tipos de entidad disponibles en la plataforma.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <p class="vch-subtitle">Usuarios que colaboran en la promoción de vouchers, generando visibilidad y atracción de clientes.</p>
         </div>
     </section>
 
@@ -30,7 +31,7 @@
         @csrf
 
         <!-- CARD -->
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold">Datos del influencer</h6>
 
@@ -185,11 +186,25 @@
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <label class="form-label required-label">Imagen/es</label>
+                    <div id="imagenes_container">
+                        <div class="row imagen-item mb-2">
+                            <div class="col-sm-11">
+                                <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                            </div>
+                            <div class="col-sm-1 d-flex align-items-center"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <button type="button" id="agregar_imagen" class="btn btn-primary btn-block">Agregar otro imagen</button>
+
             </div>
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('influencers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
@@ -224,5 +239,30 @@
         });
     });
 
+</script>
+<script>
+$(document).ready(function () {
+
+    $('#agregar_imagen').on('click', function () {
+
+        let html = `
+            <div class="row imagen-item ">
+                <div class="col-sm-11">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-imagen">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#imagenes_container').append(html);
+    });
+
+    $(document).on('click', '.remove-imagen', function () {
+        $(this).closest('.imagen-item').remove();
+    });
+
+});
 </script>
 @endsection

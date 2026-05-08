@@ -12,25 +12,22 @@
 @include('partials.navbar')
 
 <main class="commerce-page">
+    <span class="commerce-hero-wave commerce-hero-wave--one"></span>
+    <span class="commerce-hero-wave commerce-hero-wave--two"></span>
+
+    <span class="commerce-dot commerce-dot--pink-left"></span>
+    <span class="commerce-dot commerce-dot--blue-left"></span>
+    <span class="commerce-dot commerce-dot--yellow"></span>
+    <span class="commerce-dot commerce-dot--blue"></span>
+    <span class="commerce-dot commerce-dot--green"></span>
+    <span class="commerce-dot commerce-dot--pink"></span>
+    <span class="commerce-dot commerce-dot--blue-small"></span>
+
     <section class="commerce-hero">
         <div class="commerce-hero__content">
             <h1 class="commerce-title">Influencers</h1>
-
-            <p class="commerce-subtitle">
-                Consulta y administra todos los tipos de entidad disponibles en la plataforma Vauchis.
-            </p>
+            <p class="commerce-subtitle">Son perfiles que promocionan vouchers y ayudan a impulsar su difusión en la plataforma.</p>
         </div>
-
-        <span class="commerce-hero-wave commerce-hero-wave--one"></span>
-        <span class="commerce-hero-wave commerce-hero-wave--two"></span>
-
-        <span class="commerce-dot commerce-dot--pink-left"></span>
-        <span class="commerce-dot commerce-dot--blue-left"></span>
-        <span class="commerce-dot commerce-dot--yellow"></span>
-        <span class="commerce-dot commerce-dot--blue"></span>
-        <span class="commerce-dot commerce-dot--green"></span>
-        <span class="commerce-dot commerce-dot--pink"></span>
-        <span class="commerce-dot commerce-dot--blue-small"></span>
     </section>
 
     <section class="commerce-list-section">

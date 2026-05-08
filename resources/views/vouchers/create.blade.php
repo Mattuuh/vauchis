@@ -10,28 +10,30 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Nuevo voucher</h1>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <p class="commerce-subtitle">Son productos digitales que el usuario compra para canjear en una entidad bajo condiciones acordadas.</p>
         </div>
     </section>
 
     <form method="POST" action="{{ route('vouchers.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-3">Datos del voucher</h6>
 
             <div class="row g-4">
@@ -152,8 +154,8 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label required-label">Banners:</label>
-                    <div id="banners-wrapper">
+                    <label class="form-label required-label">Plantillas:</label>
+                    {{-- <div id="banners-wrapper">
                         <div class="banner-item mb-2">
                             <div class="row g-2 align-items-center">
                                 <div class="col-md-10">
@@ -162,7 +164,7 @@
                                 <div class="col-md-2"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     @error('banners')
                         <div class="text-required">{{ $message }}</div>
@@ -172,10 +174,27 @@
                         <div class="text-required">{{ $message }}</div>
                     @enderror
 
-                    <div class="mt-2 text-end">
+                    {{-- <div class="mt-2 text-end">
                         <button type="button" class="btn btn-primary" onclick="addBanner()">
                             Agregar banner
                         </button>
+                    </div> --}}
+                    <div class="card card-custom p-3 mb-3">
+                        <div class="row g-3">
+                            @foreach ($plantillas as $plantilla)
+                                <div class="col-12 col-md-4">
+                                    <div class="border rounded p-2 h-100">
+                                        <img src="{{ asset($plantilla->vpl_fondo_path) }}" class="img-fluid rounded mb-2" alt="{{ $plantilla->vpl_nombre }}" style="height:160px;border-radius:6px;">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="plantillas[]" value="{{ $plantilla->vpl_id }}" id="plantilla-{{ $plantilla->vpl_id }}">
+
+                                            <label class="form-check-label" for="plantilla-{{ $plantilla->vpl_id }}">Seleccionar plantilla</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
@@ -191,7 +210,7 @@
         </div>
 
         {{-- CAMPOS DINÁMICOS DE MODALIDAD --}}
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Configuración de la modalidad</h6>
 
             <div class="col-12 col-md-6">
@@ -221,7 +240,7 @@
         </div>
 
         {{-- ETIQUETAS --}}
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Etiquetas</h6>
 
             <p class="text-muted small mb-3">
@@ -261,12 +280,12 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success" id="btn_guardar">
                 Guardar
             </button>
         </div>

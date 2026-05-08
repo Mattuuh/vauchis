@@ -10,21 +10,22 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar voucher</h1>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
@@ -32,7 +33,7 @@
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-3">Datos del voucher</h6>
 
             <div class="row g-4">
@@ -169,7 +170,7 @@
             </div>
         </div>
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Configuración de la modalidad</h6>
             <p class="text-muted small mb-3">
                 Podés cambiar la modalidad y editar sus valores específicos.
@@ -182,7 +183,7 @@
             </div>
         </div>
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Etiquetas</h6>
 
             <div class="mb-3">
@@ -239,7 +240,7 @@
             </div>
         </div>
 
-        <div class="card card-custom p-3 mb-3">
+        {{-- <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Banners actuales</h6>
 
             @if($banners->count())
@@ -261,29 +262,42 @@
             @else
                 <div class="text-muted small">No hay banners cargados.</div>
             @endif
-        </div>
+        </div> --}}
+        <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Plantillas vinculadas</h6>
 
-        <div class="card card-custom p-3 mb-3">
-            <h6 class="fw-bold mb-2">Agregar nuevos banners</h6>
-            <div id="banners-wrapper">
-                <div class="banner-item mb-2">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-md-10">
-                            <input type="file" name="banners[]" class="form-control">
+            <p class="text-muted small mb-3">
+                Seleccioná una o más plantillas para este voucher y marcá cuál será la principal.
+            </p>
+
+            @if($plantillas->isEmpty())
+                <div class="text-muted small">No hay plantillas disponibles.</div>
+            @else
+                <div class="row g-3">
+                    @foreach ($plantillas as $plantilla)
+                        <div class="col-12 col-md-4">
+                            <div class="border rounded p-2 h-100">
+                                <img src="{{ asset($plantilla->vpl_fondo_path) }}" class="img-fluid rounded mb-2" alt="{{ $plantilla->vpl_nombre }}" style="height:160px;border-radius:6px;">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="plantillas[]" value="{{ $plantilla->vpl_id }}" id="selected-plantilla-{{ $plantilla->vpl_id }}" @checked(in_array($plantilla->vpl_id, $plantillasSeleccionadas))>
+
+                                    <label class="form-check-label" for="selected-plantilla-{{ $plantilla->vpl_id }}">Seleccionar plantilla</label>
+                                    <a href="{{ route('vouchers.plantillas.preview', [
+                                            'voucher' => $voucher->vou_id,
+                                            'plantilla' => $plantilla->vpl_id
+                                        ]) }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                        <i class="fas fa-eye"></i> Vista previa
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-2"></div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-
-            <div class="mt-2 text-end">
-                <button type="button" class="btn btn-primary" onclick="addBanner()">
-                    Agregar banner
-                </button>
-            </div>
+            @endif
         </div>
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="fw-bold mb-1">Vouchers generados</h6>
@@ -343,12 +357,12 @@
             @endif
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success" id="btn_actualizar">
                 Actualizar
             </button>
         </div>

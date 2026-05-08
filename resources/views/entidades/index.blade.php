@@ -11,27 +11,23 @@
 @include('partials.navbar')
 
 <main class="commerce-page">
+
+    <span class="commerce-hero-wave commerce-hero-wave--one"></span>
+    <span class="commerce-hero-wave commerce-hero-wave--two"></span>
+
+    <span class="commerce-dot commerce-dot--pink-left"></span>
+    <span class="commerce-dot commerce-dot--blue-left"></span>
+    <span class="commerce-dot commerce-dot--yellow"></span>
+    <span class="commerce-dot commerce-dot--blue"></span>
+    <span class="commerce-dot commerce-dot--green"></span>
+    <span class="commerce-dot commerce-dot--pink"></span>
+    <span class="commerce-dot commerce-dot--blue-small"></span>
+
     <section class="commerce-hero">
         <div class="commerce-hero__content">
             <h1 class="commerce-title">Entidades</h1>
-
-            <p class="commerce-subtitle">
-                Consulta y administra todas las entidades disponibles
-                <br>
-                en la plataforma Vauchis.
-            </p>
+            <p class="commerce-subtitle">Representan los comercios o actores dentro de la plataforma, utilizados para la gestión de vouchers.</p>
         </div>
-
-        <span class="commerce-hero-wave commerce-hero-wave--one"></span>
-        <span class="commerce-hero-wave commerce-hero-wave--two"></span>
-
-        <span class="commerce-dot commerce-dot--pink-left"></span>
-        <span class="commerce-dot commerce-dot--blue-left"></span>
-        <span class="commerce-dot commerce-dot--yellow"></span>
-        <span class="commerce-dot commerce-dot--blue"></span>
-        <span class="commerce-dot commerce-dot--green"></span>
-        <span class="commerce-dot commerce-dot--pink"></span>
-        <span class="commerce-dot commerce-dot--blue-small"></span>
     </section>
 
     <section class="commerce-list-section">

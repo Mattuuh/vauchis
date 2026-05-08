@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Entidad_domicilio extends Model
+class EntidadDomicilio extends Model
 {
     protected $table = 'entidades_domicilios';
     protected $primaryKey = 'ed_id';
@@ -38,4 +38,14 @@ class Entidad_domicilio extends Model
         'ent_fecha_baja',
         'ent_usu_baja',
     ];
+
+    public function organizacion()
+    {
+        return $this->belongsTo(Organizacion::class, 'org_id', 'org_id');
+    }
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'ent_id', 'ent_id');
+    }
 }

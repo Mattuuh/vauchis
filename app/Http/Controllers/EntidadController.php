@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entidad;
+use App\Models\EntidadImagen;
+use App\Models\EntidadLogo;
 use App\Models\Etiqueta;
 use App\Models\Organizacion;
 use App\Models\Pais;
@@ -232,12 +234,6 @@ class EntidadController extends Controller
 
             DB::beginTransaction();
 
-            $logoPath = null;
-
-            if ($request->hasFile('logo')) {
-                $logoPath = $request->file('logo')->store('logos', 'public');
-            }
-
             $entId = DB::table('entidades')->insertGetId([
                 'tipo_ent_id' => $request->tipo_entidad_id,
                 'tipo_resp_id' => $request->tipo_resp_id,
@@ -245,7 +241,7 @@ class EntidadController extends Controller
                 'ent_documento' => $request->com_documento,
                 'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                 'ent_razon_social' => $request->com_razon_social,
-                'ent_logo_url' => $logoPath,
+                // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
                 'ent_fecha_alta' => now(),
             ]);
@@ -300,6 +296,38 @@ class EntidadController extends Controller
                 }
             }
 
+            $path = null;
+            $usu = 1;
+
+            if ($request->hasFile('logos')) {
+
+                foreach ($request->file('logos') as $index => $logo) {
+                    // $filename = Str::uuid() . '.' . $logo->extension();
+                    // $path = $logo->storeAs('logos', $filename, 'public');
+
+                    $name = sanear_string($logo->getClientOriginalName());
+                    $name_legible = $logo->getClientOriginalName();
+                    $type = $logo->getMimeType();
+                    $size = $logo->getSize();
+                    $format = $logo->getClientOriginalExtension();
+                    $path = $logo->store('logos', 'public');
+
+                    $imagen = EntidadImagen::create([
+                        'ef_nombre' => $request->nombre,
+                        'ef_img_nombre_legible' => $name_legible,
+                        'ef_img_name' => $name,
+                        'ef_img_path' => $path,
+                        'ef_img_format' => $format,
+                        'ef_img_size' => $size,
+                        'ef_principal' => 0,
+                        'ef_estado' => 1,
+                        'ef_fecha_alta' => now(),
+                        'ef_usu_alta' => $usu,
+                    ]);
+                }
+            }
+
+
             DB::commit();
 
             return redirect()->route('entidades.index')->with('success', 'Comercio creado correctamente');
@@ -313,7 +341,10 @@ class EntidadController extends Controller
 
     public function edit($id)
     {
-        $entidad = Entidad::findOrFail($id);
+        // $entidad = Entidad::findOrFail($id);
+        $entidad = Entidad::with([
+            'imagenes'
+        ])->findOrFail($id);
 
         $tiposEntidad = TipoEntidad::where('tipo_ent_estado', 1)
             ->orderBy('tipo_ent_id')
@@ -406,15 +437,11 @@ class EntidadController extends Controller
         try {
             $this->validarEntidad($request);
 
+
             DB::beginTransaction();
 
             $entidad = Entidad::findOrFail($id);
-
-            $logoPath = $entidad->ent_logo_url;
-
-            if ($request->hasFile('logo')) {
-                $logoPath = $request->file('logo')->store('logos', 'public');
-            }
+            $usu = 1;
 
             DB::table('entidades')
                 ->where('ent_id', $id)
@@ -424,42 +451,83 @@ class EntidadController extends Controller
                     'ent_documento' => $request->com_documento,
                     'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                     'ent_razon_social' => $request->com_razon_social,
-                    'ent_logo_url' => $logoPath,
+                    // 'ent_logo_url' => $logoPath,
                 ]);
 
             DB::table('entidades_subrubros')
                 ->where('ent_id', $id)
-                ->update(['ed_estado' => 0]);
+                ->update(['es_estado' => 0]);
 
             DB::table('entidades_rubros')
                 ->where('ent_id', $id)
-                ->update(['ed_estado' => 0]);
+                ->update(['er_estado' => 0]);
 
-            DB::table('entidades_domicilios')
-                ->where('ent_id', $id)
-                ->update(['ed_estado' => 0]);
+            // DB::table('entidades_domicilios')
+            //     ->where('ent_id', $id)
+            //     ->update(['ed_estado' => 0]);
 
             foreach ($request->sucursales as $sucursal) {
-                $domicilioId = DB::table('entidades_domicilios')->insertGetId([
-                    'ent_id' => $id,
-                    'org_id' => $sucursal['org_id'] ?? null,
-                    'pais_id' => $sucursal['pais_id'],
-                    'provincia_id' => $sucursal['provincia_id'],
-                    'ed_ciudad' => $sucursal['cd_ciudad'],
-                    'ed_barrio' => $sucursal['cd_barrio'] ?? null,
-                    'ed_direccion' => $sucursal['cd_direccion'],
-                    'ed_codigo_postal' => $sucursal['cd_codigo_postal'] ?? null,
-                    'ed_telefono1' => $sucursal['cd_telefono1'],
-                    'ed_telefono2' => $sucursal['cd_telefono2'] ?? null,
-                    'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
-                    'ed_email1' => $sucursal['cd_email1'] ?? null,
-                    'ed_email2' => $sucursal['cd_email2'] ?? null,
-                    'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
-                    'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
-                    'ed_estado' => 1,
-                    'ed_fecha_alta' => now(),
-                ]);
 
+                if (!empty($sucursal['ed_id'])) {
+                    // Actualizar domicilio existente
+                    $domicilioId = $sucursal['ed_id'];
+
+                    DB::table('entidades_domicilios')
+                        ->where('ed_id', $domicilioId)
+                        ->where('ent_id', $id)
+                        ->update([
+                            'org_id' => $sucursal['org_id'] ?? null,
+                            'pais_id' => $sucursal['pais_id'],
+                            'provincia_id' => $sucursal['provincia_id'],
+                            'ed_ciudad' => $sucursal['cd_ciudad'],
+                            'ed_barrio' => $sucursal['cd_barrio'] ?? null,
+                            'ed_direccion' => $sucursal['cd_direccion'],
+                            'ed_codigo_postal' => $sucursal['cd_codigo_postal'] ?? null,
+                            'ed_telefono1' => $sucursal['cd_telefono1'],
+                            'ed_telefono2' => $sucursal['cd_telefono2'] ?? null,
+                            'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
+                            'ed_email1' => $sucursal['cd_email1'] ?? null,
+                            'ed_email2' => $sucursal['cd_email2'] ?? null,
+                            'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
+                            'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
+                            'ed_estado' => 1,
+                        ]);
+
+                } else {
+                    // Crear domicilio nuevo
+                    $domicilioId = DB::table('entidades_domicilios')->insertGetId([
+                        'ent_id' => $id,
+                        'org_id' => $sucursal['org_id'] ?? null,
+                        'pais_id' => $sucursal['pais_id'],
+                        'provincia_id' => $sucursal['provincia_id'],
+                        'ed_ciudad' => $sucursal['cd_ciudad'],
+                        'ed_barrio' => $sucursal['cd_barrio'] ?? null,
+                        'ed_direccion' => $sucursal['cd_direccion'],
+                        'ed_codigo_postal' => $sucursal['cd_codigo_postal'] ?? null,
+                        'ed_telefono1' => $sucursal['cd_telefono1'],
+                        'ed_telefono2' => $sucursal['cd_telefono2'] ?? null,
+                        'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
+                        'ed_email1' => $sucursal['cd_email1'] ?? null,
+                        'ed_email2' => $sucursal['cd_email2'] ?? null,
+                        'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
+                        'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
+                        'ed_estado' => 1,
+                        'ed_fecha_alta' => now(),
+                    ]);
+                }
+
+                // Desactivar rubros/subrubros anteriores de ese domicilio
+                DB::table('entidades_rubros')
+                    ->where('ent_id', $id)
+                    ->where('ed_id', $domicilioId)
+                    ->update(['er_estado' => 0]);
+
+                DB::table('entidades_subrubros')
+                    ->where('ent_id', $id)
+                    ->where('ed_id', $domicilioId)
+                    ->update(['es_estado' => 0]);
+
+                // Insertar rubros actuales
                 if (!empty($sucursal['rubros']) && is_array($sucursal['rubros'])) {
                     foreach ($sucursal['rubros'] as $rubId) {
                         DB::table('entidades_rubros')->insert([
@@ -471,6 +539,7 @@ class EntidadController extends Controller
                     }
                 }
 
+                // Insertar subrubros actuales
                 if (!empty($sucursal['subrubros']) && is_array($sucursal['subrubros'])) {
                     $rubrosSeleccionados = $sucursal['rubros'] ?? [];
 
@@ -490,10 +559,87 @@ class EntidadController extends Controller
                 }
             }
 
+            
+            /*
+            |--------------------------------------------------------------------------
+            | Eliminar logos marcados
+            |--------------------------------------------------------------------------
+            */
+            if ($request->filled('delete_logos')) {
+
+                $logos = EntidadImagen::where('ent_id', $id)
+                    ->whereIn('ef_id', $request->delete_logos)
+                    ->get();
+
+                foreach ($logos as $logo) {
+
+                    if ($logo->imagen && $logo->imagen->ef_img_path) {
+                        // Storage::disk('public')->delete($logo->imagen->ef_img_path);
+                    }
+
+                    $logo->update([
+                        'ef_principal' => 0,
+                        'ef_estado' => 0,
+                        'ef_fecha_baja' => now(),
+                        'ef_usu_baja' => $usu,
+                    ]);
+                }
+            }
+
+            // LOGO PRINCIPAL
+            if ($request->filled('logo_principal')) {
+
+                EntidadImagen::where('ent_id', $id)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 0,
+                    ]);
+
+                EntidadImagen::where('ent_id', $id)
+                    ->where('ef_id', $request->logo_principal)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 1,
+                        'ef_fecha_mod' => now(),
+                        'ef_usu_mod' => $usu,
+                    ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Agregar nuevos logos
+            |--------------------------------------------------------------------------
+            */
+            if ($request->hasFile('logos')) {
+
+                foreach ($request->file('logos') as $logoFile) {
+
+                    if (!$logoFile) {
+                        continue;
+                    }
+
+                    $path = $logoFile->store('logos', 'public');
+
+                    $imagen = EntidadImagen::create([
+                        'ent_id' => $id,
+                        'ef_nombre' => $request->nombre,
+                        'ef_img_nombre_legible' => $logoFile->getClientOriginalName(),
+                        'ef_img_name' => basename($path),
+                        'ef_img_path' => $path,
+                        'ef_img_format' => $logoFile->getClientOriginalExtension(),
+                        'ef_img_size' => $logoFile->getSize(),
+                        'ef_principal' => 0,
+                        'ef_estado' => 1,
+                        'ef_fecha_alta' => now(),
+                        'ef_usu_alta' => $usu,
+                    ]);
+                }
+            }
+
             DB::commit();
 
             return redirect()
-                ->route('entidades.index')
+                ->route('entidades.edit', $id)
                 ->with('success', 'Comercio actualizado correctamente');
 
         } catch (\Exception $e) {

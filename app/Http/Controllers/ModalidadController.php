@@ -23,12 +23,12 @@ class ModalidadController extends Controller
 
             'campos' => 'nullable|array',
             'campos.*.id' => 'nullable|integer',
-            'campos.*.codigo' => 'required|string|max:100',
+            // 'campos.*.codigo' => 'required|string|max:100',
             'campos.*.nombre' => 'required|string|max:150',
             'campos.*.tipo' => 'required|string|max:50',
-            'campos.*.label' => 'required|string|max:150',
+            // 'campos.*.label' => 'required|string|max:150',
             'campos.*.placeholder' => 'nullable|string|max:255',
-            'campos.*.orden' => 'nullable|integer|min:1',
+            // 'campos.*.orden' => 'nullable|integer|min:1',
             'campos.*.opciones' => 'nullable|string',
             'campos.*.ayuda' => 'nullable|string|max:255',
         ]);
@@ -67,22 +67,26 @@ class ModalidadController extends Controller
             'mod_usu_alta' => 1,
         ]);
 
+        $i=1;
         foreach ($request->campos ?? [] as $campo) {
+            $codigo=sanear_string($campo['nombre']);
+
             ModalidadCampo::create([
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => $campo['nombre'],
-                'mca_codigo' => $campo['codigo'],
+                'mca_nombre' => null,
+                'mca_codigo' => $codigo,
                 'mca_tipo' => $campo['tipo'],
-                'mca_label' => $campo['label'],
+                'mca_label' => $campo['nombre'],
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
-                'mca_orden' => $campo['orden'] ?? 0,
+                'mca_orden' => $i,
                 'mca_opciones' => $campo['opciones'] ?? null,
                 'mca_ayuda' => $campo['ayuda'] ?? null,
                 'mca_estado' => !empty($campo['estado']) ? 1 : 0,
                 'mca_fecha_alta' => now(),
                 'mca_usu_alta' => 1,
             ]);
+            $i++;
         }
 
         return redirect()
@@ -127,20 +131,24 @@ class ModalidadController extends Controller
             })
             ->delete();
 
+        $i=1;
         foreach ($camposRequest as $campo) {
+            $codigo=sanear_string($campo['nombre']);
+
             $dataCampo = [
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => $campo['nombre'],
-                'mca_codigo' => $campo['codigo'],
+                'mca_nombre' => null,
+                'mca_codigo' => $codigo,
                 'mca_tipo' => $campo['tipo'],
-                'mca_label' => $campo['label'],
+                'mca_label' => $campo['nombre'],
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
-                'mca_orden' => $campo['orden'] ?? 0,
+                'mca_orden' => $i,
                 'mca_opciones' => $campo['opciones'] ?? null,
                 'mca_ayuda' => $campo['ayuda'] ?? null,
                 'mca_estado' => !empty($campo['estado']) ? 1 : 0,
             ];
+            $i++;
 
             if (!empty($campo['id'])) {
                 $campoExistente = ModalidadCampo::where('mod_id', $modalidad->mod_id)

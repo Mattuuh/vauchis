@@ -46,7 +46,9 @@ class VoucherTemplateRenderer
     {
         $type = $field['type'] ?? 'text';
         $key = $field['key'] ?? '';
-        $value = $data[$key] ?? '';
+        $value = isset($field['text']) && trim($field['text']) !== ''
+            ? $field['text']
+            : ($data[$key] ?? '');
 
         $x = (int)($field['x'] ?? 0);
         $y = (int)($field['y'] ?? 0);

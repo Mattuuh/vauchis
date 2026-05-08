@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Influencer;
+use App\Models\InfluencerImagen;
 use App\Models\Pais;
 use App\Models\Provincia;
 use App\Models\TipoDocumento;
@@ -143,7 +144,7 @@ class InfluencerController extends Controller
                 'f_descripcion_interna.required' => 'Ingresa una descripcion mas amplia y detallada.',
             ]);
 
-            Influencer::create([
+            $influencer = Influencer::create([
                 'tipo_doc_id' => $request->tipo_doc_id,
                 'inf_documento' => $request->f_documento,
                 'inf_nombre_fantasia' => $request->f_nombre_fantasia,
@@ -169,6 +170,38 @@ class InfluencerController extends Controller
                 'inf_usu_alta' => '1',
             ]);
 
+            $path = null;
+            $usu = 1;
+
+            if ($request->hasFile('imagenes')) {
+
+                foreach ($request->file('imagenes') as $index => $imagen) {
+                    // $filename = Str::uuid() . '.' . $imagen->extension();
+                    // $path = $imagen->storeAs('logos', $filename, 'public');
+
+                    $name = sanear_string($imagen->getClientOriginalName());
+                    $name_legible = $imagen->getClientOriginalName();
+                    $type = $imagen->getMimeType();
+                    $size = $imagen->getSize();
+                    $format = $imagen->getClientOriginalExtension();
+                    $path = $imagen->store('imagenes', 'public');
+
+                    $imagen = InfluencerImagen::create([
+                        'inf_id' => $influencer->inf_id,
+                        'if_nombre' => $request->nombre,
+                        'if_img_nombre_legible' => $name_legible,
+                        'if_img_name' => $name,
+                        'if_img_path' => $path,
+                        'if_img_format' => $format,
+                        'if_img_size' => $size,
+                        'if_principal' => 1,
+                        'if_estado' => 1,
+                        'if_fecha_alta' => now(),
+                        'if_usu_alta' => $usu,
+                    ]);
+                }
+            }
+
             return redirect()
                 ->route('influencers.index')
                 ->with('success', 'Influencer creado correctamente');
@@ -180,7 +213,9 @@ class InfluencerController extends Controller
 
     public function edit($id)
     {
-        $influencer = Influencer::findOrFail($id);
+        $influencer = Influencer::with([
+            'imagenes'
+        ])->findOrFail($id);
 
         $tiposDocumento = TipoDocumento::where('tipo_doc_estado', 1)
             ->orderBy('tipo_doc_id')
@@ -259,8 +294,83 @@ class InfluencerController extends Controller
                 'inf_descripcion_interna' => $request->f_descripcion_interna,
             ]);
 
+            $usu = 1;
+            /*
+            | Eliminar imagenes marcados
+            */
+            if ($request->filled('delete_imagenes')) {
+
+                $imagenes = InfluencerImagen::with('imagen')
+                    ->where('inf_id', $id)
+                    ->whereIn('if_id', $request->delete_imagenes)
+                    ->get();
+
+                foreach ($imagenes as $imagen) {
+
+                    if ($imagen->imagen && $imagen->imagen->ef_img_path) {
+                        // Storage::disk('public')->delete($imagen->imagen->ef_img_path);
+                    }
+
+                    $imagen->update([
+                        'if_estado' => 0,
+                        'if_fecha_baja' => now(),
+                        'if_usu_baja' => $usu,
+                    ]);
+                }
+            }
+
+            // IMAGEN PRINCIPAL
+            if ($request->filled('imagen_principal')) {
+
+                InfluencerImagen::where('inf_id', $id)
+                    ->where('if_estado', 1)
+                    ->update([
+                        'if_principal' => 0,
+                        'if_fecha_mod' => now(),
+                        'if_usu_mod' => $usu,
+                    ]);
+
+                InfluencerImagen::where('inf_id', $id)
+                    ->where('if_id', $request->imagen_principal)
+                    ->where('if_estado', 1)
+                    ->update([
+                        'if_principal' => 1,
+                        'if_fecha_mod' => now(),
+                        'if_usu_mod' => $usu,
+                    ]);
+            }
+
+            /*
+            | Agregar nuevos logos
+            */
+            if ($request->hasFile('imagenes')) {
+
+                foreach ($request->file('imagenes') as $imagenFile) {
+
+                    if (!$imagenFile) {
+                        continue;
+                    }
+
+                    $path = $imagenFile->store('imagenes', 'public');
+
+                    $imagen = InfluencerImagen::create([
+                        'inf_id' => $id,
+                        'if_nombre' => $request->nombre,
+                        'if_img_nombre_legible' => $imagenFile->getClientOriginalName(),
+                        'if_img_name' => basename($path),
+                        'if_img_path' => $path,
+                        'if_img_format' => $imagenFile->getClientOriginalExtension(),
+                        'if_img_size' => $imagenFile->getSize(),
+                        'if_principal' => 0,
+                        'if_estado' => 1,
+                        'if_fecha_alta' => now(),
+                        'if_usu_alta' => $usu,
+                    ]);
+                }
+            }
+
             return redirect()
-                ->route('influencers.index')
+                ->route('influencers.edit', $id)
                 ->with('success', 'Influencer actualizado correctamente');
 
         } catch (\Exception $e) {

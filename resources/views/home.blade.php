@@ -125,7 +125,7 @@
                     <div class="col-12 col-md-4">
                         <div class="brand-box h-100 d-flex flex-column align-items-center justify-content-center bg-white shadow-sm rounded-3 p-3 text-center">
                             <img src="{{ $brand->logo 
-                                ? asset('images/' . $brand->logo) 
+                                ? asset('storage/' . $brand->logo) 
                                 : 'https://via.placeholder.com/120x60?text=Logo' }}"
                                 alt="{{ $brand->name }}"
                                 class="img-fluid brand-logo">
@@ -147,7 +147,7 @@
                                     <div class="col-12 col-md-4">
                                         <div class="brand-box h-100 d-flex flex-column align-items-center justify-content-center bg-white shadow-sm rounded-3 p-3 text-center">
                                             <img src="{{ $brand->logo 
-                                                ? asset('images/' . $brand->logo) 
+                                                ? asset('storage/' . $brand->logo) 
                                                 : 'https://via.placeholder.com/120x60?text=Logo' }}"
                                                 alt="{{ $brand->name }}"
                                                 class="img-fluid brand-logo">
@@ -192,7 +192,7 @@
                             <div class="card-body p-4 text-start">
                                 <div class="d-flex align-items-center gap-3 mb-3">
                                     <img src="{{ $organization->logo 
-                                        ? asset('images/' . $organization->logo) 
+                                        ? asset('storage/' . $organization->logo) 
                                         : 'https://via.placeholder.com/80' }}"
                                         alt="{{ $organization->name }}"
                                         class="organization-logo">
@@ -203,7 +203,7 @@
                                 <div class="d-flex flex-wrap gap-2 mb-4">
                                     @foreach ($organization->brands->take(4) as $brand)
                                         <img src="{{ $brand->logo 
-                                            ? asset('images/' . $brand->logo) 
+                                            ? asset('storage/' . $brand->logo) 
                                             : 'https://via.placeholder.com/120x60?text=Logo' }}"
                                             alt="{{ $brand->name }}"
                                             class="img-fluid brand-logo">
@@ -231,7 +231,7 @@
                                             <div class="card-body p-4 text-start">
                                                 <div class="d-flex align-items-center gap-3 mb-3">
                                                     <img src="{{ $organization->logo 
-                                                        ? asset('images/' . $organization->logo) 
+                                                        ? asset('storage/' . $organization->logo) 
                                                         : 'https://via.placeholder.com/80' }}"
                                                         alt="{{ $organization->name }}"
                                                         class="organization-logo">
@@ -242,7 +242,7 @@
                                                 <div class="d-flex flex-wrap gap-2 mb-4">
                                                     @foreach ($organization->brands->take(4) as $brand)
                                                         <img src="{{ $brand->logo 
-                                                            ? asset('images/' . $brand->logo) 
+                                                            ? asset('storage/' . $brand->logo) 
                                                             : 'https://via.placeholder.com/120x60?text=Logo' }}"
                                                             alt="{{ $brand->name }}"
                                                             class="img-fluid brand-logo">
@@ -369,7 +369,7 @@
         </div>
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 pt-3 border-top border-light-subtle">
-            <small>2024 © Vauchis | Todos los derechos reservados | Políticas de privacidad</small>
+            <small>2026 © Vauchis | Todos los derechos reservados | Políticas de privacidad</small>
 
             <div class="d-flex gap-3 mt-3 mt-md-0">
                 <a href="#" class="footer-link">Facebook</a>

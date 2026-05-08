@@ -5,12 +5,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Entidad_domicilio;
+use App\Models\EntidadDomicilio;
 use App\Models\Etiqueta;
 use App\Models\Influencer;
 use App\Models\Modalidad;
 use App\Models\ModalidadCampo;
 use App\Models\Voucher;
+use App\Models\VoucherPlantilla;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,8 +51,8 @@ class VoucherController extends Controller
             'etiquetas_nuevas' => 'nullable|array',
             'etiquetas_nuevas.*' => 'string|max:100',
 
-            'banners' => 'required|array|min:1',
-            'banners.0' => 'required|file|mimes:jpg,jpeg,png,webp|max:5120',
+            'banners' => 'nullable|array|min:1',
+            'banners.0' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
             'banners.*' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
 
             'modalidad_valores' => 'nullable|array',
@@ -193,6 +194,10 @@ class VoucherController extends Controller
             })
             ->toJson();
 
+        $plantillas = VoucherPlantilla::where('vpl_estado', 1)
+            ->orderBy('vpl_id', 'desc')
+            ->get(['vpl_fondo_path','vpl_nombre', 'vpl_id']);
+
         return view('vouchers.create', compact(
             'entidades',
             'influencers',
@@ -200,6 +205,7 @@ class VoucherController extends Controller
             'categorias',
             'etiquetasDisponibles',
             'modalidadesCamposJson',
+            'plantillas'
         ));
     }
 
@@ -214,9 +220,7 @@ class VoucherController extends Controller
 
             $entidad = DB::table('entidades_domicilios')
                 ->where('ed_id', $request->f_ent_id)
-                ->get([
-                    'ent_id',
-                ]);
+                ->first(['ent_id']);
 
             $vouId = DB::table('vouchers')->insertGetId([
                 'ent_id' => $entidad->ent_id,
@@ -356,32 +360,56 @@ class VoucherController extends Controller
                 DB::table('etiquetas_vouchers')->insert($rowsEtiquetas);
             }
 
-            if ($request->hasFile('banners')) {
-                foreach ($request->file('banners') as $archivo) {
-                    if (!$archivo) {
-                        continue;
-                    }
+            // if ($request->hasFile('banners')) {
+            //     foreach ($request->file('banners') as $archivo) {
+            //         if (!$archivo) {
+            //             continue;
+            //         }
 
-                    $nombreOriginal = $archivo->getClientOriginalName();
-                    $extension = $archivo->getClientOriginalExtension();
-                    $size = $archivo->getSize();
-                    $nombreArchivo = uniqid('voucher_') . '.' . $extension;
+            //         $nombreOriginal = $archivo->getClientOriginalName();
+            //         $extension = $archivo->getClientOriginalExtension();
+            //         $size = $archivo->getSize();
+            //         $nombreArchivo = uniqid('voucher_') . '.' . $extension;
 
-                    $path = $archivo->storeAs('vouchers/banners', $nombreArchivo, 'public');
+            //         $path = $archivo->storeAs('vouchers/banners', $nombreArchivo, 'public');
 
-                    DB::table('vouchers_files')->insert([
+            //         DB::table('vouchers_files')->insert([
+            //             'vou_id' => $vouId,
+            //             'vf_img_nombre_legible' => $nombreOriginal,
+            //             'vf_img_name' => $nombreArchivo,
+            //             'vf_img_path' => $path,
+            //             'vf_img_format' => $extension,
+            //             'vf_img_size' => $size,
+            //             'vf_estado' => 1,
+            //             'vf_estado2' => 1,
+            //             'vf_fecha_alta' => now(),
+            //             'vf_usu_alta' => $usuarioId,
+            //         ]);
+            //     }
+            // }
+
+            $plantillas = $request->input('plantillas', []);
+
+            $plantillas = collect($plantillas)
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values();
+
+            if ($plantillas->isNotEmpty()) {
+                $rowsPlantillas = [];
+
+                foreach ($plantillas as $vplId) {
+                    $rowsPlantillas[] = [
                         'vou_id' => $vouId,
-                        'vf_img_nombre_legible' => $nombreOriginal,
-                        'vf_img_name' => $nombreArchivo,
-                        'vf_img_path' => $path,
-                        'vf_img_format' => $extension,
-                        'vf_img_size' => $size,
-                        'vf_estado' => 1,
-                        'vf_estado2' => 1,
-                        'vf_fecha_alta' => now(),
-                        'vf_usu_alta' => $usuarioId,
-                    ]);
+                        'vpl_id' => $vplId,
+                        'vp_principal' => 0,
+                        'vp_estado' => 1,
+                        'vp_fecha_alta' => now(),
+                        'vp_usu_alta' => $usuarioId,
+                    ];
                 }
+
+                DB::table('vouchers_plantillas')->insert($rowsPlantillas);
             }
 
             DB::commit();
@@ -526,6 +554,23 @@ class VoucherController extends Controller
             })
             ->toJson();
 
+        $plantillas = DB::table('voucher_plantillas')
+            ->where('vpl_estado', 1)
+            ->orderBy('vpl_nombre')
+            ->get();
+
+        $plantillasSeleccionadas = DB::table('vouchers_plantillas')
+            ->where('vou_id', $id)
+            ->where('vp_estado', 1)
+            ->pluck('vpl_id')
+            ->toArray();
+
+        // $plantillaPrincipal = DB::table('vouchers_plantillas')
+        //     ->where('vou_id', $id)
+        //     ->where('vp_estado', 1)
+        //     ->where('vp_principal', 1)
+        //     ->value('vpl_id');
+
         return view('vouchers.edit', compact(
             'voucher',
             'banners',
@@ -537,7 +582,10 @@ class VoucherController extends Controller
             'etiquetasSeleccionadas',
             'voucherDetalles',
             'voucherModalidadValores',
-            'modalidadesCamposJson'
+            'modalidadesCamposJson',
+            'plantillas',
+            'plantillasSeleccionadas',
+            // 'plantillaPrincipal',
         ));
     }
 
@@ -758,23 +806,23 @@ class VoucherController extends Controller
                 }
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Garantizar al menos 1 banner
-            |--------------------------------------------------------------------------
-            */
-            $totalBanners = DB::table('vouchers_files')
-                ->where('vou_id', $id)
-                ->count();
+            // /*
+            // |--------------------------------------------------------------------------
+            // | Garantizar al menos 1 banner
+            // |--------------------------------------------------------------------------
+            // */
+            // $totalBanners = DB::table('vouchers_files')
+            //     ->where('vou_id', $id)
+            //     ->count();
 
-            if ($totalBanners < 1) {
-                DB::rollBack();
+            // if ($totalBanners < 1) {
+            //     DB::rollBack();
 
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'El voucher debe tener al menos un banner.');
-            }
+            //     return redirect()
+            //         ->back()
+            //         ->withInput()
+            //         ->with('error', 'El voucher debe tener al menos un banner.');
+            // }
 
             /*
             |--------------------------------------------------------------------------
@@ -812,10 +860,38 @@ class VoucherController extends Controller
                 ]);
             }
 
+            $plantillas = $request->input('plantillas', []);
+
+            $plantillas = collect($plantillas)
+                ->map(fn ($id) => (int) $id)
+                ->unique()
+                ->values();
+
+            DB::table('vouchers_plantillas')
+                ->where('vou_id', $id)
+                ->delete();
+
+            if ($plantillas->isNotEmpty()) {
+                $rowsPlantillas = [];
+
+                foreach ($plantillas as $vplId) {
+                    $rowsPlantillas[] = [
+                        'vou_id' => $id,
+                        'vpl_id' => $vplId,
+                        'vp_principal' => 0,
+                        'vp_estado' => 1,
+                        'vp_fecha_alta' => now(),
+                        'vp_usu_alta' => $usuarioId,
+                    ];
+                }
+
+                DB::table('vouchers_plantillas')->insert($rowsPlantillas);
+            }
+
             DB::commit();
 
             return redirect()
-                ->route('vouchers.index')
+                ->route('vouchers.edit', $id)
                 ->with('success', 'Voucher actualizado correctamente.');
 
         } catch (\Throwable $e) {
@@ -857,5 +933,104 @@ class VoucherController extends Controller
             ]);
 
         return redirect()->back()->with('success', 'Banner eliminado correctamente.');
+    }
+
+    public function previewPlantilla($voucherId, $plantillaId)
+    {
+        $voucher = DB::table('vouchers as v')
+            ->leftJoin('entidades as e', 'e.ent_id', '=', 'v.ent_id')
+            ->leftJoin('modalidades as m', 'm.mod_id', '=', 'v.mod_id')
+            ->where('v.vou_id', $voucherId)
+            ->select(
+                'v.*',
+                'e.ent_nombre_fantasia as entidad_nombre',
+                'e.ent_logo_url as entidad_logo',
+                'm.mod_nombre as modalidad_nombre'
+            )
+            ->first();
+
+        if (!$voucher) {
+            abort(404, 'Voucher no encontrado.');
+        }
+
+        $plantilla = DB::table('voucher_plantillas')
+            ->where('vpl_id', $plantillaId)
+            ->where('vpl_estado', 1)
+            ->first();
+
+        if (!$plantilla) {
+            abort(404, 'Plantilla no encontrada.');
+        }
+
+        // $vinculada = DB::table('vouchers_plantillas')
+        //     ->where('vou_id', $voucherId)
+        //     ->where('vpl_id', $plantillaId)
+        //     ->where('vp_estado', 1)
+        //     ->exists();
+
+        // if (!$vinculada) {
+        //     abort(404, 'La plantilla no está vinculada a este voucher.');
+        // }
+
+        $config = json_decode($plantilla->vpl_config_json, true);
+
+        if (!is_array($config)) {
+            $config = [
+                'canvas' => [
+                    'width' => 800,
+                    'height' => 500,
+                    'background' => null,
+                ],
+                'fields' => [],
+            ];
+        }
+
+        $data = [
+            'voucher_nombre' => $voucher->vou_nombre ?? '',
+            'voucher_descripcion' => $voucher->vou_descripcion ?? '',
+            'voucher_monto' => $voucher->vou_monto_fijo ?? '',
+            'voucher_fecha_inicio' => $voucher->vou_fecha_inicio
+                ? Carbon::parse($voucher->vou_fecha_inicio)->format('d/m/Y')
+                : '',
+            'voucher_fecha_fin' => $voucher->vou_fecha_fin
+                ? Carbon::parse($voucher->vou_fecha_fin)->format('d/m/Y')
+                : '',
+
+            'entidad_nombre' => $voucher->entidad_nombre ?? '',
+            'entidad_logo' => $voucher->entidad_logo
+                ? asset($voucher->entidad_logo)
+                : '',
+
+            'modalidad_nombre' => $voucher->modalidad_nombre ?? '',
+        ];
+
+        return view('vouchers.preview', compact(
+            'voucher',
+            'plantilla',
+            'config',
+            'data'
+        ));
+    }
+
+    public function preview($voucherId)
+    {
+        $voucher = Voucher::with([
+            'entidad',
+            'modalidad',
+            'modalidadValores',
+            'detalles',
+            'plantillas',
+        ])->findOrFail($voucherId);
+
+        $plantilla = $voucher->plantillaPrincipal()->first()
+            ?? $voucher->plantillas()->first();
+        // dd($plantilla);die;
+
+        abort_if(!$plantilla, 404, 'El voucher no tiene plantilla vinculada.');
+
+        $config = json_decode($plantilla->vpl_config_json, true);
+        // dd($config);
+
+        return view('vouchers.preview', compact('voucher', 'plantilla', 'config'));
     }
 }

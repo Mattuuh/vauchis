@@ -97,30 +97,31 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar organizacion</h1>
             <p class="vch-subtitle">Modifica los datos de la organización seleccionada.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
-    <form method="POST" action="{{ route('organizacion.update', $organizacion->org_id) }}" id="form_main">
+    <form method="POST" action="{{ route('organizacion.update', $organizacion->org_id) }}" id="form_main" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold">Datos de la organizacion</h6>
 
@@ -171,6 +172,33 @@
                     @error('f_razon_social')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Logo</label>
+                    <div class="card card-custom p-3 mb-3">
+
+                        {{-- @if($entidad->count()) --}}
+                            <div class="row g-3">
+                                {{-- @foreach($entidad as $logo) --}}
+                                    <div class="col-12 col-md-4">
+                                        <div class="border rounded p-2 h-100">
+                                            <img src="{{ asset('storage/' . $organizacion->org_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $organizacion->org_img_path }}">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="delete_banners[]" value="{{ $organizacion->org_id }}" id="banner-delete-{{ $organizacion->org_id }}">
+                                                <label class="form-check-label" for="banner-delete-{{ $organizacion->org_id }}">
+                                                    Eliminar logo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{-- @endforeach --}}
+                            </div>
+                        {{-- @else
+                            <div class="text-muted small">No hay entidad cargados.</div>
+                        @endif --}}
+                    </div>
+                    <input type="file" name="logo" class="form-control">
                 </div>
 
                 <div class="row g-3">
@@ -319,7 +347,7 @@
 
             </div>
         </div>
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Comercios vinculados</h6>
             <p class="text-muted small mb-3">
                 Seleccioná los domicilios comerciales que querés vincular a esta organización.
@@ -362,7 +390,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $organizacion->org_id }}" data-url="{{ route('organizacion.delete', $organizacion->org_id) }}" id="btn_eliminar">
                 Eliminar
@@ -373,7 +401,7 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
             </div>

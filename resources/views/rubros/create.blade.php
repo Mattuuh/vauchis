@@ -64,22 +64,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<main class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Nuevo rubro</h1>
-            <p class="vch-subtitle">Consulta y administra los rubro disponibles en la plataforma.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <p class="vch-subtitle">Categorías que agrupan entidades según su tipo de actividad, facilitando su organización y búsqueda.</p>
         </div>
     </section>
 
@@ -87,7 +88,7 @@
         @csrf
 
         <!-- CARD -->
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold mb-3">Datos del rubro</h6>
 
@@ -132,7 +133,7 @@
 
             </div>
         </div>
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Subrubros</h6>
 
             <p class="text-muted small mb-3">
@@ -192,7 +193,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('rubros.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
@@ -204,7 +205,7 @@
 
     </form>
 
-</div>
+</main>
 
 <script>
     let subrubrosExistentes = @json(old('subrubros', $subrubrosSeleccionados ?? []));

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rubros')
+@section('title', 'Etiquetas')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
@@ -25,8 +25,8 @@
 
     <section class="commerce-hero">
         <div class="commerce-hero__content">
-            <h1 class="commerce-title">Rubros</h1>
-            <p class="commerce-subtitle">Permiten clasificar las entidades según su categoría o actividad.</p>
+            <h1 class="commerce-title">Etiquetas para vouchers</h1>
+            <p class="commerce-subtitle">Las etiquetas permiten clasificar y organizar los vouchers según sus características o categorías.</p>
         </div>
     </section>
 
@@ -37,7 +37,7 @@
                     <div class="commerce-toolbar__left">
                         <div class="commerce-search">
                             <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar rubro...">
+                            <input type="text" class="form-control" placeholder="Buscar etiqueta...">
                         </div>
 
                         <button class="btn commerce-filter-btn" type="button">
@@ -48,9 +48,9 @@
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <a href="{{ route('rubros.create') }}" class="btn commerce-new-btn">
+                        <a href="{{ route('etiquetas.create') }}" class="btn commerce-new-btn">
                             <i class="bi bi-plus-lg"></i>
-                            Nuevo rubro
+                            Nueva etiqueta
                         </a>
                     </div>
                 </div>
@@ -61,34 +61,35 @@
                             <tr class="commerce-table-head">
                                 <th style="width: 40px">ID</th>
                                 <th style="width: 160px">NOMBRE</th>
-                                <th style="width: 60px">FECHA DE ALTA</th>
+                                <th style="width: 60px" class="text-center">FECHA DE ALTA</th>
                                 <th style="width: 60px" class="text-center">ESTADO</th>
                                 <th style="width: 60px">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($rubros as $rubro)
+                            @foreach($etiquetas as $etiqueta)
                                 <tr class="commerce-row">
+
                                     <td class="commerce-col" data-label="ID">
                                         <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $rubro['rub_id'] }}</span>
+                                        <span>{{ $etiqueta['eti_id'] }}</span>
                                     </td>
 
                                     <td class="commerce-col" data-label="Nombre">
                                         <span class="commerce-mobile-label">Nombre</span>
-                                        <span>{{ $rubro['rub_nombre'] }}</span>
+                                        <span>{{ $etiqueta['eti_nombre'] }}</span>
                                     </td>
 
                                     <td class="commerce-col text-center" data-label="Fecha de alta">
                                         <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $rubro['rub_fecha_alta']->format('d/m/Y') }}</span>
+                                        <span>{{ $etiqueta['eti_fecha_alta']!='' ? $etiqueta['eti_fecha_alta']->format('d/m/Y') : '-' }}</span>
                                     </td>
 
                                     <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $estado = estado($rubro['rub_estado']);
+                                            $estado = estado($etiqueta['eti_estado']);
                                         @endphp
 
                                         <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
@@ -98,7 +99,7 @@
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('rubros.edit', $rubro['rub_id']) }}" class="btn commerce-edit-btn" title="Editar">
+                                        <a href="{{ route('etiquetas.edit', $etiqueta->eti_id) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </td>
@@ -110,7 +111,7 @@
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $rubros->count() }} de 25 registros
+                        Mostrando 1 a {{ $etiquetas->count() }} de 25 registros
                     </div>
 
                     <div class="commerce-pagination">

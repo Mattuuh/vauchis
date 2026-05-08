@@ -40,7 +40,7 @@
         text: '{{ session('success') }}'
     });
     </script>
-    @elseif (session('error')!='')
+    @elseif ($errors->any())
     <script>
     Swal.fire({
         icon: 'error',
@@ -65,9 +65,38 @@
                 text: "Se va a crear el registro",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
+                confirmButtonColor: '#5cb85c',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $('#form_main').submit();
+                }
+            });
+        });
+
+        $('#btn_actualizar').on('click', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a actualizar el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, actualizar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {

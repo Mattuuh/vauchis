@@ -44,4 +44,15 @@ class Influencer extends Model
     protected $casts = [
         'inf_fecha_alta' => 'datetime',
     ];
+
+    public function imagenes()
+    {
+        return $this->hasMany(InfluencerImagen::class, 'inf_id', 'inf_id')
+            ->where('if_estado', 1);
+    }
+
+    public function imagenPrincipal()
+    {
+        return $this->hasOne(InfluencerImagen::class, 'inf_id')->where('if_principal', 1);
+    }
 }

@@ -68,17 +68,60 @@ body {
     background: #f4f7ff;
 }
 
-.commerce-hero {
+.commerce-page {
+    min-height: 100vh;
+    background: #eaf0fb;
     position: relative;
+    overflow: hidden;
+}
+
+.commerce-page::before,
+.commerce-page::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(190, 205, 240, 0.35);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.commerce-page::before {
+    width: 520px;
+    height: 150px;
+    right: -60px;
+    top: 70px;
+    transform: rotate(-10deg);
+}
+
+.commerce-page::after {
+    width: 520px;
+    height: 150px;
+    right: -40px;
+    bottom: -20px;
+    transform: rotate(-10deg);
+}
+
+.commerce-hero,
+.commerce-card,
+.commerce-table-card,
+.commerce-content {
+    position: relative;
+    z-index: 2;
+}
+
+.commerce-hero {
+    /* position: relative;
     background: linear-gradient(180deg, #eef3ff 0%, #eaf0fb 100%);
     min-height: 255px;
     overflow: hidden;
-    padding: 34px 0 38px;
+    padding: 34px 0 38px; */
+    background: transparent;
+    margin: 0 0 15px;
 }
 
 .commerce-hero__content {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: min(1180px, calc(100% - 48px));
     margin: 0 auto;
 }
@@ -99,19 +142,19 @@ body {
 }
 
 .commerce-title {
-    font-size: 62px;
+    font-size: 40px;
     line-height: 1;
     font-weight: 800;
     letter-spacing: -0.03em;
-    margin: 0 0 18px;
+    margin: 10px 0 18px;
     color: var(--commerce-text);
 }
 
 .commerce-subtitle {
     max-width: 610px;
     margin: 0;
-    font-size: 21px;
-    line-height: 1.45;
+    font-size: 16px;
+    line-height: 2;
     font-weight: 500;
     color: #4f5d78;
 }
@@ -119,6 +162,7 @@ body {
 .commerce-hero-wave {
     position: absolute;
     border-radius: 999px;
+    z-index: 0;
 }
 
 .commerce-hero-wave--one {
@@ -141,6 +185,7 @@ body {
 
 .commerce-dot {
     position: absolute;
+    z-index: 0;
     display: block;
     border-radius: 999px;
 }
@@ -557,6 +602,13 @@ body {
 .commerce-table-wrap {
     width: 100%;
     overflow-x: auto;
+}
+
+.commerce-table-wrap,
+.commerce-card {
+    position: relative;
+    z-index: 3;
+    background: #fff;
 }
 
 .commerce-table {

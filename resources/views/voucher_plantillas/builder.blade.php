@@ -97,7 +97,7 @@
         <div class="builder-panel">
             <h5 class="mb-3">Propiedades</h5>
 
-            <div class="mb-2">
+            <div class="mb-2" hidden>
                 <label class="form-label-sm">ID</label>
                 <input type="text" id="prop-id" class="form-control" readonly>
             </div>
@@ -132,6 +132,21 @@
             <div class="mb-2">
                 <label class="form-label-sm">Tamaño fuente</label>
                 <input type="number" id="prop-fontSize" class="form-control">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label-sm">Tipografía</label>
+                <select id="prop-fontFamily" class="form-select">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Impact">Impact</option>
+                </select>
             </div>
 
             <div class="mb-2">
@@ -212,6 +227,19 @@
 
     let selectedGroup = null;
 
+    const sampleValues = {
+        voucher_nombre: 'Cena para dos personas',
+        voucher_descripcion: 'Disfrutá una experiencia única',
+        voucher_condiciones: 'Válido de lunes a jueves',
+        voucher_codigo: 'ABC-123',
+        voucher_fecha_inicio: '01/01/2026',
+        voucher_fecha_fin: '31/12/2026',
+        vigencia_texto: 'Válido hasta 31/12/2026',
+        entidad_nombre: 'Restó Demo',
+        modalidad_nombre: 'Cena',
+        beneficio_texto: 'Incluye bebida y postre'
+    };
+
     function drawBackground() {
         backgroundLayer.destroyChildren();
 
@@ -259,7 +287,10 @@
     }
 
     function renderTextField(field) {
-        const textValue = field.label || field.key;
+        // const textValue = field.label || field.key;
+        // const textValue = field.text || sampleValues[field.key] || field.label;
+        // const textValue = field.text ?? sampleValues[field.key] ?? field.label;
+        const textValue = field.text || field.label || field.key;
 
         const text = new Konva.Text({
             x: field.x,
@@ -273,6 +304,42 @@
             fill: field.style.color || '#000000',
             align: field.style.textAlign || 'left',
             draggable: false,
+        });
+
+        text.on('dblclick', function () {
+            const textarea = document.createElement('textarea');
+            document.body.appendChild(textarea);
+
+            textarea.value = text.text();
+            textarea.style.position = 'absolute';
+            textarea.style.top = (text.y() + stage.container().offsetTop) + 'px';
+            textarea.style.left = (text.x() + stage.container().offsetLeft) + 'px';
+
+            textarea.focus();
+
+            textarea.addEventListener('blur', function () {
+                // text.text(textarea.value);
+                // textarea.remove();
+                // fieldsLayer.draw();
+
+                const newText = textarea.value;
+
+                // Actualiza visualmente
+                text.text(newText);
+
+                // Busca el campo real dentro del JSON principal
+                const fieldId = field.id;
+                const configField = templateConfig.fields.find(f => f.id === fieldId);
+
+                if (configField) {
+                    configField.text = newText;
+                }
+
+                textarea.remove();
+
+                syncConfigInput();
+                fieldsLayer.draw();
+            });
         });
 
         const group = new Konva.Group({
@@ -379,6 +446,7 @@
         if (field.type === 'text') {
             text.height(field.height);
             text.fontSize(field.style.fontSize || 24);
+            text.fontFamily(field.style.fontFamily || 'Arial');
             text.fill(field.style.color || '#000000');
             text.align(field.style.textAlign || 'left');
             text.fontStyle(String(field.style.fontWeight || '400') === '700' ? 'bold' : 'normal');
@@ -448,6 +516,7 @@
         $('#prop-width').val(field.width || 0);
         $('#prop-height').val(field.height || 0);
         $('#prop-fontSize').val(field.style?.fontSize || '');
+        $('#prop-fontFamily').val(field.style?.fontFamily || 'Arial');
         $('#prop-color').val(field.style?.color || '#000000');
         $('#prop-align').val(field.style?.textAlign || 'left');
     }
@@ -465,6 +534,7 @@
 
         if (field.type === 'text') {
             field.style.fontSize = parseInt($('#prop-fontSize').val() || 24);
+            field.style.fontFamily = $('#prop-fontFamily').val() || 'Arial';
             field.style.color = $('#prop-color').val() || '#000000';
             field.style.textAlign = $('#prop-align').val() || 'left';
         }
@@ -492,10 +562,12 @@
 
     function submitBuilderForm() {
         syncConfigInput();
+        console.log(templateConfig);
+        console.log($('#config_json').val());
         $('#builder-form').submit();
     }
 
-    $('#prop-x, #prop-y, #prop-width, #prop-height, #prop-fontSize, #prop-color, #prop-align').on('input change', function () {
+    $('#prop-x, #prop-y, #prop-width, #prop-height, #prop-fontSize, #prop-fontFamily, #prop-color, #prop-align').on('input change', function () {
         applyPropertiesToSelected();
     });
 

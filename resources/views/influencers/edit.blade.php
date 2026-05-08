@@ -6,30 +6,31 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar influencer</h1>
             <p class="vch-subtitle">Modifica los datos del influencer seleccionado.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
         </div>
     </section>
 
-    <form method="POST" action="{{ route('influencers.update', $influencer->inf_id) }}">
+    <form method="POST" action="{{ route('influencers.update', $influencer->inf_id) }}" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold">Datos del influencer</h6>
 
@@ -172,11 +173,46 @@
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <label class="form-label required-label">Imagen/es</label>
+
+                    <div class="card card-custom p-3 mb-3">
+                        <div class="row g-3">
+                            @foreach ($influencer->imagenes as $imagen)
+                                <div class="col-12 col-md-4">
+                                    <div class="border rounded p-2 h-100">
+                                        <img src="{{ asset('storage/' . $imagen->if_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->if_img_nombre_legible }}">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="delete_imagenes[]" value="{{ $imagen->if_id }}" id="imagen-delete-{{ $imagen->if_id }}">
+                                            <label class="form-check-label" for="imagen-delete-{{ $imagen->if_id }}">Eliminar imagen</label>
+                                        </div>
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="radio" name="imagen_principal" value="{{ $imagen->if_id }}" id="imagen-principal-{{ $imagen->if_id }}" {{ $imagen->if_principal == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="imagen-principal-{{ $imagen->if_id }}">Imagen principal</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div id="imagenes_container">
+                        <div class="row imagen-item mb-2">
+                            <div class="col-sm-11">
+                                <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="agregar_imagen" class="btn btn-primary btn-block">Agregar otra imagen</button>
+
             </div>
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $influencer->inf_id }}" data-url="{{ route('influencers.delete', $influencer->inf_id) }}" id="btn_eliminar">
                 Eliminar
@@ -187,7 +223,7 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
             </div>
@@ -256,6 +292,32 @@ $(document).on('click', '#btn_eliminar', function (e) {
 
         }
     });
+});
+</script>
+
+<script>
+$(document).ready(function () {
+
+    $('#agregar_imagen').on('click', function () {
+        let html = `
+            <div class="row imagen-item mb-2">
+                <div class="col-sm-11">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                </div>
+
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-imagen">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#imagenes_container').append(html);
+    });
+
+    $(document).on('click', '.remove-imagen', function () {
+        $(this).closest('.imagen-item').remove();
+    });
+
 });
 </script>
 @endsection

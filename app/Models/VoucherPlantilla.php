@@ -11,6 +11,7 @@ class VoucherPlantilla extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'pf_id',
         'vpl_nombre',
         'vpl_descripcion',
         'vpl_ancho',
@@ -33,5 +34,27 @@ class VoucherPlantilla extends Model
     public function emisiones()
     {
         return $this->hasMany(VoucherEmision::class, 'vpl_id', 'vpl_id');
+    }
+
+    public function vouchers()
+    {
+        return $this->belongsToMany(
+            Voucher::class,
+            'vouchers_plantillas',
+            'vpl_id',
+            'vou_id'
+        )
+        ->withPivot([
+            'vp_id',
+            'vp_principal',
+            'vp_estado',
+            'vp_fecha_alta',
+            'vp_usu_alta',
+        ]);
+    }
+
+    public function imagen()
+    {
+        return $this->belongsTo(BibliotecaFondo::class, 'pf_id');
     }
 }

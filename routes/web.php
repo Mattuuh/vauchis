@@ -96,6 +96,7 @@ use App\Http\Controllers\VoucherController;
 // Route::post('/vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
 Route::resource('vouchers', VoucherController::class);
 Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
+Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');
 
 // opcional
 Route::delete('/vouchers/banner/{id}', [VoucherController::class, 'destroyBanner'])->name('vouchers.banner.destroy');
@@ -161,3 +162,15 @@ Route::post('/voucher_plantillas/{id}/delete', [VoucherPlantillaController::clas
 Route::get('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'builder'])->name('voucher_plantillas.builder');
 Route::post('/voucher_plantillas/{id}/builder', [VoucherPlantillaController::class, 'saveBuilder'])->name('voucher_plantillas.builder.save');
 Route::get('/voucher_plantillas/{id}/preview', [VoucherPlantillaController::class, 'preview'])->name('voucher_plantillas.preview');
+
+
+use App\Http\Controllers\EtiquetaController;
+
+Route::resource('etiquetas', EtiquetaController::class);
+Route::post('/etiquetas/{id}/delete', [EtiquetaController::class, 'delete'])->name('etiquetas.delete');
+
+
+use App\Http\Controllers\BibliotecaFondoController;
+
+Route::resource('biblioteca_fondos', BibliotecaFondoController::class);
+Route::post('/biblioteca_fondos/{id}/delete', [BibliotecaFondoController::class, 'delete'])->name('biblioteca_fondos.delete');

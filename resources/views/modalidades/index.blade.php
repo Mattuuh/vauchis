@@ -12,25 +12,25 @@
 @include('partials.navbar')
 
 <main class="commerce-page">
+    <span class="commerce-hero-wave commerce-hero-wave--one"></span>
+    <span class="commerce-hero-wave commerce-hero-wave--two"></span>
+
+    <span class="commerce-dot commerce-dot--pink-left"></span>
+    <span class="commerce-dot commerce-dot--blue-left"></span>
+    <span class="commerce-dot commerce-dot--yellow"></span>
+    <span class="commerce-dot commerce-dot--blue"></span>
+    <span class="commerce-dot commerce-dot--green"></span>
+    <span class="commerce-dot commerce-dot--pink"></span>
+    <span class="commerce-dot commerce-dot--blue-small"></span>
+
     <section class="commerce-hero">
         <div class="commerce-hero__content">
-            <h1 class="commerce-title">Modalidades</h1>
+            <h1 class="commerce-title">Modalidades de vouchers</h1>
 
             <p class="commerce-subtitle">
-                Consulta y administra todos los modalidades disponibles en la plataforma Vauchis.
+                Las modalidades de vouchers definen el tipo de beneficio y las reglas que aplican a cada voucher.
             </p>
         </div>
-
-        <span class="commerce-hero-wave commerce-hero-wave--one"></span>
-        <span class="commerce-hero-wave commerce-hero-wave--two"></span>
-
-        <span class="commerce-dot commerce-dot--pink-left"></span>
-        <span class="commerce-dot commerce-dot--blue-left"></span>
-        <span class="commerce-dot commerce-dot--yellow"></span>
-        <span class="commerce-dot commerce-dot--blue"></span>
-        <span class="commerce-dot commerce-dot--green"></span>
-        <span class="commerce-dot commerce-dot--pink"></span>
-        <span class="commerce-dot commerce-dot--blue-small"></span>
     </section>
 
     <section class="commerce-list-section">

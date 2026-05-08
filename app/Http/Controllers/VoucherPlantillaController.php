@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BibliotecaFondo;
 use App\Models\VoucherPlantilla;
 use App\Services\VoucherTemplateRenderer;
 use App\Support\VoucherTemplateFields;
@@ -19,7 +20,9 @@ class VoucherPlantillaController extends Controller
 
     public function create()
     {
-        return view('voucher_plantillas.create');
+        $imagenesBiblioteca = BibliotecaFondo::where('pf_estado',1)->get();
+
+        return view('voucher_plantillas.create', compact('imagenesBiblioteca'));
     }
 
     public function store(Request $request)
@@ -29,23 +32,24 @@ class VoucherPlantillaController extends Controller
             'vpl_descripcion' => 'nullable|string|max:255',
             'vpl_ancho' => 'required|integer|min:100',
             'vpl_alto' => 'required|integer|min:100',
-            'vpl_fondo' => 'nullable|image|max:5120',
+            // 'vpl_fondo' => 'nullable|image|max:5120',
+            'biblioteca_imagen_id' => 'required|exists:plantillas_fondos_files,pf_id',
         ]);
 
-        $fondoPath = null;
+        $fondoPath = 'storage/'.$request->img_path;
 
-        if ($request->hasFile('vpl_fondo')) {
-            $folder = public_path('storage/vouchers/plantillas/fondos');
+        // if ($request->hasFile('vpl_fondo')) {
+        //     $folder = public_path('storage/vouchers/plantillas/fondos');
 
-            if (!File::exists($folder)) {
-                File::makeDirectory($folder, 0775, true);
-            }
+        //     if (!File::exists($folder)) {
+        //         File::makeDirectory($folder, 0775, true);
+        //     }
 
-            $filename = uniqid('plantilla_') . '.' . $request->file('vpl_fondo')->getClientOriginalExtension();
-            $request->file('vpl_fondo')->move($folder, $filename);
+        //     $filename = uniqid('plantilla_') . '.' . $request->file('vpl_fondo')->getClientOriginalExtension();
+        //     $request->file('vpl_fondo')->move($folder, $filename);
 
-            $fondoPath = 'storage/vouchers/plantillas/fondos/' . $filename;
-        }
+        //     $fondoPath = 'storage/vouchers/plantillas/fondos/' . $filename;
+        // }
 
         $config = [
             'canvas' => [
@@ -57,6 +61,7 @@ class VoucherPlantillaController extends Controller
         ];
 
         $plantilla = VoucherPlantilla::create([
+            'pf_id' => $request->biblioteca_imagen_id,
             'vpl_nombre' => $request->vpl_nombre,
             'vpl_descripcion' => $request->vpl_descripcion,
             'vpl_ancho' => $request->vpl_ancho,

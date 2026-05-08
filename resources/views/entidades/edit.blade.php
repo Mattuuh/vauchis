@@ -10,16 +10,31 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
 
-    <h4 class="fw-bold">Editar entidad</h4>
-    <p class="text-muted small">Modificá los campos de la entidad seleccionada</p>
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
+    <section class="vch-hero">
+        <div class="vch-hero__content">
+            <h1 class="vch-title">Editar entidad</h1>
+            <p class="vch-subtitle">Modificá los campos de la entidad seleccionada.</p>
+        </div>
+    </section>
 
     <form method="POST" action="{{ route('entidades.update', $entidad->ent_id) }}" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <h6 class="fw-bold">Datos de la entidad</h6>
 
@@ -95,14 +110,52 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label required-label">Logo</label>
-                    <input type="file" name="logo" class="form-control">
+                    <label class="form-label required-label">Imagen/es</label>
+
+                    <div class="card card-custom p-3 mb-3">
+                        <div class="row g-3">
+                            @foreach ($entidad->imagenes as $imagen)
+                                <div class="col-12 col-md-4">
+                                    <div class="border rounded p-2 h-100">
+                                        <img src="{{ asset('storage/' . $imagen->ef_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->ef_img_nombre_legible }}">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="delete_logos[]" value="{{ $imagen->ef_id }}" id="logo-delete-{{ $imagen->ef_id }}">
+
+                                            <label class="form-check-label" for="logo-delete-{{ $imagen->ef_id }}">
+                                                Eliminar logo
+                                            </label>
+                                        </div>
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="radio" name="logo_principal" value="{{ $imagen->ef_id }}" id="logo-principal-{{ $imagen->ef_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
+
+                                            <label class="form-check-label" for="logo-principal-{{ $imagen->ef_id }}">
+                                                Logo principal
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div id="logos-container">
+                        <div class="row logo-item mb-2">
+                            <div class="col-sm-11">
+                                <input type="file" name="logos[]" accept="image/*" class="form-control">
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                    </div>
                 </div>
+                    <button type="button" id="add-logo" class="btn btn-primary btn-block">
+                        Agregar otro logo
+                    </button>
 
             </div>
         </div>
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="fw-bold mb-0">Domicilios</h6>
                 <button type="button" class="btn btn-sm btn-primary" onclick="addSucursal()">+ Agregar</button>
@@ -110,6 +163,7 @@
 
             <div id="sucursales-container">
                 @forelse(old('sucursales', $sucursales->toArray()) as $index => $sucursal)
+                    <input type="hidden" name="sucursales[{{ $index }}][ed_id]" value="{{ $sucursal->ed_id }}">
                     <div class="sucursal sucursal-card p-3 mt-2" data-index="{{ $index }}">
                         <div class="sucursal-header">
                             <div>
@@ -129,7 +183,7 @@
                                 <select name="sucursales[{{ $index }}][org_id]" class="form-select">
                                     <option value="">Selecciona una organización</option>
                                     @foreach($organizaciones as $id => $nombre)
-                                        <option value="{{ $id }}" {{ old("sucursales.$index.org_id", $sucursal->org_id ?? '') == $id ? 'selected' : '' }}>
+                                        <option value="{{ $id }}" {{ old("sucursales.$index.org_id", $sucursal->org_id) == $id ? 'selected' : '' }}>
                                             {{ $nombre }}
                                         </option>
                                     @endforeach
@@ -141,7 +195,7 @@
                                 <select name="sucursales[{{ $index }}][pais_id]" class="form-select pais field-required" required>
                                     <option value="">Selecciona el país</option>
                                     @foreach($paises as $id => $nombre)
-                                        <option value="{{ $id }}" {{ old("sucursales.$index.pais_id", $sucursal->pais_id ?? '') == $id ? 'selected' : '' }}>
+                                        <option value="{{ $id }}" {{ old("sucursales.$index.pais_id", $sucursal->pais_id) == $id ? 'selected' : '' }}>
                                             {{ $nombre }}
                                         </option>
                                     @endforeach
@@ -185,10 +239,10 @@
                                 <input type="text" name="sucursales[{{ $index }}][cd_telefono2]" class="form-control" value="{{ old("sucursales.$index.cd_telefono2", $sucursal->ed_telefono2 ?? '') }}">
                             </div>
 
-                            <div class="col-12 col-md-6">
+                            {{-- <div class="col-12 col-md-6">
                                 <label class="form-label">WhatsApp</label>
                                 <input type="text" name="sucursales[{{ $index }}][cd_whatsapp]" class="form-control" value="{{ old("sucursales.$index.cd_whatsapp", $sucursal->ed_whatsapp ?? '') }}">
-                            </div>
+                            </div> --}}
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Email 1</label>
@@ -210,6 +264,7 @@
                                 <input type="text" name="sucursales[{{ $index }}][cd_descripcion_interna]" class="form-control" value="{{ old("sucursales.$index.cd_descripcion_interna", $sucursal->ed_descripcion_interna ?? '') }}">
                             </div>
                         </div>
+                        <br>
                         @php
                             $domicilioId = $sucursal->ed_id ?? null;
 
@@ -311,7 +366,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $entidad->ent_id }}" data-url="{{ route('entidades.delete', $entidad->ent_id) }}" id="btn_eliminar">
                 Eliminar
@@ -322,7 +377,7 @@
                     Cancelar
                 </a>
 
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
             </div>
@@ -797,6 +852,32 @@ $(document).on('click', '#btn_eliminar', function (e) {
 
         }
     });
+});
+</script>
+
+<script>
+$(document).ready(function () {
+
+    $('#add-logo').on('click', function () {
+        let html = `
+            <div class="row logo-item mb-2">
+                <div class="col-sm-11">
+                    <input type="file" name="logos[]" accept="image/*"cclass="form-control">
+                </div>
+
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#logos-container').append(html);
+    });
+
+    $(document).on('click', '.remove-logo', function () {
+        $(this).closest('.logo-item').remove();
+    });
+
 });
 </script>
 

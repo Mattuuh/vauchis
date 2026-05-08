@@ -10,10 +10,25 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
 
-    <h4 class="fw-bold">Nueva entidad</h4>
-    <p class="text-muted small">Completá los campos para registrar una nueva entidad</p>
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
+    <section class="vch-hero">
+        <div class="vch-hero__content">
+            <h1 class="vch-title">Nueva entidad</h1>
+            <p class="vch-subtitle">Completá los campos para registrar una nueva entidad.</p>
+        </div>
+    </section>
 
     <form method="POST" action="{{ route('entidades.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
@@ -89,9 +104,18 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label required-label">Logo</label>
-                    <input type="file" name="logo" class="form-control">
+                    <label class="form-label required-label">Imagen/es</label>
+                    <div id="logos-container">
+                        <div class="row logo-item mb-2">
+                            <div class="col-sm-11">
+                                <input type="file" name="logos[]" accept="image/*" class="form-control">
+                            </div>
+                            <div class="col-sm-1 d-flex align-items-center"></div>
+                        </div>
+
+                    </div>
                 </div>
+                <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
 
             </div>
         </div>
@@ -188,10 +212,10 @@
                             <input type="text" name="sucursales[0][cd_telefono2]" class="form-control" placeholder="+54 11 9876-5432">
                         </div>
 
-                        <div class="col-12 col-md-6">
+                        {{-- <div class="col-12 col-md-6">
                             <label class="form-label">WhatsApp</label>
                             <input type="text" name="sucursales[0][cd_whatsapp]" class="form-control" placeholder="+54 11 1234-5678">
-                        </div>
+                        </div> --}}
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Email 1</label>
@@ -632,5 +656,30 @@
             initSucursalState(sucursal);
         });
     });
+</script>
+<script>
+$(document).ready(function () {
+
+    $('#add-logo').on('click', function () {
+
+        let html = `
+            <div class="row logo-item ">
+                <div class="col-sm-11">
+                    <input type="file" name="logos[]" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#logos-container').append(html);
+    });
+
+    $(document).on('click', '.remove-logo', function () {
+        $(this).closest('.logo-item').remove();
+    });
+
+});
 </script>
 @endsection

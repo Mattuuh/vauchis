@@ -9,22 +9,23 @@
     $oldCampos = old('campos', []);
 @endphp
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
-            <h1 class="vch-title">Nueva modalidad</h1>
-            <p class="vch-subtitle">Crea una modalidad y define los campos dinámicos que tendrán sus vouchers.</p>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <h1 class="vch-title">Nueva modalidad para vouchers</h1>
+            <p class="vch-subtitle">Configuran cómo funciona un voucher, incluyendo su tipo, condiciones y forma de uso.</p>
         </div>
     </section>
 
@@ -32,22 +33,14 @@
         @csrf
 
         {{-- DATOS DE LA MODALIDAD --}}
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-3">Datos de la modalidad</h6>
 
             <div class="row g-3">
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Código</label>
-                    <input
-                        type="text"
-                        name="f_codigo"
-                        id="f_codigo"
-                        class="form-control field-required"
-                        value="{{ old('f_codigo') }}"
-                        placeholder="Ej: PORCENTAJE"
-                        required
-                    >
-                    <div class="form-text">Código interno único. Se recomienda usar mayúsculas y guiones bajos.</div>
+                    <input type="text" name="f_codigo" id="f_codigo" class="form-control field-required" value="{{ old('f_codigo') }}" placeholder="Ej: PORCENTAJE" required>
+                    <div class="form-text">Se recomienda usar mayúsculas y guiones bajos.</div>
 
                     @error('f_codigo')
                         <div class="text-required">{{ $message }}</div>
@@ -56,14 +49,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre</label>
-                    <input
-                        type="text"
-                        name="f_nombre"
-                        class="form-control field-required"
-                        value="{{ old('f_nombre') }}"
-                        placeholder="Ej: Descuento porcentual"
-                        required
-                    >
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Ej: Descuento porcentual" required>
 
                     @error('f_nombre')
                         <div class="text-required">{{ $message }}</div>
@@ -72,12 +58,7 @@
 
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
-                    <textarea
-                        name="f_descripcion"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Descripción interna de la modalidad..."
-                    >{{ old('f_descripcion') }}</textarea>
+                    <textarea name="f_descripcion" class="form-control" rows="3" placeholder="Descripción interna de la modalidad...">{{ old('f_descripcion') }}</textarea>
 
                     @error('f_descripcion')
                         <div class="text-required">{{ $message }}</div>
@@ -87,7 +68,7 @@
         </div>
 
         {{-- CAMPOS DINÁMICOS --}}
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="fw-bold mb-1">Campos dinámicos</h6>
@@ -110,51 +91,28 @@
                             </button>
 
                             <div class="row g-3">
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label required-label">Código</label>
-                                    <input type="text" name="campos[{{ $i }}][codigo]" class="form-control field-required campo-codigo" value="{{ $campo['codigo'] ?? '' }}" placeholder="Ej: porcentaje" required>
-                                </div>
-
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label required-label">Nombre interno</label>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label required-label">Leyenda del campo</label>
                                     <input type="text" name="campos[{{ $i }}][nombre]" class="form-control field-required" value="{{ $campo['nombre'] ?? '' }}" placeholder="Ej: Porcentaje" required>
                                 </div>
 
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label required-label">Tipo</label>
-                                    <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="text" {{ (($campo['tipo'] ?? '') == 'text') ? 'selected' : '' }}>Texto</option>
-                                        <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Textarea</option>
-                                        <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
-                                        <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option>
-                                        <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option>
-                                        <option value="boolean" {{ (($campo['tipo'] ?? '') == 'boolean') ? 'selected' : '' }}>Sí / No</option>
-                                        <option value="select" {{ (($campo['tipo'] ?? '') == 'select') ? 'selected' : '' }}>Seleccionable</option>
-                                    </select>
-                                </div>
-
                                 <div class="col-12 col-md-6">
-                                    <label class="form-label required-label">Label</label>
-                                    <input type="text" name="campos[{{ $i }}][label]" class="form-control field-required" value="{{ $campo['label'] ?? '' }}" placeholder="Ej: Porcentaje de descuento" required>
-                                </div>
-
-                                <div class="col-12 col-md-6">
-                                    <label class="form-label">Placeholder</label>
+                                    <label class="form-label">Texto de guía</label>
                                     <input type="text" name="campos[{{ $i }}][placeholder]" class="form-control" value="{{ $campo['placeholder'] ?? '' }}" placeholder="Ej: Ingresá el porcentaje">
                                 </div>
 
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label">Orden</label>
-                                    <input type="number" name="campos[{{ $i }}][orden]" class="form-control" value="{{ $campo['orden'] ?? ($i + 1) }}" min="1">
-                                </div>
-
-                                <div class="col-12 col-md-4">
-                                    <label class="form-label d-block">Requerido</label>
-                                    <div class="form-check form-switch mt-2">
-                                        <input class="form-check-input" type="checkbox" name="campos[{{ $i }}][requerido]" value="1" {{ !empty($campo['requerido']) ? 'checked' : '' }}>
-                                        <label class="form-check-label">Sí</label>
-                                    </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label required-label">Tipo de dato del campo</label>
+                                    <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="text" {{ (($campo['tipo'] ?? '') == 'text') ? 'selected' : '' }}>Texto</option>
+                                        <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option>
+                                        <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
+                                        {{-- <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option> --}}
+                                        {{-- <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option> --}}
+                                        <option value="boolean" {{ (($campo['tipo'] ?? '') == 'boolean') ? 'selected' : '' }}>Sí / No</option>
+                                        <option value="select" {{ (($campo['tipo'] ?? '') == 'select') ? 'selected' : '' }}>Seleccionable</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-12 col-md-4">
@@ -167,17 +125,12 @@
 
                                 <div class="col-12 campo-opciones-wrapper" style="{{ (($campo['tipo'] ?? '') === 'select') ? '' : 'display:none;' }}">
                                     <label class="form-label">Opciones</label>
-                                    <textarea
-                                        name="campos[{{ $i }}][opciones]"
-                                        class="form-control"
-                                        rows="2"
-                                        placeholder="Ej: ARS,USD o Bajo,Medio,Alto"
-                                    >{{ $campo['opciones'] ?? '' }}</textarea>
+                                    <textarea name="campos[{{ $i }}][opciones]" class="form-control" rows="2" placeholder="Ej: Rojo,Azul,Verde">{{ $campo['opciones'] ?? '' }}</textarea>
                                     <div class="form-text">Separá las opciones por coma.</div>
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label">Texto de ayuda</label>
+                                    <label class="form-label">Texto de ayuda (se muestra abajo de cada campo)</label>
                                     <input type="text" name="campos[{{ $i }}][ayuda]" class="form-control" value="{{ $campo['ayuda'] ?? '' }}" placeholder="Ej: Valor entre 1 y 100">
                                 </div>
                             </div>
@@ -196,7 +149,7 @@
         </div>
 
         {{-- BOTONES --}}
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('modalidades.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
@@ -216,52 +169,52 @@
         </button>
 
         <div class="row g-3">
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label required-label">Código</label>
                 <input type="text" name="campos[__INDEX__][codigo]" class="form-control field-required campo-codigo" placeholder="Ej: porcentaje" required>
-            </div>
+            </div> --}}
 
-            <div class="col-12 col-md-4">
-                <label class="form-label required-label">Nombre interno</label>
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Leyenda del campo</label>
                 <input type="text" name="campos[__INDEX__][nombre]" class="form-control field-required" placeholder="Ej: Porcentaje" required>
             </div>
 
-            <div class="col-12 col-md-4">
-                <label class="form-label required-label">Tipo</label>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Texto de guía</label>
+                <input type="text" name="campos[__INDEX__][placeholder]" class="form-control" placeholder="Ej: Ingresá el porcentaje">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Tipo de dato del campo</label>
                 <select name="campos[__INDEX__][tipo]" class="form-select field-required campo-tipo" required>
                     <option value="">Seleccionar...</option>
                     <option value="text">Texto</option>
-                    <option value="textarea">Textarea</option>
+                    <option value="textarea">Texto expandible</option>
                     <option value="number">Número</option>
-                    <option value="decimal">Decimal</option>
-                    <option value="money">Moneda</option>
+                    {{-- <option value="decimal">Decimal</option> --}}
+                    {{-- <option value="money">Moneda</option> --}}
                     <option value="boolean">Sí / No</option>
                     <option value="select">Seleccionable</option>
                 </select>
             </div>
 
-            <div class="col-12 col-md-6">
-                <label class="form-label required-label">Label</label>
+            {{-- <div class="col-12 col-md-6">
+                <label class="form-label required-label">Leyenda del campo</label>
                 <input type="text" name="campos[__INDEX__][label]" class="form-control field-required" placeholder="Ej: Porcentaje de descuento" required>
-            </div>
+            </div> --}}
 
-            <div class="col-12 col-md-6">
-                <label class="form-label">Placeholder</label>
-                <input type="text" name="campos[__INDEX__][placeholder]" class="form-control" placeholder="Ej: Ingresá el porcentaje">
-            </div>
-
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label">Orden</label>
                 <input type="number" name="campos[__INDEX__][orden]" class="form-control" min="1" value="1">
-            </div>
+            </div> --}}
 
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label d-block">Requerido</label>
                 <div class="form-check form-switch mt-2">
                     <input class="form-check-input" type="checkbox" name="campos[__INDEX__][requerido]" value="1">
                     <label class="form-check-label">Sí</label>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-4">
                 <label class="form-label d-block">Activo</label>
@@ -273,17 +226,12 @@
 
             <div class="col-12 campo-opciones-wrapper" style="display:none;">
                 <label class="form-label">Opciones</label>
-                <textarea
-                    name="campos[__INDEX__][opciones]"
-                    class="form-control"
-                    rows="2"
-                    placeholder="Ej: ARS,USD o Bajo,Medio,Alto"
-                ></textarea>
+                <textarea name="campos[__INDEX__][opciones]" class="form-control" rows="2" placeholder="Ej: Rojo,Azul,Verde"></textarea>
                 <div class="form-text">Separá las opciones por coma.</div>
             </div>
 
             <div class="col-12">
-                <label class="form-label">Texto de ayuda</label>
+                <label class="form-label">Texto de ayuda (se muestra abajo de cada campo)</label>
                 <input type="text" name="campos[__INDEX__][ayuda]" class="form-control" placeholder="Ej: Valor entre 1 y 100">
             </div>
         </div>

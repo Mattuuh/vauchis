@@ -54,6 +54,41 @@ class Voucher extends Model
 
     public function entidad_domicilio()
     {
-        return $this->belongsTo(Entidad_domicilio::class, 'ed_id', 'ed_id');
+        return $this->belongsTo(EntidadDomicilio::class, 'ed_id', 'ed_id');
+    }
+
+    public function plantillas()
+    {
+        return $this->belongsToMany(
+            VoucherPlantilla::class,
+            'vouchers_plantillas',
+            'vou_id',
+            'vpl_id'
+        )
+        ->withPivot([
+            'vp_id',
+            'vp_principal',
+            'vp_estado',
+            'vp_fecha_alta',
+            'vp_usu_alta',
+        ])
+        ->wherePivot('vp_estado', 1);
+    }
+
+    public function plantillaPrincipal()
+    {
+        return $this->belongsToMany(
+            VoucherPlantilla::class,
+            'vouchers_plantillas',
+            'vou_id',
+            'vpl_id'
+        )
+        ->withPivot([
+            'vp_id',
+            'vp_principal',
+            'vp_estado',
+        ])
+        ->wherePivot('vp_estado', 1)
+        ->wherePivot('vp_principal', 1);
     }
 }

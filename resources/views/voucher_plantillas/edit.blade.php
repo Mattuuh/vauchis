@@ -6,21 +6,23 @@
 
 @include('partials.navbar')
 
-<div class="container py-3">
+<div class="container">
+
+    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    <div class="vch-hero-wave vch-hero-wave--two"></div>
+
+    <span class="vch-dot vch-dot--pink-left"></span>
+    <span class="vch-dot vch-dot--blue-left"></span>
+    <span class="vch-dot vch-dot--yellow"></span>
+    <span class="vch-dot vch-dot--blue"></span>
+    <span class="vch-dot vch-dot--green"></span>
+    <span class="vch-dot vch-dot--pink"></span>
+    <span class="vch-dot vch-dot--blue-small"></span>
+
     <section class="vch-hero">
         <div class="vch-hero__content">
             <h1 class="vch-title">Editar plantilla</h1>
-
-            <div class="vch-hero-wave vch-hero-wave--one"></div>
-            <div class="vch-hero-wave vch-hero-wave--two"></div>
-
-            <span class="vch-dot vch-dot--pink-left"></span>
-            <span class="vch-dot vch-dot--blue-left"></span>
-            <span class="vch-dot vch-dot--yellow"></span>
-            <span class="vch-dot vch-dot--blue"></span>
-            <span class="vch-dot vch-dot--green"></span>
-            <span class="vch-dot vch-dot--pink"></span>
-            <span class="vch-dot vch-dot--blue-small"></span>
+            <p class="vch-subtitle">.</p>
         </div>
     </section>
 
@@ -28,7 +30,7 @@
         @csrf
         @method('PUT')
 
-        <div class="card card-custom p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
 
             <div class="row g-3">
 
@@ -52,7 +54,7 @@
 
                 <div class="col-6 col-md-6">
                     <label class="form-label required-label">Ancho:</label>
-                    <input type="number" name="vpl_ancho" class="form-control field-required" value="{{ old('vpl_ancho', $plantilla->vpl_ancho) }}" placeholder="Ej: 1080" required>
+                    <input type="number" name="vpl_ancho" class="form-control field-required" value="{{ old('vpl_ancho', $plantilla->vpl_ancho) }}" placeholder="Ej: 1080" readonly>
 
                     @error('vpl_ancho')
                         <div class="text-required">{{ $message }}</div>
@@ -61,7 +63,7 @@
 
                 <div class="col-6 col-md-6">
                     <label class="form-label required-label">Alto:</label>
-                    <input type="number" name="vpl_alto" class="form-control field-required" value="{{ old('vpl_alto', $plantilla->vpl_alto) }}" placeholder="Ej: 1350" required>
+                    <input type="number" name="vpl_alto" class="form-control field-required" value="{{ old('vpl_alto', $plantilla->vpl_alto) }}" placeholder="Ej: 1350" readonly>
 
                     @error('vpl_alto')
                         <div class="text-required">{{ $message }}</div>
@@ -85,7 +87,7 @@
         </div>
 
         <!-- BOTONES -->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between form-actions">
 
             <button type="button" class="btn btn-danger" data-id="{{ $plantilla->vpl_id }}" data-url="{{ route('voucher_plantillas.delete', $plantilla->vpl_id) }}" id="btn_eliminar">
                 Eliminar
@@ -95,7 +97,7 @@
                 <a href="{{ route('voucher_plantillas.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
-                <button type="submit" class="btn btn-success" id="btn_guardar">
+                <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
                 {{-- <a href="{{ route('voucher_plantillas.builder', $plantilla->vpl_id) }}" class="btn btn-outline-success">Ir al builder</a> --}}
