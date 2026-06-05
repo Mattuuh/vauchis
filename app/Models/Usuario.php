@@ -11,9 +11,12 @@ class Usuario extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'usuarios';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'usu_id';
+
+    public $timestamps = false;
 
     protected $fillable = [
+        'tu_id',
         'tipo_doc_id',
         'usu_documento',
         'usu_apellido',
@@ -31,6 +34,19 @@ class Usuario extends Authenticatable
         'pais_id',
         'provincia_id',
         'ciudad_id',
+        'usu_estado',
+        'usu_fecha_alta',
+        'usu_usu_alta',
+        'usu_fecha_mod',
+        'usu_usu_mod',
+        'usu_fecha_baja',
+        'usu_usu_baja',
+    ];
+
+    protected $casts = [
+        'usu_fecha_alta' => 'datetime',
+        'usu_fecha_mod' => 'datetime',
+        'usu_fecha_baja' => 'datetime',
     ];
 
     protected $hidden = [

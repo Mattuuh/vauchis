@@ -3,392 +3,1330 @@
 
 @section('content')
 
-@include('partials.navbar')
+<main class="vs-page vh-page">
+    @include('partials.navbar')
 
-<section class="hero-section py-5 py-lg-6">
-    <div class="container">
-        <div class="row align-items-center g-4">
-            <div class="col-12 col-lg-6 order-2 order-lg-1 text-center text-lg-start">
-                <h1 class="hero-title mb-3">
-                    Los mejores vouchers<br>
-                    en un solo lugar
-                </h1>
-
-                <p class="hero-text mb-4">
-                    Compra y regala vouchers de marcas, negocios y ONGs locales
-                    de forma fácil y rápida.
-                </p>
-
-                <a href="#" class="btn btn-success btn-lg px-4" id="btn_explorar">Explora Vauchis</a>
+    <section class="vh-hero">
+        <div class="vh-shell vh-hero__inner">
+            <div class="vh-hero__copy">
+                <p class="vh-kicker">Elegí qué regalar</p>
+                <h1>El placer de regalar,<br>simplificado</h1>
+                <p>Comprá y enviá regalos personalizados de la manera más simple.</p>
+                <a href="#negocios" class="vs-btn vs-btn-primary vh-primary-btn" id="btn_explorar">Explorá Vauchis</a>
             </div>
 
-            <div class="col-12 col-lg-6 order-1 order-lg-2 text-center">
-                <img src="{{ asset('images/hero-vauchis.png') }}"
-                     alt="Hero Vauchis"
-                     class="img-fluid hero-image">
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="como-funciona" class="py-5 bg-white" style="display: none;">
-    <div class="container text-center">
-        <h2 class="section-title">¿Cómo funciona Vauchis?</h2>
-        <p class="section-subtitle">Sigue estos simples pasos para regalar vouchers fácilmente</p>
-
-        <div class="row g-4 mt-2">
-            <div class="col-12 col-md-4">
-                <div class="card info-card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <img src="{{ asset('images/elige_voucher.png') }}" alt="Elige un voucher" class="info-icon mb-3">
-                        <h4 class="fw-bold text-primary">Elige un voucher</h4>
-                        <p class="text-muted mb-0">
-                            Explora nuestra selección de vouchers y elige el regalo perfecto.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <div class="card info-card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <img src="{{ asset('images/envia_regalo.png') }}" alt="Envía tu regalo" class="info-icon mb-3">
-                        <h4 class="fw-bold text-primary">Envía tu regalo</h4>
-                        <p class="text-muted mb-0">
-                            Envía un voucher de forma fácil y rápida al destinatario que elijas.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <div class="card info-card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <img src="{{ asset('images/disfruta_regalo.png') }}" alt="Disfruta el regalo" class="info-icon mb-3">
-                        <h4 class="fw-bold text-primary">Disfruta el regalo</h4>
-                        <p class="text-muted mb-0">
-                            El destinatario recibe el voucher y podrá usarlo y disfrutar el regalo deseado.
-                        </p>
+            <div class="vh-gift-preview" aria-hidden="true">
+                <div class="vh-gift-card">
+                    <span>#24</span>
+                    <em></em>
+                    <div class="vh-gifts">
+                        <i class="vh-gift vh-gift--blue">🎁</i>
+                        <i class="vh-gift vh-gift--green">🎁</i>
+                        <i class="vh-gift vh-gift--pink">🎁</i>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-<section class="py-5 category-section">
-    <div class="container text-center">
-        <h2 class="section-title">Categorías principales</h2>
-        <p class="section-subtitle">Descubre y regala vouchers por categorías</p>
-
-        <div class="row g-4 mt-2">
+        <div class="vh-category-stack" id="objetos">
             @foreach ($categories as $category)
-                <div class="col-12 col-md-4">
-                    <div class="card category-card h-100 border-0 shadow-sm">
-                        <div class="card-body p-4">
-                            {{-- <img src="{{ asset('storage/' . $category->image) }}"
-                                 alt="{{ $category->name }}"
-                                 class="category-img mb-3"> --}}
-                            <img src="{{ $category->image 
-                                ? asset('images/' . $category->image) 
-                                : 'https://via.placeholder.com/150' }}"
-                                alt="{{ $category->name }}"
-                                class="category-img mb-3">
-
-                            <h4 class="fw-bold mb-2" style="color: {{ $category->color ?? '#1f4ed8' }}">
-                                {{ $category->name }}
-                            </h4>
-
-                            <p class="text-muted mb-0">
-                                {{ $category->description }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <a href="#" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
+                    <strong>{{ $category->name }}</strong>
+                    @php
+                        $img_category = $category->image ? asset('images/'.$category->image) : '';
+                    @endphp
+                    <img src="{{ $img_category }}" alt="{{ $category->name }}">
+                </a>
             @endforeach
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="marcas" class="py-5 bg-white">
-    <div class="container text-center">
-        <h2 class="section-title">Destacados</h2>
-        <p class="section-subtitle">Marcas que te encantarán</p>
-
-        @php
-            $groupedBrands = $featuredBrands->chunk(3);
-        @endphp
-
-        @if ($featuredBrands->count() <= 3)
-            <div class="row g-3 justify-content-center mt-2">
-                @foreach ($featuredBrands as $brand)
-                    <div class="col-12 col-md-4">
-                        <div class="brand-box h-100 d-flex flex-column align-items-center justify-content-center bg-white shadow-sm rounded-3 p-3 text-center">
-                            <img src="{{ $brand->logo 
-                                ? asset('storage/' . $brand->logo) 
-                                : 'https://via.placeholder.com/120x60?text=Logo' }}"
-                                alt="{{ $brand->name }}"
-                                class="img-fluid brand-logo">
-
-                            <h4 class="fw-bold mt-2">
-                                {{ $brand->name }}
-                            </h4>
-                        </div>
-                    </div>
-                @endforeach
+    <section class="vh-featured" id="negocios">
+        <div class="vh-shell">
+            <div class="vh-section-title vh-section-title--light">
+                <span></span>
+                <h2>Los negocios <strong>más elegidos</strong></h2>
             </div>
-        @else
-            <div id="featuredBrandsCarousel" class="carousel slide mt-3" data-bs-ride="false">
-                <div class="carousel-inner">
-                    @foreach ($groupedBrands as $index => $group)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                            <div class="row g-3 justify-content-center">
-                                @foreach ($group as $brand)
-                                    <div class="col-12 col-md-4">
-                                        <div class="brand-box h-100 d-flex flex-column align-items-center justify-content-center bg-white shadow-sm rounded-3 p-3 text-center">
-                                            <img src="{{ $brand->logo 
-                                                ? asset('storage/' . $brand->logo) 
-                                                : 'https://via.placeholder.com/120x60?text=Logo' }}"
-                                                alt="{{ $brand->name }}"
-                                                class="img-fluid brand-logo">
 
-                                            <h4 class="fw-bold mt-2">
-                                                {{ $brand->name }}
-                                            </h4>
-                                        </div>
-                                    </div>
-                                @endforeach
+            <div class="vh-slider-wrap">
+                <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior">‹</button>
+                <div class="vh-carousel-viewport" data-carousel="brands">
+                    <div class="vh-card-row vh-card-row--brands">
+                    @foreach ($featuredBrands as $brand)
+                        @php
+                            $brandImage = $brand->image ?? $brand->logo ?? null;
+                            $imgSrc = $brandImage ? asset('storage/' . $brandImage) : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
+                        @endphp
+                        <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}">
+                            <img src="{{ $imgSrc }}" alt="{{ $brand->name }}">
+                            <span class="vs-badge vh-card-badge">★ Recomendado</span>
+                            <div class="vh-business-card__caption">
+                                <div>
+                                    <h3>{{ $brand->name }}</h3>
+                                    <p>{{ $brand->description ?? 'Una experiencia para regalar y disfrutar' }}</p>
+                                </div>
+                                <small>desde ${{ $brand->min_amount ?? $brand->min_price ?? '10.000' }}</small>
                             </div>
-                        </div>
+                        </article>
                     @endforeach
+                    </div>
                 </div>
-
-                <button class="carousel-control-prev featured-brand-carousel-control" type="button" data-bs-target="#featuredBrandsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-
-                <button class="carousel-control-next featured-brand-carousel-control" type="button" data-bs-target="#featuredBrandsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
+                <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente">›</button>
             </div>
-        @endif
-    </div>
-</section>
+        </div>
+    </section>
 
-<section class="py-5 organization-section">
-    <div class="container text-center">
-        <h2 class="section-title">Organizaciones</h2>
-        <p class="section-subtitle">Descubre organizaciones y las marcas que ofrecen</p>
+    <section class="vh-organizations">
+        <div class="vh-shell">
+            <div class="vh-section-title">
+                <span></span>
+                <h2>Encontrá todo <strong>en un solo lugar</strong></h2>
+            </div>
 
-        @php
-            $groupedOrganizations = $organizations->chunk(3);
-        @endphp
-
-        @if ($organizations->count() <= 3)
-            <div class="row g-4 mt-2">
+            <div class="vh-logo-carousel-wrap">
+                <div class="vh-carousel-viewport" data-carousel="organizations">
+                    <div class="vh-logo-carousel">
                 @foreach ($organizations as $organization)
-                    <div class="col-12 col-lg-4">
-                        <div class="card organization-card border-0 shadow-sm h-100">
-                            <div class="card-body p-4 text-start">
-                                <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img src="{{ $organization->logo 
-                                        ? asset('storage/' . $organization->logo) 
-                                        : 'https://via.placeholder.com/80' }}"
-                                        alt="{{ $organization->name }}"
-                                        class="organization-logo">
+                    <a href="#" class="vh-logo-bubble">
+                        @if (!empty($organization->logo))
+                            <img src="{{ asset('storage/' . $organization->logo) }}" alt="{{ $organization->name }}">
+                        @else
+                            <strong>{{ $organization->name }}</strong>
+                        @endif
+                    </a>
+                @endforeach
+                    </div>
+                </div>
+                <button class="vh-round-next" type="button" aria-label="Siguiente">→</button>
+            </div>
+        </div>
+    </section>
 
-                                    <h5 class="mb-0 fw-bold">{{ $organization->name }}</h5>
-                                </div>
+    <section class="vh-inspiration" id="experiencias">
+        <div class="vh-shell">
+            <div class="vh-section-title">
+                <span></span>
+                <h2>Inspirate <strong>en recomendaciones</strong></h2>
+            </div>
 
-                                <div class="d-flex flex-wrap gap-2 mb-4">
-                                    @foreach ($organization->brands->take(4) as $brand)
-                                        <img src="{{ $brand->logo 
-                                            ? asset('storage/' . $brand->logo) 
-                                            : 'https://via.placeholder.com/120x60?text=Logo' }}"
-                                            alt="{{ $brand->name }}"
-                                            class="img-fluid brand-logo">
-                                    @endforeach
-                                </div>
-
-                                <div class="d-flex gap-2">
-                                    <a href="#" class="btn btn-outline-primary btn-sm flex-fill">Ver más</a>
-                                    <a href="#" class="btn btn-primary btn-sm flex-fill">Ver vouchers</a>
-                                </div>
+            <div class="vh-influencer-carousel-wrap">
+                <div class="vh-carousel-viewport" data-carousel="influencers">
+                    <div class="vh-card-row vh-card-row--influencers">
+                @foreach ($influencers as $influencer)
+                    @php
+                        $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : $influencerFallbackImages[$loop->index % count($influencerFallbackImages)];
+                    @endphp
+                    <article class="vh-influencer-card">
+                        <img class="vh-influencer-card__cover" src="{{ $imgSrc }}" alt="{{ $influencer->name }}">
+                        <div class="vh-influencer-card__body">
+                            <img src="{{ $imgSrc }}" alt="" class="vh-avatar">
+                            <div>
+                                <h3>{{ $influencer->name }}</h3>
+                                <p>{{ $influencer->user_name ?? '@' . \Illuminate\Support\Str::slug($influencer->name ?? 'influencer') }}</p>
+                                <small>{{ $influencer->description }}</small>
                             </div>
                         </div>
+                    </article>
+                @endforeach
                     </div>
+                </div>
+                <button class="vh-round-next vh-round-next--inspiration" type="button" aria-label="Siguiente">→</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="vh-explore" id="causa">
+        <div class="vh-shell">
+            <div class="vh-section-heading">
+                <span class="vh-section-heading__line"></span>
+                <h2>Sigue explorando</h2>
+            </div>
+
+            <div class="vh-slider-wrap">
+                <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior">‹</button>
+
+                <div class="vh-carousel-viewport" data-carousel="explore">
+                    <div class="vh-explore-grid">
+                    @foreach ($featuredBrands as $brand)
+                        @php
+                            $brandImage = $brand->image ?? $brand->logo ?? null;
+                            $imgSrc = $brandImage
+                                ? asset('storage/' . $brandImage)
+                                : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
+
+                            $badge = $loop->first ? 'Destacado' : ($loop->iteration === 2 ? 'Con causa' : '');
+                        @endphp
+
+                        <article
+                            class="vh-business-card entidades"
+                            data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}"
+                        >
+                            <div class="vh-business-card__image">
+                                <img src="{{ $imgSrc }}" alt="{{ $brand->name }}">
+
+                                @if($badge)
+                                    <span class="vh-card-badge {{ $loop->first ? 'vh-card-badge--pink' : 'vh-card-badge--green' }}">
+                                        {{ $badge }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="vh-business-card__caption">
+                                <div>
+                                    <h3>{{ $brand->name }}</h3>
+                                    <p>{{ $brand->description ?? 'Una experiencia para regalar y disfrutar' }}</p>
+                                </div>
+
+                                <small>
+                                    desde ${{ $brand->min_amount ?? $brand->min_price ?? '10.000' }}
+                                </small>
+                            </div>
+                        </article>
+                    @endforeach
+                    </div>
+                </div>
+
+                <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente">›</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="vh-collections">
+        <div class="vh-shell">
+            <div class="vh-section-heading">
+                <span class="vh-section-heading__line"></span>
+                <h2>Colecciones</h2>
+            </div>
+
+            <div class="vh-collections-grid">
+                @foreach ($collections as $collection)
+                    @php
+                        $imgSrc = !empty($collection->photo) ? asset('images/' . $collection->photo) : '';
+                    @endphp
+
+                    <a href="#" class="vh-collection-card">
+                        <img src="{{ $imgSrc }}" alt="{{ $collection->name }}">
+
+                        <span class="vh-collection-card__overlay"></span>
+
+                        <strong>
+                            {{ $collection->name }}
+                        </strong>
+                    </a>
                 @endforeach
             </div>
-        @else
-            <div id="organizationsCarousel" class="carousel slide mt-3" data-bs-ride="false">
-                <div class="carousel-inner">
-                    @foreach ($groupedOrganizations as $index => $group)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                            <div class="row g-4">
-                                @foreach ($group as $organization)
-                                    <div class="col-12 col-lg-4">
-                                        <div class="card organization-card border-0 shadow-sm h-100">
-                                            <div class="card-body p-4 text-start">
-                                                <div class="d-flex align-items-center gap-3 mb-3">
-                                                    <img src="{{ $organization->logo 
-                                                        ? asset('storage/' . $organization->logo) 
-                                                        : 'https://via.placeholder.com/80' }}"
-                                                        alt="{{ $organization->name }}"
-                                                        class="organization-logo">
-
-                                                    <h5 class="mb-0 fw-bold">{{ $organization->name }}</h5>
-                                                </div>
-
-                                                <div class="d-flex flex-wrap gap-2 mb-4">
-                                                    @foreach ($organization->brands->take(4) as $brand)
-                                                        <img src="{{ $brand->logo 
-                                                            ? asset('storage/' . $brand->logo) 
-                                                            : 'https://via.placeholder.com/120x60?text=Logo' }}"
-                                                            alt="{{ $brand->name }}"
-                                                            class="img-fluid brand-logo">
-                                                    @endforeach
-                                                </div>
-
-                                                <div class="d-flex gap-2">
-                                                    <a href="#" class="btn btn-outline-primary btn-sm flex-fill">Ver más</a>
-                                                    <a href="#" class="btn btn-primary btn-sm flex-fill">Ver vouchers</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <button class="carousel-control-prev organization-carousel-control" type="button" data-bs-target="#organizationsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-
-                <button class="carousel-control-next organization-carousel-control" type="button" data-bs-target="#organizationsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
-        @endif
-    </div>
-</section>
-
-<section class="py-5 organization-section bg-white">
-    <div class="container text-center">
-        <h2 class="section-title">Coleccionables</h2>
-        <p class="section-subtitle">Descubre oportunidades</p>
-
-        <div class="row g-4 mt-2">
-            @foreach ($collections as $collection)
-                <div class="col-12 col-lg-4">
-                    <div class="card influencer-card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center gap-3 text-start">
-                                {{-- <img src="{{ asset('storage/' . $influencer->photo) }}"
-                                     alt="{{ $influencer->name }}"
-                                     class="influencer-photo"> --}}
-                                <img src="{{ $collection->photo 
-                                    ? asset('images/' . $collection->photo) 
-                                    : 'https://i.pravatar.cc/150?img=' . $loop->index }}"
-                                    class="influencer-photo">
-
-                                <div>
-                                    <h5 class="mb-1 fw-bold">{{ $collection->name }}</h5>
-                                    <p class="text-muted small mb-2">
-                                        {{ $collection->description }}
-                                    </p>
-                                    <a href="#" class="btn btn-primary btn-sm">Ver voucher</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="py-5">
-    <div class="container text-center">
-        <h2 class="section-title">Influencers</h2>
-        <p class="section-subtitle">Descubre recomendaciones de quienes más te inspiran</p>
-
-        <div class="row g-4 mt-2">
-            @foreach ($influencers as $influencer)
-                <div class="col-12 col-lg-4">
-                    <div class="card influencer-card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center gap-3 text-start">
-                                {{-- <img src="{{ asset('storage/' . $influencer->photo) }}"
-                                     alt="{{ $influencer->name }}"
-                                     class="influencer-photo"> --}}
-                                <img src="{{ $influencer->photo 
-                                    ? asset('storage/' . $influencer->photo) 
-                                    : 'https://i.pravatar.cc/150?img=' . $loop->index }}"
-                                    class="influencer-photo">
-
-                                <div>
-                                    <h5 class="mb-1 fw-bold">{{ $influencer->name }}</h5>
-                                    <p class="text-muted small mb-2">
-                                        {{ $influencer->description }}
-                                    </p>
-                                    <a href="#" class="btn btn-primary btn-sm">Ver voucher</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<footer class="footer-vauchis text-white pt-5 pb-4">
-    <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-12 col-lg-5">
-                <h3 class="mb-3">Recibe nuestras novedades</h3>
-                <ul class="list-unstyled mb-0">
-                    <li><a href="#" class="footer-link">Cómo funciona</a></li>
-                    <li><a href="#" class="footer-link">Marcas</a></li>
-                    <li><a href="#" class="footer-link">Contacto</a></li>
-                </ul>
-            </div>
-
-            <div class="col-12 col-lg-7">
-                <form class="row g-2">
-                    <div class="col-12 col-md-8">
-                        <input type="email" class="form-control form-control-lg" placeholder="Tu correo electrónico">
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <button class="btn btn-danger btn-lg w-100">Suscribirme</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 pt-3 border-top border-light-subtle">
-            <small>2026 © Vauchis | Todos los derechos reservados | Políticas de privacidad</small>
-
-            <div class="d-flex gap-3 mt-3 mt-md-0">
-                <a href="#" class="footer-link">Facebook</a>
-                <a href="#" class="footer-link">LinkedIn</a>
-                <a href="#" class="footer-link">Email</a>
-            </div>
-        </div>
-    </div>
-</footer>
+    @include('partials.footer')
+</main>
 @endsection
+
+@push('styles')
+<style>
+    /* =========================================================
+   VAUCHIS HOME - CSS UNIFICADO
+   Basado en el CSS compartido y ajustes para igualar el PDF
+   ========================================================= */
+
+/* =========================
+   BASE
+========================= */
+
+.vh-page{
+    overflow: hidden;
+    background: var(--color-white);
+    color: var(--color-primary-dark);
+    font-family: var(--font-main);
+}
+
+.vh-shell{
+    width: min(100% - 128px, 1310px);
+    margin-inline: auto;
+}
+
+a{
+    text-decoration: none;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.vh-hero{
+    position: relative;
+    min-height: 300px;
+    background:
+        radial-gradient(circle at 20% 72%, rgba(0, 101, 250, .12), transparent 24%),
+        radial-gradient(circle at 72% 38%, rgba(73, 179, 132, .10), transparent 22%),
+        linear-gradient(180deg, #FDFDFE 0%, #F9FCFF 100%);
+}
+
+.vh-hero__inner{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    min-height: 260px;
+    padding-top: 16px;
+}
+
+.vh-hero__copy{
+    padding-left: 88px;
+    transform: translateY(-6px);
+}
+
+.vh-kicker{
+    margin: 0 0 6px;
+    color: var(--color-primary-dark);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: .23em;
+    text-transform: uppercase;
+}
+
+.vh-hero h1{
+    margin: 0 0 5px;
+    color: var(--color-primary-dark);
+    font-size: 44px;
+    line-height: .90;
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: -.035em;
+}
+
+.vh-hero__copy p:not(.vh-kicker){
+    width: 430px;
+    margin: 0 0 10px;
+    color: rgba(7, 55, 140, .75);
+    font-size: 14px;
+    line-height: 1.25;
+    font-weight: 300;
+}
+
+.vh-primary-btn{
+    min-height: 26px;
+    padding: 0 22px;
+    font-size: 12px;
+    box-shadow: 0 3px 8px rgba(0, 101, 250, .24);
+}
+
+.vh-gift-preview{
+    display: flex;
+    justify-content: center;
+    padding-right: 90px;
+}
+
+.vh-gift-card{
+    width: 450px;
+    height: 164px;
+    padding: 35px 40px;
+    border: 1px solid rgba(7, 55, 140, .35);
+    border-radius: 18px;
+    background: rgba(253, 253, 254, .72);
+    transform: rotate(6deg);
+}
+
+.vh-gift-card span{
+    display: block;
+    color: rgba(7, 55, 140, .38);
+    font-size: 14px;
+    letter-spacing: .2em;
+}
+
+.vh-gift-card em{
+    display: block;
+    width: 120px;
+    height: 2px;
+    margin-top: 22px;
+    background: rgba(7, 55, 140, .16);
+}
+
+.vh-gifts{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    margin-top: -38px;
+    font-style: normal;
+}
+
+.vh-gift{
+    font-style: normal;
+    line-height: 1;
+    filter: saturate(1.1);
+}
+
+.vh-gift--blue{ font-size: 60px; }
+.vh-gift--green{ font-size: 44px; }
+.vh-gift--pink{ font-size: 82px; }
+
+.vh-category-stack{
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    bottom: -32px;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(3, 174px);
+    gap: 24px;
+}
+
+.vh-category-card{
+    height: 82px;
+    padding: 13px 18px;
+    border-radius: 14px;
+    color: white;
+    box-shadow: 0 8px 18px rgba(0,0,0,.16);
+}
+
+.vh-category-card:hover{
+    color: white;
+    transform: translateY(-2px);
+}
+
+.vh-category-card strong{
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.vh-category-card small{
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    opacity: .75;
+}
+
+.vh-category-card--1{ background: #07378C; }
+.vh-category-card--2{ background: #49B384; }
+.vh-category-card--3{ background: #E51281; }
+
+/* =========================
+   TITULOS DE SECCION
+========================= */
+
+.vh-section-title,
+.vh-section-heading{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vh-section-title span,
+.vh-section-heading__line{
+    display: inline-block;
+    width: 25px;
+    height: 3px;
+    background: #07378C;
+}
+
+.vh-section-title h2,
+.vh-section-heading h2{
+    margin: 0;
+    color: #07378C;
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.vh-section-title h2 strong,
+.vh-section-heading h2 strong{
+    font-weight: 800;
+}
+
+.vh-section-title--light span{
+    background: #FDFDFE;
+}
+
+.vh-section-title--light h2,
+.vh-section-title--light h2 strong{
+    color: #FDFDFE;
+}
+
+/* =========================
+   COMPONENTES COMPARTIDOS
+========================= */
+
+.vh-slider-wrap{
+    position: relative;
+}
+
+.vh-card-row{
+    display: grid;
+    gap: 36px;
+}
+
+.vh-card-row--brands{
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.vh-slider-btn{
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.vh-round-next{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #07378C;
+    background: transparent;
+    color: #07378C;
+    font-size: 28px;
+    line-height: 1;
+}
+
+/* =========================
+   NEGOCIOS MAS ELEGIDOS
+========================= */
+
+.vh-featured{
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(180deg, #3C66AD 0%, #07378C 100%);
+    padding: 78px 0 96px;
+    overflow: visible;
+}
+
+.vh-featured::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,.04);
+    pointer-events: none;
+}
+
+.vh-featured .vh-shell{
+    position: relative;
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.vh-featured .vh-section-title{
+    margin-bottom: 58px;
+}
+
+.vh-featured .vh-card-row--brands{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.vh-featured .vh-business-card{
+    position: relative;
+    width: 255px;
+    height: 178px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #FDFDFE;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    cursor: pointer;
+}
+
+.vh-featured .vh-business-card > img{
+    width: 100%;
+    height: 121px;
+    object-fit: cover;
+    display: block;
+}
+
+.vh-featured .vh-card-badge{
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    z-index: 2;
+    height: 18px;
+    min-width: 78px;
+    padding: 0 9px;
+    border-radius: 4px;
+    background: #FDFDFE;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #9B5A00;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.vh-featured .vh-business-card__caption{
+    height: 57px;
+    padding: 8px 10px 9px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    background: #FDFDFE;
+}
+
+.vh-featured .vh-business-card__caption h3{
+    margin: 0 0 7px;
+    color: #111111;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.vh-featured .vh-business-card__caption p{
+    margin: 0;
+    max-width: 145px;
+    color: #111111;
+    font-size: 9px;
+    line-height: 1.2;
+    font-weight: 300;
+}
+
+.vh-featured .vh-business-card__caption small{
+    align-self: flex-end;
+    white-space: nowrap;
+    color: #111111;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.vh-featured .vh-slider-btn{
+    top: 63px;
+    width: 27px;
+    height: 27px;
+    border: 2px solid #FDFDFE;
+    background: transparent;
+    color: #FDFDFE;
+    font-size: 32px;
+    line-height: 20px;
+    font-weight: 200;
+}
+
+.vh-featured .vh-slider-btn--left{ left: -38px; }
+.vh-featured .vh-slider-btn--right{ right: -38px; }
+
+/* =========================
+   ORGANIZACIONES
+========================= */
+
+.vh-organizations{
+    background: linear-gradient(120deg, #fffaf0 0%, #f7fdff 45%, #eaf3ff 100%);
+    padding: 58px 0 70px;
+    overflow: hidden;
+}
+
+.vh-organizations .vh-shell{
+    max-width: 1066px;
+    margin: 0 auto;
+}
+
+.vh-organizations .vh-section-title{
+    margin-bottom: 44px;
+}
+
+.vh-logo-carousel{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    width: max-content;
+}
+
+.vh-logo-bubble{
+    width: 226px;
+    height: 226px;
+    border-radius: 50%;
+    background: #FDFDFE;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #07378C;
+}
+
+.vh-logo-bubble:first-child{
+    background: #A7E8EA;
+}
+
+.vh-logo-bubble:nth-child(3){
+    background: #1687A3;
+}
+
+.vh-logo-bubble img{
+    width: 74%;
+    height: 74%;
+    object-fit: contain;
+}
+
+.vh-logo-bubble:first-child img{
+    width: 78%;
+    height: 78%;
+}
+
+.vh-logo-bubble strong{
+    color: #07378C;
+    font-size: 22px;
+    text-align: center;
+}
+
+.vh-logo-carousel .vh-round-next{
+    right: -70px;
+    bottom: -28px;
+}
+
+/* =========================
+   INSPIRATE EN RECOMENDACIONES
+========================= */
+
+.vh-inspiration{
+    background: linear-gradient(120deg, #fffaf0 0%, #f4fbff 55%, #eaf3ff 100%);
+    padding: 28px 0 88px;
+    overflow: hidden;
+}
+
+.vh-inspiration .vh-shell{
+    max-width: 1066px;
+    margin: 0 auto;
+}
+
+.vh-inspiration .vh-section-title{
+    gap: 14px;
+    margin-bottom: 34px;
+}
+
+.vh-inspiration .vh-section-title span{
+    width: 32px;
+    height: 2px;
+}
+
+.vh-inspiration .vh-section-title h2{
+    font-size: 15px;
+    letter-spacing: .08em;
+}
+
+.vh-card-row--influencers{
+    position: relative;
+    display: flex;
+    gap: 22px;
+    width: max-content;
+}
+
+.vh-influencer-card{
+    width: 206px;
+    height: 362px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #FDFDFE;
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+
+.vh-influencer-card__cover{
+    width: 100%;
+    height: 278px;
+    object-fit: cover;
+    display: block;
+}
+
+.vh-influencer-card__body{
+    height: 84px;
+    padding: 18px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #FDFDFE;
+}
+
+.vh-avatar{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid #0065FA;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.vh-influencer-card__body h3{
+    margin: 0;
+    color: #111111;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.vh-influencer-card__body p{
+    margin: 2px 0;
+    color: #0065FA;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.vh-influencer-card__body small{
+    color: #111111;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.vh-round-next--inspiration{
+    right: 48px;
+    bottom: -64px;
+}
+
+/* =========================
+   SIGUE EXPLORANDO
+========================= */
+
+.vh-explore{
+    background: #EAF3FF;
+    padding: 66px 0 76px;
+    overflow: hidden;
+}
+
+.vh-explore .vh-shell{
+    max-width: 1066px;
+    margin: 0 auto;
+}
+
+.vh-explore .vh-section-heading{
+    margin-bottom: 132px;
+}
+
+.vh-explore-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 344px);
+    gap: 32px;
+}
+
+.vh-explore .vh-business-card{
+    position: relative;
+    height: 240px;
+    border-radius: 13px;
+    overflow: hidden;
+    background: #FDFDFE;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    cursor: pointer;
+}
+
+.vh-business-card__image{
+    position: relative;
+    height: 168px;
+    overflow: hidden;
+}
+
+.vh-business-card__image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.vh-explore .vh-card-badge{
+    position: absolute;
+    top: 25px;
+    left: 14px;
+    z-index: 2;
+    min-width: 86px;
+    height: 19px;
+    padding: 0 14px;
+    border-radius: 4px;
+    background: #FDFDFE;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.vh-card-badge--pink{
+    color: #E51281;
+}
+
+.vh-card-badge--green{
+    color: #168451;
+}
+
+.vh-card-badge--green::before{
+    content: '♥';
+    margin-right: 7px;
+    color: #49B384;
+    font-size: 10px;
+}
+
+.vh-explore .vh-business-card__caption{
+    height: 72px;
+    padding: 11px 14px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.vh-explore .vh-business-card__caption h3{
+    margin: 0 0 8px;
+    color: #111111;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.vh-explore .vh-business-card__caption p{
+    margin: 0;
+    max-width: 190px;
+    color: #111111;
+    font-size: 12px;
+    line-height: 1.25;
+    font-weight: 300;
+}
+
+.vh-explore .vh-business-card__caption small{
+    align-self: flex-end;
+    white-space: nowrap;
+    color: #111111;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.vh-explore .vh-slider-btn{
+    top: 122px;
+    width: 38px;
+    height: 38px;
+    border: 2px solid rgba(255,255,255,.95);
+    background: rgba(255,255,255,.25);
+    color: #FDFDFE;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 200;
+}
+
+.vh-explore .vh-slider-btn--left{ left: -22px; }
+.vh-explore .vh-slider-btn--right{ right: -22px; }
+
+/* =========================
+   COLECCIONES
+========================= */
+
+.vh-collections{
+    background: #FDFDFE;
+    padding: 82px 0 106px;
+}
+
+.vh-collections .vh-shell{
+    max-width: 1066px;
+    margin: 0 auto;
+}
+
+.vh-collections .vh-section-heading{
+    margin-bottom: 48px;
+}
+
+.vh-collections .vh-section-heading h2{
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .03em;
+}
+
+.vh-collections-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.vh-collection-card{
+    position: relative;
+    display: block;
+    height: 340px;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: none;
+    color: #FDFDFE;
+}
+
+.vh-collection-card:hover{
+    color: #FDFDFE;
+}
+
+.vh-collection-card img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.vh-collection-card__overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.22);
+    z-index: 1;
+}
+
+.vh-collection-card strong{
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: #FDFDFE;
+    font-size: 22px;
+    line-height: 1.1;
+    font-weight: 700;
+    text-align: center;
+}
+
+
+/* =========================
+   AJUSTES DE CARRUSELES E IMAGENES
+========================= */
+
+.vh-category-card{
+    position: relative;
+    overflow: visible;
+}
+
+.vh-category-card img{
+    position: absolute;
+    right: 14px;
+    bottom: -72px;
+    width: 104px;
+    height: 104px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.vh-category-card--2 img{
+    bottom: -82px;
+    width: 112px;
+    height: 112px;
+}
+
+.vh-category-card--3 img{
+    bottom: -98px;
+    width: 120px;
+    height: 120px;
+}
+
+.vh-carousel-viewport{
+    overflow: hidden;
+    width: 100%;
+}
+
+.vh-featured .vh-card-row--brands{
+    display: flex;
+    gap: 24px;
+    transition: transform .35s ease;
+    will-change: transform;
+}
+
+.vh-featured .vh-business-card{
+    flex: 0 0 255px;
+}
+
+.vh-logo-carousel-wrap,
+.vh-influencer-carousel-wrap{
+    position: relative;
+}
+
+.vh-logo-carousel{
+    transition: transform .35s ease;
+    will-change: transform;
+}
+
+.vh-logo-bubble{
+    flex: 0 0 226px;
+}
+
+.vh-card-row--influencers{
+    transition: transform .35s ease;
+    will-change: transform;
+}
+
+.vh-influencer-card{
+    flex: 0 0 206px;
+}
+
+.vh-explore-grid{
+    display: flex;
+    gap: 32px;
+    transition: transform .35s ease;
+    will-change: transform;
+}
+
+.vh-explore .vh-business-card{
+    flex: 0 0 344px;
+}
+
+.vh-featured .vh-card-row--brands,
+.vh-logo-carousel,
+.vh-card-row--influencers,
+.vh-explore-grid{
+    transform: translateX(0);
+}
+
+
+/* =========================
+   CATEGORIAS SOBRE HERO
+   Ajuste visual segun referencia
+========================= */
+
+.vh-category-stack{
+    bottom: -25px;
+    grid-template-columns: repeat(3, 100px);
+    gap: 20px;
+    align-items: end;
+}
+
+.vh-category-card{
+    position: relative;
+    width: 100px;
+    height: 100px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 18px rgba(0,0,0,.16);
+}
+
+.vh-category-card strong{
+    position: relative;
+    z-index: 2;
+    max-width: 84px;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.12;
+    font-weight: 800;
+}
+
+.vh-category-card img,
+.vh-category-card--2 img,
+.vh-category-card--3 img{
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    right: auto;
+    bottom: 5px;
+    width: 88px;
+    height: 78px;
+    transform: translateX(-50%);
+    object-fit: contain;
+    opacity: .45;
+    pointer-events: none;
+}
+
+.vh-category-card--2 img{
+    width: 90px;
+    height: 82px;
+    bottom: 8px;
+    transform: translateX(-50%) rotate(-8deg);
+}
+
+.vh-category-card--3 img{
+    width: 96px;
+    height: 88px;
+    bottom: -1px;
+    opacity: .35;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px){
+    .vh-shell{
+        width: min(100% - 32px, 960px);
+    }
+
+    .vh-hero__copy{
+        padding-left: 0;
+    }
+
+    .vh-gift-preview{
+        padding-right: 0;
+    }
+
+    .vh-card-row--brands,
+    .vh-card-row--collections,
+    .vh-collections-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vh-card-row--influencers,
+    .vh-logo-carousel{
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vh-logo-carousel{
+        display: grid;
+        width: auto;
+    }
+
+    .vh-featured .vh-slider-btn--left,
+    .vh-explore .vh-slider-btn--left{
+        left: 8px;
+    }
+
+    .vh-featured .vh-slider-btn--right,
+    .vh-explore .vh-slider-btn--right{
+        right: 8px;
+    }
+}
+
+@media (max-width: 991px){
+    .vh-explore{
+        padding: 48px 0 60px;
+    }
+
+    .vh-explore .vh-shell,
+    .vh-collections .vh-shell{
+        padding: 0 24px;
+    }
+
+    .vh-explore .vh-section-heading{
+        margin-bottom: 48px;
+    }
+
+    .vh-explore-grid,
+    .vh-collections-grid{
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .vh-explore .vh-business-card{
+        height: 240px;
+    }
+
+    .vh-collections{
+        padding: 56px 0 72px;
+    }
+
+    .vh-collection-card{
+        height: 280px;
+    }
+
+    .vh-explore .vh-slider-btn{
+        display: none;
+    }
+}
+
+@media (max-width: 768px){
+
+    .vh-hero__inner{
+        grid-template-columns: 1fr;
+        padding: 36px 0 96px;
+    }
+
+    .vh-hero h1{
+        font-size: 38px;
+    }
+
+    .vh-hero__copy p:not(.vh-kicker){
+        width: auto;
+    }
+
+    .vh-gift-preview{
+        display: none;
+    }
+
+    .vh-category-stack{
+        grid-template-columns: 1fr;
+        width: min(100% - 32px, 360px);
+        bottom: -170px;
+    }
+
+    .vh-featured{
+        padding-top: 210px;
+    }
+
+    .vh-card-row--brands,
+    .vh-card-row--collections,
+    .vh-card-row--influencers,
+    .vh-logo-carousel{
+        grid-template-columns: 1fr;
+    }
+
+    .vh-logo-bubble{
+        width: 100%;
+        border-radius: 24px;
+    }
+}
+
+</style>
+@endpush
 
 @push('scripts')
 <script>
-    $('#btn_explorar').on('click', function () {
-        $('#como-funciona').slideDown();
+    $(function () {
+        $('#btn_explorar').on('click', function (event) {
+            event.preventDefault();
+            $('html, body').animate({
+                scrollTop: $('#negocios').offset().top
+            }, 600);
+        });
 
-        $('html, body').animate({
-            scrollTop: $('#como-funciona').offset().top
-        }, 600);
+        $('.entidades').on('click', function () {
+            const url = $(this).data('url');
+            if (url && url !== '#') {
+                window.location = url;
+            }
+        });
+
+        function setupCarousel($wrap, trackSelector, prevSelector, nextSelector, visibleItems) {
+            const $track = $wrap.find(trackSelector).first();
+            const $items = $track.children();
+            let index = 0;
+
+            if (!$track.length || $items.length <= visibleItems) {
+                $wrap.find(prevSelector + ', ' + nextSelector).hide();
+                return;
+            }
+
+            function itemStep() {
+                const el = $items.get(0);
+                if (!el) return 0;
+                const gap = parseFloat(getComputedStyle($track.get(0)).columnGap || getComputedStyle($track.get(0)).gap || 0);
+                return el.getBoundingClientRect().width + gap;
+            }
+
+            function update() {
+                const max = Math.max(0, $items.length - visibleItems);
+                index = Math.max(0, Math.min(index, max));
+                $track.css('transform', 'translateX(' + (-index * itemStep()) + 'px)');
+                $wrap.find(prevSelector).prop('disabled', index === 0);
+                $wrap.find(nextSelector).prop('disabled', index === max);
+            }
+
+            $wrap.find(nextSelector).on('click', function () {
+                index++;
+                update();
+            });
+
+            $wrap.find(prevSelector).on('click', function () {
+                index--;
+                update();
+            });
+
+            $(window).on('resize', update);
+            update();
+        }
+
+        setupCarousel($('.vh-featured .vh-slider-wrap'), '.vh-card-row--brands', '.vh-slider-btn--left', '.vh-slider-btn--right', 3);
+        setupCarousel($('.vh-organizations .vh-logo-carousel-wrap'), '.vh-logo-carousel', '.vh-round-next', '.vh-round-next', 3);
+        setupCarousel($('.vh-inspiration .vh-influencer-carousel-wrap'), '.vh-card-row--influencers', '.vh-round-next--inspiration', '.vh-round-next--inspiration', 4);
+        setupCarousel($('.vh-explore .vh-slider-wrap'), '.vh-explore-grid', '.vh-slider-btn--left', '.vh-slider-btn--right', 3);
     });
 </script>
 @endpush

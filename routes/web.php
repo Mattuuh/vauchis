@@ -97,6 +97,14 @@ use App\Http\Controllers\VoucherController;
 Route::resource('vouchers', VoucherController::class);
 Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
 Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');
+Route::post('/vouchers/{voucher}/detalles/{detalle}/delete', [VoucherController::class, 'delete_voucher_detalle'])->name('vouchers.delete.detalle');
+Route::post('/vouchers/{id}/agregar-stock', [VoucherController::class, 'agregar_voucher_detalle'])->name('vouchers.update_detalle');
+Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
+
+
+use App\Http\Controllers\VoucherCompraController;
+Route::get('/vouchers/{voucher}/comprar', [VoucherCompraController::class, 'show'])->name('vouchers.comprar');
+Route::post('/vouchers/{voucher}/pagar', [VoucherCompraController::class, 'pagar'])->name('vouchers.pagar');
 
 // opcional
 Route::delete('/vouchers/banner/{id}', [VoucherController::class, 'destroyBanner'])->name('vouchers.banner.destroy');
@@ -174,3 +182,16 @@ use App\Http\Controllers\BibliotecaFondoController;
 
 Route::resource('biblioteca_fondos', BibliotecaFondoController::class);
 Route::post('/biblioteca_fondos/{id}/delete', [BibliotecaFondoController::class, 'delete'])->name('biblioteca_fondos.delete');
+
+
+use App\Http\Controllers\CheckoutController;
+Route::post('/checkout/voucher/{id}', [CheckoutController::class, 'crearPreferencia'])->name('checkout.voucher');
+Route::post('/webhooks/mercadopago', [CheckoutController::class, 'webhook'])->name('mercadopago.webhook');
+Route::get('/mercadopago/pago_success', [CheckoutController::class, 'success'])->name('mercadopago.success');
+Route::get('/mercadopago/pago_failure', [CheckoutController::class, 'failure'])->name('mercadopago.failure');
+Route::get('/mercadopago/pago_pending', [CheckoutController::class, 'pending'])->name('mercadopago.pending');
+
+
+use App\Http\Controllers\MercadoPagoOAuthController;
+Route::get('/mercadopago/conectar/{entidad}', [MercadoPagoOAuthController::class, 'redirect'])->name('mp.conectar');
+Route::get('/mercadopago/callback', [MercadoPagoOAuthController::class, 'callback'])->name('mp.callback');

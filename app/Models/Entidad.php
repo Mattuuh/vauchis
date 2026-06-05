@@ -22,6 +22,9 @@ class Entidad extends Model
         'ent_razon_social',
         'ent_logo_url',
         'ent_portada_url',
+        'ent_domicilio_fiscal',
+        'ent_instagram',
+        'ent_tiktok',
         'ent_estado',
         'ent_estado2',
         'ent_fecha_alta',
@@ -30,6 +33,10 @@ class Entidad extends Model
         'ent_usu_mod',
         'ent_fecha_baja',
         'ent_usu_baja',
+        'mp_user_id',
+        'mp_access_token',
+        'mp_refresh_token',
+        'mp_public_key'
     ];
 
     protected $casts = [

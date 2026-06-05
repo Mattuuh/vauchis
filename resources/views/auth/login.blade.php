@@ -1,19 +1,6 @@
-{{-- resources/views/auth/login.blade.php --}}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresar | Vauchis</title>
+@extends('layouts.app')
 
-    {{-- Bootstrap 5 --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {{-- Google Font similar al estilo de la referencia --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+@push('styles')
     <style>
         :root {
             --vauchis-blue: #2f63c7;
@@ -351,145 +338,122 @@
             }
         }
     </style>
-</head>
-<body>
-    <div class="login-page">
-        <div class="container">
-            <div class="login-shell">
-                <header class="topbar d-flex justify-content-between align-items-center">
-                    <a href="{{ url('/') }}">
-                        <img src="{{ asset('images/logo-vauchis.jpg') }}" alt="Vauchis" class="brand-logo">
-                    </a>
-                </header>
+@endpush
 
-                <div class="row g-0 align-items-center">
-                    <div class="col-lg-6">
-                        <section class="hero-section">
-                            <span class="hero-badge">Bienvenido a Vauchis</span>
+@section('content')
+{{-- @include('partials.navbar') --}}
 
-                            <h1 class="hero-title">Ingresa a tu cuenta y sigue regalando fácil</h1>
+<div class="login-page">
+    <div class="container">
+        <div class="login-shell">
+            <header class="topbar d-flex justify-content-between align-items-center">
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis" class="brand-logo">
+                </a>
+            </header>
 
-                            <p class="hero-text">
-                                Accede a tu panel para comprar, enviar y gestionar vouchers de marcas,
-                                negocios y ONGs locales en un solo lugar.
-                            </p>
+            <div class="row g-0 align-items-center">
+                <div class="col-lg-6">
+                    <section class="hero-section">
+                        <span class="hero-badge">Bienvenido a Vauchis</span>
 
-                            <div>
-                                <span class="feature-pill pill-green">Simple</span>
-                                <span class="feature-pill pill-blue">Seguro</span>
-                                <span class="feature-pill pill-pink">Rápido</span>
+                        <h1 class="hero-title">Ingresa a tu cuenta y sigue regalando fácil</h1>
+
+                        <p class="hero-text">
+                            Accede a tu panel para comprar, enviar y gestionar vouchers de marcas,
+                            negocios y ONGs locales en un solo lugar.
+                        </p>
+
+                        <div>
+                            <span class="feature-pill pill-green">Simple</span>
+                            <span class="feature-pill pill-blue">Seguro</span>
+                            <span class="feature-pill pill-pink">Rápido</span>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-6">
+                    <section class="visual-side">
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-teal"></span>
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-blue"></span>
+
+                        <div class="login-card">
+                            <div class="login-card-header">
+                                {{-- <small>Vauchis</small>
+                                <h2>Ingresar</h2> --}}
                             </div>
-                        </section>
-                    </div>
 
-                    <div class="col-lg-6">
-                        <section class="visual-side">
-                            <span class="dot dot-yellow"></span>
-                            <span class="dot dot-teal"></span>
-                            <span class="dot dot-red"></span>
-                            <span class="dot dot-blue"></span>
+                            <div class="login-card-body">
+                                <form method="POST" action="{{ route('login') }}">
+                                    @csrf
 
-                            <div class="login-card">
-                                <div class="login-card-header">
-                                    <small>Vauchis</small>
-                                    <h2>Ingresar</h2>
-                                </div>
-
-                                <div class="login-card-body">
-                                    <form method="POST" action="{{ route('login') }}">
-                                        @csrf
-
-                                        <div class="mb-4">
-                                            <label for="email" class="form-label">Correo electrónico</label>
-                                            <input
-                                                type="email"
-                                                id="email"
-                                                name="email"
-                                                value="{{ old('email') }}"
-                                                class="form-control form-control-custom @error('email') is-invalid @enderror"
-                                                placeholder="tu@email.com"
-                                                required
-                                                autofocus
-                                            >
-                                            @error('email')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
-                                                <label for="password" class="form-label mb-0">Contraseña</label>
-                                                @if (Route::has('password.request'))
-                                                    <a href="{{ route('password.request') }}" class="link-green">¿Olvidaste tu contraseña?</a>
-                                                @endif
-                                            </div>
-
-                                            <input
-                                                type="password"
-                                                id="password"
-                                                name="password"
-                                                class="form-control form-control-custom @error('password') is-invalid @enderror"
-                                                placeholder="••••••••"
-                                                required
-                                            >
-                                            @error('password')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-                                            <div class="form-check m-0">
-                                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                                <label class="form-check-label text-muted" for="remember">
-                                                    Recordarme
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-grid">
-                                            {{-- <button type="submit" class="btn btn-vauchis btn-lg">
-                                                Ingresar
-                                            </button> --}}
-                                            <a href="{{ route('home') }}" class="btn btn-vauchis btn-lg">Ingresar</a>
-                                        </div>
-                                    </form>
-
-                                    <div class="separator">
-                                        <span>o continúa con</span>
+                                    <div class="mb-4">
+                                        <label for="email" class="form-label">Correo electrónico</label>
+                                        <input type="email" id="email" name="email" value="{{ old('email') }}" class="form-control form-control-custom @error('email') is-invalid @enderror" placeholder="tu@email.com" required autofocus>
+                                        @error('email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
-                                    <div class="row g-3">
-                                        <div class="col-6">
-                                            <button type="button" class="btn btn-outline-soft w-100">Google</button>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                                            <label for="password" class="form-label mb-0">Contraseña</label>
+                                            @if (Route::has('password.request'))
+                                                <a href="{{ route('password.request') }}" class="link-green">¿Olvidaste tu contraseña?</a>
+                                            @endif
                                         </div>
-                                        <div class="col-6">
-                                            <button type="button" class="btn btn-outline-soft w-100">Facebook</button>
+
+                                        <input type="password" id="password" name="password" class="form-control form-control-custom @error('password') is-invalid @enderror" placeholder="****" required>
+                                        @error('password')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                            <label class="form-check-label text-muted" for="remember">
+                                                Recordarme
+                                            </label>
                                         </div>
                                     </div>
 
-                                    <p class="signup-text">
-                                        ¿No tienes cuenta?
-                                        <a href="{{ route('register') }}" class="link-pink">Crear cuenta</a>
-                                    </p>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-vauchis btn-lg">
+                                            Ingresar
+                                        </button>
+                                        {{-- <a href="{{ route('home') }}" class="btn btn-vauchis btn-lg">Ingresar</a> --}}
+                                    </div>
+                                </form>
+
+                                <div class="separator">
+                                    <span>o continúa con</span>
                                 </div>
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-outline-soft w-100">Google</button>
+                                    </div>
+                                    {{-- <div class="col-6">
+                                        <button type="button" class="btn btn-outline-soft w-100">Facebook</button>
+                                    </div> --}}
+                                </div>
+
+                                <p class="signup-text">
+                                    ¿No tienes cuenta?
+                                    <a href="{{ route('register') }}" class="link-pink">Crear cuenta</a>
+                                </p>
                             </div>
-                        </section>
-                    </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@include('partials.footer')
 
-{{--
-Rutas sugeridas (web.php):
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-Ubicación sugerida del logo:
-public/images/logo-vauchis_v1.jpg
---}}
+@endsection

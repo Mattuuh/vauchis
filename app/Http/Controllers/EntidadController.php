@@ -241,6 +241,9 @@ class EntidadController extends Controller
                 'ent_documento' => $request->com_documento,
                 'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                 'ent_razon_social' => $request->com_razon_social,
+                'ent_domicilio_fiscal' => $request->com_dom_fiscal,
+                'ent_instagram' => $request->com_instagram,
+                'ent_tiktok' => $request->com_tiktok,
                 // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
                 'ent_fecha_alta' => now(),
@@ -250,6 +253,7 @@ class EntidadController extends Controller
                 $domicilioId = DB::table('entidades_domicilios')->insertGetId([
                     'ent_id' => $entId,
                     'org_id' => $sucursal['org_id'] ?? null,
+                    'ed_canje' => $sucursal['cd_canje'] ?? 0,
                     'pais_id' => $sucursal['pais_id'],
                     'provincia_id' => $sucursal['provincia_id'],
                     'ed_ciudad' => $sucursal['cd_ciudad'],
@@ -452,6 +456,11 @@ class EntidadController extends Controller
                     'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                     'ent_razon_social' => $request->com_razon_social,
                     // 'ent_logo_url' => $logoPath,
+                    'ent_domicilio_fiscal' => $request->com_dom_fiscal,
+                    'ent_instagram' => $request->com_instagram,
+                    'ent_tiktok' => $request->com_tiktok,
+                    'ent_fecha_mod' => now(),
+                    'ent_usu_mod' => 1,
                 ]);
 
             DB::table('entidades_subrubros')
@@ -477,6 +486,7 @@ class EntidadController extends Controller
                         ->where('ent_id', $id)
                         ->update([
                             'org_id' => $sucursal['org_id'] ?? null,
+                            'ed_canje' => $sucursal['cd_canje'] ?? 0,
                             'pais_id' => $sucursal['pais_id'],
                             'provincia_id' => $sucursal['provincia_id'],
                             'ed_ciudad' => $sucursal['cd_ciudad'],

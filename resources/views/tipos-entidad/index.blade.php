@@ -2,129 +2,124 @@
 
 @section('title', 'Tipos de entidad')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
-@endpush
-
-
 @section('content')
 
-@include('partials.navbar')
+<main class="vs-page">
+    @include('partials.navbar')
 
-<main class="commerce-page">
-
-    <span class="commerce-hero-wave commerce-hero-wave--one"></span>
-    <span class="commerce-hero-wave commerce-hero-wave--two"></span>
-
-    <span class="commerce-dot commerce-dot--pink-left"></span>
-    <span class="commerce-dot commerce-dot--blue-left"></span>
-    <span class="commerce-dot commerce-dot--yellow"></span>
-    <span class="commerce-dot commerce-dot--blue"></span>
-    <span class="commerce-dot commerce-dot--green"></span>
-    <span class="commerce-dot commerce-dot--pink"></span>
-    <span class="commerce-dot commerce-dot--blue-small"></span>
-
-    <section class="commerce-hero">
-        <div class="commerce-hero__content">
-            <h1 class="commerce-title">Tipos de entidades</h1>
-            <p class="commerce-subtitle">Clasifican las entidades según su rubro o actividad.</p>
+    <section class="vs-section-lg vs-bg-primary-dark">
+        <div class="vs-container">
+            <h1 class="vs-title-xl" style="color: var(--text-inverse);">Tipos de entidades</h1>
+            <p class="vs-text" style="max-width: 620px; color: rgba(253,253,254,.82);">
+                Clasifican las entidades según su rubro o actividad.
+            </p>
         </div>
     </section>
 
-    <section class="commerce-list-section">
-        <div class="container">
-            <div class="commerce-card">
-                <div class="commerce-toolbar">
-                    <div class="commerce-toolbar__left">
-                        <div class="commerce-search">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar tipo de entidad...">
+    <section class="vs-section">
+        <div class="vs-container">
+            <div class="vs-card">
+                <div class="vs-card-body">
+                    <div class="vs-d-flex vs-align-center vs-justify-between vs-gap-md vs-mb-md" style="flex-wrap: wrap;">
+                        <div class="vs-d-flex vs-align-center vs-gap-sm" style="flex: 1 1 420px; flex-wrap: wrap;">
+                            <div style="position: relative; flex: 1 1 280px; max-width: 420px;">
+                                <i class="bi bi-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                                <input
+                                    type="text"
+                                    class="vs-input"
+                                    placeholder="Buscar tipo de entidad..."
+                                    style="padding-left: 40px; border-radius: var(--radius-pill);"
+                                >
+                            </div>
+
+                            <button class="vs-btn vs-btn-secondary" type="button">
+                                <i class="bi bi-funnel"></i>
+                                Filtro
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
                         </div>
 
-                        <button class="btn commerce-filter-btn" type="button">
-                            <i class="bi bi-funnel"></i>
-                            Filtro
-                            <i class="bi bi-chevron-down ms-1"></i>
-                        </button>
-                    </div>
-
-                    <div class="commerce-toolbar__right">
-                        <a href="{{ route('tipos-entidad.create') }}" class="btn commerce-new-btn">
+                        <a href="{{ route('tipos-entidad.create') }}" class="vs-btn vs-btn-primary">
                             <i class="bi bi-plus-lg"></i>
                             Nuevo tipo de entidad
                         </a>
                     </div>
-                </div>
 
-                <div class="commerce-table-wrap">
-                    <table class="commerce-table">
-                        <thead>
-                            <tr class="commerce-table-head">
-                                <th style="width: 50px">ID</th>
-                                <th style="width: 160px">NOMBRE</th>
-                                <th style="width: 70px">FECHA DE ALTA</th>
-                                <th style="width: 60px">ESTADO</th>
-                                <th style="width: 60px">ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($tipos as $tipo)
-                                <tr class="commerce-row">
-
-                                    <td class="commerce-col" data-label="ID">
-                                        <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $tipo['tipo_ent_id'] }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Nombre">
-                                        <span class="commerce-mobile-label">Nombre</span>
-                                        <span>{{ $tipo['tipo_ent_nombre'] }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Fecha de alta">
-                                        <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $tipo['tipo_ent_fecha_alta']->format('d/m/Y') }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Estado">
-                                        <span class="commerce-mobile-label">Estado</span>
-
-                                        @php
-                                            $estado = estado($tipo['tipo_ent_estado']);
-                                        @endphp
-
-                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
-                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
-                                        </span>
-                                    </td>
-
-                                    <td class="commerce-col commerce-col--actions" data-label="Acciones">
-                                        <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('tipos-entidad.edit', $tipo->tipo_ent_id) }}" class="btn commerce-edit-btn" title="Editar">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                    </td>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 760px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(162,162,161,.25);">
+                                    <th class="vs-ui-text" style="width: 70px; padding: 14px 12px; text-align: left; color: var(--text-muted);">ID</th>
+                                    <th class="vs-ui-text" style="padding: 14px 12px; text-align: left; color: var(--text-muted);">NOMBRE</th>
+                                    <th class="vs-ui-text" style="width: 180px; padding: 14px 12px; text-align: center; color: var(--text-muted);">FECHA DE ALTA</th>
+                                    <th class="vs-ui-text" style="width: 120px; padding: 14px 12px; text-align: center; color: var(--text-muted);">ESTADO</th>
+                                    <th class="vs-ui-text" style="width: 120px; padding: 14px 12px; text-align: center; color: var(--text-muted);">ACCIONES</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach($tipos as $tipo)
+                                    <tr style="border-bottom: 1px solid rgba(162,162,161,.18);">
+                                        <td class="vs-text-sm" data-label="ID" style="padding: 14px 12px;">
+                                            {{ $tipo['tipo_ent_id'] }}
+                                        </td>
 
-                <div class="commerce-footer">
-                    <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $tipos->count() }} de 25 registros
+                                        <td class="vs-text-sm" data-label="Nombre" style="padding: 14px 12px; font-weight: 600; color: var(--text-main);">
+                                            {{ $tipo['tipo_ent_nombre'] }}
+                                        </td>
+
+                                        <td class="vs-text-sm vs-text-center" data-label="Fecha de alta" style="padding: 14px 12px;">
+                                            {{ $tipo['tipo_ent_fecha_alta']->format('d/m/Y') }}
+                                        </td>
+
+                                        <td class="vs-text-center" data-label="Estado" style="padding: 14px 12px;">
+                                            @php
+                                                $estado = estado($tipo['tipo_ent_estado']);
+
+                                                $estadoClass = match ($tipo['tipo_ent_estado']) {
+                                                    1, '1', true => 'vs-badge-success',
+                                                    default => 'vs-badge-pink',
+                                                };
+                                            @endphp
+
+                                            <span class="vs-badge {{ $estadoClass }}" title="{{ $estado['text'] }}">
+                                                <i class="bi bi-{{ $estado['icon'] }}"></i>
+                                                {{ $estado['text'] }}
+                                            </span>
+                                        </td>
+
+                                        <td class="vs-text-center" data-label="Acciones" style="padding: 14px 12px;">
+                                            <a href="{{ route('tipos-entidad.edit', $tipo->tipo_ent_id) }}" class="vs-btn vs-btn-secondary vs-btn-icon" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="commerce-pagination">
-                        <button class="btn commerce-page-arrow" disabled>
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <button class="btn commerce-page-btn active">1</button>
-                        <button class="btn commerce-page-btn">2</button>
-                        <button class="btn commerce-page-btn">3</button>
-                        <button class="btn commerce-page-arrow">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
+                    <div class="vs-d-flex vs-align-center vs-justify-between vs-gap-md vs-mt-md" style="flex-wrap: wrap;">
+                        <div class="vs-text-sm vs-text-muted">
+                            Mostrando 1 a {{ $tipos->count() }} de {{ method_exists($tipos, 'total') ? $tipos->total() : $tipos->count() }} registros
+                        </div>
+
+                        @if(method_exists($tipos, 'links'))
+                            <div>
+                                {{ $tipos->links() }}
+                            </div>
+                        @else
+                            <div class="vs-d-flex vs-align-center vs-gap-xs">
+                                <button class="vs-btn vs-btn-secondary vs-btn-icon" disabled>
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                <button class="vs-btn vs-btn-primary vs-btn-icon">1</button>
+                                <button class="vs-btn vs-btn-secondary vs-btn-icon">2</button>
+                                <button class="vs-btn vs-btn-secondary vs-btn-icon">3</button>
+                                <button class="vs-btn vs-btn-secondary vs-btn-icon">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

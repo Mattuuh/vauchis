@@ -39,4 +39,12 @@ return [
         'api_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'mercadopago' => [
+        'public_key' => env('MP_AMBIENTE')=='PRODUCCION' ? env('MP_PUBLIC_KEY_PROD') : env('MP_PUBLIC_KEY_SAND'),
+        'access_token' => env('MP_AMBIENTE')=='PRODUCCION' ? env('MP_ACCESS_TOKEN_PROD') : env('MP_ACCESS_TOKEN_SAND'),
+        'client_id' => env('MP_CLIENT_ID'),
+        'client_secret' => env('MP_CLIENT_SECRET'),
+        'ambiente' => env('MP_AMBIENTE'),
+    ],
+
 ];

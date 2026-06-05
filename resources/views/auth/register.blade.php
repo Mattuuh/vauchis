@@ -1,17 +1,7 @@
-{{-- resources/views/auth/register.blade.php --}}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | Vauchis</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@extends('layouts.app')
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+@push('styles')
     <style>
         :root {
             --vauchis-blue: #2f63c7;
@@ -97,12 +87,90 @@
             color: #d73b81;
         }
     </style>
-</head>
-<body>
+@endpush
+
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form').validate({
+        rules: {
+            usu_nombre: {
+                required: true,
+            },
+            usu_apellido: {
+                required: true,
+            },
+            tipo_doc_id: {
+                required: true,
+            },
+            usu_documento: {
+                required: true,
+                number: true,
+                minlength: 6
+            },
+            usu_email1: {
+                required: true,
+                email: true,
+                minlength: 5
+            },
+            usu_email1_confirmar: {
+                required: true,
+                email: true,
+                equalTo: "#usu_email1"
+            },
+            usu_celular1: {
+                required: true,
+                number: true,
+                minlength: 8
+            },
+            usu_clave: {
+                required: true,
+                minlength: 8
+            },
+            usu_clave_confirmar: {
+                required: true,
+                minlength: 8,
+                equalTo: "#usu_clave"
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
+@section('content')
+
+{{-- @include('partials.navbar') --}}
 
 <div class="wrapper">
     <div class="container">
         <div class="main-card">
+            {{-- <header class="topbar d-flex justify-content-between align-items-center">
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis" class="brand-logo">
+                </a>
+            </header> --}}
 
             <div class="row g-0 align-items-center">
 
@@ -133,7 +201,7 @@
                         <div class="login-body">
 
                             {{-- <form method="POST" action="#"> --}}
-                            <form method="POST" action="{{ route('register.store') }}">
+                            <form id="form" method="POST" action="{{ route('register.store') }}">
                                 @csrf
 
                                 <div class="row g-3">
@@ -147,7 +215,12 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="text" name="tipo_doc_id" class="form-control" placeholder="Tipo doc">
+                                        <select name="tipo_doc_id" class="form-select field-required" required>
+                                            <option value="">Selecciona una opci&oacute;n</option>
+                                            @foreach($tiposDocumento as $id => $nombre)
+                                                <option value="{{ $id }}">{{ $nombre }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="col-md-6">
@@ -155,27 +228,21 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="email" name="usu_email1" class="form-control" placeholder="Email">
+                                        <input type="email" name="usu_email1" id="usu_email1" class="form-control" placeholder="Email">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="email" name="usu_email2" class="form-control" placeholder="Email">
+                                        <input type="email" name="usu_email1_confirmar" class="form-control" placeholder="Confirmar email">
                                     </div>
 
                                     <div class="col-md-6">
                                         <input type="text" name="usu_celular1" class="form-control" placeholder="Celular">
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <input type="text" name="usu_celular2" class="form-control" placeholder="Celular">
-                                    </div>
+                                    <div class="col-sm-12"></div>
 
                                     <div class="col-md-6">
-                                        <input type="text" name="usu_nick" class="form-control" placeholder="Usuario">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <input type="password" name="usu_clave" class="form-control" placeholder="Contraseña">
+                                        <input type="password" name="usu_clave" id="usu_clave" class="form-control" placeholder="Contraseña">
                                     </div>
 
                                     <div class="col-md-6">
@@ -204,10 +271,5 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-{{-- Ruta sugerida:
-Route::get('/register', fn() => view('auth.register'))->name('register');
---}}
+@include('partials.footer')
+@endsection

@@ -53,19 +53,19 @@ class HomeController extends Controller
             (object)[
                 'name' => 'Objetos',
                 'description' => 'Vouchers para tiendas',
-                'image' => 'objetos.png',
+                'image' => 'ic-regalo.png',
                 'color' => '#1f4ed8'
             ],
             (object)[
                 'name' => 'Experiencias',
                 'description' => 'Cenas, spa y más',
-                'image' => 'experiencias.png',
+                'image' => 'ic-camara.png',
                 'color' => '#e11d48'
             ],
             (object)[
-                'name' => 'Impacto Social',
+                'name' => 'Regalos con causa',
                 'description' => 'Apoya ONGs',
-                'image' => 'impacto_social.png',
+                'image' => 'ic-corazon.png',
                 'color' => '#059669'
             ]
         ]);
@@ -92,6 +92,7 @@ class HomeController extends Controller
             ->get()
             ->map(function ($ent) {
                 return (object)[
+                    'id' => $ent->ent_id,
                     'name' => $ent->ent_nombre_fantasia,
                     'logo' => $ent->imagenPrincipal
                         ? $ent->imagenPrincipal->ef_img_path
@@ -126,40 +127,46 @@ class HomeController extends Controller
                 return (object)[
                     'name' => $org->org_nombre,
                     'logo' => $org->org_img_path,
-                    'brands' => $org->domicilios
-                        ->filter(fn ($domicilio) => $domicilio->entidad)
-                        ->map(function ($domicilio) {
-                            return (object)[
-                                'name' => $domicilio->entidad->ent_nombre_fantasia,
-                                'logo' => $domicilio->entidad->ent_logo_url,
-                            ];
-                        })
-                        ->unique('name')
-                        ->values(),
+                    // 'brands' => $org->domicilios
+                    //     ->filter(fn ($domicilio) => $domicilio->entidad)
+                    //     ->map(function ($domicilio) {
+                    //         return (object)[
+                    //             'name' => $domicilio->entidad->ent_nombre_fantasia,
+                    //             'logo' => $domicilio->entidad->ent_logo_url,
+                    //         ];
+                    //     })
+                    //     ->unique('name')
+                    //     ->values(),
+                    'brands' => '',
                 ];
             });
 
         $collections = collect([
             (object)[
-                'name' => 'Amantes del Cafe',
-                'photo' => 'collections/amantes-cafe.jpg',
+                'name' => '¡Feliz día ma!',
+                'photo' => 'collections/dia_madre_v2.png',
                 'description' => 'Experiencias únicas'
             ],
             (object)[
-                'name' => 'Dia de la madre',
-                'photo' => 'collections/dia_madre.png',
+                'name' => 'Hora de un café',
+                'photo' => 'collections/cafe.png',
                 'description' => 'Experiencias únicas'
             ],
             (object)[
-                'name' => 'Cata de vinos',
-                'photo' => 'collections/fanaticos-vino.jpg',
+                'name' => 'Tendencias DECO 26',
+                'photo' => 'collections/deco-2026.png',
                 'description' => 'Experiencias únicas'
             ],
-            (object)[
-                'name' => 'Peliculeros',
-                'photo' => 'collections/peliculeros.jpg',
-                'description' => 'Experiencias únicas'
-            ],
+            // (object)[
+            //     'name' => 'Cata de vinos',
+            //     'photo' => 'collections/fanaticos-vino.jpg',
+            //     'description' => 'Experiencias únicas'
+            // ],
+            // (object)[
+            //     'name' => 'Peliculeros',
+            //     'photo' => 'collections/peliculeros.jpg',
+            //     'description' => 'Experiencias únicas'
+            // ],
         ]);
 
         // $influencers = collect([

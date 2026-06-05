@@ -22,13 +22,23 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script> {{-- Lib en español --}}
 
+    {{-- Jquery validation --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/localization/messages_es.min.js"></script>
 
-    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+
+    {{-- <link href="{{ asset('css/home.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('css/vauchis-base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/vauchis-main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
     @stack('libs')
 
     @stack('styles')
+
+    @stack('validation')
 </head>
 <body>
 
@@ -46,6 +56,14 @@
         icon: 'error',
         title: 'Error :(',
         text: '{{ session('error') }}'
+    });
+    </script>
+    @elseif (session('warning')!='')
+    <script>
+    Swal.fire({
+        icon: 'warning',
+        title: 'Atencion!',
+        text: '{{ session('warning') }}'
     });
     </script>
     @endif

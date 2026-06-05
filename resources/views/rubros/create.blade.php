@@ -67,8 +67,7 @@
 <main class="container">
 
     <div class="vch-hero-wave vch-hero-wave--one"></div>
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
-
+    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>

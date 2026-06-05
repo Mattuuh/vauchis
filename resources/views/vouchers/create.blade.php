@@ -12,9 +12,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
-
+    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -49,15 +47,25 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Entidad:</label>
-                    <select name="f_ent_id" class="form-select field-required" required>
+                    <select name="f_ent_id" id="f_ent_id" class="form-select field-required" required>
                         <option value="">Selecciona la entidad</option>
                         @foreach($entidades as $entidad)
-                            <option value="{{ $entidad['id'] }}" {{ old('f_ent_id') == $entidad['id'] ? 'selected' : '' }}>
-                                {{ $entidad['nombre'] }} - {{ $entidad['direccion'] }}
+                            <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id') == $entidad['ent_id'] ? 'selected' : '' }}>
+                                {{ $entidad['ent_nombre_fantasia'] }}
                             </option>
                         @endforeach
                     </select>
                     @error('f_ent_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Sucursal:</label>
+                    <select name="f_ed_id" id="f_ed_id" class="form-select field-required" required>
+                        <option value="">Selecciona la sucursal</option>
+                    </select>
+                    @error('f_ed_id')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
@@ -92,25 +100,7 @@
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Monto total:</label>
-                    <input type="text" name="f_monto_total" class="form-control field-required" value="{{ old('f_monto_total') }}" placeholder="1.01" required>
-
-                    @error('f_monto_total')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Stock:</label>
-                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0" required>
-
-                    @error('stock')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label required-label">Fecha de inicio:</label>
                         <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy" required>
@@ -133,6 +123,33 @@
                 </div>
 
                 <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto total:</label>
+                    <input type="text" name="f_monto_total" class="form-control field-required" value="0" placeholder="1.01" required>
+
+                    @error('f_monto_total')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock:</label>
+                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0" required>
+
+                    @error('stock')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
+                    <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision') }}" placeholder="0" required>
+
+                    @error('f_comision')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Permite personalización</label>
                     <select name="f_permite_personalizacion" class="form-select field-required" required>
                         <option value="0" {{ old('f_permite_personalizacion') === '0' ? 'selected' : '' }}>NO</option>
@@ -141,7 +158,7 @@
                     @error('f_permite_personalizacion')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12">
                     <label class="form-label required-label">Descripción:</label>
@@ -280,6 +297,35 @@
             </div>
         </div>
 
+        {{-- ARCHIVOS --}}
+        <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Imagenes</h6>
+
+            <div class="col-12">
+                <label class="form-label required-label">Imagen/es</label>
+                <div id="logos-container">
+                    <div class="row logo-item mb-2">
+                        <div class="col-sm-8">
+                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                        {{ $tipo['tipo_archivo_nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center"></div>
+                    </div>
+
+                </div>
+            </div>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
+        </div>
+
         <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
@@ -298,6 +344,30 @@
 @endsection
 
 @push('scripts')
+<script>
+    const sucursales = @json($sucursales);
+
+    $(document).on('change', '#f_ent_id', function () {
+        const ent_id = $(this).val();
+        const sucursalSelect = $('#f_ed_id');
+        let txt_canje='';
+
+        sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
+
+        $.each(sucursales, function (_, sucursal) {
+            if (String(sucursal.ent_id) === String(ent_id)) {
+                txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
+                sucursalSelect.append(
+                    $('<option>', {
+                        value: sucursal.ent_id,
+                        text: sucursal.ed_direccion+txt_canje
+                    })
+                );
+            }
+        });
+    });
+</script>
+
 <script>
     const modalidadesCampos = JSON.parse(document.getElementById('modalidades-campos-json').textContent || '{}');
 
@@ -552,6 +622,36 @@
                     fpFechaFin[0].set("minDate", null);
                 }
             }
+        });
+
+        $('#add-logo').on('click', function () {
+
+            let html = `
+                <div class="row logo-item mb-2">
+                    <div class="col-sm-8">
+                        <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                    </div>
+                    <div class="col-sm-3">
+                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <option value="">Selecciona el tipo de archivo</option>
+                            @foreach($tipos_archivos as $tipo)
+                                <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                    {{ $tipo['tipo_archivo_nombre'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-1 d-flex align-items-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                    </div>
+                </div>
+            `;
+
+            $('#logos-container').append(html);
+        });
+
+        $(document).on('click', '.remove-logo', function () {
+            $(this).closest('.logo-item').remove();
         });
     });
 </script>

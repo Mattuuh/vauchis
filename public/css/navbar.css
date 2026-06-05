@@ -1,0 +1,144 @@
+/* ==================================================
+NAVBAR
+================================================== */
+.vh-navbar {
+    position: relative;
+    z-index: 20;
+    height: 50px;
+    border-bottom: 1px solid rgba(7, 55, 140, .10);
+    background: rgba(253, 253, 254, .96);
+}
+
+.vh-navbar__inner {
+    height: 50px;
+    display: grid;
+    grid-template-columns: 170px 1fr auto;
+    align-items: center;
+    gap: 24px;
+}
+
+.vh-logo {
+    color: var(--color-primary-dark);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    line-height: 1;
+}
+
+.vh-logo span {
+    font-size: 18px;
+}
+
+.vh-search {
+    width: min(100%, 460px);
+    height: 20px;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    border: 1px solid rgba(7, 55, 140, .62);
+    border-radius: 99px;
+    background: #fff;
+    color: rgba(7, 55, 140, .5);
+}
+
+.vh-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    font-size: 11px;
+    color: var(--color-primary-dark);
+    background: transparent;
+}
+
+.vh-search input::placeholder {
+    color: rgba(7, 55, 140, .55);
+}
+
+.vh-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--color-primary-dark);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .04em;
+}
+
+.vh-nav a {
+    color: var(--color-primary-dark);
+}
+
+.vh-nav-icon {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(7, 55, 140, .45);
+    border-radius: 50%;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .vh-navbar {
+        height: auto;
+    }
+
+    .vh-navbar__inner {
+        height: auto;
+        padding: 14px 0;
+        grid-template-columns: 1fr;
+    }
+
+    .vh-search {
+        width: 100%;
+    }
+
+    .vh-nav {
+        flex-wrap: wrap;
+    }
+}
+
+
+.v-navbar {
+    position: relative;
+    z-index: 1000;
+    overflow: visible;
+}
+
+.v-navbar .container {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    overflow: visible;
+}
+
+.v-navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+    list-style: none;
+}
+
+.v-navbar__actions .nav-item {
+    list-style: none;
+}
+
+.commerce-user-dropdown {
+    z-index: 2000;
+    border-radius: 14px;
+    min-width: 220px;
+    overflow: hidden;
+}
+
+.commerce-user-menu {
+    color: #003d9c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.commerce-user-menu:hover {
+    color: #ff4f9a;
+}

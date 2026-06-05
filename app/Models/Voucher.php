@@ -18,6 +18,8 @@ class Voucher extends Model
         'inf_id',
         'mod_id',
         'vou_nombre',
+        'vou_monto_fijo',
+        'vou_porcentaje_comision',
         'vou_estado',
         'vou_estado2',
         'vou_fecha_alta',
@@ -29,7 +31,11 @@ class Voucher extends Model
     ];
 
     protected $casts = [
+        'vou_fecha_inicio' => 'datetime',
+        'vou_fecha_fin' => 'datetime',
         'vou_fecha_alta' => 'datetime',
+        'vou_fecha_mod' => 'datetime',
+        'vou_fecha_baja' => 'datetime',
     ];
 
     public function categoria()
@@ -90,5 +96,10 @@ class Voucher extends Model
         ])
         ->wherePivot('vp_estado', 1)
         ->wherePivot('vp_principal', 1);
+    }
+
+    public function imagenes()
+    {
+        return $this->hasMany(VoucherFile::class, 'vou_id', 'vou_id')->where('tipo_archivo_id',1);
     }
 }

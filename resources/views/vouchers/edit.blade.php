@@ -13,8 +13,7 @@
 <div class="container">
 
     <div class="vch-hero-wave vch-hero-wave--one"></div>
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
-
+    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -48,16 +47,32 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Entidad:</label>
-                    <select name="f_ent_id" class="form-select field-required" required>
+                    <select name="f_ent_id" id="f_ent_id" class="form-select field-required" required>
                         <option value="">Selecciona la entidad</option>
                         @foreach($entidades as $entidad)
-                            <option value="{{ $entidad['id'] }}"
-                                {{ old('f_ent_id', $voucher->ed_id) == $entidad['id'] ? 'selected' : '' }}>
-                                {{ $entidad['nombre'] }} - {{ $entidad['direccion'] }}
+                            <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id', $voucher->ent_id) == $entidad['ent_id'] ? 'selected' : '' }}>
+                                {{ $entidad['ent_nombre_fantasia'] }}
                             </option>
                         @endforeach
                     </select>
                     @error('f_ent_id')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Sucursal:</label>
+                    <select name="f_ed_id" id="f_ed_id" class="form-select field-required" required>
+                        <option value="">Selecciona la sucursal</option>
+                        @foreach($sucursales as $sucursal)
+                            @if ($sucursal['ent_id']==$voucher->ent_id)
+                                <option value="{{ $sucursal['ed_id'] }}" {{ old('f_ed_id', $voucher->ed_id) == $sucursal['ed_id'] ? 'selected' : '' }}>
+                                    {{ $sucursal['ed_direccion'] }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @error('f_ed_id')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
@@ -78,22 +93,6 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Modalidad:</label>
-                    <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
-                        <option value="">Selecciona la modalidad</option>
-                        @foreach($modalidades as $modalidad)
-                            <option value="{{ $modalidad->mod_id }}"
-                                {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : '' }}>
-                                {{ $modalidad->mod_codigo }} - {{ $modalidad->mod_nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('f_mod_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-12 col-md-6">
                     <label class="form-label required-label">Categoría:</label>
                     <select name="f_cv_id" class="form-select field-required" required>
                         <option value="">Selecciona la categoría</option>
@@ -109,6 +108,24 @@
                 </div>
 
                 <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Fecha de inicio:</label>
+                    <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab', \Carbon\Carbon::parse($voucher->vou_fecha_inicio)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
+                    <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini', $voucher->vou_fecha_inicio) }}">
+                    @error('f_fecha_ini')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Fecha de vencimiento:</label>
+                    <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab', \Carbon\Carbon::parse($voucher->vou_fecha_fin)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
+                    <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin', $voucher->vou_fecha_fin) }}">
+                    @error('f_fecha_fin')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6" hidden>
                     <label class="form-label required-label">Monto total:</label>
                     <input type="text" name="f_monto_total" class="form-control field-required" value="{{ old('f_monto_total', $voucher->vou_monto_fijo) }}" required>
                     @error('f_monto_total')
@@ -118,31 +135,22 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Stock:</label>
-                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock', $voucher->vou_stock) }}" required>
+                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock', $voucher->vou_stock) }}" readonly>
                     @error('stock')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Fecha de inicio:</label>
-                    <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab', \Carbon\Carbon::parse($voucher->vou_fecha_inicio)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
-                    <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
-                    @error('f_fecha_ini')
+                    <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
+                    <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision', number_format($voucher->vou_porcentaje_comision,2,'.','')) }}" placeholder="0" required>
+
+                    @error('f_comision')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Fecha de vencimiento:</label>
-                    <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab', \Carbon\Carbon::parse($voucher->vou_fecha_fin)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
-                    <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
-                    @error('f_fecha_fin')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="col-12 col-md-6">
+                {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Permite personalización</label>
                     <select name="f_permite_personalizacion" class="form-select field-required" required>
                         <option value="0" {{ old('f_permite_personalizacion', (string) $voucher->vou_permite_personalizacion) === '0' ? 'selected' : '' }}>NO</option>
@@ -151,7 +159,7 @@
                     @error('f_permite_personalizacion')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12">
                     <label class="form-label required-label">Descripción:</label>
@@ -172,6 +180,23 @@
 
         <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Configuración de la modalidad</h6>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Modalidad:</label>
+                <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
+                    <option value="">Selecciona la modalidad</option>
+                    @foreach($modalidades as $modalidad)
+                        <option value="{{ $modalidad->mod_id }}"
+                            {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : '' }}>
+                            {{ $modalidad->mod_codigo }} - {{ $modalidad->mod_nombre }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('f_mod_id')
+                    <div class="text-required">{{ $message }}</div>
+                @enderror
+            </div>
+
             <p class="text-muted small mb-3">
                 Podés cambiar la modalidad y editar sus valores específicos.
             </p>
@@ -297,6 +322,53 @@
             @endif
         </div>
 
+        {{-- ARCHIVOS --}}
+        <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Imagenes</h6>
+            <div class="row g-3">
+                @foreach ($imagenes as $imagen)
+                    <div class="col-12 col-md-4">
+                        <div class="border rounded p-2 h-100">
+                            <img src="{{ asset('storage/'. $imagen->vf_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->vf_nombre }}" style="height:160px;border-radius:6px;">
+
+                            <div class="form-check">
+                                <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="col-12">
+                <label class="form-label required-label">Imagen/es</label>
+                <div id="logos-container">
+                    <div class="row logo-item mb-2">
+                        <div class="col-sm-8">
+                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                        {{ $tipo['tipo_archivo_nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center"></div>
+                    </div>
+
+                </div>
+            </div>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
+        </div>
+
         <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
@@ -305,6 +377,7 @@
                         Detalles creados automáticamente a partir del stock del voucher.
                     </p>
                 </div>
+                <div class="btn btn-success" id="btn_agregar_detalles">Agregar stock</div>
                 <span class="badge bg-primary">{{ $voucherDetalles->count() }} registros</span>
             </div>
 
@@ -323,12 +396,13 @@
                                 <th>Monto</th>
                                 <th>Estado</th>
                                 <th>Fecha alta</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($voucherDetalles as $detalle)
                                 <tr>
-                                    <td>{{ $detalle->vd_id }}</td>
+                                    <td class="text-danger">{{ $detalle->vd_id }}</td>
                                     <td>{{ $detalle->vd_codigo_interno }}</td>
                                     <td>{{ $detalle->vd_codigo ?? '-' }}</td>
                                     {{-- <td>{{ $detalle->cli_id ?? 'Libre' }}</td> --}}
@@ -343,11 +417,21 @@
                                     <td>${{ number_format((float) $detalle->vd_monto_total, 2, ',', '.') }}</td>
                                     <td>
                                         <div class="small">
-                                            <div>{{ $detalle->vd_estado == 1 ? 'ACTIVO' : 'BLOQUEADO' }}</div>
+                                            @php
+                                            $estado = estado($detalle->vd_estado);
+                                            @endphp
+                                            <span class="status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                                <i class="bi bi-{{ $estado['icon'] }}"></i>
+                                            </span>
                                         </div>
                                     </td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($detalle->vd_fecha_alta)->format('d/m/Y') }}
+                                    </td>
+                                    <td>
+                                        <div class="btn btn-danger btn_eliminar_stock" data-url="{{ route('vouchers.delete.detalle', ['voucher' => $voucher->vou_id,'detalle' => $detalle->vd_id]) }}" {{ $detalle->vd_estado == 1 ? '' : 'hidden' }}>
+                                            <i class="bi bi-trash"></i>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -367,6 +451,38 @@
             </button>
         </div>
     </form>
+
+    <form id="form_stock" class="form-horizontal" method="post" action="{{ route('vouchers.update_detalle', $voucher->vou_id) }}">
+        @csrf
+
+        <!-- MODAL -->
+        <div class="modal fade" id="modal_editar" data-backdrop="static">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modificar stock</h4>
+                    </div>
+                    
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label" for="">Cantidad de stock a agregar:</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" name="stock" id="stock">
+                            </div>											
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#modal_editar').modal('hide')">Cerrar</button>
+                        <button type="submit" class="btn btn-success" id="btn_guardar_modal">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN MODAL -->
+    </form>
 </div>
 
 <script id="modalidades-campos-json" type="application/json">
@@ -375,6 +491,30 @@
 @endsection
 
 @push('scripts')
+<script>
+    const sucursales = @json($sucursales);
+
+    $(document).on('change', '#f_ent_id', function () {
+        const ent_id = $(this).val();
+        const sucursalSelect = $('#f_ed_id');
+        let txt_canje='';
+
+        sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
+
+        $.each(sucursales, function (_, sucursal) {
+            if (String(sucursal.ent_id) === String(ent_id)) {
+                txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
+                sucursalSelect.append(
+                    $('<option>', {
+                        value: sucursal.ent_id,
+                        text: sucursal.ed_direccion+txt_canje
+                    })
+                );
+            }
+        });
+    });
+</script>
+
 <script>
     const modalidadesCampos = JSON.parse(document.getElementById('modalidades-campos-json').textContent || '{}');
     const modalidadValoresGuardados = @json(old('modalidad_valores', $voucherModalidadValores ?? []));
@@ -629,6 +769,115 @@
                     fpFechaFin[0].set("minDate", null);
                 }
             }
+        });
+
+        $('.btn_eliminar_stock').click(function () {
+            const url = $(this).data('url');
+
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Confirmar eliminación del detalle?',
+                showCancelButton: true,
+                cancelButtonColor: '#d9534f',
+                cancelButtonText: 'CANCELAR',
+                showConfirmButton: true,
+                confirmButtonColor: '#5cb85c',
+                confirmButtonText: "CONTINUAR",
+
+            }).then(function (result) {
+
+			    if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        cache: false,
+                        success: function (data) {
+                            Swal.fire({
+                                icon: data.icon,
+                                title: data.title,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#5cb85c',
+                                confirmButtonText: "CONTINUAR",
+                            }).then(function (e) {
+                                if (e.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function () {}
+                    });
+                }
+            });
+        });
+
+        // Control de modales
+        $('#btn_agregar_detalles').click(function (e) {
+            $('#modal_editar').modal('show');
+            e.preventDefault();	
+        });
+
+        $('#btn_guardar_modal').click(function (e) {
+            $('#modal_editar').modal('hide');
+
+            e.preventDefault();
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a actualizar el stock",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, actualizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $('#form_stock').submit();
+                }
+            });
+        });
+
+        $('#add-logo').on('click', function () {
+
+            let html = `
+                <div class="row logo-item mb-2">
+                    <div class="col-sm-8">
+                        <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                    </div>
+                    <div class="col-sm-3">
+                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <option value="">Selecciona el tipo de archivo</option>
+                            @foreach($tipos_archivos as $tipo)
+                                <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                    {{ $tipo['tipo_archivo_nombre'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-1 d-flex align-items-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                    </div>
+                </div>
+            `;
+
+            $('#logos-container').append(html);
+        });
+
+        $(document).on('click', '.remove-logo', function () {
+            $(this).closest('.logo-item').remove();
         });
     });
 </script>

@@ -13,8 +13,7 @@
 <div class="container">
 
     <div class="vch-hero-wave vch-hero-wave--one"></div>
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
-
+    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -110,6 +109,30 @@
                 </div>
 
                 <div class="col-12">
+                    <label class="form-label required-label">Domicilio fiscal</label>
+                    <input type="text" name="com_dom_fiscal" class="form-control field-required" value="{{ old('com_dom_fiscal', $entidad->ent_domicilio_fiscal) }}" required>
+                    @error('com_dom_fiscal')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Instagram</label>
+                    <input type="text" name="com_instagram" class="form-control" value="{{ old('com_instagram', $entidad->ent_instagram) }}">
+                    @error('com_instagram')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Tiktok</label>
+                    <input type="text" name="com_tiktok" class="form-control" value="{{ old('com_tiktok', $entidad->ent_tiktok) }}">
+                    @error('com_tiktok')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
 
                     <div class="card card-custom p-3 mb-3">
@@ -148,17 +171,33 @@
                         </div>
                     </div>
                 </div>
-                    <button type="button" id="add-logo" class="btn btn-primary btn-block">
-                        Agregar otro logo
-                    </button>
+                <button type="button" id="add-logo" class="btn btn-primary btn-block">
+                    Agregar otro logo
+                </button>
+
+                @if ($entidad->mp_user_id!='')
+                    <div class="row g-3">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <label class="btn btn-success btn-block col-md-12">Conectado con Mercado Pago</label>
+                        </div>
+                    </div>
+                @else
+                    <div class="row g-3">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Conectar Mercado Pago</a>
+                        </div>
+                    </div>
+                @endif
 
             </div>
         </div>
 
         <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-bold mb-0">Domicilios</h6>
-                <button type="button" class="btn btn-sm btn-primary" onclick="addSucursal()">+ Agregar</button>
+                <h6 class="fw-bold mb-0">Sucursales</h6>
+                <button type="button" class="btn btn-sm btn-primary" onclick="addSucursal()">+ Agregar sucursal</button>
             </div>
 
             <div id="sucursales-container">
@@ -167,18 +206,18 @@
                     <div class="sucursal sucursal-card p-3 mt-2" data-index="{{ $index }}">
                         <div class="sucursal-header">
                             <div>
-                                <strong>Domicilio {{ $index + 1 }}</strong>
+                                <strong>Sucursal {{ $index + 1 }}</strong>
                                 @if($index === 0)
                                     <span class="badge text-bg-success ms-2">Principal</span>
                                 @endif
                             </div>
                             <button type="button" class="btn-delete-sucursal {{ $index === 0 ? 'd-none' : '' }}" onclick="removeSucursal(this)">
-                                Eliminar
+                                Eliminar sucursal
                             </button>
                         </div>
 
                         <div class="row g-2">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label">Organización</label>
                                 <select name="sucursales[{{ $index }}][org_id]" class="form-select">
                                     <option value="">Selecciona una organización</option>
@@ -190,7 +229,19 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label required-label">Utilizado para Canje</label>
+                                <select name="sucursales[{{ $index }}][cd_canje]" class="form-select field-required" required>
+                                    <option value="">Selecciona una opci&oacute;n</option>
+                                    <option value="0" {{ old("sucursales.$index.cd_canje", $sucursal->ed_canje) == 0 ? 'selected' : '' }}>NO</option>
+                                    <option value="1" {{ old("sucursales.$index.cd_canje", $sucursal->ed_canje) == 1 ? 'selected' : '' }}>S&iacute;</option>
+                                </select>
+                                @error('sucursales.0.cd_canje')
+                                    <div class="text-required">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-12 col-md-6">
                                 <label class="form-label required-label">País</label>
                                 <select name="sucursales[{{ $index }}][pais_id]" class="form-select pais field-required" required>
                                     <option value="">Selecciona el país</option>
@@ -202,7 +253,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
                                 <label class="form-label required-label">Provincia</label>
                                 <select name="sucursales[{{ $index }}][provincia_id]" class="form-select provincia field-required" required data-selected="{{ old("sucursales.$index.provincia_id", $sucursal->provincia_id ?? '') }}">
                                     <option value="">Selecciona la provincia</option>
@@ -282,7 +333,7 @@
                         <div class="card card-custom p-3 mb-3 rubros-card">
                             <h6 class="fw-bold mb-2">Rubros y subrubros</h6>
                             <p class="text-muted small mb-3">
-                                Seleccioná uno o más rubros para este domicilio y luego elegí los subrubros correspondientes.
+                                Seleccioná uno o más rubros para esta sucursal y luego elegí los subrubros correspondientes.
                             </p>
 
                             <div class="mb-3">
@@ -353,7 +404,7 @@
                     <div class="sucursal sucursal-card p-3 mt-2" data-index="0">
                         <div class="sucursal-header">
                             <div>
-                                <strong>Domicilio 1</strong>
+                                <strong>Sucursal 1</strong>
                                 <span class="badge text-bg-success ms-2">Principal</span>
                             </div>
                             <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">
@@ -638,7 +689,7 @@
             <div class="card card-custom p-3 mb-3 rubros-card">
                 <h6 class="fw-bold mb-2">Rubros y subrubros</h6>
                 <p class="text-muted small mb-3">
-                    Seleccioná uno o más rubros para este domicilio y luego elegí los subrubros correspondientes.
+                    Seleccioná uno o más rubros para esta sucursal y luego elegí los subrubros correspondientes.
                 </p>
 
                 <div class="mb-3">
@@ -705,10 +756,10 @@
             <div class="sucursal sucursal-card p-3 mt-2" data-index="${sucursalIndex}">
                 <div class="sucursal-header">
                     <div>
-                        <strong>Domicilio ${sucursalIndex + 1}</strong>
+                        <strong>Sucursal ${sucursalIndex + 1}</strong>
                     </div>
                     <button type="button" class="btn-delete-sucursal" onclick="removeSucursal(this)">
-                        Eliminar
+                        Eliminar sucursal
                     </button>
                 </div>
 

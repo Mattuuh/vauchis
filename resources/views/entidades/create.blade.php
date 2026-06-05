@@ -13,8 +13,7 @@
 <div class="container">
 
     <div class="vch-hero-wave vch-hero-wave--one"></div>
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
-
+    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -104,6 +103,30 @@
                 </div>
 
                 <div class="col-12">
+                    <label class="form-label required-label">Domicilio fiscal</label>
+                    <input type="text" name="com_dom_fiscal" class="form-control field-required" required>
+                    @error('com_dom_fiscal')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Instagram</label>
+                    <input type="text" name="com_instagram" class="form-control">
+                    @error('com_instagram')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Tiktok</label>
+                    <input type="text" name="com_tiktok" class="form-control">
+                    @error('com_tiktok')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
                     <div id="logos-container">
                         <div class="row logo-item mb-2">
@@ -123,24 +146,24 @@
         <!-- SUCURSALES -->
         <div class="card card-custom p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-bold mb-0">Domicilios</h6>
-                <button type="button" class="btn btn-sm btn-primary" onclick="addSucursal()">+ Agregar domicilio</button>
+                <h6 class="fw-bold mb-0">Sucursales</h6>
+                <button type="button" class="btn btn-sm btn-primary" onclick="addSucursal()">+ Agregar sucursal</button>
             </div>
 
             <div id="sucursales-container">
                 <div class="sucursal sucursal-card p-3 mt-2" data-index="0">
                     <div class="sucursal-header">
                         <div>
-                            <strong>Domicilio 1</strong>
+                            <strong>Sucursal 1</strong>
                             <span class="badge text-bg-success ms-2">Principal</span>
                         </div>
                         <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">
-                            Eliminar domicilio
+                            Eliminar sucursal
                         </button>
                     </div>
 
                     <div class="row g-2">
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <label class="form-label required-label">Organización</label>
                             <select name="sucursales[0][org_id]" class="form-select">
                                 <option value="">Selecciona una organización</option>
@@ -150,7 +173,19 @@
                             </select>
                         </div>
 
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label required-label">Utilizado para Canje</label>
+                            <select name="sucursales[0][cd_canje]" class="form-select field-required" required>
+                                <option value="">Selecciona una opci&oacute;n</option>
+                                <option value="0">NO</option>
+                                <option value="1">S&iacute;</option>
+                            </select>
+                            @error('sucursales.0.cd_canje')
+                                <div class="text-required">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-12 col-md-6">
                             <label class="form-label required-label">País</label>
                             <select name="sucursales[0][pais_id]" class="form-select pais field-required" required>
                                 <option value="">Selecciona el país</option>
@@ -163,7 +198,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6">
                             <label class="form-label required-label">Provincia</label>
                             <select name="sucursales[0][provincia_id]" class="form-select provincia field-required" required>
                                 <option value="">Selecciona la provincia</option>
@@ -243,7 +278,7 @@
                     <div class="card card-custom p-3 mb-3 rubros-card">
                         <h6 class="fw-bold mb-2">Rubros y subrubros</h6>
                         <p class="text-muted small mb-3">
-                            Seleccioná uno o más rubros para este domicilio y luego elegí los subrubros correspondientes.
+                            Seleccioná uno o más rubros para esta sucursal y luego elegí los subrubros correspondientes.
                         </p>
 
                         <div class="mb-3">
@@ -583,7 +618,7 @@
 
         const headerTitle = clone.querySelector('.sucursal-header strong');
         if (headerTitle) {
-            headerTitle.textContent = `Domicilio ${sucursalIndex + 1}`;
+            headerTitle.textContent = `Sucursal ${sucursalIndex + 1}`;
         }
 
         const badge = clone.querySelector('.badge');
@@ -617,7 +652,7 @@
 
             const title = sucursal.querySelector('.sucursal-header strong');
             if (title) {
-                title.textContent = `Domicilio ${index + 1}`;
+                title.textContent = `Sucursal ${index + 1}`;
             }
 
             const deleteButton = sucursal.querySelector('.btn-delete-sucursal');
