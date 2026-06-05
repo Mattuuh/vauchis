@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccessLog;
 use App\Models\TipoDocumento;
 use App\Models\Usuario;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -36,7 +38,35 @@ class AuthController extends Controller
             ->where('usu_estado', 1)
             ->first();
 
-        if (!$usuario || !Hash::check($request->password, $usuario->usu_clave)) {
+        if (!$usuario) {
+
+            AccessLog::create([
+                'usu_web_id' => null,
+                'usu_web_nick' => null,
+                'usu_web_ipacceso' => request()->ip(),
+                'sesion_id' => null,
+                'acc_web_observacion' => "No existe Usuario \r".$request->email,
+                'acc_web_browser' => request()->userAgent(),
+                'acc_web_fecha_alta' => now(),
+            ]);
+
+            return back()
+                ->withErrors(['email' => 'Credenciales incorrectas.'])
+                ->withInput();
+        }
+
+        if (!Hash::check($request->password, $usuario->usu_clave)) {
+
+            AccessLog::create([
+                'usu_web_id' => null,
+                'usu_web_nick' => null,
+                'usu_web_ipacceso' => request()->ip(),
+                'sesion_id' => null,
+                'acc_web_observacion' => "No valida Password \r".$request->email,
+                'acc_web_browser' => request()->userAgent(),
+                'acc_web_fecha_alta' => now(),
+            ]);
+
             return back()
                 ->withErrors(['email' => 'Credenciales incorrectas.'])
                 ->withInput();
@@ -47,8 +77,21 @@ class AuthController extends Controller
                 'usuario_id' => $usuario->usu_id,
                 'tu_id' => $usuario->tu_id,
                 'nombre' => $usuario->usu_nombre,
-                'email' => $usuario->usu_email,
+                'email' => $usuario->usu_email1,
             ]
+        ]);
+
+        $request->session()->regenerate();
+
+        AccessLog::create([
+            'usu_web_id' => $usuario->usu_id,
+            'usu_web_nick' => $usuario->usu_email1,
+            'usu_web_ipacceso' => request()->ip(),
+            'acc_web_login_fecha' => now(),
+            'acc_web_sesion_id' => session()->getId(),
+            'acc_web_observacion' => 'Login OK',
+            'acc_web_browser' => request()->userAgent(),
+            'acc_web_fecha_alta' => now(),
         ]);
 
         // return redirect()->route('home');
@@ -134,6 +177,13 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        AccessLog::where('acc_web_sesion_id', session()->getId())
+            ->whereNull('acc_web_logout_fecha')
+            ->update([
+                'acc_web_logout_fecha' => now(),
+                // 'acc_web_observacion' => 'Logout OK',
+            ]);
+
         $request->session()->forget('auth');
         $request->session()->invalidate();
         $request->session()->regenerateToken();

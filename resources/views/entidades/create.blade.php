@@ -41,7 +41,7 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Tipo de entidad</label>
-                    <select name="tipo_entidad_id" class="form-select field-required" required>
+                    <select name="tipo_entidad_id" class="form-select form-control-custom" required>
                         <option value="">Selecciona el tipo de entidad</option>
                         @foreach($tiposEntidad as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
@@ -54,7 +54,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Condición ante IVA</label>
-                    <select name="tipo_resp_id" class="form-select field-required" required>
+                    <select name="tipo_resp_id" class="form-select form-control-custom" required>
                         <option value="">Selecciona una opcion</option>
                         @foreach($tiposResponsabilidad as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
@@ -67,7 +67,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Tipo de documento</label>
-                    <select name="tipo_doc_id" class="form-select field-required" required>
+                    <select name="tipo_doc_id" class="form-select form-control-custom" required>
                         <option value="">Selecciona el tipo de documento</option>
                         @foreach($tiposDocumento as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
@@ -80,7 +80,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">N° de documento</label>
-                    <input type="text" name="com_documento" class="form-control field-required" required>
+                    <input type="text" name="com_documento" class="form-control form-control-custom" required>
                     @error('com_documento')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -88,7 +88,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre de fantasía</label>
-                    <input type="text" name="com_nombre_fantasia" class="form-control field-required" required>
+                    <input type="text" name="com_nombre_fantasia" class="form-control form-control-custom" required>
                     @error('com_nombre_fantasia')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -96,7 +96,7 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Razón social</label>
-                    <input type="text" name="com_razon_social" class="form-control field-required" required>
+                    <input type="text" name="com_razon_social" class="form-control form-control-custom" required>
                     @error('com_razon_social')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -104,7 +104,7 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Domicilio fiscal</label>
-                    <input type="text" name="com_dom_fiscal" class="form-control field-required" required>
+                    <input type="text" name="com_dom_fiscal" class="form-control form-control-custom" required>
                     @error('com_dom_fiscal')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -175,7 +175,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Utilizado para Canje</label>
-                            <select name="sucursales[0][cd_canje]" class="form-select field-required" required>
+                            <select name="sucursales[0][cd_canje]" class="form-select form-control-custom" required>
                                 <option value="">Selecciona una opci&oacute;n</option>
                                 <option value="0">NO</option>
                                 <option value="1">S&iacute;</option>
@@ -187,7 +187,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">País</label>
-                            <select name="sucursales[0][pais_id]" class="form-select pais field-required" required>
+                            <select name="sucursales[0][pais_id]" class="form-select pais form-control-custom" required>
                                 <option value="">Selecciona el país</option>
                                 @foreach($paises as $id => $nombre)
                                     <option value="{{ $id }}" {{ $id == 5 ? 'selected' : '' }}>{{ $nombre }}</option>
@@ -200,7 +200,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Provincia</label>
-                            <select name="sucursales[0][provincia_id]" class="form-select provincia field-required" required>
+                            <select name="sucursales[0][provincia_id]" class="form-select provincia form-control-custom" required>
                                 <option value="">Selecciona la provincia</option>
                             </select>
                             @error('sucursales.0.provincia_id')
@@ -210,7 +210,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Ciudad</label>
-                            <input type="text" name="sucursales[0][cd_ciudad]" class="form-control field-required" placeholder="Selecciona la ciudad" required>
+                            <input type="text" name="sucursales[0][cd_ciudad]" class="form-control form-control-custom" placeholder="Selecciona la ciudad" required>
                             @error('sucursales.0.cd_ciudad')
                                 <div class="text-required">{{ $message }}</div>
                             @enderror
@@ -218,12 +218,12 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Barrio</label>
-                            <input type="text" name="sucursales[0][cd_barrio]" class="form-control" placeholder="Introduce el barrio">
+                            <input type="text" name="sucursales[0][cd_barrio]" class="form-control form-control-custom" placeholder="Introduce el barrio">
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Dirección</label>
-                            <input type="text" name="sucursales[0][cd_direccion]" class="form-control field-required" placeholder="Introduce la dirección" required>
+                            <input type="text" name="sucursales[0][cd_direccion]" class="form-control form-control-custom" placeholder="Introduce la dirección" required>
                             @error('sucursales.0.cd_direccion')
                                 <div class="text-required">{{ $message }}</div>
                             @enderror
@@ -231,12 +231,12 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Código postal</label>
-                            <input type="text" name="sucursales[0][cd_codigo_postal]" class="form-control" placeholder="Introduce el código postal">
+                            <input type="text" name="sucursales[0][cd_codigo_postal]" class="form-control form-control-custom" placeholder="Introduce el código postal">
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Teléfono 1</label>
-                            <input type="text" name="sucursales[0][cd_telefono1]" class="form-control field-required" placeholder="+54 11 1234-5678" required>
+                            <input type="text" name="sucursales[0][cd_telefono1]" class="form-control form-control-custom" placeholder="+54 11 1234-5678" required>
                             @error('sucursales.0.cd_telefono1')
                                 <div class="text-required">{{ $message }}</div>
                             @enderror
@@ -254,22 +254,22 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Email 1</label>
-                            <input type="email" name="sucursales[0][cd_email1]" class="form-control" placeholder="sucursal@comercio.com">
+                            <input type="email" name="sucursales[0][cd_email1]" class="form-control form-control-custom" placeholder="sucursal@comercio.com">
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label">Email 2</label>
-                            <input type="email" name="sucursales[0][cd_email2]" class="form-control" placeholder="contacto@comercio.com">
+                            <input type="email" name="sucursales[0][cd_email2]" class="form-control form-control-custom" placeholder="contacto@comercio.com">
                         </div>
 
                         <div class="col-12">
                             <label class="form-label">Descripcion Publica</label>
-                            <input type="text" name="sucursales[0][cd_descripcion_publica]" class="form-control" placeholder="Información adicional que sera publica de esta sucursal">
+                            <input type="text" name="sucursales[0][cd_descripcion_publica]" class="form-control form-control-custom" placeholder="Información adicional que sera publica de esta sucursal">
                         </div>
 
                         <div class="col-12">
                             <label class="form-label">Descripcion Interna</label>
-                            <input type="text" name="sucursales[0][cd_descripcion_interna]" class="form-control" placeholder="Información adicional detallada sobre esta sucursal">
+                            <input type="text" name="sucursales[0][cd_descripcion_interna]" class="form-control form-control-custom" placeholder="Información adicional detallada sobre esta sucursal">
                         </div>
                     </div>
 

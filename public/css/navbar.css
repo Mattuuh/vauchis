@@ -80,26 +80,6 @@ NAVBAR
     font-size: 13px;
 }
 
-@media (max-width: 768px) {
-    .vh-navbar {
-        height: auto;
-    }
-
-    .vh-navbar__inner {
-        height: auto;
-        padding: 14px 0;
-        grid-template-columns: 1fr;
-    }
-
-    .vh-search {
-        width: 100%;
-    }
-
-    .vh-nav {
-        flex-wrap: wrap;
-    }
-}
-
 
 .v-navbar {
     position: relative;
@@ -141,4 +121,101 @@ NAVBAR
 
 .commerce-user-menu:hover {
     color: #ff4f9a;
+}
+
+.v-navbar__toggle{
+    display:none;
+}
+
+.offcanvas {
+    width: 280px;
+}
+
+.offcanvas-title {
+    color: #003d9c;
+    font-weight: 700;
+}
+
+.offcanvas-body a {
+    color: #003d9c;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+
+    .v-navbar {
+        height: 82px;
+        min-height: 82px;
+        background: #fff;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, .12);
+        border-bottom: none;
+    }
+
+    .v-navbar .container {
+        height: 82px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 0 22px;
+    }
+
+    .v-navbar__toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        margin-right: 14px;
+        border: 0;
+        background: transparent;
+        color: #003d9c;
+        font-size: 28px;
+        line-height: 1;
+    }
+
+    .v-navbar__toggle i {
+        display: block;
+        line-height: 1;
+    }
+
+    .v-navbar__logo img {
+        height: 28px;
+        width: auto;
+        display: block;
+    }
+
+    .v-navbar__logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .v-navbar__menu,
+    .v-navbar__actions {
+        display: none !important;
+    }
+
+    .v-navbar__search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        margin-left: auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .v-navbar__search input {
+        display: none !important;
+    }
+
+    .v-navbar__search::before {
+        content: "\F52A";
+        font-family: "bootstrap-icons";
+        font-size: 20px;
+        line-height: 1;
+        color: #003d9c;
+    }
 }

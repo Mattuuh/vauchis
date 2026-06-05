@@ -1222,45 +1222,178 @@ a{
     }
 }
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
 
-    .vh-hero__inner{
-        grid-template-columns: 1fr;
-        padding: 36px 0 96px;
+    .vh-category-stack {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        margin-top: 36px;
+        padding: 0 0 16px 20px;
+        overflow-x: auto;
+        overflow-y: visible;
+        scroll-snap-type: x mandatory;
     }
 
-    .vh-hero h1{
-        font-size: 38px;
-    }
-
-    .vh-hero__copy p:not(.vh-kicker){
-        width: auto;
-    }
-
-    .vh-gift-preview{
+    .vh-category-stack::-webkit-scrollbar {
         display: none;
     }
 
-    .vh-category-stack{
-        grid-template-columns: 1fr;
-        width: min(100% - 32px, 360px);
-        bottom: -170px;
+    .vh-category-card {
+        flex: 0 0 185px;
+        width: 185px;
+        height: 165px;
+        border-radius: 10px;
+        scroll-snap-align: start;
+        overflow: hidden;
     }
 
-    .vh-featured{
-        padding-top: 210px;
+    .vh-category-card strong {
+        position: relative;
+        z-index: 2;
+        display: block;
+        padding-top: 26px;
+        font-size: 22px;
+        line-height: 1.05;
+        text-align: center;
+        color: #fff;
     }
 
-    .vh-card-row--brands,
-    .vh-card-row--collections,
-    .vh-card-row--influencers,
-    .vh-logo-carousel{
-        grid-template-columns: 1fr;
+    .vh-category-card img {
+        position: absolute;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
+        max-width: 110px;
+        max-height: 95px;
+        object-fit: contain;
     }
 
-    .vh-logo-bubble{
+    .vh-hero {
+        padding-bottom: 34px;
+        overflow: hidden;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .vh-collections {
+        padding: 42px 0;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .vh-collections .vh-shell {
+        padding-left: 34px;
+        padding-right: 0;
+    }
+
+    .vh-section-heading {
+        margin-bottom: 58px;
+    }
+
+    .vh-section-heading h2 {
+        font-size: 22px;
+        letter-spacing: .08em;
+        color: #003d9c;
+    }
+
+    .vh-section-heading__line {
+        width: 40px;
+        height: 4px;
+        background: #003d9c;
+    }
+
+    .vh-collections-grid {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 8px;
+        padding-right: 34px;
+    }
+
+    .vh-collections-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vh-collection-card {
+        flex: 0 0 340px;
+        height: 340px;
+        border-radius: 14px;
+        overflow: hidden;
+        scroll-snap-align: start;
+    }
+
+    .vh-collection-card img {
         width: 100%;
-        border-radius: 24px;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .vh-collection-card strong {
+        font-size: 24px;
+        line-height: 1.05;
+        max-width: 180px;
+        text-align: center;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+
+    .vh-organizations {
+        padding: 42px 0 64px;
+        background: #f7fbff;
+    }
+
+    .vh-organizations .vh-section-title {
+        margin-bottom: 34px;
+    }
+
+    .vh-logo-carousel {
+        display: flex;
+        gap: 22px;
+        width: max-content;
+        padding: 0 32px 10px 22px;
+    }
+
+    .vh-carousel-viewport {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .vh-carousel-viewport::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vh-logo-bubble {
+        flex: 0 0 175px;
+        width: 175px;
+        height: 175px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, .12);
+    }
+
+    .vh-logo-bubble img {
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+    }
+
+    .vh-round-next {
+        display: none;
     }
 }
 

@@ -89,9 +89,15 @@
         </div>
     </div>
 </nav>
+
 @elseif (session('auth.tu_id')==2)
+
 <nav class="v-navbar">
     <div class="container">
+
+        <button class="v-navbar__toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+            <i class="bi bi-list"></i>
+        </button>
 
         <a href="{{ route('home') }}" class="v-navbar__logo">
             <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
@@ -117,54 +123,54 @@
 
         <div class="v-navbar__actions">
 
-    <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 commerce-user-menu"
-           href="#"
-           id="adminDropdown"
-           role="button"
-           data-bs-toggle="dropdown"
-           aria-expanded="false">
-            <i class="bi bi-person-fill"></i>
-            {{ session('auth.nombre') }}
-        </a>
-
-        <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown"
-            aria-labelledby="adminDropdown">
-            <li class="px-3 py-2 border-bottom">
-                <div class="fw-semibold">{{ session('auth.nombre') }}</div>
-                <small class="text-muted">{{ session('auth.email') }}</small>
-            </li>
-
-            <li>
-                <a class="dropdown-item" href="{{ route('vouchers.index') }}">
-                    <i class="bi bi-pencil-square me-2"></i>Editar perfil
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 commerce-user-menu"
+                href="#"
+                id="adminDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                    <i class="bi bi-person-fill"></i>
+                    {{ session('auth.nombre') }}
                 </a>
-            </li>
 
-            <li>
-                <a class="dropdown-item" href="{{ route('modalidades.index') }}">
-                    <i class="bi bi-ticket-perforated me-2"></i>Mis vouchers
-                </a>
-            </li>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown"
+                    aria-labelledby="adminDropdown">
+                    <li class="px-3 py-2 border-bottom">
+                        <div class="fw-semibold">{{ session('auth.nombre') }}</div>
+                        <small class="text-muted">{{ session('auth.email') }}</small>
+                    </li>
 
-            <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('vouchers.index') }}">
+                            <i class="bi bi-pencil-square me-2"></i>Editar perfil
+                        </a>
+                    </li>
 
-            <li class="px-2 pb-2">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-danger w-100 rounded-pill">
-                        <i class="bi bi-box-arrow-right me-2"></i>Salir
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('modalidades.index') }}">
+                            <i class="bi bi-ticket-perforated me-2"></i>Mis vouchers
+                        </a>
+                    </li>
 
-    <a href="#" class="v-navbar__icon">
-        <i class="bi bi-question"></i>
-    </a>
+                    <li><hr class="dropdown-divider"></li>
 
-</div>
+                    <li class="px-2 pb-2">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                                <i class="bi bi-box-arrow-right me-2"></i>Salir
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="#" class="v-navbar__icon">
+                <i class="bi bi-question"></i>
+            </a>
+
+        </div>
 
     </div>
 </nav>
@@ -173,6 +179,10 @@
 
 <nav class="v-navbar">
     <div class="container">
+
+        <button class="v-navbar__toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+            <i class="bi bi-list"></i>
+        </button>
 
         <a href="{{ route('home') }}" class="v-navbar__logo">
             <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
@@ -210,3 +220,67 @@
     </div>
 </nav>
 @endif
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menú</h5>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas">
+        </button>
+    </div>
+
+    <div class="offcanvas-body">
+
+        <ul class="list-unstyled mb-4">
+            <li class="mb-3">
+                <a href="#" class="text-decoration-none">Objetos</a>
+            </li>
+
+            <li class="mb-3">
+                <a href="#" class="text-decoration-none">Experiencias</a>
+            </li>
+
+            <li class="mb-3">
+                <a href="#" class="text-decoration-none">Regalá con causa</a>
+            </li>
+        </ul>
+
+        @if(session('auth'))
+            <hr>
+
+            <div class="mb-3">
+                <strong>{{ session('auth.nombre') }}</strong><br>
+                <small>{{ session('auth.email') }}</small>
+            </div>
+
+            <a href="{{ route('vouchers.index') }}"
+               class="btn btn-outline-primary w-100 mb-2">
+                Editar perfil
+            </a>
+
+            <a href="{{ route('modalidades.index') }}"
+               class="btn btn-outline-primary w-100 mb-2">
+                Mis vouchers
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <button type="submit"
+                        class="btn btn-danger w-100">
+                    Salir
+                </button>
+            </form>
+        @else
+            <hr>
+            <a href="{{ route('login') }}" class="v-navbar__icon">
+                {{-- <i class="bi bi-person-circle"></i> --}}
+                <i class="bi bi-person-fill"></i>
+            </a>
+        @endif
+
+    </div>
+</div>

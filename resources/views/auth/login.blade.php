@@ -340,6 +340,44 @@
     </style>
 @endpush
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form').validate({
+        rules: {
+            email: {
+                required: true,
+            },
+            password: {
+                required: true,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 {{-- @include('partials.navbar') --}}
 
@@ -386,7 +424,7 @@
                             </div>
 
                             <div class="login-card-body">
-                                <form method="POST" action="{{ route('login') }}">
+                                <form id="form" method="POST" action="{{ route('login') }}">
                                     @csrf
 
                                     <div class="mb-4">

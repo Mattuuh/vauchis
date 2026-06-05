@@ -86,6 +86,22 @@
         .link-pink:hover {
             color: #d73b81;
         }
+
+        .btn-vauchis {
+            background: var(--vauchis-green);
+            border: none;
+            color: #fff;
+            font-weight: 800;
+            border-radius: 18px;
+            padding: 14px 20px;
+            box-shadow: 0 12px 24px rgba(70, 185, 137, 0.28);
+        }
+
+        .btn-vauchis:hover,
+        .btn-vauchis:focus {
+            background: #3eab7d;
+            color: #fff;
+        }
     </style>
 @endpush
 
@@ -252,7 +268,7 @@ $(document).ready(function () {
                                 </div>
 
                                 <div class="mt-4 d-grid">
-                                    <button class="btn btn-main btn-lg">Crear cuenta</button>
+                                    <button class="btn btn-vauchis btn-lg">Crear cuenta</button>
                                 </div>
 
                                 <p class="text-center mt-3">
