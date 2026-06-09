@@ -7,23 +7,42 @@
     @include('partials.navbar')
 
     <section class="vh-hero">
+
+        <div class="vh-mobile-hero">
+            <img src="{{ asset('images/regalitos-hero-vauchis.png') }}" alt="" class="vh-mobile-hero-img">
+
+            <h1>¡Elegí qué regalar!</h1>
+
+            <p>
+                Encontrá tus negocios favoritos y regalá<br>
+                vouchers personalizados
+            </p>
+        </div>
+
         <div class="vh-shell vh-hero__inner">
             <div class="vh-hero__copy">
                 <p class="vh-kicker">Elegí qué regalar</p>
-                <h1>El placer de regalar,<br>simplificado</h1>
+                <h1>El placer de regalar,<br><span style="color: #0065FA;">simplificado</span></h1>
                 <p>Comprá y enviá regalos personalizados de la manera más simple.</p>
                 <a href="#negocios" class="vs-btn vs-btn-primary vh-primary-btn" id="btn_explorar">Explorá Vauchis</a>
             </div>
 
             <div class="vh-gift-preview" aria-hidden="true">
                 <div class="vh-gift-card">
-                    <span>#24</span>
-                    <em></em>
-                    <div class="vh-gifts">
-                        <i class="vh-gift vh-gift--blue">🎁</i>
-                        <i class="vh-gift vh-gift--green">🎁</i>
-                        <i class="vh-gift vh-gift--pink">🎁</i>
+
+                    <div class="vh-gift-lines">
+                        <div class="vh-line">
+                            <span>DE</span>
+                            <i></i>
+                        </div>
+
+                        <div class="vh-line">
+                            <span>PARA</span>
+                            <i></i>
+                        </div>
                     </div>
+
+                    <img src="{{ asset('images/regalitos-hero-vauchis.png') }}" alt="" class="vh-gifts-img">
                 </div>
             </div>
         </div>
@@ -31,7 +50,7 @@
         <div class="vh-category-stack" id="objetos">
             @foreach ($categories as $category)
                 <a href="#" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
-                    <strong>{{ $category->name }}</strong>
+                    <strong style="font-family: Montserrat; font-size: 16px;">{{ $category->name }}</strong>
                     @php
                         $img_category = $category->image ? asset('images/'.$category->image) : '';
                     @endphp
@@ -317,13 +336,13 @@ a{
 }
 
 .vh-gift-card{
-    width: 450px;
-    height: 164px;
-    padding: 35px 40px;
-    border: 1px solid rgba(7, 55, 140, .35);
-    border-radius: 18px;
-    background: rgba(253, 253, 254, .72);
-    transform: rotate(6deg);
+    width:320px;
+    height:180px;
+    position:relative;
+    border:1px solid #8ca9e8;
+    border-radius:18px;
+    transform:rotate(7deg);
+    background:rgba(255,255,255,.35);
 }
 
 .vh-gift-card span{
@@ -339,6 +358,13 @@ a{
     height: 2px;
     margin-top: 22px;
     background: rgba(7, 55, 140, .16);
+}
+
+.vh-gift-lines{
+    position:absolute;
+    left:28px;
+    top:48px;
+    z-index:1;
 }
 
 .vh-gifts{
@@ -1394,6 +1420,306 @@ a{
 
     .vh-round-next {
         display: none;
+    }
+}
+
+
+
+
+
+
+/* =========================================================
+   HERO FINAL - referencia desktop
+   Pegar al final para pisar reglas anteriores
+========================================================= */
+@media (min-width: 769px){
+    .vh-hero{
+        position: relative;
+        z-index: 3;
+        height: 399px;
+        min-height: 399px;
+        padding: 0;
+        overflow: visible;
+        background:
+            radial-gradient(circle at 22% 74%, rgba(0, 101, 250, .11), transparent 25%),
+            radial-gradient(circle at 73% 38%, rgba(73, 179, 132, .09), transparent 23%),
+            linear-gradient(180deg, #FDFDFE 0%, #F8FCFF 100%);
+    }
+
+    .vh-hero__inner{
+        width: min(100% - 128px, 1310px);
+        margin-inline: auto;
+        height: 300px;
+        min-height: 300px;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 36px;
+    }
+
+    .vh-hero__copy{
+        width: 420px;
+        padding-left: 34px;
+        padding-top: 18px;
+        transform: none;
+    }
+
+    .vh-kicker{
+        margin: 0 0 9px;
+        color: #07378C;
+        font-size: 11px;
+        line-height: 1;
+        font-weight: 500;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+    }
+
+    .vh-hero h1{
+        width: 380px;
+        margin: 0 0 10px;
+        color: #07378C;
+        font-size: 30px;
+        line-height: .92;
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: -.035em;
+    }
+
+    .vh-hero__copy p:not(.vh-kicker){
+        width: 330px;
+        margin: 0 0 15px;
+        color: rgba(7, 55, 140, .72);
+        font-size: 10px;
+        line-height: 1.25;
+        font-weight: 300;
+    }
+
+    .vh-primary-btn{
+        min-height: 30px;
+        padding: 0 22px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 10px rgba(0, 101, 250, .24);
+    }
+
+    .vh-gift-preview{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0 0 0 34px;
+        margin: 0;
+    }
+
+    .vh-gift-card{
+        position: relative;
+        width: 280px;
+        height: 165px;
+        padding: 40px 28px;
+        border: 1px solid rgba(7, 55, 140, .35);
+        border-radius: 16px;
+        background: rgba(253, 253, 254, .62);
+        transform: rotate(7deg);
+        box-shadow: 0 22px 60px rgba(7, 55, 140, .07);
+        overflow: hidden;
+    }
+
+    .vh-gift-card span{
+        display: inline-block;
+        width: 38px;
+        margin: 0;
+        color: rgba(7, 55, 140, .42);
+        font-size: 10px;
+        line-height: 1;
+        letter-spacing: .22em;
+        font-style: normal;
+        vertical-align: middle;
+    }
+
+    .vh-gift-card em{
+        display: inline-block;
+        width: 92px;
+        height: 1px;
+        margin: 0;
+        background: rgba(7, 55, 140, .24);
+        vertical-align: middle;
+    }
+
+    .vh-gift-card__to{
+        display: inline-block;
+        margin-top: 24px !important;
+    }
+
+    .vh-gifts-img{
+        position:absolute;
+        right:22px;
+        bottom:18px;
+
+        width:145px;
+        height:auto;
+
+        z-index:2;
+
+        transform:rotate(-7deg);
+    }
+
+    .vh-line{
+        display:flex;
+        align-items:center;
+        margin-bottom:22px;
+    }
+
+    .vh-line span{
+        width:40px;
+        color:#7b9ad5;
+        font-size:11px;
+        letter-spacing:2px;
+    }
+
+    .vh-line i{
+        width:95px;
+        height:1px;
+        background:#8ca9e8;
+        display:block;
+    }
+
+    .vh-category-stack{
+        position: absolute;
+        z-index: 50;
+        left: 50%;
+        bottom: -34px;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 20px;
+        width: auto;
+    }
+
+    .vh-category-card{
+        position: relative;
+        flex: 0 0 auto;
+        width: 100px;
+        height: 100px;
+        padding: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        display: block;
+        text-align: center;
+        box-shadow: 0 8px 18px rgba(0,0,0,.16);
+    }
+
+    .vh-category-card strong{
+        position: absolute;
+        z-index: 3;
+        top: 9px;
+        left: 50%;
+        width: 86px;
+        max-width: 86px;
+        transform: translateX(-50%);
+        display: block;
+        padding: 0;
+        margin: 0;
+        color: #fff;
+        font-size: 13px;
+        line-height: 1.05;
+        font-weight: 800;
+        text-align: center;
+        letter-spacing: -.01em;
+    }
+
+    .vh-category-card img,
+    .vh-category-card--2 img,
+    .vh-category-card--3 img{
+        position: absolute;
+        z-index: 2;
+        left: 50%;
+        right: auto;
+        bottom: 7px;
+        width: 88px;
+        height: 76px;
+        max-width: none;
+        max-height: none;
+        transform: translateX(-50%);
+        object-fit: contain;
+        opacity: .45;
+        pointer-events: none;
+    }
+
+    .vh-category-card--2 img{
+        width: 92px;
+        height: 82px;
+        bottom: 7px;
+        transform: translateX(-50%) rotate(-8deg);
+        opacity: .45;
+    }
+
+    .vh-category-card--3 img{
+        width: 94px;
+        height: 84px;
+        bottom: 0;
+        opacity: .36;
+    }
+
+    .vh-featured{
+        position: relative;
+        z-index: 1;
+        margin-top: 0;
+        padding-top: 78px;
+    }
+}
+
+.vh-mobile-hero {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .vh-hero__inner,
+    .vh-gift-preview {
+        display: none !important;
+    }
+
+    .vh-hero {
+        min-height: auto;
+        padding: 8px 20px 34px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .vh-mobile-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .vh-mobile-hero-img {
+        width: 260px;
+        max-width: 90%;
+        margin-bottom: 18px;
+        opacity: 1;
+    }
+
+    .vh-mobile-hero h1 {
+        margin: 0 0 16px;
+        color: #07378C;
+        font-size: 40px;
+        line-height: 1;
+        font-weight: 800;
+        font-style: normal;
+        letter-spacing: -1px;
+    }
+
+    .vh-mobile-hero p {
+        margin: 0;
+        color: #07378C;
+        font-size: 17px;
+        line-height: 1.45;
+        font-weight: 400;
     }
 }
 

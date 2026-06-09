@@ -209,3 +209,31 @@ INSERT INTO `tipos_archivos` (`tipo_archivo_id`, `tipo_archivo_nombre`, `tipo_ar
 (NULL, 'LOGO', 'LOGO', '1', '1900-01-01 00:00:00', '1', NULL, NULL, NULL, NULL),
 (NULL, 'BANNER', 'BANNER', '1', '1900-01-01 00:00:00', '1', NULL, NULL, NULL, NULL),
 (NULL, 'FONDO', 'FONDO', '1', '1900-01-01 00:00:00', '1', NULL, NULL, NULL, NULL);
+
+
+DROP TABLE `accesos_web`;
+
+CREATE TABLE `accesos_web` (
+  `acc_web_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `usu_web_id` int UNSIGNED DEFAULT NULL,
+  `usu_web_nick` varchar(50) DEFAULT NULL,
+  `acc_web_sesion_id` varchar(255) DEFAULT NULL,
+  `acc_web_login_fecha` datetime DEFAULT NULL,
+  `acc_web_logout_fecha` datetime DEFAULT NULL,
+  `acc_web_ip` varchar(50) DEFAULT NULL,
+  `acc_web_observacion` text DEFAULT NULL,
+  `acc_web_browser` text DEFAULT NULL,
+  `acc_web_fecha_alta` datetime DEFAULT NULL,
+  PRIMARY KEY (`acc_web_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+.inetsi_castur2026
+
+CREATE USER 'inetsi'@'localhost'
+IDENTIFIED BY '.2026inetsi_@394';
+
+GRANT ALL PRIVILEGES
+ON vauchis.*
+TO 'inetsi'@'localhost';
