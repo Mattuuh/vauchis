@@ -665,11 +665,12 @@ a{
 }
 
 .vh-logo-bubble{
-    width: 226px;
-    height: 226px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
-    background: #FDFDFE;
+    background: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    flex: 0 0 226px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -677,23 +678,10 @@ a{
     color: #07378C;
 }
 
-.vh-logo-bubble:first-child{
-    background: #A7E8EA;
-}
-
-.vh-logo-bubble:nth-child(3){
-    background: #1687A3;
-}
-
 .vh-logo-bubble img{
-    width: 74%;
-    height: 74%;
-    object-fit: contain;
-}
-
-.vh-logo-bubble:first-child img{
-    width: 78%;
-    height: 78%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .vh-logo-bubble strong{
@@ -1067,10 +1055,6 @@ a{
 .vh-logo-carousel{
     transition: transform .35s ease;
     will-change: transform;
-}
-
-.vh-logo-bubble{
-    flex: 0 0 226px;
 }
 
 .vh-card-row--influencers{
