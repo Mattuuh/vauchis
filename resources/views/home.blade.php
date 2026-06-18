@@ -20,43 +20,48 @@
         </div>
 
         <div class="vh-shell vh-hero__inner">
+
             <div class="vh-hero__copy">
-                <p class="vh-kicker">Elegí qué regalar</p>
-                <h1>El placer de regalar,<br><span style="color: #0065FA;">simplificado</span></h1>
-                <p>Comprá y enviá regalos personalizados de la manera más simple.</p>
-                <a href="#negocios" class="vs-btn vs-btn-primary vh-primary-btn" id="btn_explorar">Explorá Vauchis</a>
+                <h1>
+                    El placer de regalar,<br>
+                    <span>simplificado</span>
+                </h1>
+
+                <p>
+                    Comprá y enviá regalos personalizados<br>
+                    de la manera más simple.
+                </p>
+
+                <div class="vh-hero-categories">
+                    <div class="vh-category-label">
+                        ¡Elegí <br>que regalar! <br>
+                        <img src="{{ asset('images/decoracion-flecha.svg') }}" alt="" class="">
+                    </div>
+
+                    <div class="vh-category-stack" id="objetos">
+                        @foreach ($categories as $category)
+                            @php
+                                $img_category = $category->image ? asset('images/'.$category->image) : '';
+                            @endphp
+
+                            <a href="{{ isset($category->id) ? route('vouchers.categoria', $category->id) : '#' }}" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
+                                <strong>{{ $category->name }}</strong>
+
+                                @if($img_category)
+                                    <img src="{{ $img_category }}" alt="{{ $category->name }}">
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
             <div class="vh-gift-preview" aria-hidden="true">
-                <div class="vh-gift-card">
-
-                    <div class="vh-gift-lines">
-                        <div class="vh-line">
-                            <span>DE</span>
-                            <i></i>
-                        </div>
-
-                        <div class="vh-line">
-                            <span>PARA</span>
-                            <i></i>
-                        </div>
-                    </div>
-
-                    <img src="{{ asset('images/regalitos-hero-vauchis.png') }}" alt="" class="vh-gifts-img">
-                </div>
+                <img src="{{ asset('images/ilustracion-hero.svg') }}" alt="" class="vh-gifts-img">
             </div>
-        </div>
 
-        <div class="vh-category-stack" id="objetos">
-            @foreach ($categories as $category)
-                <a href="#" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
-                    <strong style="font-family: Montserrat; font-size: 16px;">{{ $category->name }}</strong>
-                    @php
-                        $img_category = $category->image ? asset('images/'.$category->image) : '';
-                    @endphp
-                    <img src="{{ $img_category }}" alt="{{ $category->name }}">
-                </a>
-            @endforeach
+            <button class="vh-help-btn" type="button" aria-label="Ayuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
+
         </div>
     </section>
 
@@ -237,6 +242,28 @@
         </div>
     </section>
 
+    <section class="vh-final-banner">
+        <div class="vh-shell vh-final-banner__inner">
+
+            <div class="vh-final-banner__image">
+                <img src="{{ asset('images/liustracion-banner.svg') }}" alt="Vauchis">
+            </div>
+
+            <div class="vh-final-banner__copy">
+                <h2>
+                    Una forma<br>
+                    distinta <em>(y fácil)</em><br>
+                    de regalar
+                </h2>
+
+                <a href="#negocios" class="vh-final-banner__btn">
+                    Explorá Vauchis
+                </a>
+            </div>
+
+        </div>
+    </section>
+
     @include('partials.footer')
 </main>
 @endsection
@@ -272,160 +299,296 @@ a{
    HERO
 ========================= */
 
-.vh-hero{
+.vh-hero {
     position: relative;
-    min-height: 300px;
-    background:
-        radial-gradient(circle at 20% 72%, rgba(0, 101, 250, .12), transparent 24%),
-        radial-gradient(circle at 72% 38%, rgba(73, 179, 132, .10), transparent 22%),
-        linear-gradient(180deg, #FDFDFE 0%, #F9FCFF 100%);
+    min-height: 590px;
+    background: #f4f5f7;
+    overflow: hidden;
 }
 
-.vh-hero__inner{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    min-height: 260px;
-    padding-top: 16px;
+.vh-mobile-hero {
+    display: none;
 }
 
-.vh-hero__copy{
-    padding-left: 88px;
-    transform: translateY(-6px);
+.vh-hero__inner {
+    position: relative;
+    min-height: 590px;
 }
 
-.vh-kicker{
-    margin: 0 0 6px;
-    color: var(--color-primary-dark);
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: .23em;
-    text-transform: uppercase;
-}
-
-.vh-hero h1{
-    margin: 0 0 5px;
-    color: var(--color-primary-dark);
-    font-size: 44px;
-    line-height: .90;
-    font-style: italic;
-    font-weight: 800;
-    letter-spacing: -.035em;
-}
-
-.vh-hero__copy p:not(.vh-kicker){
-    width: 430px;
-    margin: 0 0 10px;
-    color: rgba(7, 55, 140, .75);
-    font-size: 14px;
-    line-height: 1.25;
-    font-weight: 300;
-}
-
-.vh-primary-btn{
-    min-height: 26px;
-    padding: 0 22px;
-    font-size: 12px;
-    box-shadow: 0 3px 8px rgba(0, 101, 250, .24);
-}
-
-.vh-gift-preview{
-    display: flex;
-    justify-content: center;
-    padding-right: 90px;
-}
-
-.vh-gift-card{
-    width:320px;
-    height:180px;
-    position:relative;
-    border:1px solid #8ca9e8;
-    border-radius:18px;
-    transform:rotate(7deg);
-    background:rgba(255,255,255,.35);
-}
-
-.vh-gift-card span{
-    display: block;
-    color: rgba(7, 55, 140, .38);
-    font-size: 14px;
-    letter-spacing: .2em;
-}
-
-.vh-gift-card em{
-    display: block;
-    width: 120px;
-    height: 2px;
-    margin-top: 22px;
-    background: rgba(7, 55, 140, .16);
-}
-
-.vh-gift-lines{
-    position:absolute;
-    left:28px;
-    top:48px;
-    z-index:1;
-}
-
-.vh-gifts{
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
-    margin-top: -38px;
-    font-style: normal;
-}
-
-.vh-gift{
-    font-style: normal;
-    line-height: 1;
-    filter: saturate(1.1);
-}
-
-.vh-gift--blue{ font-size: 60px; }
-.vh-gift--green{ font-size: 44px; }
-.vh-gift--pink{ font-size: 82px; }
-
-.vh-category-stack{
+.vh-hero__copy {
     position: absolute;
-    z-index: 5;
-    left: 50%;
-    bottom: -32px;
-    transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(3, 174px);
-    gap: 24px;
+    top: 155px;
+    left: 105px;
+    width: 420px;
+    z-index: 3;
 }
 
-.vh-category-card{
-    height: 82px;
-    padding: 13px 18px;
-    border-radius: 14px;
-    color: white;
-    box-shadow: 0 8px 18px rgba(0,0,0,.16);
+.vh-hero__copy h1 {
+    margin: 0 0 14px;
+    color: #07378C;
+    font-family: Montserrat, sans-serif;
+    font-size: 34px;
+    line-height: 1.08;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.03em;
 }
 
-.vh-category-card:hover{
-    color: white;
+.vh-hero__copy h1 span {
+    color: #0065FA;
+}
+
+.vh-hero__copy > p {
+    margin: 0;
+    color: #666;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 400;
+}
+
+.vh-gift-preview {
+    position: absolute;
+    top: 58px;
+    right: 130px;
+    width: 405px;
+    z-index: 2;
+}
+
+.vh-gifts-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.vh-hero-categories {
+    position: absolute;
+    top: 265px;
+    left: 55px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.vh-category-label {
+    width: 130px;
+    margin-bottom: 132px;
+    color: #2a62c7;
+    font-family: Montserrat, sans-serif;
+    font-size: 24px;
+    line-height: 1.08;
+    font-weight: 400;
+}
+
+.vh-category-label img {
+    display: block;
+    width: 72px;
+    margin-top: 14px;
+    margin-left: 2px;
+}
+
+.vh-category-stack {
+    display: flex;
+    gap: 14px;
+}
+
+.vh-category-card {
+    position: relative;
+    width: 134px;
+    height: 134px;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    border-radius: 13px;
+    text-decoration: none;
+    box-shadow: 0 5px 12px rgba(0,0,0,.18);
+}
+
+.vh-category-card:hover {
+    color: #fff;
     transform: translateY(-2px);
 }
 
-.vh-category-card strong{
-    display: block;
+.vh-category-card strong {
+    position: absolute;
+    top: 13px;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
     font-size: 15px;
-    font-weight: 800;
+    line-height: 1.05;
+    font-weight: 700;
 }
 
-.vh-category-card small{
+.vh-category-card img {
+    width: 100%;
+    height: 100%;
     display: block;
-    margin-top: 3px;
-    font-size: 10px;
-    opacity: .75;
+    object-fit: cover;
 }
 
-.vh-category-card--1{ background: #07378C; }
-.vh-category-card--2{ background: #49B384; }
-.vh-category-card--3{ background: #E51281; }
+.vh-category-card--1 { background: #07378C; }
+.vh-category-card--2 { background: #49B384; }
+.vh-category-card--3 { background: #E51281; }
+
+
+    .vh-help-btn {
+        position: fixed;
+        right: 40px;
+        bottom: 40px;
+        width: 64px;
+        height: 64px;
+        border: none;
+        border-radius: 50%;
+        background: #07378C;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    }
+
+    .vh-help-btn img {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+@media (max-width: 768px) {
+    .vh-hero {
+        min-height: auto;
+        padding: 8px 20px 34px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .vh-hero__inner {
+        display: none;
+    }
+
+    .vh-mobile-hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .vh-mobile-hero-img {
+        width: 260px;
+        max-width: 90%;
+        margin-bottom: 18px;
+    }
+
+    .vh-mobile-hero h1 {
+        margin: 0 0 16px;
+        color: #07378C;
+        font-size: 40px;
+        line-height: 1;
+        font-weight: 800;
+        font-style: normal;
+        letter-spacing: -1px;
+    }
+
+    .vh-mobile-hero p {
+        margin: 0;
+        color: #07378C;
+        font-size: 17px;
+        line-height: 1.45;
+        font-weight: 400;
+    }
+}
+
+@media (min-width: 769px) {
+    .vh-hero {
+        min-height: 590px;
+    }
+
+    .vh-hero__copy {
+        top: 95px;
+        left: 108px;
+        width: 430px;
+    }
+
+    .vh-hero__copy h1 {
+        font-size: 34px;
+        line-height: 1.05;
+    }
+
+    .vh-hero__copy > p {
+        font-size: 16px;
+        line-height: 1.15;
+    }
+
+    .vh-gift-preview {
+        top: -15px;
+        right: 125px;
+        width: 410px;
+    }
+
+    .vh-hero-categories {
+        position: absolute;
+        top: 295px;
+        left: 55px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .vh-category-label {
+        width: 130px;
+        margin-top: -65px;
+        margin-bottom: 0;
+        font-size: 24px;
+        line-height: 1.08;
+    }
+
+    .vh-category-label img {
+        width: 130px;
+        margin-top: -5px;
+        margin-left: 2px;
+    }
+
+    .vh-category-stack {
+        gap: 13px;
+    }
+
+    .vh-category-card {
+        width: 134px;
+        height: 134px;
+        border-radius: 13px;
+    }
+
+
+    .vh-category-card strong {
+        position: absolute;
+        top: 12px;
+        left: 0;
+        width: 100%;
+        padding: 0 10px;
+        z-index: 3;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.15;
+        font-weight: 700;
+    }
+
+    .vh-category-card img {
+        position: absolute;
+        left: 50%;
+        bottom: 8px;
+        transform: translateX(-50%);
+        width: 108px;
+        height: 98px;
+        object-fit: contain;
+        opacity: .22;
+        mix-blend-mode: screen;
+        z-index: 1;
+    }
+}
 
 /* =========================
    TITULOS DE SECCION
@@ -1004,33 +1167,6 @@ a{
    AJUSTES DE CARRUSELES E IMAGENES
 ========================= */
 
-.vh-category-card{
-    position: relative;
-    overflow: visible;
-}
-
-.vh-category-card img{
-    position: absolute;
-    right: 14px;
-    bottom: -72px;
-    width: 104px;
-    height: 104px;
-    object-fit: contain;
-    pointer-events: none;
-}
-
-.vh-category-card--2 img{
-    bottom: -82px;
-    width: 112px;
-    height: 112px;
-}
-
-.vh-category-card--3 img{
-    bottom: -98px;
-    width: 120px;
-    height: 120px;
-}
-
 .vh-carousel-viewport{
     overflow: hidden;
     width: 100%;
@@ -1084,72 +1220,6 @@ a{
     transform: translateX(0);
 }
 
-
-/* =========================
-   CATEGORIAS SOBRE HERO
-   Ajuste visual segun referencia
-========================= */
-
-.vh-category-stack{
-    bottom: -25px;
-    grid-template-columns: repeat(3, 100px);
-    gap: 20px;
-    align-items: end;
-}
-
-.vh-category-card{
-    position: relative;
-    width: 100px;
-    height: 100px;
-    padding: 9px 10px;
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 8px 18px rgba(0,0,0,.16);
-}
-
-.vh-category-card strong{
-    position: relative;
-    z-index: 2;
-    max-width: 84px;
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.12;
-    font-weight: 800;
-}
-
-.vh-category-card img,
-.vh-category-card--2 img,
-.vh-category-card--3 img{
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    right: auto;
-    bottom: 5px;
-    width: 88px;
-    height: 78px;
-    transform: translateX(-50%);
-    object-fit: contain;
-    opacity: .45;
-    pointer-events: none;
-}
-
-.vh-category-card--2 img{
-    width: 90px;
-    height: 82px;
-    bottom: 8px;
-    transform: translateX(-50%) rotate(-8deg);
-}
-
-.vh-category-card--3 img{
-    width: 96px;
-    height: 88px;
-    bottom: -1px;
-    opacity: .35;
-}
 
 /* =========================
    RESPONSIVE
@@ -1407,307 +1477,106 @@ a{
     }
 }
 
+/* =========================
+   BANNER FINAL
+========================= */
 
-
-
-
-
-/* =========================================================
-   HERO FINAL - referencia desktop
-   Pegar al final para pisar reglas anteriores
-========================================================= */
-@media (min-width: 769px){
-    .vh-hero{
-        position: relative;
-        z-index: 3;
-        height: 399px;
-        min-height: 399px;
-        padding: 0;
-        overflow: visible;
-        background:
-            radial-gradient(circle at 22% 74%, rgba(0, 101, 250, .11), transparent 25%),
-            radial-gradient(circle at 73% 38%, rgba(73, 179, 132, .09), transparent 23%),
-            linear-gradient(180deg, #FDFDFE 0%, #F8FCFF 100%);
-    }
-
-    .vh-hero__inner{
-        width: min(100% - 128px, 1310px);
-        margin-inline: auto;
-        height: 300px;
-        min-height: 300px;
-        padding: 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-        gap: 36px;
-    }
-
-    .vh-hero__copy{
-        width: 420px;
-        padding-left: 34px;
-        padding-top: 18px;
-        transform: none;
-    }
-
-    .vh-kicker{
-        margin: 0 0 9px;
-        color: #07378C;
-        font-size: 11px;
-        line-height: 1;
-        font-weight: 500;
-        letter-spacing: .24em;
-        text-transform: uppercase;
-    }
-
-    .vh-hero h1{
-        width: 380px;
-        margin: 0 0 10px;
-        color: #07378C;
-        font-size: 30px;
-        line-height: .92;
-        font-style: italic;
-        font-weight: 800;
-        letter-spacing: -.035em;
-    }
-
-    .vh-hero__copy p:not(.vh-kicker){
-        width: 330px;
-        margin: 0 0 15px;
-        color: rgba(7, 55, 140, .72);
-        font-size: 10px;
-        line-height: 1.25;
-        font-weight: 300;
-    }
-
-    .vh-primary-btn{
-        min-height: 30px;
-        padding: 0 22px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 5px 10px rgba(0, 101, 250, .24);
-    }
-
-    .vh-gift-preview{
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 0 0 0 34px;
-        margin: 0;
-    }
-
-    .vh-gift-card{
-        position: relative;
-        width: 280px;
-        height: 165px;
-        padding: 40px 28px;
-        border: 1px solid rgba(7, 55, 140, .35);
-        border-radius: 16px;
-        background: rgba(253, 253, 254, .62);
-        transform: rotate(7deg);
-        box-shadow: 0 22px 60px rgba(7, 55, 140, .07);
-        overflow: hidden;
-    }
-
-    .vh-gift-card span{
-        display: inline-block;
-        width: 38px;
-        margin: 0;
-        color: rgba(7, 55, 140, .42);
-        font-size: 10px;
-        line-height: 1;
-        letter-spacing: .22em;
-        font-style: normal;
-        vertical-align: middle;
-    }
-
-    .vh-gift-card em{
-        display: inline-block;
-        width: 92px;
-        height: 1px;
-        margin: 0;
-        background: rgba(7, 55, 140, .24);
-        vertical-align: middle;
-    }
-
-    .vh-gift-card__to{
-        display: inline-block;
-        margin-top: 24px !important;
-    }
-
-    .vh-gifts-img{
-        position:absolute;
-        right:22px;
-        bottom:18px;
-
-        width:145px;
-        height:auto;
-
-        z-index:2;
-
-        transform:rotate(-7deg);
-    }
-
-    .vh-line{
-        display:flex;
-        align-items:center;
-        margin-bottom:22px;
-    }
-
-    .vh-line span{
-        width:40px;
-        color:#7b9ad5;
-        font-size:11px;
-        letter-spacing:2px;
-    }
-
-    .vh-line i{
-        width:95px;
-        height:1px;
-        background:#8ca9e8;
-        display:block;
-    }
-
-    .vh-category-stack{
-        position: absolute;
-        z-index: 50;
-        left: 50%;
-        bottom: -34px;
-        transform: translateX(-50%);
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        gap: 20px;
-        width: auto;
-    }
-
-    .vh-category-card{
-        position: relative;
-        flex: 0 0 auto;
-        width: 100px;
-        height: 100px;
-        padding: 0;
-        border-radius: 10px;
-        overflow: hidden;
-        display: block;
-        text-align: center;
-        box-shadow: 0 8px 18px rgba(0,0,0,.16);
-    }
-
-    .vh-category-card strong{
-        position: absolute;
-        z-index: 3;
-        top: 9px;
-        left: 50%;
-        width: 86px;
-        max-width: 86px;
-        transform: translateX(-50%);
-        display: block;
-        padding: 0;
-        margin: 0;
-        color: #fff;
-        font-size: 13px;
-        line-height: 1.05;
-        font-weight: 800;
-        text-align: center;
-        letter-spacing: -.01em;
-    }
-
-    .vh-category-card img,
-    .vh-category-card--2 img,
-    .vh-category-card--3 img{
-        position: absolute;
-        z-index: 2;
-        left: 50%;
-        right: auto;
-        bottom: 7px;
-        width: 88px;
-        height: 76px;
-        max-width: none;
-        max-height: none;
-        transform: translateX(-50%);
-        object-fit: contain;
-        opacity: .45;
-        pointer-events: none;
-    }
-
-    .vh-category-card--2 img{
-        width: 92px;
-        height: 82px;
-        bottom: 7px;
-        transform: translateX(-50%) rotate(-8deg);
-        opacity: .45;
-    }
-
-    .vh-category-card--3 img{
-        width: 94px;
-        height: 84px;
-        bottom: 0;
-        opacity: .36;
-    }
-
-    .vh-featured{
-        position: relative;
-        z-index: 1;
-        margin-top: 0;
-        padding-top: 78px;
-    }
+.vh-final-banner {
+    position: relative;
+    background: #3f6fb3;
+    padding: 76px 0 62px;
+    overflow: hidden;
 }
 
-.vh-mobile-hero {
-    display: none;
+.vh-final-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../images/patron-regalos.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+    opacity: .16;
+    pointer-events: none;
 }
 
+.vh-final-banner__inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.vh-final-banner__image img {
+    width: 430px;
+    max-width: 100%;
+    display: block;
+}
+
+.vh-final-banner__copy {
+    color: #fff;
+}
+
+.vh-final-banner__copy h2 {
+    margin: 0 0 26px;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 44px;
+    line-height: 1.18;
+    font-weight: 800;
+}
+
+.vh-final-banner__copy h2 em {
+    font-weight: 300;
+    font-style: italic;
+}
+
+.vh-final-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 188px;
+    height: 42px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: #0065fa;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.vh-final-banner__btn:hover {
+    color: #fff;
+    background: #0057d8;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-    .vh-hero__inner,
-    .vh-gift-preview {
-        display: none !important;
-    }
-
-    .vh-hero {
-        min-height: auto;
-        padding: 8px 20px 34px;
-        background: #fff;
-        overflow: hidden;
-    }
-
-    .vh-mobile-hero {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    .vh-final-banner {
+        padding: 48px 0;
         text-align: center;
     }
 
-    .vh-mobile-hero-img {
-        width: 260px;
-        max-width: 90%;
-        margin-bottom: 18px;
-        opacity: 1;
+    .vh-final-banner__inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
     }
 
-    .vh-mobile-hero h1 {
-        margin: 0 0 16px;
-        color: #07378C;
-        font-size: 40px;
-        line-height: 1;
-        font-weight: 800;
-        font-style: normal;
-        letter-spacing: -1px;
+    .vh-final-banner__image img {
+        width: 310px;
+        margin: 0 auto;
     }
 
-    .vh-mobile-hero p {
-        margin: 0;
-        color: #07378C;
-        font-size: 17px;
-        line-height: 1.45;
-        font-weight: 400;
+    .vh-final-banner__copy h2 {
+        font-size: 32px;
     }
 }
 
 </style>
+
 @endpush
 
 @push('scripts')

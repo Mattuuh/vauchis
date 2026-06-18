@@ -51,18 +51,21 @@ class HomeController extends Controller
     {
         $categories = collect([
             (object)[
+                'id' => 1,
                 'name' => 'Objetos',
                 'description' => 'Vouchers para tiendas',
-                'image' => 'ic-regalo.png',
+                'image' => 'ic-objetos.svg',
                 'color' => '#1f4ed8'
             ],
             (object)[
+                'id' => 2,
                 'name' => 'Experiencias',
                 'description' => 'Cenas, spa y más',
                 'image' => 'ic-camara.png',
                 'color' => '#e11d48'
             ],
             (object)[
+                'id' => 3,
                 'name' => 'Regalos con causa',
                 'description' => 'Apoya ONGs',
                 'image' => 'ic-corazon.png',

@@ -1,7 +1,7 @@
 {{-- @if (session('auth.tu_id')==1) --}}
 @if (session('auth.tu_id')==1)
     
-<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm sticky-top commerce-navbar">
+<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm commerce-navbar">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
             <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis" height="40">
@@ -109,15 +109,15 @@
 
         <ul class="v-navbar__menu">
             <li>
-                <a {{-- href="{{ route('objetos.index') }}" --}}>Objetos</a>
+                <a href="{{ route('vouchers.categoria', 1) }}" class="{{ isset($categoria->id) ? (1 == $categoria->id ? 'fw-bold' : '') : '' }}">Objetos</a>
             </li>
 
             <li>
-                <a {{-- href="{{ route('experiencias.index') }}" --}}>Experiencias</a>
+                <a href="{{ route('vouchers.categoria', 2) }}" class="{{ isset($categoria->id) ? (2 == $categoria->id ? 'fw-bold' : '') : '' }}">Experiencias</a>
             </li>
 
             <li>
-                <a {{-- href="{{ route('causa.index') }}" --}}>Regalá con causa</a>
+                <a href="{{ route('vouchers.categoria', 3) }}" class="{{ isset($categoria->id) ? (3 == $categoria->id ? 'fw-bold' : '') : '' }}">Regalá con causa</a>
             </li>
         </ul>
 
@@ -194,15 +194,15 @@
 
         <ul class="v-navbar__menu">
             <li>
-                <a {{-- href="{{ route('objetos.index') }}" --}}>Objetos</a>
+                <a href="{{ route('vouchers.categoria', 1) }}" class="{{ isset($categoria->id) ? (1 == $categoria->id ? 'fw-bold' : '') : '' }}">Objetos</a>
             </li>
 
             <li>
-                <a {{-- href="{{ route('experiencias.index') }}" --}}>Experiencias</a>
+                <a href="{{ route('vouchers.categoria', 2) }}" class="{{ isset($categoria->id) ? (2 == $categoria->id ? 'fw-bold' : '') : '' }}">Experiencias</a>
             </li>
 
             <li>
-                <a {{-- href="{{ route('causa.index') }}" --}}>Regalá con causa</a>
+                <a href="{{ route('vouchers.categoria', 3) }}" class="{{ isset($categoria->id) ? (3 == $categoria->id ? 'fw-bold' : '') : '' }}">Regalá con causa</a>
             </li>
         </ul>
 

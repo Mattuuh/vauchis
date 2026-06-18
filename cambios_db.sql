@@ -237,3 +237,7 @@ IDENTIFIED BY '.2026inetsi_@394';
 GRANT ALL PRIVILEGES
 ON vauchis.*
 TO 'inetsi'@'localhost';
+
+
+
+ALTER TABLE `rubros` ADD `cv_id` INT NULL DEFAULT NULL COMMENT 'Ref a la categoria' AFTER `rub_id`;

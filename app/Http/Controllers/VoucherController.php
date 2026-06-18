@@ -11,6 +11,7 @@ use App\Models\Etiqueta;
 use App\Models\Influencer;
 use App\Models\Modalidad;
 use App\Models\ModalidadCampo;
+use App\Models\Rubro;
 use App\Models\TipoArchivo;
 use App\Models\Voucher;
 use App\Models\VoucherDetalle;
@@ -1180,5 +1181,81 @@ class VoucherController extends Controller
             // dd($vouchers);
 
         return view('entidad', compact('entidad', 'vouchers'));
+    }
+
+    public function vouchersPorCategoria(int $id)
+    {
+        $categoria = DB::table('categorias_vouchers')
+            ->where('cv_id', $id)
+            ->where('cv_estado', 1)
+            ->select(
+                'cv_id as id',
+                'cv_nombre as nombre',
+                'cv_img_path as logo'
+            )
+            ->first();
+
+        if (!$categoria) {
+            abort(404);
+        }
+
+        $rubros = Rubro::where('cv_id', $id)
+            ->where('rub_estado', 1)
+            ->get();
+
+        $vouchers = Voucher::with('imagenes')
+            ->where('cv_id', $id)
+            ->where('vou_estado', 1)
+            ->get();
+            // dd($vouchers);
+
+        return view('categoria', compact('categoria', 'rubros', 'vouchers'));
+    }
+
+    public function buscar_voucher(Request $request)
+    {
+         $query = Voucher::query()
+            ->with(['entidad', 'categoria', 'imagenes']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('vou_nombre', 'like', "%{$search}%")
+                    ->orWhere('vou_descripcion', 'like', "%{$search}%")
+                    ->orWhereHas('entidad', function ($entidad) use ($search) {
+                        $entidad->where('ent_nombre_fantasia', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('categoria', function ($categoria) use ($search) {
+                        $categoria->where('cv_nombre', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('category')) {
+            $query->where('cv_id', $request->category);
+        }
+
+        if ($request->filled('min')) {
+            $query->where('vou_monto_fijo', '>=', $request->min);
+        }
+
+        if ($request->filled('max')) {
+            $query->where('vou_monto_fijo', '<=', $request->max);
+        }
+
+        if ($request->filled('destacado')) {
+            $query->where('destacado', 1);
+        }
+
+        $vouchers = $query->paginate(12)->withQueryString();
+
+        $categories = Categoria::all();
+
+        if ($request->ajax()) {
+            return view('partials.voucher-grid', compact('vouchers'))->render();
+        }
+
+        return view('categoria', compact('vouchers', 'categories'));
     }
 }

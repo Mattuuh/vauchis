@@ -100,6 +100,8 @@ Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherControl
 Route::post('/vouchers/{voucher}/detalles/{detalle}/delete', [VoucherController::class, 'delete_voucher_detalle'])->name('vouchers.delete.detalle');
 Route::post('/vouchers/{id}/agregar-stock', [VoucherController::class, 'agregar_voucher_detalle'])->name('vouchers.update_detalle');
 Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
+Route::get('/categoria/{id}', [VoucherController::class, 'vouchersPorCategoria'])->name('vouchers.categoria');
+Route::get('/buscar', [VoucherController::class, 'buscar_voucher'])->name('vouchers.buscar');
 
 
 use App\Http\Controllers\VoucherCompraController;

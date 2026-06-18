@@ -12,6 +12,7 @@ class Rubro extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'cv_id',
         'rub_codigo',
         'rub_codigo_alternativo1',
         'rub_codigo_alternativo2',
