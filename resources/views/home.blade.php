@@ -19,6 +19,32 @@
             </p>
         </div>
 
+        <div class="vh-mobile-categories">
+            @foreach ($categories as $category)
+                @php
+                    $img_category = $category->image ? asset('images/'.$category->image) : '';
+                @endphp
+
+                <a href="{{ isset($category->id) ? route('vouchers.categoria', $category->id) : '#' }}"
+                class="vh-mobile-category-card vh-mobile-category-card--{{ $loop->index + 1 }}">
+                    <strong>{{ $category->name }}</strong>
+
+                    @if($img_category)
+                        <img src="{{ $img_category }}" alt="{{ $category->name }}">
+                    @endif
+                </a>
+            @endforeach
+        </div>
+
+        <form action="{{ route('vouchers.buscar') }}" method="GET" class="vh-mobile-search">
+            <span class="vh-mobile-search__icon">⌕</span>
+            <input type="text" name="search" placeholder="Negocio, servicio, categoría..." value="{{ request('search') }}">
+        </form>
+
+        <button class="vh-help-btn vh-help-btn--mobile" type="button" aria-label="Ayuda">
+            <img src="{{ asset('images/boton-ayuda.svg') }}" alt="">
+        </button>
+
         <div class="vh-shell vh-hero__inner">
 
             <div class="vh-hero__copy">
@@ -60,7 +86,7 @@
                 <img src="{{ asset('images/ilustracion-hero.svg') }}" alt="" class="vh-gifts-img">
             </div>
 
-            <button class="vh-help-btn" type="button" aria-label="Ayuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
+            {{-- <button class="vh-help-btn" type="button" aria-label="Ayuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button> --}}
 
         </div>
     </section>
@@ -458,6 +484,14 @@ a{
         display: block;
     }
 
+    .vh-mobile-categories {
+        display: none;
+    }
+
+    .vh-mobile-search {
+        display: none;
+    }
+
 @media (max-width: 768px) {
     .vh-hero {
         min-height: auto;
@@ -500,6 +534,122 @@ a{
         line-height: 1.45;
         font-weight: 400;
     }
+
+    .vh-mobile-categories {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 30px 0 68px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .vh-mobile-categories::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vh-mobile-category-card {
+        position: relative;
+        flex: 0 0 218px;
+        width: 218px;
+        height: 202px;
+        border-radius: 10px;
+        overflow: hidden;
+        scroll-snap-align: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,.28);
+    }
+
+    .vh-mobile-category-card strong {
+        position: absolute;
+        top: 35px;
+        left: 0;
+        width: 100%;
+        padding: 0 18px;
+        z-index: 2;
+        color: #fff;
+        font-family: Montserrat, sans-serif;
+        font-size: 22px;
+        line-height: 1.15;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .vh-mobile-category-card img {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        width: 150px;
+        height: 120px;
+        object-fit: contain;
+        transform: translateX(-50%);
+        opacity: .42;
+        mix-blend-mode: screen;
+    }
+
+    .vh-mobile-category-card--1 { background: #07378C; }
+    .vh-mobile-category-card--2 { background: #49B384; }
+    .vh-mobile-category-card--3 { background: #F20888; }
+
+    .vh-mobile-search {
+        width: calc(100% - 80px);
+        height: 60px;
+        margin: 0 auto;
+        border: 1.5px solid #07378C;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 0 30px;
+        background: #fff;
+    }
+
+    .vh-mobile-search__icon {
+        color: #111;
+        font-size: 38px;
+        line-height: 1;
+        transform: rotate(-20deg);
+    }
+
+    .vh-mobile-search input {
+        width: 100%;
+        border: 0;
+        outline: none;
+        background: transparent;
+        color: #333;
+        font-family: Montserrat, sans-serif;
+        font-size: 18px;
+        font-style: italic;
+    }
+
+    .vh-mobile-search input::placeholder {
+        color: #9b9b9b;
+    }
+
+    .vh-help-btn {
+        display: none;
+    }
+
+    .vh-help-btn--mobile {
+        display: flex;
+        position: fixed;
+        right: 30px;
+        bottom: 22px;
+        width: 96px;
+        height: 96px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: #07378C;
+        z-index: 9999;
+        box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    }
+
+    .vh-help-btn--mobile img {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
 }
 
 @media (min-width: 769px) {
@@ -532,7 +682,7 @@ a{
     .vh-hero-categories {
         position: absolute;
         top: 295px;
-        left: 55px;
+        left: 85px;
         display: flex;
         align-items: flex-start;
         gap: 16px;

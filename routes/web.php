@@ -158,11 +158,11 @@ Route::resource('modalidades', ModalidadController::class);
 Route::post('/modalidades/{id}/delete', [ModalidadController::class, 'delete'])->name('modalidades.delete');
 
 
-use App\Http\Controllers\VoucherEmisionController;
+// use App\Http\Controllers\VoucherEmisionController;
 
-Route::resource('voucher_emisiones', VoucherEmisionController::class);
-Route::get('/voucher_emisiones/{id}', [VoucherEmisionController::class, 'show'])->name('voucher_emisiones.show');
-Route::get('/voucher_emisiones/{id}/pdf', [VoucherEmisionController::class, 'pdf'])->name('voucher_emisiones.pdf');
+// Route::resource('voucher_emisiones', VoucherEmisionController::class);
+// Route::get('/voucher_emisiones/{id}', [VoucherEmisionController::class, 'show'])->name('voucher_emisiones.show');
+// Route::get('/voucher_emisiones/{id}/pdf', [VoucherEmisionController::class, 'pdf'])->name('voucher_emisiones.pdf');
 
 
 use App\Http\Controllers\VoucherPlantillaController;
