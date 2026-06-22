@@ -12,7 +12,7 @@
         @endphp
 
         <article class="vo-card">
-            <a href="{{ route('vouchers.show', $voucher->vou_id) }}" class="vo-card-link">
+            <a href="{{ route('vouchers.comprar', $voucher->vou_id) }}" class="vo-card-link">
                 <div class="vo-card-image">
                     <img src="{{ $imageUrl }}" alt="{{ $voucher->vou_nombre }}">
                 </div>

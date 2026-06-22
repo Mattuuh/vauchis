@@ -6,6 +6,48 @@
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
 @endpush
 
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        function cargar_vouchers(page = 1, orderby = '')
+        {
+            let dataString =
+                $('#formftro').serialize() +
+                '&page=' + page +
+                '&orderby=' + orderby;
+
+            $.ajax({
+                type: 'GET',
+                url: '/vouchers/listado',
+                data: dataString,
+
+                beforeSend: function() {
+                    $('#box-espere').show();
+                },
+
+                complete: function() {
+                    $('#box-espere').hide();
+                },
+
+                success: function(response) {
+
+                    $('#box_body').html(response.body);
+                    $('#box_foot').html(response.foot);
+
+                    $('#f_organismo_totales').html(response.kregtotal);
+                }
+            });
+        }
+
+        cargar_vouchers($('#pag').val(), $('#ob').val());
+
+        $('#btn_filtro').on('click', function () {
+            cargar_vouchers($('#pag').val(), $('#ob').val());
+        });
+    });
+</script>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
@@ -34,23 +76,20 @@
             <div class="commerce-card">
                 <div class="commerce-toolbar">
                     <div class="commerce-toolbar__left">
-                        <div class="commerce-search">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar voucher...">
-                        </div>
-
-                        <button class="btn commerce-filter-btn" type="button">
-                            <i class="bi bi-funnel"></i>
-                            Filtro
-                            <i class="bi bi-chevron-down ms-1"></i>
-                        </button>
+                        <form action="" id="formftro">
+                            <input type="hidden" id="pag" value="1">
+                            <input type="hidden" name="ob" id="ob" value="asc">
+                            <div class="commerce-search">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" name="buscar" placeholder="Buscar voucher...">
+                            </div>
+                            <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button>
+                            <button type="button" id="btn_filtro">Mostrar</button>
+                        </form>
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <a href="{{ route('vouchers.create') }}" class="btn commerce-new-btn">
-                            <i class="bi bi-plus-lg"></i>
-                            Nuevo voucher
-                        </a>
+                        <a href="{{ route('vouchers.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo voucher</a>
                     </div>
                 </div>
 
@@ -69,7 +108,7 @@
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody id="box_body">
                             @foreach($vouchers as $voucher)
                                 <tr class="commerce-row">
 
@@ -138,7 +177,7 @@
                         Mostrando 1 a {{ $vouchers->count() }} de 25 registros
                     </div>
 
-                    <div class="commerce-pagination">
+                    <div class="commerce-pagination" id="box_foot">
                         <button class="btn commerce-page-arrow" disabled>
                             <i class="bi bi-chevron-left"></i>
                         </button>

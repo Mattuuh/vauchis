@@ -94,6 +94,7 @@ use App\Http\Controllers\VoucherController;
 
 // Route::get('/vouchers/create', [VoucherController::class, 'create'])->name('vouchers.create');
 // Route::post('/vouchers', [VoucherController::class, 'store'])->name('vouchers.store');
+Route::get('/vouchers/listado', [VoucherController::class, 'listado'])->name('vouchers.listado');
 Route::resource('vouchers', VoucherController::class);
 Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
 Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');

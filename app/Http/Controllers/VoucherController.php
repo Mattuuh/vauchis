@@ -1258,4 +1258,35 @@ class VoucherController extends Controller
 
         return view('categoria', compact('vouchers', 'categories'));
     }
+
+    public function listado(Request $request)
+    {
+        $query = Voucher::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('vou_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('vou_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $vouchers = $query
+            ->orderBy('vou_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'vouchers.partials.tabla',
+                compact('vouchers')
+            )->render(),
+
+            'foot' => view(
+                'vouchers.partials.paginacion',
+                compact('vouchers')
+            )->render(),
+
+            'kregtotal' => $vouchers->total()
+        ]);
+    }
 }
