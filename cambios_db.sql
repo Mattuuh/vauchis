@@ -241,3 +241,15 @@ TO 'inetsi'@'localhost';
 
 
 ALTER TABLE `rubros` ADD `cv_id` INT NULL DEFAULT NULL COMMENT 'Ref a la categoria' AFTER `rub_id`;
+
+
+
+CREATE TABLE `logs_auth` (
+  `log_id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `log_data_json` text DEFAULT NULL,
+  `log_ip` varchar(50) DEFAULT NULL,
+  `log_browser` text DEFAULT NULL,
+  `log_fecha_alta` datetime DEFAULT NULL,
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+

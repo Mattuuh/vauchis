@@ -98,4 +98,35 @@ class TipoEntidadController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = TipoEntidad::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('tipo_ent_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('tipo_ent_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $tipos_entidad = $query
+            ->orderBy('tipo_ent_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'tipos-entidad.partials.tabla',
+                compact('tipos_entidad')
+            )->render(),
+
+            'foot' => view(
+                'tipos-entidad.partials.paginacion',
+                compact('tipos_entidad')
+            )->render(),
+
+            'kregtotal' => $tipos_entidad->total()
+        ]);
+    }
 }

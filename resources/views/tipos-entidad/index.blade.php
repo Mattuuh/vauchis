@@ -6,6 +6,47 @@
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
 @endpush
 
+@push('scripts')
+<script>
+$(document).ready(function () {
+    function cargar_tipos_entidad(page = 1, orderby = '')
+    {
+        let dataString =
+            $('#formftro').serialize() +
+            '&page=' + page +
+            '&orderby=' + orderby;
+
+        $.ajax({
+            type: 'GET',
+            url: '/tipos-entidad/listado',
+            data: dataString,
+
+            beforeSend: function() {
+                $('#box-espere').show();
+            },
+
+            complete: function() {
+                $('#box-espere').hide();
+            },
+
+            success: function(response) {
+                $('#box_body').html(response.body);
+                $('#box_foot').html(response.foot);
+
+                $('#f_organismo_totales').html(response.kregtotal);
+            }
+        });
+    }
+
+    cargar_tipos_entidad($('#pag').val(), $('#ob').val());
+
+    $('#btn_filtro').on('click', function () {
+        cargar_tipos_entidad($('#pag').val(), $('#ob').val());
+    });
+});
+</script>
+@endpush
+
 
 @section('content')
 
@@ -36,23 +77,19 @@
             <div class="commerce-card">
                 <div class="commerce-toolbar">
                     <div class="commerce-toolbar__left">
-                        <div class="commerce-search">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar tipo de entidad...">
-                        </div>
+                        <form action="" id="formftro">
+                            <div class="commerce-search">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" id="buscar" name="buscar" placeholder="Buscar tipo de entidad...">
+                            </div>
 
-                        <button class="btn commerce-filter-btn" type="button">
-                            <i class="bi bi-funnel"></i>
-                            Filtro
-                            <i class="bi bi-chevron-down ms-1"></i>
-                        </button>
+                            {{-- <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button> --}}
+                        </form>
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <a href="{{ route('tipos-entidad.create') }}" class="btn commerce-new-btn">
-                            <i class="bi bi-plus-lg"></i>
-                            Nuevo tipo de entidad
-                        </a>
+                        <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
+                        <a href="{{ route('tipos-entidad.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo tipo de entidad</a>
                     </div>
                 </div>
 
@@ -67,7 +104,7 @@
                                 <th style="width: 60px">ACCIONES</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="box_body">
                             @foreach($tipos as $tipo)
                                 <tr class="commerce-row">
 
@@ -112,10 +149,10 @@
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $tipos->count() }} de 25 registros
+                        Mostrando 1 a {{ $tipos->count() }} de {{ $tipos->count() }} registros
                     </div>
 
-                    <div class="commerce-pagination">
+                    <div class="commerce-pagination" id="box_foot">
                         <button class="btn commerce-page-arrow" disabled>
                             <i class="bi bi-chevron-left"></i>
                         </button>

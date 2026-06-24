@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,13 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
+        DB::table('logs_auth')->insert([
+            'log_data_json' => json_encode($request->all()),
+            'log_ip' => request()->ip(),
+            'log_browser' => request()->userAgent(),
+            'log_fecha_alta' => now(),
+        ]);
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string', 'min:6'],
@@ -111,6 +119,13 @@ class AuthController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
+        DB::table('logs_auth')->insert([
+            'log_data_json' => json_encode($request->all()),
+            'log_ip' => request()->ip(),
+            'log_browser' => request()->userAgent(),
+            'log_fecha_alta' => now(),
+        ]);
+
         $validated = $request->validate([
             'tipo_doc_id' => ['nullable', 'string', 'max:20'],
             'usu_documento' => ['nullable', 'string', 'max:20'],

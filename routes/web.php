@@ -118,6 +118,7 @@ use App\Http\Controllers\TipoEntidadController;
 // Route::get('/tipos-entidad', [TipoEntidadController::class, 'index'])->name('tipos-entidad.index');
 // Route::get('/tipos-entidad/create', [TipoEntidadController::class, 'create'])->name('tipos-entidad.create');
 // Route::post('/tipos-entidad', [TipoEntidadController::class, 'store'])->name('tipos-entidad.store');
+Route::get('/tipos-entidad/listado', [TipoEntidadController::class, 'listado'])->name('tipos-entidad.listado');
 Route::resource('tipos-entidad', TipoEntidadController::class);
 Route::post('/tipos-entidad/{id}/delete', [TipoEntidadController::class, 'delete'])->name('tipos-entidad.delete');
 

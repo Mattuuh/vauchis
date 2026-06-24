@@ -30,7 +30,6 @@
                 },
 
                 success: function(response) {
-
                     $('#box_body').html(response.body);
                     $('#box_foot').html(response.foot);
 
@@ -83,12 +82,12 @@
                                 <i class="bi bi-search"></i>
                                 <input type="text" class="form-control" name="buscar" placeholder="Buscar voucher...">
                             </div>
-                            <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button>
-                            <button type="button" id="btn_filtro">Mostrar</button>
+                            {{-- <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button> --}}
                         </form>
                     </div>
 
                     <div class="commerce-toolbar__right">
+                        <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
                         <a href="{{ route('vouchers.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo voucher</a>
                     </div>
                 </div>
@@ -174,7 +173,7 @@
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $vouchers->count() }} de 25 registros
+                        Mostrando 1 a {{ $vouchers->count() }} de {{ $vouchers->count() }} registros
                     </div>
 
                     <div class="commerce-pagination" id="box_foot">
