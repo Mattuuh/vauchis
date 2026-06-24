@@ -43,6 +43,14 @@ $(document).ready(function () {
     $('#btn_filtro').on('click', function () {
         cargar_tipos_entidad($('#pag').val(), $('#ob').val());
     });
+
+	$(document).on("keypress", function(e) {
+		// Detecta tecla Enter
+		if (e.which === 13) {
+			e.preventDefault(); // evita comportamiento por defecto
+			$("#btn_filtro").click(); // simula click en el botón
+		}
+	});
 });
 </script>
 @endpush

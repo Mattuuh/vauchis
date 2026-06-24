@@ -17,6 +17,7 @@ use App\Http\Controllers\EntidadController;
 // Route::get('/comercios', [EntidadController::class, 'index'])->name('entidades.index');
 // Route::get('/comercios/create', [EntidadController::class, 'create'])->name('entidades.create');
 // Route::post('/comercios', [EntidadController::class, 'store'])->name('entidades.store');
+Route::get('/entidades/listado', [EntidadController::class, 'listado'])->name('entidades.listado');
 Route::resource('entidades', EntidadController::class);
 Route::post('/entidades/{id}/delete', [EntidadController::class, 'delete'])->name('entidades.delete');
 
@@ -128,6 +129,7 @@ use App\Http\Controllers\OrganizacionController;
 // Route::get('/organizacion', [OrganizacionController::class, 'index'])->name('organizacion.index');
 // Route::get('/organizacion/create', [OrganizacionController::class, 'create'])->name('organizacion.create');
 // Route::post('/organizacion', [OrganizacionController::class, 'store'])->name('organizacion.store');
+Route::get('/organizacion/listado', [OrganizacionController::class, 'listado'])->name('organizacion.listado');
 Route::resource('organizacion', OrganizacionController::class);
 Route::post('/organizacion/{id}/delete', [OrganizacionController::class, 'delete'])->name('organizacion.delete');
 
@@ -139,6 +141,7 @@ use App\Http\Controllers\InfluencerController;
 // Route::post('/influencers', [InfluencerController::class, 'store'])->name('influencers.store');
 // Route::get('/influencers/{id}/edit', [InfluencerController::class, 'edit'])->name('influencers.edit');
 // Route::put('/influencers/{id}', [InfluencerController::class, 'update'])->name('influencers.update');
+Route::get('/influencers/listado', [InfluencerController::class, 'listado'])->name('influencers.listado');
 Route::resource('influencers', InfluencerController::class);
 Route::post('/influencers/{id}/delete', [InfluencerController::class, 'delete'])->name('influencers.delete');
 
@@ -150,12 +153,14 @@ use App\Http\Controllers\RubroController;
 // Route::post('/rubros', [RubroController::class, 'store'])->name('rubros.store');
 // Route::get('/rubros/{id}/edit', [RubroController::class, 'edit'])->name('rubros.edit');
 // Route::put('/rubros/{id}', [RubroController::class, 'update'])->name('rubros.update');
+Route::get('/rubros/listado', [RubroController::class, 'listado'])->name('rubros.listado');
 Route::resource('rubros', RubroController::class);
 Route::post('/rubros/{id}/delete', [RubroController::class, 'delete'])->name('rubros.delete');
 
 
 use App\Http\Controllers\ModalidadController;
 
+Route::get('/modalidades/listado', [ModalidadController::class, 'listado'])->name('modalidades.listado');
 Route::resource('modalidades', ModalidadController::class);
 Route::post('/modalidades/{id}/delete', [ModalidadController::class, 'delete'])->name('modalidades.delete');
 
@@ -178,6 +183,7 @@ Route::get('/voucher_plantillas/{id}/preview', [VoucherPlantillaController::clas
 
 use App\Http\Controllers\EtiquetaController;
 
+Route::get('/etiquetas/listado', [EtiquetaController::class, 'listado'])->name('etiquetas.listado');
 Route::resource('etiquetas', EtiquetaController::class);
 Route::post('/etiquetas/{id}/delete', [EtiquetaController::class, 'delete'])->name('etiquetas.delete');
 

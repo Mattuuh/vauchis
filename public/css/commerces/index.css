@@ -507,50 +507,20 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .commerce-card {
-        padding: 18px;
+
+    .commerce-table-wrap {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .commerce-table thead {
-        display: none;
+    .commerce-table {
+        min-width: 900px;
     }
 
-    .commerce-table,
-    .commerce-table tbody,
-    .commerce-table tr,
+    .commerce-table th,
     .commerce-table td {
-        display: block;
-        width: 100%;
-    }
-
-    .commerce-table tbody tr {
-        border: 1px solid #e8eef8;
-        border-radius: 16px;
-        padding: 18px;
-        margin-bottom: 14px;
-        background: #fff;
-    }
-
-    .commerce-table tbody td {
-        border: none;
-        padding: 0 0 12px;
-    }
-
-    .commerce-table tbody td:last-child {
-        padding-bottom: 0;
-    }
-
-    .commerce-mobile-label {
-        display: block;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: #98a3bc;
-        margin-bottom: 4px;
-    }
-
-    .commerce-col--actions {
-        padding-top: 4px;
+        white-space: nowrap;
     }
 }
 
@@ -615,7 +585,7 @@ body {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
+    /* table-layout: fixed; */
 }
 
 .commerce-table thead th {

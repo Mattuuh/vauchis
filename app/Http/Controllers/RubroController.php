@@ -196,4 +196,35 @@ class RubroController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = Rubro::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('rub_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('rub_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $rubros = $query
+            ->orderBy('rub_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'rubros.partials.tabla',
+                compact('rubros')
+            )->render(),
+
+            'foot' => view(
+                'rubros.partials.paginacion',
+                compact('rubros')
+            )->render(),
+
+            'kregtotal' => $rubros->total()
+        ]);
+    }
 }

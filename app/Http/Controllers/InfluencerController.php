@@ -396,4 +396,35 @@ class InfluencerController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = Influencer::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('inf_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('inf_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $influencers = $query
+            ->orderBy('inf_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'influencers.partials.tabla',
+                compact('influencers')
+            )->render(),
+
+            'foot' => view(
+                'influencers.partials.paginacion',
+                compact('influencers')
+            )->render(),
+
+            'kregtotal' => $influencers->total()
+        ]);
+    }
 }

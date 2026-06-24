@@ -6,6 +6,49 @@
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
 @endpush
 
+@push('scripts')
+<script>
+$(document).ready(function () {
+    function cargar_rubros(page = 1, orderby = '')
+    {
+        let dataString =$('#formftro').serialize()+'&page='+page+'&orderby=' + orderby;
+
+        $.ajax({
+            type: 'GET',
+            url: '/rubros/listado',
+            data: dataString,
+            beforeSend: function() {
+                $('#box-espere').show();
+            },
+            complete: function() {
+                $('#box-espere').hide();
+            },
+            success: function(response) {
+                $('#box_body').html(response.body);
+                $('#box_foot').html(response.foot);
+
+                $('#f_organismo_totales').html(response.kregtotal);
+            }
+        });
+    }
+
+    // cargar_rubros($('#pag').val(), $('#ob').val());
+
+    $('#btn_filtro').on('click', function () {
+        cargar_rubros($('#pag').val(), $('#ob').val());
+    });
+
+	$(document).on("keypress", function(e) {
+		// Detecta tecla Enter
+		if (e.which === 13) {
+			e.preventDefault(); // evita comportamiento por defecto
+			$("#btn_filtro").click(); // simula click en el botón
+		}
+	});
+});
+</script>
+@endpush
+
 
 @section('content')
 
@@ -35,23 +78,24 @@
             <div class="commerce-card">
                 <div class="commerce-toolbar">
                     <div class="commerce-toolbar__left">
-                        <div class="commerce-search">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control" placeholder="Buscar rubro...">
-                        </div>
+                        <form action="" id="formftro">
+                            <div class="commerce-search">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" name="buscar" id="buscar" placeholder="Buscar rubro...">
+                            </div>
+                        </form>
 
-                        <button class="btn commerce-filter-btn" type="button">
-                            <i class="bi bi-funnel"></i>
-                            Filtro
-                            <i class="bi bi-chevron-down ms-1"></i>
-                        </button>
+                        {{-- <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button> --}}
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <a href="{{ route('rubros.create') }}" class="btn commerce-new-btn">
-                            <i class="bi bi-plus-lg"></i>
-                            Nuevo rubro
-                        </a>
+                        <div class="col-sm-1">
+                            <div class="overlay pull-right" id="box-espere" style="display: none;">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                        </div>
+                        <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
+                        <a href="{{ route('rubros.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo rubro</a>
                     </div>
                 </div>
 
@@ -66,7 +110,7 @@
                                 <th style="width: 60px">ACCIONES</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="box_body">
                             @foreach($rubros as $rubro)
                                 <tr class="commerce-row">
                                     <td class="commerce-col" data-label="ID">
@@ -110,10 +154,10 @@
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $rubros->count() }} de 25 registros
+                        Mostrando 1 a {{ $rubros->count() }} de {{ $rubros->count() }} registros
                     </div>
 
-                    <div class="commerce-pagination">
+                    <div class="commerce-pagination" id="box_foot">
                         <button class="btn commerce-page-arrow" disabled>
                             <i class="bi bi-chevron-left"></i>
                         </button>

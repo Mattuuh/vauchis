@@ -185,4 +185,35 @@ class ModalidadController extends Controller
             ->route('modalidades.index')
             ->with('success', 'Modalidad eliminada correctamente');
     }
+
+    public function listado(Request $request)
+    {
+        $query = Modalidad::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('mod_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('mod_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $modalidades = $query
+            ->orderBy('mod_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'modalidades.partials.tabla',
+                compact('modalidades')
+            )->render(),
+
+            'foot' => view(
+                'modalidades.partials.paginacion',
+                compact('modalidades')
+            )->render(),
+
+            'kregtotal' => $modalidades->total()
+        ]);
+    }
 }

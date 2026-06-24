@@ -676,4 +676,39 @@ class EntidadController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = Entidad::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('ent_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('ent_nombre_fantasia', 'like', "%".$request->buscar."%");
+        }
+
+        $entidades = $query
+            ->with('tipo_entidad')
+            ->with('tipo_responsabilidad')
+            ->withCount('domicilios')
+            ->withCount('vouchersActivos')
+            ->orderBy('ent_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'entidades.partials.tabla',
+                compact('entidades')
+            )->render(),
+
+            'foot' => view(
+                'entidades.partials.paginacion',
+                compact('entidades')
+            )->render(),
+
+            'kregtotal' => $entidades->total()
+        ]);
+    }
 }

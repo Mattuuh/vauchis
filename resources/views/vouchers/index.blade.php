@@ -8,42 +8,50 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function () {
-        function cargar_vouchers(page = 1, orderby = '')
-        {
-            let dataString =
-                $('#formftro').serialize() +
-                '&page=' + page +
-                '&orderby=' + orderby;
+$(document).ready(function () {
+    function cargar_vouchers(page = 1, orderby = '')
+    {
+        let dataString =
+            $('#formftro').serialize() +
+            '&page=' + page +
+            '&orderby=' + orderby;
 
-            $.ajax({
-                type: 'GET',
-                url: '/vouchers/listado',
-                data: dataString,
+        $.ajax({
+            type: 'GET',
+            url: '/vouchers/listado',
+            data: dataString,
 
-                beforeSend: function() {
-                    $('#box-espere').show();
-                },
+            beforeSend: function() {
+                $('#box-espere').show();
+            },
 
-                complete: function() {
-                    $('#box-espere').hide();
-                },
+            complete: function() {
+                $('#box-espere').hide();
+            },
 
-                success: function(response) {
-                    $('#box_body').html(response.body);
-                    $('#box_foot').html(response.foot);
+            success: function(response) {
+                $('#box_body').html(response.body);
+                $('#box_foot').html(response.foot);
 
-                    $('#f_organismo_totales').html(response.kregtotal);
-                }
-            });
-        }
-
-        cargar_vouchers($('#pag').val(), $('#ob').val());
-
-        $('#btn_filtro').on('click', function () {
-            cargar_vouchers($('#pag').val(), $('#ob').val());
+                $('#f_organismo_totales').html(response.kregtotal);
+            }
         });
+    }
+
+    cargar_vouchers($('#pag').val(), $('#ob').val());
+
+    $('#btn_filtro').on('click', function () {
+        cargar_vouchers($('#pag').val(), $('#ob').val());
     });
+
+	$(document).on("keypress", function(e) {
+		// Detecta tecla Enter
+		if (e.which === 13) {
+			e.preventDefault(); // evita comportamiento por defecto
+			$("#btn_filtro").click(); // simula click en el botón
+		}
+	});
+});
 </script>
 @endpush
 

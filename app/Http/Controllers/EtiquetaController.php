@@ -163,4 +163,35 @@ class EtiquetaController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = Etiqueta::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('eti_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('eti_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $etiquetas = $query
+            ->orderBy('eti_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'etiquetas.partials.tabla',
+                compact('etiquetas')
+            )->render(),
+
+            'foot' => view(
+                'etiquetas.partials.paginacion',
+                compact('etiquetas')
+            )->render(),
+
+            'kregtotal' => $etiquetas->total()
+        ]);
+    }
 }

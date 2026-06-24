@@ -361,4 +361,35 @@ class OrganizacionController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function listado(Request $request)
+    {
+        $query = Organizacion::query();
+
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('org_fecha_alta', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('buscar')) {
+            $query->where('org_nombre', 'like', "%".$request->buscar."%");
+        }
+
+        $organizaciones = $query
+            ->orderBy('org_id', 'desc')
+            ->paginate(20);
+
+        return response()->json([
+            'body' => view(
+                'organizaciones.partials.tabla',
+                compact('organizaciones')
+            )->render(),
+
+            'foot' => view(
+                'organizaciones.partials.paginacion',
+                compact('organizaciones')
+            )->render(),
+
+            'kregtotal' => $organizaciones->total()
+        ]);
+    }
 }
