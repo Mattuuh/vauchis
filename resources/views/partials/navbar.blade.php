@@ -92,84 +92,55 @@
 
 @elseif (session('auth.tu_id')==2)
 
-<nav class="v-navbar">
-    <div class="container">
+<nav class="v-navbar" id="vNavbar">
+    <div class="v-navbar__shell">
 
-        <button class="v-navbar__toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="v-navbar__top">
+            <a href="{{ route('home') }}" class="v-navbar__logo">
+                <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+            </a>
 
-        <a href="{{ route('home') }}" class="v-navbar__logo">
-            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
-        </a>
+            <div class="v-navbar__actions">
+                <a href="#" class="v-navbar__icon">
+                    <img src="{{ asset('images/icon-user.png') }}" alt="Usuario">
+                </a>
+
+                <a href="#" class="v-navbar__icon">
+                    <img src="{{ asset('images/icon-help.png') }}" alt="Ayuda">
+                </a>
+            </div>
+        </div>
 
         <div class="v-navbar__search">
-            <input type="text" class="v-form-control" placeholder="Buscá tu vauchis...">
+            <img src="{{ asset('images/icon-search.png') }}" alt="Buscar">
+            <input type="text" placeholder="Buscá tu vauchis...">
         </div>
 
         <ul class="v-navbar__menu">
             <li>
-                <a href="{{ route('vouchers.categoria', 1) }}" class="{{ isset($categoria->id) ? (1 == $categoria->id ? 'fw-bold' : '') : '' }}">Objetos</a>
+                <a href="{{ route('vouchers.categoria', 1) }}" class="active">
+                    <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+                    Objetos
+                </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 2) }}" class="{{ isset($categoria->id) ? (2 == $categoria->id ? 'fw-bold' : '') : '' }}">Experiencias</a>
+                <a href="{{ route('vouchers.categoria', 2) }}">
+                    <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+                    Experiencias
+                </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 3) }}" class="{{ isset($categoria->id) ? (3 == $categoria->id ? 'fw-bold' : '') : '' }}">Regalá con causa</a>
+                <a href="{{ route('vouchers.categoria', 3) }}">
+                    <img src="{{ asset('images/icon-causa.png') }}" alt="">
+                    Con causa
+                </a>
             </li>
         </ul>
 
-        <div class="v-navbar__actions">
-
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 commerce-user-menu"
-                href="#"
-                id="adminDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                    <i class="bi bi-person-fill"></i>
-                    {{ session('auth.nombre') }}
-                </a>
-
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown"
-                    aria-labelledby="adminDropdown">
-                    <li class="px-3 py-2 border-bottom">
-                        <div class="fw-semibold">{{ session('auth.nombre') }}</div>
-                        <small class="text-muted">{{ session('auth.email') }}</small>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="{{ route('vouchers.index') }}">
-                            <i class="bi bi-pencil-square me-2"></i>Editar perfil
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="{{ route('modalidades.index') }}">
-                            <i class="bi bi-ticket-perforated me-2"></i>Mis vouchers
-                        </a>
-                    </li>
-
-                    <li><hr class="dropdown-divider"></li>
-
-                    <li class="px-2 pb-2">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-danger w-100 rounded-pill">
-                                <i class="bi bi-box-arrow-right me-2"></i>Salir
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-
-            <a href="#" class="v-navbar__icon">
-                <i class="bi bi-question"></i>
-            </a>
-
+        <div class="v-navbar__note">
+            ¡Elegí que regalar!
         </div>
 
     </div>
@@ -177,110 +148,120 @@
 
 @else
 
-<nav class="v-navbar">
-    <div class="container">
+<nav class="v-navbar" id="vNavbar">
+    <div class="v-navbar__shell">
 
-        <button class="v-navbar__toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="v-navbar__top">
+            <a href="{{ route('home') }}" class="v-navbar__logo">
+                <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+            </a>
 
-        <a href="{{ route('home') }}" class="v-navbar__logo">
-            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
-        </a>
+            <div class="v-navbar__actions">
+                <a href="#" class="v-navbar__icon">
+                    {{-- <img src="{{ asset('images/icon-user.png') }}" alt="Usuario"> --}}
+                    <i class="bi bi-person"></i>
+                </a>
+
+                <a href="#" class="v-navbar__icon">
+                    {{-- <img src="{{ asset('images/icon-help.png') }}" alt="Ayuda"> --}}
+                    <i class="bi bi-question"></i>
+                </a>
+            </div>
+        </div>
 
         <div class="v-navbar__search">
-            <input type="text" class="v-form-control" placeholder="Buscá tu vauchis...">
+            {{-- <img src="{{ asset('images/icon-search.png') }}" alt="Buscar"> --}}
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Buscá tu vauchis...">
         </div>
 
         <ul class="v-navbar__menu">
             <li>
-                <a href="{{ route('vouchers.categoria', 1) }}" class="{{ isset($categoria->id) ? (1 == $categoria->id ? 'fw-bold' : '') : '' }}">Objetos</a>
+                <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+                    Objetos
+                </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 2) }}" class="{{ isset($categoria->id) ? (2 == $categoria->id ? 'fw-bold' : '') : '' }}">Experiencias</a>
+                <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+                    Experiencias
+                </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 3) }}" class="{{ isset($categoria->id) ? (3 == $categoria->id ? 'fw-bold' : '') : '' }}">Regalá con causa</a>
+                <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/icon-causa.png') }}" alt="">
+                    Con causa
+                </a>
             </li>
         </ul>
 
-        <div class="v-navbar__actions">
-            <a href="{{ route('login') }}" class="v-navbar__icon">
-                {{-- <i class="bi bi-person-circle"></i> --}}
-                <i class="bi bi-person-fill"></i>
-            </a>
-
-            <a href="#" class="v-navbar__icon">
-                <i class="bi bi-question"></i>
-            </a>
+        <div class="v-navbar__note">
+            ¡Elegí que regalar!
+            <img src="{{ asset('images/decoracion-flecha.svg') }}" alt="" class="" width="55" height="53">
         </div>
 
     </div>
 </nav>
 @endif
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+<nav class="v-mobile-navbar">
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu">
+        <i class="bi bi-list"></i>
+    </button>
 
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Menú</h5>
+    <a href="{{ route('home') }}" class="v-mobile-navbar__logo">
+        <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+    </a>
 
-        <button type="button"
-                class="btn-close"
-                data-bs-dismiss="offcanvas">
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileSearch">
+        <i class="bi bi-search"></i>
+    </button>
+</nav>
+<div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileMenu">
+    <div class="v-mobile-panel__header">
+        <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
         </button>
     </div>
 
-    <div class="offcanvas-body">
+    <div class="v-mobile-panel__body">
+        <h3>Menú</h3>
 
-        <ul class="list-unstyled mb-4">
-            <li class="mb-3">
-                <a href="#" class="text-decoration-none">Objetos</a>
-            </li>
+        <a href="{{ route('vouchers.categoria', 1) }}">
+            <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+            Objetos
+        </a>
 
-            <li class="mb-3">
-                <a href="#" class="text-decoration-none">Experiencias</a>
-            </li>
+        <a href="{{ route('vouchers.categoria', 2) }}">
+            <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+            Experiencias
+        </a>
 
-            <li class="mb-3">
-                <a href="#" class="text-decoration-none">Regalá con causa</a>
-            </li>
-        </ul>
+        <a href="{{ route('vouchers.categoria', 3) }}">
+            <img src="{{ asset('images/icon-causa.png') }}" alt="">
+            Con causa
+        </a>
+    </div>
+</div>
+<div class="offcanvas offcanvas-end v-search-panel" tabindex="-1" id="vMobileSearch">
+    <div class="v-search-panel__top">
+        <div class="v-search-panel__input">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Buscar..." autofocus>
+        </div>
 
-        @if(session('auth'))
-            <hr>
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
 
-            <div class="mb-3">
-                <strong>{{ session('auth.nombre') }}</strong><br>
-                <small>{{ session('auth.email') }}</small>
-            </div>
-
-            <a href="{{ route('vouchers.index') }}"
-               class="btn btn-outline-primary w-100 mb-2">
-                Editar perfil
-            </a>
-
-            <a href="{{ route('modalidades.index') }}"
-               class="btn btn-outline-primary w-100 mb-2">
-                Mis vouchers
-            </a>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-
-                <button type="submit"
-                        class="btn btn-danger w-100">
-                    Salir
-                </button>
-            </form>
-        @else
-            <hr>
-            <a href="{{ route('login') }}" class="v-navbar__icon">
-                {{-- <i class="bi bi-person-circle"></i> --}}
-                <i class="bi bi-person-fill"></i>
-            </a>
-        @endif
-
+    <div class="v-search-panel__results">
+        <a href="#">Hoyts Salta</a>
+        <a href="#">Hotelería</a>
+        <a href="#">Hotel Salta</a>
     </div>
 </div>

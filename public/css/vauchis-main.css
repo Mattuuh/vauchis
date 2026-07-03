@@ -719,6 +719,7 @@ FOOTER
     background: #07378C;
     color: #FDFDFE;
     padding: 64px 0 24px;
+    min-height: 400px;
 }
 
 .v-footer__logo{

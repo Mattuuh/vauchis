@@ -135,6 +135,23 @@
     });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbar = document.getElementById('vNavbar');
+
+            function toggleNavbar() {
+                if (window.scrollY > 40) {
+                    navbar.classList.add('is-scrolled');
+                } else {
+                    navbar.classList.remove('is-scrolled');
+                }
+            }
+
+            toggleNavbar();
+            window.addEventListener('scroll', toggleNavbar);
+        });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

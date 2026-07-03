@@ -36,10 +36,10 @@
             @endforeach
         </div>
 
-        <form action="{{ route('vouchers.buscar') }}" method="GET" class="vh-mobile-search">
+        {{-- <form action="{{ route('vouchers.buscar') }}" method="GET" class="vh-mobile-search">
             <span class="vh-mobile-search__icon">⌕</span>
             <input type="text" name="search" placeholder="Negocio, servicio, categoría..." value="{{ request('search') }}">
-        </form>
+        </form> --}}
 
         <button class="vh-help-btn vh-help-btn--mobile" type="button" aria-label="Ayuda">
             <img src="{{ asset('images/boton-ayuda.svg') }}" alt="">
@@ -49,8 +49,8 @@
 
             <div class="vh-hero__copy">
                 <h1>
-                    El placer de regalar,<br>
-                    <span>simplificado</span>
+                    El placer de<br> regalar,<br>
+                    simplificado
                 </h1>
 
                 <p>
@@ -58,11 +58,9 @@
                     de la manera más simple.
                 </p>
 
+                <button type="button" class="btn-vauchis">Explorá Vauchis</button>
+
                 <div class="vh-hero-categories">
-                    <div class="vh-category-label">
-                        ¡Elegí <br>que regalar! <br>
-                        <img src="{{ asset('images/decoracion-flecha.svg') }}" alt="" class="">
-                    </div>
 
                     <div class="vh-category-stack" id="objetos">
                         @foreach ($categories as $category)
@@ -94,8 +92,7 @@
     <section class="vh-featured" id="negocios">
         <div class="vh-shell">
             <div class="vh-section-title vh-section-title--light">
-                <span></span>
-                <h2>Los negocios <strong>más elegidos</strong></h2>
+                <h2><span class="guion-vauchis"></span> <br>Negocios <strong>destacados</strong></h2>
             </div>
 
             <div class="vh-slider-wrap">
@@ -115,7 +112,6 @@
                                     <h3>{{ $brand->name }}</h3>
                                     <p>{{ $brand->description ?? 'Una experiencia para regalar y disfrutar' }}</p>
                                 </div>
-                                <small>desde ${{ $brand->min_amount ?? $brand->min_price ?? '10.000' }}</small>
                             </div>
                         </article>
                     @endforeach
@@ -128,9 +124,15 @@
 
     <section class="vh-organizations">
         <div class="vh-shell">
-            <div class="vh-section-title">
-                <span></span>
-                <h2>Encontrá todo <strong>en un solo lugar</strong></h2>
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="vh-section-title">
+                        <h2><span class="guion-vauchis"></span><br>Encontrá todo <strong>en un solo lugar</strong></h2>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn-ver-todos"><i class="bi bi-arrow-right"></i> Ver todos</button>
+                </div>
             </div>
 
             <div class="vh-logo-carousel-wrap">
@@ -154,30 +156,36 @@
 
     <section class="vh-inspiration" id="experiencias">
         <div class="vh-shell">
-            <div class="vh-section-title">
-                <span></span>
-                <h2>Inspirate <strong>en recomendaciones</strong></h2>
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="vh-section-title">
+                        <h2><span class="guion-vauchis"></span><br>Inspirate <strong>en recomendaciones</strong></h2>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn-ver-todos"><i class="bi bi-arrow-right"></i> Ver todos</button>
+                </div>
             </div>
 
             <div class="vh-influencer-carousel-wrap">
                 <div class="vh-carousel-viewport" data-carousel="influencers">
                     <div class="vh-card-row vh-card-row--influencers">
-                @foreach ($influencers as $influencer)
-                    @php
-                        $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : $influencerFallbackImages[$loop->index % count($influencerFallbackImages)];
-                    @endphp
-                    <article class="vh-influencer-card">
-                        <img class="vh-influencer-card__cover" src="{{ $imgSrc }}" alt="{{ $influencer->name }}">
-                        <div class="vh-influencer-card__body">
-                            <img src="{{ $imgSrc }}" alt="" class="vh-avatar">
-                            <div>
-                                <h3>{{ $influencer->name }}</h3>
-                                <p>{{ $influencer->user_name ?? '@' . \Illuminate\Support\Str::slug($influencer->name ?? 'influencer') }}</p>
-                                <small>{{ $influencer->description }}</small>
+                    @foreach ($influencers as $influencer)
+                        @php
+                            $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : $influencerFallbackImages[$loop->index % count($influencerFallbackImages)];
+                        @endphp
+                        <article class="vh-influencer-card">
+                            <img class="vh-influencer-card__cover" src="{{ $imgSrc }}" alt="{{ $influencer->name }}">
+                            <div class="vh-influencer-card__body">
+                                <img src="{{ $imgSrc }}" alt="" class="vh-avatar">
+                                <div>
+                                    <h3>{{ $influencer->name }}</h3>
+                                    <p>{{ $influencer->user_name ?? '@' . \Illuminate\Support\Str::slug($influencer->name ?? 'influencer') }}</p>
+                                    <small>{{ $influencer->description }}</small>
+                                </div>
                             </div>
-                        </div>
-                    </article>
-                @endforeach
+                        </article>
+                    @endforeach
                     </div>
                 </div>
                 <button class="vh-round-next vh-round-next--inspiration" type="button" aria-label="Siguiente">→</button>
@@ -185,7 +193,7 @@
         </div>
     </section>
 
-    <section class="vh-explore" id="causa">
+    <section class="vh-explore" id="causa" hidden>
         <div class="vh-shell">
             <div class="vh-section-heading">
                 <span class="vh-section-heading__line"></span>
@@ -243,9 +251,15 @@
 
     <section class="vh-collections">
         <div class="vh-shell">
-            <div class="vh-section-heading">
-                <span class="vh-section-heading__line"></span>
-                <h2>Colecciones</h2>
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="vh-section-heading">
+                        <h2><span class="guion-vauchis"></span><br>Colecciones</h2>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn-ver-todos"><i class="bi bi-arrow-right"></i> Ver todos</button>
+                </div>
             </div>
 
             <div class="vh-collections-grid">
@@ -277,9 +291,9 @@
 
             <div class="vh-final-banner__copy">
                 <h2>
-                    Una forma<br>
-                    distinta <em>(y fácil)</em><br>
-                    de regalar
+                    <span>Form&aacute; parte de</span><br>
+                    <i>la comunidad</i><br>
+                    <span>vauchis</span>
                 </h2>
 
                 <a href="#negocios" class="vh-final-banner__btn">
@@ -326,10 +340,17 @@ a{
 ========================= */
 
 .vh-hero {
-    position: relative;
+    /* position: relative;
+    z-index: 1;
     min-height: 590px;
-    background: #f4f5f7;
-    overflow: hidden;
+    background: #EEEFF7;
+    overflow: hidden; */
+
+    margin-top: 0;
+    padding-top: 170px;
+    position: relative;
+    z-index: 1;
+    background: #EEEFF7;
 }
 
 .vh-mobile-hero {
@@ -351,26 +372,45 @@ a{
 
 .vh-hero__copy h1 {
     margin: 0 0 14px;
-    color: #07378C;
+    color: #3F4359;
     font-family: Montserrat, sans-serif;
-    font-size: 34px;
-    line-height: 1.08;
+    font-size: 60px;
+    line-height: 87px;
     font-weight: 800;
-    font-style: italic;
-    letter-spacing: -0.03em;
-}
-
-.vh-hero__copy h1 span {
-    color: #0065FA;
+    letter-spacing: -1.5px;
 }
 
 .vh-hero__copy > p {
     margin: 0;
-    color: #666;
+    color: #555555;
     font-family: Montserrat, sans-serif;
     font-size: 16px;
-    line-height: 1.15;
+    line-height: 27.2px;
     font-weight: 400;
+    letter-spacing: 0px;
+}
+
+.btn-vauchis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 166px;
+    height: 32px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: #0066ff;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    line-height: 1;
+}
+
+.btn-vauchis:hover {
+    background: #005be3;
+    color: #fff;
 }
 
 .vh-gift-preview {
@@ -414,8 +454,9 @@ a{
 }
 
 .vh-category-stack {
-    display: flex;
-    gap: 14px;
+    display: none;
+    /* display: flex;
+    gap: 14px; */
 }
 
 .vh-category-card {
@@ -495,7 +536,7 @@ a{
 @media (max-width: 768px) {
     .vh-hero {
         min-height: auto;
-        padding: 8px 20px 34px;
+        padding: 8px 5px 34px;
         background: #fff;
         overflow: hidden;
     }
@@ -504,11 +545,16 @@ a{
         display: none;
     }
 
+    .btn-ver-todos {
+        display: none !important;
+    }
+
     .vh-mobile-hero {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
+        margin-top: 60px;
     }
 
     .vh-mobile-hero-img {
@@ -525,6 +571,7 @@ a{
         font-weight: 800;
         font-style: normal;
         letter-spacing: -1px;
+        font-family: Montserrat, sans-serif;
     }
 
     .vh-mobile-hero p {
@@ -533,6 +580,7 @@ a{
         font-size: 17px;
         line-height: 1.45;
         font-weight: 400;
+        font-family: Montserrat, sans-serif;
     }
 
     .vh-mobile-categories {
@@ -663,7 +711,7 @@ a{
         width: 430px;
     }
 
-    .vh-hero__copy h1 {
+    /* .vh-hero__copy h1 {
         font-size: 34px;
         line-height: 1.05;
     }
@@ -671,7 +719,7 @@ a{
     .vh-hero__copy > p {
         font-size: 16px;
         line-height: 1.15;
-    }
+    } */
 
     .vh-gift-preview {
         top: -15px;
@@ -751,7 +799,6 @@ a{
     gap: 12px;
 }
 
-.vh-section-title span,
 .vh-section-heading__line{
     display: inline-block;
     width: 25px;
@@ -763,20 +810,17 @@ a{
 .vh-section-heading h2{
     margin: 0;
     color: #07378C;
-    font-size: 15px;
+    font-size: 21px;
     line-height: 1;
-    font-weight: 400;
+    font-weight: 100;
     text-transform: uppercase;
-    letter-spacing: .05em;
+    letter-spacing: 0.9px;
+    font-family: Montserrat, sans-serif;
 }
 
 .vh-section-title h2 strong,
 .vh-section-heading h2 strong{
-    font-weight: 800;
-}
-
-.vh-section-title--light span{
-    background: #FDFDFE;
+    font-weight: 700;
 }
 
 .vh-section-title--light h2,
@@ -832,10 +876,45 @@ a{
 
 .vh-featured{
     position: relative;
-    z-index: 1;
-    background: linear-gradient(180deg, #3C66AD 0%, #07378C 100%);
+    /* z-index: 1 */
+    background: linear-gradient(180deg, #3C66AD 0%, #192A47 100%);
     padding: 78px 0 96px;
     overflow: visible;
+}
+
+.guion-vauchis {
+    display: inline-block;
+    width: 30px;
+    height: 4px;
+    margin-bottom: 5px;
+    background: #07378C;
+}
+
+.vh-featured .guion-vauchis{
+    background: #FDFDFE;
+}
+
+.btn-ver-todos {
+    display: inline-flex;
+    align-items: center;
+    justify-content: left;
+    min-width: 166px;
+    height: 32px;
+    padding: 30px 24px;
+    border-radius: 999px;
+    background: #07378C;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    line-height: 1;
+}
+
+.btn-ver-todos:hover {
+    background: #052b6c;
+    color: #fff;
 }
 
 .vh-featured::before{
@@ -848,7 +927,7 @@ a{
 
 .vh-featured .vh-shell{
     position: relative;
-    max-width: 750px;
+    max-width: 85%;
     margin: 0 auto;
 }
 
@@ -866,10 +945,10 @@ a{
     position: relative;
     width: 255px;
     height: 178px;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     overflow: hidden;
-    background: #FDFDFE;
-    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    background: transparent;
+    /* box-shadow: 0 4px 16px rgba(0,0,0,.12); */
     cursor: pointer;
 }
 
@@ -878,11 +957,12 @@ a{
     height: 121px;
     object-fit: cover;
     display: block;
+    border-radius: 8px;
 }
 
 .vh-featured .vh-card-badge{
     position: absolute;
-    top: 20px;
+    top: 7px;
     left: 10px;
     z-index: 2;
     height: 18px;
@@ -906,12 +986,12 @@ a{
     align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
-    background: #FDFDFE;
+    background: transparent;
 }
 
 .vh-featured .vh-business-card__caption h3{
     margin: 0 0 7px;
-    color: #111111;
+    color: #FDFDFE;
     font-size: 11px;
     line-height: 1;
     font-weight: 700;
@@ -920,7 +1000,7 @@ a{
 .vh-featured .vh-business-card__caption p{
     margin: 0;
     max-width: 145px;
-    color: #111111;
+    color: #FDFDFE;
     font-size: 9px;
     line-height: 1.2;
     font-weight: 300;
@@ -929,7 +1009,7 @@ a{
 .vh-featured .vh-business-card__caption small{
     align-self: flex-end;
     white-space: nowrap;
-    color: #111111;
+    color: #FDFDFE;
     font-size: 8px;
     line-height: 1;
     font-weight: 300;
@@ -955,13 +1035,13 @@ a{
 ========================= */
 
 .vh-organizations{
-    background: linear-gradient(120deg, #fffaf0 0%, #f7fdff 45%, #eaf3ff 100%);
+    background: #EEEFF7;
     padding: 58px 0 70px;
     overflow: hidden;
 }
 
 .vh-organizations .vh-shell{
-    max-width: 1066px;
+    max-width: 85%;
     margin: 0 auto;
 }
 
@@ -1013,29 +1093,19 @@ a{
 ========================= */
 
 .vh-inspiration{
-    background: linear-gradient(120deg, #fffaf0 0%, #f4fbff 55%, #eaf3ff 100%);
+    background: #FFFBF0;
     padding: 28px 0 88px;
     overflow: hidden;
 }
 
 .vh-inspiration .vh-shell{
-    max-width: 1066px;
+    max-width: 85%;
     margin: 0 auto;
 }
 
 .vh-inspiration .vh-section-title{
     gap: 14px;
     margin-bottom: 34px;
-}
-
-.vh-inspiration .vh-section-title span{
-    width: 32px;
-    height: 2px;
-}
-
-.vh-inspiration .vh-section-title h2{
-    font-size: 15px;
-    letter-spacing: .08em;
 }
 
 .vh-card-row--influencers{
@@ -1118,7 +1188,7 @@ a{
 }
 
 .vh-explore .vh-shell{
-    max-width: 1066px;
+    max-width: 85%;
     margin: 0 auto;
 }
 
@@ -1243,12 +1313,12 @@ a{
 ========================= */
 
 .vh-collections{
-    background: #FDFDFE;
+    background: #EEEFF7;
     padding: 82px 0 106px;
 }
 
 .vh-collections .vh-shell{
-    max-width: 1066px;
+    max-width: 85%;
     margin: 0 auto;
 }
 
@@ -1257,9 +1327,7 @@ a{
 }
 
 .vh-collections .vh-section-heading h2{
-    font-size: 18px;
     font-weight: 700;
-    letter-spacing: .03em;
 }
 
 .vh-collections-grid{
@@ -1420,10 +1488,10 @@ a{
         padding: 48px 0 60px;
     }
 
-    .vh-explore .vh-shell,
+    /* .vh-explore .vh-shell,
     .vh-collections .vh-shell{
         padding: 0 24px;
-    }
+    } */
 
     .vh-explore .vh-section-heading{
         margin-bottom: 48px;
@@ -1517,10 +1585,10 @@ a{
         overflow: hidden;
     }
 
-    .vh-collections .vh-shell {
+    /* .vh-collections .vh-shell {
         padding-left: 34px;
         padding-right: 0;
-    }
+    } */
 
     .vh-section-heading {
         margin-bottom: 58px;
@@ -1673,13 +1741,13 @@ a{
     color: #fff;
     font-family: Montserrat, sans-serif;
     font-size: 44px;
-    line-height: 1.18;
-    font-weight: 800;
+    line-height: auto;
+    letter-spacing: 0%;
 }
 
-.vh-final-banner__copy h2 em {
-    font-weight: 300;
-    font-style: italic;
+.vh-final-banner__copy h2 span {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
 }
 
 .vh-final-banner__btn {
@@ -1723,6 +1791,16 @@ a{
     .vh-final-banner__copy h2 {
         font-size: 32px;
     }
+}
+
+.vh-mobile-category-card {
+    transform: scale(0.92);
+    transition: transform .25s ease;
+}
+
+.vh-mobile-category-card.active-center {
+    transform: scale(1.08);
+    z-index: 2;
 }
 
 </style>
@@ -1790,5 +1868,39 @@ a{
         setupCarousel($('.vh-inspiration .vh-influencer-carousel-wrap'), '.vh-card-row--influencers', '.vh-round-next--inspiration', '.vh-round-next--inspiration', 4);
         setupCarousel($('.vh-explore .vh-slider-wrap'), '.vh-explore-grid', '.vh-slider-btn--left', '.vh-slider-btn--right', 3);
     });
+
+
+
+    const cards = document.querySelectorAll('.vh-mobile-category-card');
+
+    function updateCenterCard() {
+        const screenCenter = window.innerWidth / 2;
+        let closestCard = null;
+        let closestDistance = Infinity;
+
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.left + rect.width / 2;
+            const distance = Math.abs(screenCenter - cardCenter);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestCard = card;
+            }
+        });
+
+        cards.forEach(card => card.classList.remove('active-center'));
+
+        if (closestCard) {
+            closestCard.classList.add('active-center');
+        }
+    }
+
+    window.addEventListener('scroll', updateCenterCard);
+    window.addEventListener('resize', updateCenterCard);
+
+    document.querySelector('.vh-mobile-categories')?.addEventListener('scroll', updateCenterCard);
+
+    updateCenterCard();
 </script>
 @endpush
