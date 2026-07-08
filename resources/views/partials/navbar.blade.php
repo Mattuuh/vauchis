@@ -245,6 +245,14 @@
             <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
             Con causa
         </a>
+
+        <a href="{{ route('login') }}">
+            <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">Usuario
+        </a>
+
+        <a href="#">
+            <img src="{{ asset('images/icono-Ayuda.png') }}" alt="Ayuda">Ayuda
+        </a>
     </div>
 </div>
 <div class="offcanvas offcanvas-end v-search-panel" tabindex="-1" id="vMobileSearch">
