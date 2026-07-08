@@ -1170,6 +1170,11 @@ class VoucherController extends Controller
             )
             ->first();
 
+        $domicilios = EntidadDomicilio::with('organizacion')
+            ->where('ent_id', $id)
+            ->where('ed_estado', 1)
+            ->get();
+
         if (!$entidad) {
             abort(404);
         }
@@ -1180,7 +1185,7 @@ class VoucherController extends Controller
             ->get();
             // dd($vouchers);
 
-        return view('entidad', compact('entidad', 'vouchers'));
+        return view('entidad', compact('entidad', 'domicilios', 'vouchers'));
     }
 
     public function vouchersPorCategoria(int $id)

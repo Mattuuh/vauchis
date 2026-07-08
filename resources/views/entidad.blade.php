@@ -33,7 +33,9 @@
     @endphp
 
     <section class="vp-brand-hero">
-        <img src="{{ asset($heroImage) }}" alt="{{ $entidad->nombre ?? 'Comercio' }}">
+        @if (isset($heroImage))
+            <img src="{{ asset($heroImage) }}" alt="{{ $entidad->nombre ?? 'Comercio' }}">
+        @endif
     </section>
 
     <section class="vp-brand-info">
@@ -70,14 +72,25 @@
                 </div>
             </div>
 
-            @if(!empty($entidad->org_id))
-                <div class="vp-brand-shopping">
-                    <span>Parte de:</span>
-                    <strong>{{ $entidad->org_id }}</strong>
-                </div>
-            @endif
+            @foreach ($domicilios as $domicilio)
+                @if(!empty($domicilio->org_id)) 
+                    <div class="vp-brand-shopping">
+                        <span>Parte de:</span>{{ $domicilio->organizacion->org_nombre }}
+                    </div>
+                @endif
+            @endforeach
 
-            <div class="vp-brand-meta">
+            @foreach ($domicilios as $domicilio)
+                @if(!empty($domicilio->org_id)) 
+                    <div class="vp-brand-meta">
+                        @if(!empty($domicilio->ed_direccion))
+                            <span>{{ $domicilio->ed_direccion }}</span>
+                        @endif
+                    </div>
+                @endif
+            @endforeach
+
+            {{-- <div class="vp-brand-meta">
                 @if(!empty($entidad->ent_direccion))
                     <span>{{ $entidad->ent_direccion }}</span>
                 @endif
@@ -85,7 +98,7 @@
                 @if(!empty($entidad->schedule))
                     <span>{{ $entidad->schedule }}</span>
                 @endif
-            </div>
+            </div> --}}
 
         </div>
     </section>
@@ -94,7 +107,8 @@
         <div class="vp-brand-shell">
 
             <article class="vp-voucher-box vp-voucher-box--green">
-                <div class="vp-gift-icon">🎁</div>
+                {{-- <div class="vp-gift-icon">🎁</div> --}}
+                <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="" class="vp-gift-icon">
 
                 <div class="vp-voucher-box__content">
                     <h2>Monto fijo</h2>
@@ -106,12 +120,22 @@
                                 ${{ number_format($amount->amount ?? $amount->vou_monto_fijo, 0, ',', '.') }}
                             </a>
                         @endforeach
+                        <a href="#">
+                            ${{ number_format(25000, 0, ',', '.') }}
+                        </a>
+                        <a href="#">
+                            ${{ number_format(50000, 0, ',', '.') }}
+                        </a>
+                        <a href="#">
+                            ${{ number_format(120000, 0, ',', '.') }}
+                        </a>
                     </div>
                 </div>
             </article>
 
             <article class="vp-voucher-box vp-voucher-box--blue">
-                <div class="vp-gift-icon">🎁</div>
+                {{-- <div class="vp-gift-icon">🎁</div> --}}
+                <img src="{{ asset('images/perfildemarca-regalo-azul.png') }}" alt="" class="vp-gift-icon">
 
                 <div class="vp-voucher-box__content">
                     <h2>Monto a elección</h2>
@@ -119,17 +143,18 @@
 
                     <form action="" method="POST" class="vp-custom-form">
                         @csrf
-                        <input type="number" name="amount" min="1" placeholder="Ingresa el monto que quieras regalar">
+                        <input type="text" name="amount" min="1" placeholder="Ingresa el monto que quieras regalar">
                     </form>
                 </div>
             </article>
 
             <section class="vp-products-section">
-                <h2>Productos específicos</h2>
-                <p>Regala vouchers de productos específicos seleccionados por el comercio</p>
+                <h2>Vouchers seleccionados por el comercio</h2>
+                {{-- <p>Regala vouchers de productos específicos seleccionados por el comercio</p> --}}
 
                 <div class="vp-products-wrap">
-                    <button class="vp-products-arrow vp-products-arrow--left" type="button">‹</button>
+                    {{-- <button class="vp-products-arrow vp-products-arrow--left" type="button">‹</button> --}}
+                    <img class="vp-products-arrow vp-products-arrow--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
 
                     <div class="vp-products-grid">
                         @foreach($productVouchers as $voucher)
@@ -149,12 +174,13 @@
                                 </div>
 
                                 <h3>{{ $voucher->vou_nombre ?? $voucher->name }}</h3>
-                                <strong>${{ number_format($price, 0, ',', '.') }}</strong>
+                                <p>${{ number_format($price, 0, ',', '.') }}</p>
                             </a>
                         @endforeach
                     </div>
 
-                    <button class="vp-products-arrow vp-products-arrow--right" type="button">›</button>
+                    {{-- <button class="vp-products-arrow vp-products-arrow--right" type="button">›</button> --}}
+                    <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
                 </div>
             </section>
 
@@ -171,9 +197,9 @@
 
 @push('styles')
     <style>
-        .vp-brand-page {
+.vp-brand-page {
     background: #f7f7f7;
-    color: #06307d;
+    color: #07378C;
     font-family: Montserrat, Arial, sans-serif;
 }
 
@@ -186,6 +212,7 @@
 .vp-brand-hero {
     height: 265px;
     overflow: hidden;
+    background-color: #07378C;
 }
 
 .vp-brand-hero img {
@@ -195,7 +222,7 @@
 }
 
 .vp-brand-info {
-    background: #083f98;
+    background: #07378C;
     color: #fff;
     box-shadow: 0 4px 8px rgba(0,0,0,.18);
 }
@@ -251,14 +278,19 @@
 .vp-brand-main h1 {
     margin: 0;
     font-size: 35px;
-    line-height: 1;
-    font-weight: 800;
+    line-height: 24px;
+    letter-spacing: 0%;
+    font-weight: 700;
+    font-family: Montserrat, sans-serif;
 }
 
 .vp-brand-category,
 .vp-brand-price {
     margin: 5px 0 0;
     font-size: 17px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    font-family: Montserrat, sans-serif;
 }
 
 .vp-brand-shopping {
@@ -266,10 +298,13 @@
     top: 34px;
     right: 24px;
     background: #fff;
-    color: #12285a;
+    color: #000000;
     border-radius: 7px;
     padding: 11px 20px;
-    font-size: 14px;
+    line-height: 24px;
+    /* font-size: 14px; */
+    font-weight: 500;
+    font-family: Montserrat, sans-serif;
     box-shadow: 0 3px 6px rgba(0,0,0,.15);
 }
 
@@ -282,7 +317,7 @@
     gap: 18px;
     margin-top: 24px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .vp-brand-meta span + span::before {
@@ -333,13 +368,13 @@
 .vp-voucher-box--green,
 .vp-voucher-box--green h2,
 .vp-voucher-box--green p {
-    color: #45b883;
+    color: #35B156;
 }
 
 .vp-voucher-box--blue,
 .vp-voucher-box--blue h2,
 .vp-voucher-box--blue p {
-    color: #0074f2;
+    color: #0065FA;
 }
 
 .vp-fixed-options {
@@ -351,19 +386,19 @@
 .vp-fixed-options a {
     min-width: 125px;
     text-align: center;
-    border: 1.5px solid #45b883;
-    color: #45b883;
+    border: 1.5px solid #35B156;
+    color: #35B156;
     background: transparent;
     border-radius: 18px;
     padding: 7px 18px;
     text-decoration: none;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .vp-custom-form input {
     width: min(100%, 430px);
     height: 34px;
-    border: 1.5px solid #0074f2;
+    border: 1.5px solid #0065FA;
     border-radius: 10px;
     background: transparent;
     padding: 0 16px;
@@ -381,16 +416,17 @@
 }
 
 .vp-products-section h2 {
-    margin: 0;
+    /* margin: 0; */
+    margin-bottom: 30px;
     font-size: 27px;
     font-weight: 500;
-    color: #163776;
+    color: #07378C;
 }
 
 .vp-products-section p {
     margin: 2px 0 30px;
-    color: #06307d;
-    font-weight: 700;
+    color: #000000;
+    font-weight: 600;
 }
 
 .vp-products-wrap {
@@ -404,14 +440,15 @@
 }
 
 .vp-product-card {
-    color: #111;
+    color: #000000;
+    font-weight: 400;
     text-decoration: none;
 }
 
 .vp-product-image {
     height: 215px;
     background: #fff;
-    border-radius: 3px;
+    border-radius: 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,.18);
     display: flex;
     align-items: center;
@@ -430,7 +467,7 @@
     margin: 0;
     font-size: 15px;
     line-height: 1.15;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .vp-product-card strong {
@@ -446,9 +483,9 @@
     width: 31px;
     height: 31px;
     border-radius: 50%;
-    border: 1px solid #06307d;
-    background: #fff;
-    color: #06307d;
+    border: 1px solid #07378C;
+    background: transparent;
+    /* color: #06307d; */
     font-size: 25px;
     line-height: 1;
     cursor: pointer;

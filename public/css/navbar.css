@@ -245,12 +245,12 @@ NAVBAR
 .v-navbar__shell {
     position: relative;
     z-index: 9999;
-    max-width: 1260px;
+    max-width: 98%;
     max-height: 389px;
     margin: 0 auto;
     background: #fff;
     border-radius: 0 0 42px 42px;
-    box-shadow: 0 16px 35px rgba(0, 74, 255, .35);
+    /* box-shadow: 0 16px 35px rgba(0, 74, 255, .35); */
     padding: 18px 90px 28px;
     pointer-events: auto;
     transition: all .35s ease;
@@ -459,7 +459,7 @@ NAVBAR
 /* NAVBAR COMPRIMIDO */
 
 .v-navbar.is-scrolled .v-navbar__shell {
-    max-width: 1260px;
+    max-width: 98%;
     min-height: 96px;
     border-radius: 0 0 42px 42px;
     padding: 0 82px;
@@ -467,12 +467,11 @@ NAVBAR
     align-items: center; */
     gap: 64px;
 
-
     display:grid;
     grid-template-columns:
-        150px
-        300px
-        1fr
+        /* 150px */ 15%
+        /* 300px */ 20%
+        1.5fr
         auto;
 
     align-items:center;
