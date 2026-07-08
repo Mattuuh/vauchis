@@ -1213,9 +1213,13 @@ class VoucherController extends Controller
             ->where('cv_id', $id)
             ->where('vou_estado', 1)
             ->get();
-            // dd($vouchers);
+        
+        $entidades = Entidad::where('ent_estado',1)
+            ->with('imagenPrincipal')
+            // ->where('')
+            ->get();
 
-        return view('categoria', compact('categoria', 'rubros', 'vouchers'));
+        return view('categoria', compact('categoria', 'rubros', 'vouchers', 'entidades'));
     }
 
     public function buscar_voucher(Request $request)

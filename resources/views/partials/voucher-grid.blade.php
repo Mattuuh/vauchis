@@ -1,26 +1,26 @@
 <div class="vo-grid">
-    @forelse ($vouchers as $voucher)
+    @forelse ($entidades as $entidad)
         @php
-            $image = optional($voucher->imagenes->first())->vf_img_path;
+            $image = optional($entidad->imagenPrincipal)->ef_img_path;
             $imageUrl = $image 
                 ? asset('storage/' . $image) 
                 : asset('images/default-voucher.png');
 
-            $commerceName = $voucher->entidad->ent_nombre_fantasia ?? 'Comercio';
+            $commerceName = $entidad->ent_nombre_fantasia ?? 'Comercio';
 
-            $price = $voucher->vou_monto_fijo ?? 0;
+            $price = $entidad->vou_monto_fijo ?? 10000;
         @endphp
 
         <article class="vo-card">
-            <a href="{{ route('vouchers.comprar', $voucher->vou_id) }}" class="vo-card-link">
+            <a href="{{ route('vouchers.entidad', $entidad->ent_id) }}" class="vo-card-link">
                 <div class="vo-card-image">
-                    <img src="{{ $imageUrl }}" alt="{{ $voucher->vou_nombre }}">
+                    <img src="{{ $imageUrl }}" alt="{{ $entidad->ent_nombre_fantasia }}">
                 </div>
 
                 <div class="vo-card-body">
                     <div>
                         <h3>{{ $commerceName }}</h3>
-                        <p>{{ $voucher->vou_nombre }}</p>
+                        <p>{{ $entidad->vou_nombre }}</p>
                     </div>
 
                     <span class="vo-price">
@@ -31,7 +31,7 @@
         </article>
     @empty
         <div class="vo-empty">
-            No encontramos vouchers disponibles.
+            No encontramos comercios disponibles.
         </div>
     @endforelse
 </div>
