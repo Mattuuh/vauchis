@@ -32,7 +32,8 @@
                     @if (!empty($rubro->subrubros) && $rubro->subrubros->count())
                         <div class="vo-subnavbar-dropdown">
                             @foreach ($rubro->subrubros as $subrubro)
-                                <a href="{{ route('vouchers.buscar', ['rubro' => $rubro->rub_id,'subrubro' => $subrubro->sub_id]) }}">
+                                {{-- <a href="{{ route('vouchers.buscar', ['rubro' => $rubro->rub_id,'subrubro' => $subrubro->sub_id]) }}"> --}}
+                                <a href="#">
                                     {{ $subrubro->sub_nombre }}
                                 </a>
                             @endforeach
