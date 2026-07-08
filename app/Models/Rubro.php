@@ -32,4 +32,9 @@ class Rubro extends Model
     protected $casts = [
         'rub_fecha_alta' => 'datetime',
     ];
+
+    public function subrubros()
+    {
+        return $this->hasMany(Subrubro::class, 'rub_id', 'rub_id')->where('sub_estado', 1);
+    }
 }

@@ -292,11 +292,11 @@ NAVBAR
     justify-content: center;
 }
 
-.v-navbar__icon img {
+/* .v-navbar__icon img {
     width: 22px;
     height: 22px;
     object-fit: contain;
-}
+} */
 
 .v-navbar__search {
     max-width: 705px;
@@ -379,8 +379,8 @@ NAVBAR
 }
 
 .v-menu-item img{
-    width: 20px;
-    height: 20px;
+    /* width: 20px;
+    height: 20px; */
     transition: .25s;
 }
 
@@ -441,11 +441,11 @@ NAVBAR
     color: #E51281;
 }
 
-.v-navbar__menu img {
+/* .v-navbar__menu img {
     width: 24px;
     height: 24px;
     object-fit: contain;
-}
+} */
 
 .v-navbar__note {
     position: absolute;
@@ -531,10 +531,10 @@ NAVBAR
     font-size: 16px;
 }
 
-.v-navbar.is-scrolled .v-navbar__menu img {
+/* .v-navbar.is-scrolled .v-navbar__menu img {
     width: 22px;
     height: 22px;
-}
+} */
 
 .v-navbar.is-scrolled .v-navbar__note {
     display: none;

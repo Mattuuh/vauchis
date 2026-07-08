@@ -17,12 +17,13 @@
             ? $heroVoucher->imagenes->first()->vf_img_path
             : null;
 
-        $heroImage = $heroVoucherImage
-            ? asset('storage/' . $heroVoucherImage)
-            : $logoEntidad;
         $logo = $entidad->logo
             ? asset('storage/' . $entidad->logo)
             : asset('images/default-brand.png');
+
+        $heroImage = $heroVoucherImage
+            ? asset('storage/' . $heroVoucherImage)
+            : $logo;
 
         $fixedAmounts = $fixedAmounts ?? [];
         $productVouchers = $productVouchers ?? $vouchers ?? [];

@@ -7,21 +7,11 @@
     @include('partials.navbar')
 
     <section class="vo-hero">
-        <div class="vo-shell">
-            <div class="vo-hero-content">
-                <h1>{{ $categoria->nombre }}</h1>
-
-                <form method="GET" action="{{ route('vouchers.buscar') }}" class="vo-search" id="vo-search-form">
-                    <i class="bi bi-search"></i>
-                    <input type="text" name="search" id="vo-search-input" value="{{ request('search') }}" placeholder="Negocio, servicio, categoría..." autocomplete="off">
-                </form>
-            </div>
-        </div>
 
         <button class="vh-help-btn" type="button" aria-label="Ayuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
     </section>
 
-    <nav class="vo-subnavbar">
+    {{-- <nav class="vo-subnavbar">
         <div class="vo-shell vo-subnavbar-inner">
             @foreach ($rubros ?? [] as $rubro)
                 <a href="" class="vo-subnavbar-link {{ request('category') == $rubro->rub_id ? 'active' : '' }}">
@@ -29,12 +19,34 @@
                 </a>
             @endforeach
         </div>
+    </nav> --}}
+
+    <nav class="vo-subnavbar">
+        <div class="vo-shell vo-subnavbar-inner">
+            @foreach ($rubros ?? [] as $rubro)
+                <div class="vo-subnavbar-item">
+                    <a href="" class="vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+
+                    @if (!empty($rubro->subrubros) && $rubro->subrubros->count())
+                        <div class="vo-subnavbar-dropdown">
+                            @foreach ($rubro->subrubros as $subrubro)
+                                <a href="{{ route('vouchers.buscar', ['rubro' => $rubro->rub_id,'subrubro' => $subrubro->sub_id]) }}">
+                                    {{ $subrubro->sub_nombre }}
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
     </nav>
 
     <section class="vo-content">
-        <div class="vo-shell vo-layout">
+        <div class="vo-shell ">
 
-            <aside class="vo-filters">
+            {{-- <aside class="vo-filters">
                 <button class="vo-filter-pill">
                     <i class="bi bi-sliders"></i>
                     Filtros
@@ -49,7 +61,7 @@
                     Destacados
                     <span>×</span>
                 </a>
-            </aside>
+            </aside> --}}
 
             @include('partials.voucher-grid', ['vouchers' => $vouchers])
 
@@ -76,21 +88,21 @@
         }
 
         .vo-hero {
-            background: #003b8f;
+            background: #002870;
             min-height: 250px;
             color: #fff;
             position: relative;
             overflow: hidden;
         }
 
-        .vo-hero::after {
+        /* .vo-hero::after {
             content: "";
             position: absolute;
             inset: 0;
             background: url("../images/hero-objetos-bg.png") right center / contain no-repeat;
             opacity: .18;
             pointer-events: none;
-        }
+        } */
 
         .vo-hero-content {
             position: relative;
@@ -178,7 +190,7 @@
 
         .vo-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 22px 28px;
         }
 
@@ -321,7 +333,7 @@
             }
 
             .vo-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 18px;
             }
 
@@ -331,21 +343,28 @@
         }
 
 .vo-hero {
-    background: #003b8f;
-    min-height: 260px;
+    background: 
+    @if (isset($categoria->id) && 1 == $categoria->id)
+        #002870;
+    @elseif (isset($categoria->id) && 2 == $categoria->id)
+        #35B156;
+    @else
+        #E51281;
+    @endif;
+    min-height: 100px;
     color: #fff;
     position: relative;
     overflow: hidden;
 }
 
-.vo-hero::after {
+/* .vo-hero::after {
     content: "";
     position: absolute;
     inset: 0;
     background: url("../images/hero-objetos-bg.png") right center / contain no-repeat;
     opacity: .22;
     pointer-events: none;
-}
+} */
 
 .vo-hero-content {
     position: relative;
@@ -400,9 +419,16 @@
     position: sticky;
     top: 0;
     z-index: 90;
-    background: #003b8f;
+    background: 
+    @if (isset($categoria->id) && 1 == $categoria->id)
+        #002870;
+    @elseif (isset($categoria->id) && 2 == $categoria->id)
+        #35B156;
+    @else
+        #E51281;
+    @endif;
     border-top: 1px solid rgba(255, 255, 255, .08);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, .14);
+    /* box-shadow: 0 6px 14px rgba(0, 0, 0, .14); */
 }
 
 .vo-subnavbar-inner {
@@ -450,7 +476,7 @@
 
 @media (max-width: 768px) {
     .vo-hero {
-        min-height: 230px;
+        min-height: 80px;
     }
 
     .vo-hero-content {
@@ -477,7 +503,7 @@
 
 
 /* Bolsa de fondo */
-.vo-hero::before {
+/* .vo-hero::before {
     content: "";
     position: absolute;
     top: -100px;
@@ -485,7 +511,7 @@
     width: 600px;
     height: 600px;
 
-    /* background-image: url("../images/ic-objetos.svg"); */
+    background-image: url("../images/ic-objetos.svg");
     background-image: url("../{{ $categoria->logo }}");
     background-repeat: no-repeat;
     background-position: center;
@@ -494,7 +520,7 @@
     opacity: .18;
     pointer-events: none;
     z-index: 1;
-}
+} */
 
 .vo-shell,
 .vo-hero-content {
@@ -529,6 +555,117 @@
         opacity: .45;
         pointer-events: none;
     }
+
+    
+
+
+.vo-subnavbar {
+    position: relative;
+    z-index: 100;
+}
+
+.vo-subnavbar-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.vo-subnavbar-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.vo-subnavbar-inner {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    /* overflow: visible; */
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* width: max-content; */
+    min-width: 100%;
+}
+
+.vo-subnavbar-item {
+    flex: 0 0 auto;
+}
+
+.vo-subnavbar-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-radius: 999px;
+    background: transparent;
+    /* color: #1f1f1f; */
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: Montserrat, sans-serif;
+    letter-spacing: 0%;
+    line-height: auto;
+}
+
+.vo-subnavbar-link:hover,
+.vo-subnavbar-link.active {
+    background: #6fa0ee;
+    color: #fff;
+}
+
+.vo-subnavbar-dropdown {
+    /* position: absolute;
+    top: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 200px;
+    padding: 14px 18px;
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,.18);
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center; */
+    
+    position: fixed;
+    display: none;
+    min-width: 200px;
+    padding: 14px 18px;
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,.18);
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    z-index: 9999;
+}
+
+/* .vo-subnavbar-item:hover .vo-subnavbar-dropdown { */
+.vo-subnavbar-dropdown.is-open {
+    display: flex;
+}
+
+.vo-subnavbar-dropdown a {
+    color: #111;
+    font-size: 16px;
+    line-height: 1.35;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.vo-subnavbar-dropdown a:hover {
+    color: #0A5CFF;
+}
+
+.vo-subnavbar-inner {
+    cursor: grab;
+    user-select: none;
+}
+
+.vo-subnavbar-inner.is-dragging {
+    cursor: grabbing;
+}
     </style>
 @endpush
 
@@ -587,5 +724,110 @@
 //         });
 //     }
 // });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const items = document.querySelectorAll('.vo-subnavbar-item');
+    let currentDropdown = null;
+
+    function closeDropdown() {
+        if (currentDropdown) {
+            currentDropdown.classList.remove('is-open');
+            currentDropdown = null;
+        }
+    }
+
+    items.forEach(item => {
+        const link = item.querySelector('.vo-subnavbar-link');
+        const dropdown = item.querySelector('.vo-subnavbar-dropdown');
+
+        if (!link || !dropdown) return;
+
+        document.body.appendChild(dropdown);
+
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const wasOpen = dropdown.classList.contains('is-open');
+
+            closeDropdown();
+
+            if (!wasOpen) {
+                const rect = link.getBoundingClientRect();
+
+                dropdown.style.top = `${rect.bottom + 12}px`;
+                dropdown.style.left = `${rect.left + rect.width / 2}px`;
+                dropdown.style.transform = 'translateX(-50%)';
+
+                dropdown.classList.add('is-open');
+                currentDropdown = dropdown;
+            }
+        });
+
+        dropdown.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+
+    document.addEventListener('click', closeDropdown);
+    window.addEventListener('scroll', closeDropdown);
+    window.addEventListener('resize', closeDropdown);
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const slider = document.querySelector('.vo-subnavbar-inner');
+
+    if (!slider) return;
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let moved = false;
+
+    slider.addEventListener('mousedown', function (e) {
+        isDown = true;
+        moved = false;
+        slider.classList.add('is-dragging');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', function () {
+        isDown = false;
+        slider.classList.remove('is-dragging');
+    });
+
+    slider.addEventListener('mouseup', function () {
+        isDown = false;
+        slider.classList.remove('is-dragging');
+    });
+
+    slider.addEventListener('mousemove', function (e) {
+        if (!isDown) return;
+
+        e.preventDefault();
+
+        const x = e.pageX - slider.offsetLeft;
+        const walk = x - startX;
+
+        if (Math.abs(walk) > 5) {
+            moved = true;
+        }
+
+        slider.scrollLeft = scrollLeft - walk;
+    });
+
+    slider.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (moved) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    });
+});
 </script>
 @endpush

@@ -18,4 +18,9 @@ class Subrubro extends Model
         'sub_estado',
         'sub_estado2',
     ];
+
+    public function rubro()
+    {
+        return $this->belongsTo(Rubro::class, 'rub_id', 'rub_id');
+    }
 }

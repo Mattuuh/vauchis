@@ -157,14 +157,14 @@
             </a>
 
             <div class="v-navbar__actions">
-                <a href="#" class="v-navbar__icon">
-                    {{-- <img src="{{ asset('images/icon-user.png') }}" alt="Usuario"> --}}
-                    <i class="bi bi-person"></i>
+                <a href="{{ route('login') }}" class="v-navbar__icon">
+                    <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
+                    {{-- <i class="bi bi-person"></i> --}}
                 </a>
 
                 <a href="#" class="v-navbar__icon">
-                    {{-- <img src="{{ asset('images/icon-help.png') }}" alt="Ayuda"> --}}
-                    <i class="bi bi-question"></i>
+                    <img src="{{ asset('images/icono-Ayuda.png') }}" alt="Ayuda">
+                    {{-- <i class="bi bi-question"></i> --}}
                 </a>
             </div>
         </div>
@@ -178,21 +178,21 @@
         <ul class="v-navbar__menu">
             <li>
                 <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
                     Objetos
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
                     Experiencias
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/icon-causa.png') }}" alt="">
+                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
                     Con causa
                 </a>
             </li>
@@ -232,17 +232,17 @@
         <h3>Menú</h3>
 
         <a href="{{ route('vouchers.categoria', 1) }}">
-            <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+            <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
             Objetos
         </a>
 
         <a href="{{ route('vouchers.categoria', 2) }}">
-            <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+            <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
             Experiencias
         </a>
 
         <a href="{{ route('vouchers.categoria', 3) }}">
-            <img src="{{ asset('images/icon-causa.png') }}" alt="">
+            <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
             Con causa
         </a>
     </div>

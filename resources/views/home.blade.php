@@ -9,7 +9,7 @@
     <section class="vh-hero">
 
         <div class="vh-mobile-hero">
-            <img src="{{ asset('images/regalitos-hero-vauchis.png') }}" alt="" class="vh-mobile-hero-img">
+            <img src="{{ asset('images/regalos-azules-mobile-home.png') }}" alt="" class="vh-mobile-hero-img">
 
             <h1>¡Elegí qué regalar!</h1>
 
@@ -96,7 +96,8 @@
             </div>
 
             <div class="vh-slider-wrap">
-                <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior">‹</button>
+                {{-- <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior"><img src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda"></button> --}}
+                <img class="vh-slider-btn vh-slider-btn--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
                 <div class="vh-carousel-viewport" data-carousel="brands">
                     <div class="vh-card-row vh-card-row--brands">
                     @foreach ($featuredBrands as $brand)
@@ -117,7 +118,8 @@
                     @endforeach
                     </div>
                 </div>
-                <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente">›</button>
+                {{-- <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente"><img src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha"></button> --}}
+                <img class="vh-slider-btn vh-slider-btn--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
             </div>
         </div>
     </section>
@@ -201,7 +203,8 @@
             </div>
 
             <div class="vh-slider-wrap">
-                <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior">‹</button>
+                {{-- <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior"><img src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda"></button> --}}
+                <img class="vh-slider-btn vh-slider-btn--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
 
                 <div class="vh-carousel-viewport" data-carousel="explore">
                     <div class="vh-explore-grid">
@@ -244,7 +247,8 @@
                     </div>
                 </div>
 
-                <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente">›</button>
+                {{-- <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente"><img src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha"></button> --}}
+                <img class="vh-slider-btn vh-slider-btn--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
             </div>
         </div>
     </section>
@@ -351,6 +355,18 @@ a{
     position: relative;
     z-index: 1;
     background: #EEEFF7;
+}
+
+.vh-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../images/home-regalo-1.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+    opacity: .80;
+    pointer-events: none;
 }
 
 .vh-mobile-hero {
@@ -554,7 +570,7 @@ a{
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-top: 60px;
+        margin-top: 100px;
     }
 
     .vh-mobile-hero-img {
@@ -882,6 +898,21 @@ a{
     overflow: visible;
 }
 
+.vh-featured::before {
+    content: "";
+    position: absolute;
+    top: -180px;
+    right: 0;
+    bottom: -96px;
+    left: 0;
+    background-image: url("../images/destacados-1.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+    opacity: 1;
+    pointer-events: none;
+}
+
 .guion-vauchis {
     display: inline-block;
     width: 30px;
@@ -917,13 +948,13 @@ a{
     color: #fff;
 }
 
-.vh-featured::before{
+/* .vh-featured::before{
     content: '';
     position: absolute;
     inset: 0;
     background: rgba(255,255,255,.04);
     pointer-events: none;
-}
+} */
 
 .vh-featured .vh-shell{
     position: relative;
@@ -1017,17 +1048,17 @@ a{
 
 .vh-featured .vh-slider-btn{
     top: 63px;
-    width: 27px;
-    height: 27px;
-    border: 2px solid #FDFDFE;
+    width: 4%;
+    /* height: 27px; */
+    /* border: 2px solid #FDFDFE; */
     background: transparent;
-    color: #FDFDFE;
-    font-size: 32px;
-    line-height: 20px;
-    font-weight: 200;
+    /* color: #FDFDFE; */
+    /* font-size: 32px; */
+    /* line-height: 20px; */
+    /* font-weight: 200; */
 }
 
-.vh-featured .vh-slider-btn--left{ left: -38px; }
+.vh-featured .vh-slider-btn--left{ left: -48px; }
 .vh-featured .vh-slider-btn--right{ right: -38px; }
 
 /* =========================
@@ -1701,8 +1732,8 @@ a{
 
 .vh-final-banner {
     position: relative;
-    background: #3f6fb3;
-    padding: 76px 0 62px;
+    background: #3C66AD;
+    /* padding: 76px 0 62px; */
     overflow: hidden;
 }
 
@@ -1710,11 +1741,11 @@ a{
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("../images/patron-regalos.png");
+    background-image: url("../images/comunidad-vauhcis-1.png");
     background-repeat: no-repeat;
     background-position: right center;
     background-size: contain;
-    opacity: .16;
+    opacity: .80;
     pointer-events: none;
 }
 

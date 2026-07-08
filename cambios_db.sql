@@ -253,3 +253,100 @@ CREATE TABLE `logs_auth` (
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+-- [2026-07-08]
+INSERT INTO `rubros` (`rub_id`, `cv_id`, `rub_codigo`, `rub_codigo_alternativo1`, `rub_codigo_alternativo2`, `rub_nombre`, `rub_descripcion`, `rub_descripcion_corta`, `rub_orden_visual`, `rub_estado`, `rub_estado2`, `rub_img_nombre_legible`, `rub_img_name`, `rub_img_path`, `rub_img_format`, `rub_img_size`, `rub_fecha_alta`, `rub_usu_alta`, `rub_fecha_mod`, `rub_usu_mod`, `rub_fecha_baja`, `rub_usu_baja`) VALUES
+(1, 1, 'DEF', NULL, NULL, 'Deportes & Outdoor', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(2, 1, 'DEF', NULL, NULL, 'Moda & Accesorios', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(3, 1, 'DEF', NULL, NULL, 'Algo rico', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(4, 1, 'DEF', NULL, NULL, 'Libros, Juegos & Regalos', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(5, 1, 'DEF', NULL, NULL, 'Deco y Hogar', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(6, 1, 'DEF', NULL, NULL, 'Espacio Tech ', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(7, 1, 'DEF', NULL, NULL, 'Futura mamá y Recién nacidos', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(8, 1, 'DEF', NULL, NULL, 'Mascotas', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(9, 1, 'DEF', NULL, NULL, 'Campo y Caballos', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(10, 1, 'DEF', NULL, NULL, 'Arte', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+
+INSERT INTO `rubros` (`rub_id`, `cv_id`, `rub_codigo`, `rub_codigo_alternativo1`, `rub_codigo_alternativo2`, `rub_nombre`, `rub_descripcion`, `rub_descripcion_corta`, `rub_orden_visual`, `rub_estado`, `rub_estado2`, `rub_img_nombre_legible`, `rub_img_name`, `rub_img_path`, `rub_img_format`, `rub_img_size`, `rub_fecha_alta`, `rub_usu_alta`, `rub_fecha_mod`, `rub_usu_mod`, `rub_fecha_baja`, `rub_usu_baja`) VALUES
+(11, 2, 'DEF', NULL, NULL, 'Belleza & Bienestar', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(12, 2, 'DEF', NULL, NULL, 'Salidas Gourmet', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(13, 2, 'DEF', NULL, NULL, 'Escapadas', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(14, 2, 'DEF', NULL, NULL, 'Aventura', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(15, 2, 'DEF', NULL, NULL, 'Aprender & Crear', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+
+INSERT INTO `rubros` (`rub_id`, `cv_id`, `rub_codigo`, `rub_codigo_alternativo1`, `rub_codigo_alternativo2`, `rub_nombre`, `rub_descripcion`, `rub_descripcion_corta`, `rub_orden_visual`, `rub_estado`, `rub_estado2`, `rub_img_nombre_legible`, `rub_img_name`, `rub_img_path`, `rub_img_format`, `rub_img_size`, `rub_fecha_alta`, `rub_usu_alta`, `rub_fecha_mod`, `rub_usu_mod`, `rub_fecha_baja`, `rub_usu_baja`) VALUES
+(16, 3, 'DEF', NULL, NULL, 'ONGs', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(17, 3, 'DEF', NULL, NULL, 'Artesanos', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+
+
+
+INSERT INTO `subrubros` (`sub_id`, `rub_id`, `sub_codigo`, `sub_nombre`, `sub_estado`, `sub_estado2`, `sub_fecha_alta`, `sub_usu_alta`, `sub_fecha_mod`, `sub_usu_mod`, `sub_fecha_baja`, `sub_usu_baja`) VALUES
+(1, 1, 'DEF', 'Outdoor', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Deportes', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Especiales', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Adultos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Jóvenes', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Bebes y Niños ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Joyas y Bijou', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Bolsos y Carteras', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Tejidos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Complementos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 2, 'DEF', 'Beauty', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 3, 'DEF', 'Chocolates y Dulces', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 3, 'DEF', 'Gourmet', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 3, 'DEF', 'Natural ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 3, 'DEF', 'Vinos ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 3, 'DEF', 'Café y Té ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 4, 'DEF', 'Juegos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 4, 'DEF', 'Librería y Regalos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 4, 'DEF', 'Lectura', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 4, 'DEF', 'Mundo Creativo', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 4, 'DEF', 'Flores ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Deco Casa', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Mesa y Bazar', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Complementos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Tecnología ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Jardines y más', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Cocina y Parrilla', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Adornos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 5, 'DEF', 'Accesorios', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 8, 'DEF', 'Celular', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 8, 'DEF', 'Audio', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 8, 'DEF', 'Fotografia ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 8, 'DEF', 'Hogar Tech', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 8, 'DEF', 'Innovacion', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 9, 'DEF', 'Indumentaria', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 9, 'DEF', 'Talabartería ', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 10, 'DEF', 'Cuadros y pinturas', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 10, 'DEF', 'Cerámica', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 10, 'DEF', 'Imágenes y Escultura', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+
+
+INSERT INTO `subrubros` (`sub_id`, `rub_id`, `sub_codigo`, `sub_nombre`, `sub_estado`, `sub_estado2`, `sub_fecha_alta`, `sub_usu_alta`, `sub_fecha_mod`, `sub_usu_mod`, `sub_fecha_baja`, `sub_usu_baja`) VALUES
+(NULL, 1, 'DEF', 'Masajes y Spa', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Cuidado Personal', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Estetica', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Salta', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Alrededores Salta', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Alrededores Jujuy', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Alrededores Salta', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Valles Calchaquies', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'La Quebrada', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Buenos Aires', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Cordoba', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Mendoza', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Litoral', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Patagonia', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Entretenimiento', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Caballos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Agua', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Naturaleza (o Senderos)', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Explorar', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Cocina', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Jardines', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Vinos', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Arte', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Letras', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Musica', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(NULL, 1, 'DEF', 'Vida Activa', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+

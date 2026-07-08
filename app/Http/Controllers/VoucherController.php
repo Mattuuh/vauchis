@@ -1199,7 +1199,8 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        $rubros = Rubro::where('cv_id', $id)
+        $rubros = Rubro::with('subrubros')
+            ->where('cv_id', $id)
             ->where('rub_estado', 1)
             ->get();
 
