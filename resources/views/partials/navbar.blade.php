@@ -207,6 +207,105 @@
 </nav>
 @endif
 
+
+@if (session('auth.tu_id') == 1)
+
+    {{-- NAVBAR ADMIN MOBILE --}}
+    <nav class="v-mobile-navbar">
+        <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileAdminMenu">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <a href="{{ route('home') }}" class="v-mobile-navbar__logo">
+            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+        </a>
+
+        {{-- <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="v-mobile-navbar__btn">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </form> --}}
+        <button type="button" class="v-mobile-navbar__btn"></button>
+    </nav>
+
+    <div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileAdminMenu">
+        <div class="v-mobile-panel__header">
+            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+            <button type="button" data-bs-dismiss="offcanvas">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="v-mobile-panel__body">
+            <h3>Administrador</h3>
+
+            <a href="{{ route('home') }}">
+                <i class="bi bi-house-door"></i>
+                Inicio
+            </a>
+
+            <a href="{{ route('entidades.index') }}">
+                <i class="bi bi-shop"></i>
+                Entidades
+            </a>
+
+            <a href="{{ route('tipos-entidad.index') }}">
+                <i class="bi bi-tags"></i>
+                Tipos de Entidad
+            </a>
+
+            <a href="{{ route('rubros.index') }}">
+                <i class="bi bi-grid"></i>
+                Rubros
+            </a>
+
+            <a href="{{ route('vouchers.index') }}">
+                <i class="bi bi-ticket-perforated"></i>
+                Vouchers
+            </a>
+
+            <a href="{{ route('modalidades.index') }}">
+                <i class="bi bi-sliders"></i>
+                Modalidades
+            </a>
+
+            <a href="{{ route('etiquetas.index') }}">
+                <i class="bi bi-bookmark"></i>
+                Etiquetas
+            </a>
+
+            <a href="{{ route('voucher_plantillas.index') }}">
+                <i class="bi bi-file-earmark-richtext"></i>
+                Plantillas
+            </a>
+
+            <a href="{{ route('biblioteca_fondos.create') }}">
+                <i class="bi bi-image"></i>
+                Fondos
+            </a>
+
+            <a href="{{ route('organizacion.index') }}">
+                <i class="bi bi-people"></i>
+                Organizaciones
+            </a>
+
+            <a href="{{ route('influencers.index') }}">
+                <i class="bi bi-person-video3"></i>
+                Influencers
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" class="mt-4">
+                @csrf
+                <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Salir
+                </button>
+            </form>
+        </div>
+    </div>
+
+@else
 <nav class="v-mobile-navbar">
     <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu">
         <i class="bi bi-list"></i>
@@ -273,3 +372,4 @@
         <a href="#">Hotel Salta</a>
     </div>
 </div>
+@endif
