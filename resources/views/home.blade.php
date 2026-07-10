@@ -331,7 +331,7 @@
 }
 
 .vh-shell{
-    width: min(100% - 128px, 1310px);
+    /* width: min(100% - 128px, 1310px); */
     margin-inline: auto;
 }
 
@@ -1069,6 +1069,7 @@ a{
     background: #EEEFF7;
     padding: 58px 0 70px;
     overflow: hidden;
+    min-height: 100vh;
 }
 
 .vh-organizations .vh-shell{
@@ -1089,8 +1090,8 @@ a{
 }
 
 .vh-logo-bubble{
-    width: 220px;
-    height: 220px;
+    min-width: 50vh;
+    min-height: 50vh;
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
@@ -1705,8 +1706,8 @@ a{
 
     .vh-logo-bubble {
         flex: 0 0 175px;
-        width: 175px;
-        height: 175px;
+        min-width: 40vh;
+        min-height: 40vh;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -1716,8 +1717,8 @@ a{
     }
 
     .vh-logo-bubble img {
-        max-width: 120px;
-        max-height: 120px;
+        max-width: 100%;
+        max-height: 100%;
         object-fit: contain;
     }
 

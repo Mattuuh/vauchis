@@ -706,3 +706,57 @@ NAVBAR
         z-index: 1050;
     }
 }
+
+.v-navbar__user{
+    position: relative;
+}
+
+.v-navbar__user-toggle{
+    display: flex;
+    align-items: center;
+    color: #0d3c7c;
+}
+
+.v-navbar__user-info{
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.v-navbar__user-name{
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.v-navbar__user-email{
+    font-size: 12px;
+    color: #7a7a7a;
+}
+
+.v-navbar__user .dropdown-menu{
+    min-width: 240px;
+    border-radius: 16px;
+}
+
+.v-navbar__actions{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.v-navbar__icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+}
+
+.v-navbar__icon::after{
+    display:none; /* Oculta la flecha del dropdown */
+}
+
+.v-navbar__actions .dropdown-menu{
+    margin-top:12px;
+    min-width:250px;
+    border-radius:18px;
+}

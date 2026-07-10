@@ -2,6 +2,70 @@
 
 @section('title', 'Nuevo tipo de entidad')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a crear el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            nombre: {
+                required: true,
+            },
+            observaciones: {
+                required: false,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
 
 @section('content')
 
@@ -40,14 +104,7 @@
                 <!-- NOMBRE -->
                 <div class="col-12">
                     <label class="form-label required-label">Nombre</label>
-                    <input 
-                        type="text" 
-                        name="nombre" 
-                        class="form-control field-required"
-                        value="{{ old('nombre') }}"
-                        placeholder="Ej: Empresa, Persona, ONG..."
-                        required
-                    >
+                    <input type="text" name="nombre" class="form-control field-required" value="{{ old('nombre') }}" placeholder="Ej: Empresa, Persona, ONG..." required>
 
                     @error('nombre')
                         <div class="text-required">{{ $message }}</div>
@@ -57,12 +114,7 @@
                 <!-- OBSERVACIONES -->
                 <div class="col-12">
                     <label class="form-label">Observaciones</label>
-                    <textarea 
-                        name="observaciones" 
-                        class="form-control" 
-                        rows="3"
-                        placeholder="Notas internas o descripción opcional..."
-                    >{{ old('observaciones') }}</textarea>
+                    <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
 
                     @error('observaciones')
                         <div class="text-required">{{ $message }}</div>

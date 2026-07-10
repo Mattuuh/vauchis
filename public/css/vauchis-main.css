@@ -980,6 +980,7 @@ FOOTER
 
 .is-invalid {
     border-color: #dc3545 !important;
+    color: #dc3545 !important;
 }
 
 .is-valid {

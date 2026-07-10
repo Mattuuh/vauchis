@@ -2,6 +2,159 @@
 
 @section('title', 'Nueva entidad')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
+
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a crear el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            tipo_entidad_id: {
+                required: true,
+            },
+            tipo_resp_id: {
+                required: true,
+            },
+            tipo_doc_id: {
+                required: true,
+            },
+            com_documento: {
+                required: true,
+                number: true,
+                minlength: 6
+            },
+            com_nombre_fantasia: {
+                required: true,
+            },
+            com_razon_social: {
+                required: true,
+            },
+            com_dom_fiscal: {
+                required: true,
+            },
+            com_instagram: {
+                required: false,
+            },
+            com_tiktok: {
+                required: false,
+            },
+            "logos[]": {
+                required: true,
+            },
+            "sucursales[][org_id]": {
+                required: false,
+            },
+            "sucursales[][cd_canje]": {
+                required: true,
+            },
+            "sucursales[][pais_id]": {
+                required: true,
+            },
+            "sucursales[][provincia_id]": {
+                required: true,
+            },
+            "sucursales[][cd_ciudad]": {
+                required: true,
+            },
+            "sucursales[][cd_barrio]": {
+                required: true,
+            },
+            "sucursales[][cd_direccion]": {
+                required: true,
+            },
+            "sucursales[][cd_codigo_postal]": {
+                required: true,
+            },
+            "sucursales[][cd_telefono1]": {
+                required: true,
+                number: true,
+                minlength: 8
+            },
+            "sucursales[][cd_telefono2]": {
+                required: false,
+                // number: true,
+                // minlength: 8
+            },
+            "sucursales[][cd_email1]": {
+                required: true,
+                email: true,
+                minlength: 5
+            },
+            "sucursales[][cd_email2]": {
+                required: false,
+                // email: true,
+                // minlength: 5
+            },
+            "sucursales[][cd_descripcion_publica]": {
+                required: true,
+            },
+            "sucursales[][cd_descripcion_interna]": {
+                required: true,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/entidades/entidades.css') }}">
 @endpush
@@ -12,7 +165,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>

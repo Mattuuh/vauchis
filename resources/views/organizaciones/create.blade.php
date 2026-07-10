@@ -2,13 +2,135 @@
 
 @section('title', 'Nueva organizacion')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a crear el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                } else {
+                    return false;
+                }
+            });
+        },
+        rules: {
+            tipo_doc_id: {
+                required: true,
+            },
+            f_documento: {
+                required: true,
+                number: true,
+                minlength: 6
+            },
+            f_nombre_fantasia: {
+                required: true,
+            },
+            f_nombre: {
+                required: true,
+            },
+            f_razon_social: {
+                required: true,
+            },
+            logo: {
+                required: true,
+            },
+            f_pais_id: {
+                required: true,
+            },
+            f_provincia_id: {
+                required: true,
+            },
+            f_ciudad: {
+                required: true,
+            },
+            f_codigo_postal: {
+                required: true,
+            },
+            f_direccion: {
+                required: true,
+            },
+            f_email1: {
+                required: true,
+                email: true,
+                minlength: 5
+            },
+            f_email2: {
+                required: true,
+                email: true,
+                minlength: 5
+            },
+            f_telefono1: {
+                required: true,
+                number: true,
+                minlength: 8
+            },
+            f_telefono2: {
+                required: true,
+                number: true,
+                minlength: 8
+            },
+            f_descripcion_publica: {
+                required: true,
+            },
+            f_descripcion_interna: {
+                required: true,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -34,7 +156,7 @@
             <div class="row g-2">
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Tipo de documento</label>
+                    <label class="form-label required-label" for="tipo_doc_id">Tipo de documento</label>
                     <select name="tipo_doc_id" class="form-select field-required" required>
                         <option value="">Selecciona el tipo de documento</option>
                         @foreach($tiposDocumento as $id => $nombre)
@@ -150,21 +272,9 @@
                         <label class="form-label">Mapa</label>
 
                         <div class="col-12 col-md-3" hidden>
-                            <input
-                                type="text"
-                                name="f_latitud"
-                                id="f_latitud"
-                                value="{{ old('f_latitud', '-24.782127') }}"
-                                hidden
-                            >
+                            <input type="text" name="f_latitud" id="f_latitud" value="{{ old('f_latitud', '-24.782127') }}" hidden>
 
-                            <input
-                                type="text"
-                                name="f_longitud"
-                                id="f_longitud"
-                                value="{{ old('f_longitud', '-65.423198') }}"
-                                hidden
-                            >
+                            <input type="text" name="f_longitud" id="f_longitud" value="{{ old('f_longitud', '-65.423198') }}" hidden>
                         </div>
 
                         <div id="map"

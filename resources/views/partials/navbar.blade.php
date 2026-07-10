@@ -100,40 +100,98 @@
                 <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
             </a>
 
+            {{-- Acciones --}}
             <div class="v-navbar__actions">
-                <a href="#" class="v-navbar__icon">
-                    <img src="{{ asset('images/icon-user.png') }}" alt="Usuario">
-                </a>
+
+                {{-- Usuario --}}
+                <div class="dropdown">
+                    <a href="#"
+                        class="v-navbar__icon dropdown-toggle"
+                        id="mobileUserDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                        <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown">
+
+                        <li class="px-3 py-2 border-bottom">
+                            <div class="fw-semibold">
+                                {{ session('auth.nombre') }}
+                            </div>
+                            <small class="text-muted">
+                                {{ session('auth.email') }}
+                            </small>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="{{ route('vouchers.index') }}">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                Mis vouchers
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="">
+                                <i class="bi bi-person me-2"></i>
+                                Editar perfil
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="bi bi-heart me-2"></i>
+                                Favoritos
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li class="px-2 pb-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <button type="submit"
+                                    class="btn btn-danger w-100 rounded-pill">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    Salir
+                                </button>
+                            </form>
+                        </li>
+
+                    </ul>
+                </div>
 
                 <a href="#" class="v-navbar__icon">
-                    <img src="{{ asset('images/icon-help.png') }}" alt="Ayuda">
+                    <img src="{{ asset('images/icono-Ayuda.png') }}" alt="Ayuda">
                 </a>
             </div>
         </div>
 
         <div class="v-navbar__search">
-            <img src="{{ asset('images/icon-search.png') }}" alt="Buscar">
+            <i class="bi bi-search"></i>
             <input type="text" placeholder="Buscá tu vauchis...">
         </div>
 
         <ul class="v-navbar__menu">
             <li>
-                <a href="{{ route('vouchers.categoria', 1) }}" class="active">
-                    <img src="{{ asset('images/icon-objetos.png') }}" alt="">
+                <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
                     Objetos
                 </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 2) }}">
-                    <img src="{{ asset('images/icon-experiencias.png') }}" alt="">
+                <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
                     Experiencias
                 </a>
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 3) }}">
-                    <img src="{{ asset('images/icon-causa.png') }}" alt="">
+                <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
+                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
                     Con causa
                 </a>
             </li>
@@ -141,6 +199,7 @@
 
         <div class="v-navbar__note">
             ¡Elegí que regalar!
+            <img src="{{ asset('images/decoracion-flecha.svg') }}" alt="" class="" width="55" height="53">
         </div>
 
     </div>

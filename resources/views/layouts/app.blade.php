@@ -74,34 +74,36 @@
     <script>
     $(document).ready(function () {
 
-        $('#btn_guardar').on('click', function (e) {
-            e.preventDefault();
+        // $('#btn_guardar').on('click', function (e) {
+        //     e.preventDefault();
+        //     if ($('#form_main').valid()) {
 
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Se va a crear el registro",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#5cb85c',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, crear',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
+        //         Swal.fire({
+        //             title: '¿Estás seguro?',
+        //             text: "Se va a crear el registro",
+        //             icon: 'warning',
+        //             showCancelButton: true,
+        //             confirmButtonColor: '#5cb85c',
+        //             cancelButtonColor: '#d33',
+        //             confirmButtonText: 'Sí, crear',
+        //             cancelButtonText: 'Cancelar'
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
 
-                    // Loader opcional
-                    Swal.fire({
-                        title: 'Procesando...',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
+        //                 // Loader opcional
+        //                 Swal.fire({
+        //                     title: 'Procesando...',
+        //                     allowOutsideClick: false,
+        //                     didOpen: () => {
+        //                         Swal.showLoading();
+        //                     }
+        //                 });
 
-                    $('#form_main').submit();
-                }
-            });
-        });
+        //                 $('#form_main').submit();
+        //             }
+        //         });
+        //     }
+        // });
 
         $('#btn_actualizar').on('click', function (e) {
             e.preventDefault();
@@ -162,7 +164,11 @@
                 toggleNavbar();
                 window.addEventListener('scroll', toggleNavbar);
             @else
-                navbar.classList.add('is-scrolled');
+                @if (session('auth.tu_id')==1)
+                    
+                @else
+                    navbar.classList.add('is-scrolled');
+                @endif
             @endif
         });
     </script>
