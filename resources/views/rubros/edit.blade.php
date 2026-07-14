@@ -86,7 +86,7 @@
 
 <main class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -103,7 +103,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('rubros.update', $rubro->rub_id) }}">
+    <form method="POST" action="{{ route('rubros.update', $rubro->rub_id) }}" id="form_main">
         @csrf
         @method('PUT')
 
@@ -129,15 +129,23 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Nombre publico:</label>
-                    <input
-                        type="text"
-                        name="f_nombre"
-                        class="form-control field-required"
-                        value="{{ old('f_nombre', $rubro->rub_nombre) }}"
-                        required
-                    >
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre', $rubro->rub_nombre) }}" required>
 
                     @error('f_nombre')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Categoría:</label>
+                    <select name="f_categoria" class="form-select">
+                        <option value="">Selecciona una categoria</option>
+                        @foreach($categorias as $id => $nombre)
+                            <option value="{{ $id }}" {{ $rubro->cv_id==$id ? 'selected' : '' }}>{{ $nombre }}</option>
+                        @endforeach
+                    </select>
+
+                    @error('f_categoria')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>

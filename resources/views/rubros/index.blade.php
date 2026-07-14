@@ -104,7 +104,8 @@ $(document).ready(function () {
                         <thead>
                             <tr class="commerce-table-head">
                                 <th style="width: 40px">ID</th>
-                                <th style="width: 160px">NOMBRE</th>
+                                <th style="width: 100px">NOMBRE</th>
+                                <th style="width: 60px">CATEGORIA</th>
                                 <th style="width: 60px">FECHA DE ALTA</th>
                                 <th style="width: 60px" class="text-center">ESTADO</th>
                                 <th style="width: 60px">ACCIONES</th>
@@ -121,6 +122,11 @@ $(document).ready(function () {
                                     <td class="commerce-col" data-label="Nombre">
                                         <span class="commerce-mobile-label">Nombre</span>
                                         <span>{{ $rubro['rub_nombre'] }}</span>
+                                    </td>
+
+                                    <td class="commerce-col" data-label="categoria">
+                                        <span class="commerce-mobile-label">Categoria</span>
+                                        <span>{{ $rubro['categoria']['cv_nombre'] }}</span>
                                     </td>
 
                                     <td class="commerce-col text-center" data-label="Fecha de alta">

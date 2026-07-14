@@ -26,4 +26,9 @@ class Categoria extends Model
     protected $casts = [
         'cv_fecha_alta' => 'datetime',
     ];
+
+    public function rubros()
+    {
+        return $this->hasMany(Rubro::class, 'cv_id', 'cv_id');
+    }
 }

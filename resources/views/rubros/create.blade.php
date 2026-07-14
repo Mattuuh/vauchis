@@ -193,6 +193,20 @@ $(document).ready(function () {
                 </div>
 
                 <div class="col-12">
+                    <label class="form-label required-label">Categoría:</label>
+                    <select name="f_categoria" class="form-select">
+                        <option value="">Selecciona una categoria</option>
+                        @foreach($categorias as $id => $nombre)
+                            <option value="{{ $id }}">{{ $nombre }}</option>
+                        @endforeach
+                    </select>
+
+                    @error('f_categoria')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12">
                     <label class="form-label required-label">Descripcion corta:</label>
                     <input type="text" name="f_descripcion_corta" class="form-control field-required" value="{{ old('f_descripcion_corta') }}" placeholder="Descripcion para el publico">
 

@@ -251,9 +251,10 @@ $(document).ready(function () {
                         <div class="vs-checkout-divider"></div>
 
                         <div class="vs-checkout-field">
-                            <label for="cantidad">Cantidad</label>
+                            {{-- <label for="cantidad">Cantidad</label> --}}
                             <input type="hidden" id="stock" value="{{ $voucher->vou_stock ?? 0 }}">
-                            <input type="text" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $voucher->vou_monto_fijo }}">
+                            {{-- <input type="text" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $voucher->vou_monto_fijo }}"> --}}
+                            <input type="hidden" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $voucher->vou_monto_fijo }}">
                         </div>
 
                         <div class="vs-checkout-row">

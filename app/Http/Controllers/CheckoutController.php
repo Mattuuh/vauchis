@@ -11,15 +11,17 @@ use Illuminate\Http\Request;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
 
     public function crearPreferencia(Request $request, int $id)
     {
-        if (true) {
-            return redirect()->route('mercadopago.success');
-        }
+        // if (true) {
+        //     return redirect()->route('mercadopago.success');
+        // }
 
         if (!session()->has('auth')) {
             session(['url.intended' => url()->previous()]);
@@ -64,8 +66,8 @@ class CheckoutController extends Controller
         ]);
 
 
-        $vendedorAccessToken = $entidad->mp_access_token;
-        // $vendedorAccessToken = config('services.mercadopago.access_token');
+        // $vendedorAccessToken = $entidad->mp_access_token;
+        $vendedorAccessToken = config('services.mercadopago.access_token');
 
         MercadoPagoConfig::setAccessToken($vendedorAccessToken);
 
@@ -91,8 +93,9 @@ class CheckoutController extends Controller
                         'unit_price' => $precio,
                     ]
                 ],
-                'marketplace_fee' => $comisionMarketplace,
+                // 'marketplace_fee' => $comisionMarketplace,
                 'external_reference' => 'PAGOVOUCHER_'. $op->op_id .'_'. $voucher->vou_id .'_'. $entidad->ent_id .'_'. $cliente->cli_id,
+                // 'external_reference' => 'TEST_' . time(),
                 'notification_url' => $baseUrl . '/webhooks/mercadopago',
                 'back_urls' => [
                     'success' => $baseUrl . '/mercadopago/pago_success',
@@ -100,16 +103,23 @@ class CheckoutController extends Controller
                     'pending' => $baseUrl . '/mercadopago/pago_pending',
                 ],
                 'auto_return' => 'approved',
-                'payment_methods' => array (
-                    'excluded_payment_types' => array(
-                        array(
-                            'id' => 'ticket',
-                        )
-                    ),
-                ),
-                'expires' => true,
-                'expiration_date_from' => $fecha_ini_expiracion,
-                'expiration_date_to' => $fecha_fin_expiracion
+                // 'payment_methods' => array (
+                //     'excluded_payment_types' => array(
+                //         array(
+                //             'id' => 'ticket',
+                //         )
+                //     ),
+                // ),
+                // 'expires' => true,
+                // 'expiration_date_from' => $fecha_ini_expiracion,
+                // 'expiration_date_to' => $fecha_fin_expiracion
+            ]);
+
+            $mp_id = DB::table('mercadopago_response_log')->insertGetId([
+                'preference_data' => json_encode($preference, JSON_PRETTY_PRINT),
+                // 'eti_estado' => 1,
+                'mpl_fecha_alta' => now(),
+                'mpl_usu_alta' => 1,
             ]);
 
             // dd($preference);
@@ -123,7 +133,9 @@ class CheckoutController extends Controller
             ]);
         }
 
+        // dd(json_encode($preference, JSON_PRETTY_PRINT));
         return redirect($preference->init_point);
+        // return redirect($preference->sandbox_init_point);
     }
 
     public function webhook(Request $request)
@@ -139,10 +151,10 @@ class CheckoutController extends Controller
                 break;
         }
 
-        $data_js=file_get_contents('php://input');
+        $data_js=$request->getContent();
         $data_mp=json_decode($data_js, true);
-
-        $vec_resp['preference_data']=file_get_contents('php://input');
+// return http_response_code(200);
+        $vec_resp['preference_data']=$request->getContent();
         $vec_resp['get']='GET: '.var_export($_GET,true);
         $vec_resp['post']='POST: '.var_export($_POST,true);
         $vec_resp['pmc_resp_obs']=$strbn;
@@ -151,60 +163,134 @@ class CheckoutController extends Controller
         MercadopagoResponse::create([
             'op_id' => 0,    
             'cliente_id' => 0,
-            'preference_data' => file_get_contents('php://input'),
-            'pmr_get' => 'GET: '.var_export($_GET,true),
-            'pmr_post' => 'POST: '.var_export($_POST,true),
+            'preference_data' => $request->getContent(),
+            'mpl_get' => 'GET: '.json_encode($request->query(), JSON_PRETTY_PRINT),
+            'mpl_post' => 'POST: '.json_encode($request->post(), JSON_PRETTY_PRINT),
             'collection_id' => 0,
             'external_reference' => 0,
             'merchant_order_id' => 0,
             'collection_status' => 0,
             'payment_type' => 0,
-            'pmr_json' => 0,
-            'pmr_obs' => $strbn,
-            'pmr_exec' => $_SERVER['PHP_SELF'],
+            'mpl_json' => 0,
+            'mpl_obs' => $strbn,
+            'mpl_exec' => $request->path(),
             'merchant_order_info' => 0,
             'payment_info' => 0,
-            'pmr_usu_alta' => 0,
-            'pmr_fecha_alta' => now(),
+            'mpl_usu_alta' => 0,
+            'mpl_fecha_alta' => now(),
         ]);
 
-        $mp = new MP(MP_CLIENT_ID, MP_CLIENT_SECRET);
-        // $mp = new MP(MP_ACCESS_TOKEN);
+        // $mp = new MP(MP_CLIENT_ID, MP_CLIENT_SECRET);
+        // // $mp = new MP(MP_ACCESS_TOKEN);
 
         $mp_ambiente = config('services.mercadopago.ambiente');
-        if($mp_ambiente=='SANDBOX'){
-            $mp->sandbox_mode(TRUE);
+        // if($mp_ambiente=='SANDBOX'){
+        //     $mp->sandbox_mode(TRUE);
+        // }
+
+        // if (isset($_REQUEST['topic']) && $_REQUEST['topic']=='merchant_order'){
+        //     if(!ctype_digit($_REQUEST['id'])){
+        //         http_response_code(400);
+        //         return;
+        //     }
+        // }
+
+        // //////////////////////////////////////////////////////////////
+        // //Notificación de pago y referencia a la compra asociada
+        // if($_REQUEST['topic']=='payment'){
+
+        //     $payment_info=$mp->get('/collections/notifications/'.$_REQUEST['id']);
+        //     $merchant_order_info=$mp->get('/merchant_orders/'.$payment_info['response']['collection']['merchant_order_id']);
+
+        //     $external_reference=$payment_info['response']['collection']['external_reference']; //$merchant_order_info['response']['collection']['external_reference'];
+        //     $merchant_order_id=$payment_info['response']['collection']['merchant_order_id'];
+        //     $collection_id=$payment_info['response']['collection']['id'];
+        //     $payment_type=$payment_info['response']['collection']['payment_type'];
+        //     $payment_id=$_REQUEST['id'];
+        // }
+        // //////////////////////////////////////////////////////////////
+        // //Notificación de compra/transacción realizada
+        // elseif($_REQUEST['topic']=='merchant_order'){
+        //     $merchant_order_info=$mp->get('/merchant_orders/'.$_REQUEST['id']);
+
+        //     $external_reference=$merchant_order_info['response']['external_reference'];
+        //     $merchant_order_id=$_REQUEST['id'];
+        //     $payment_id=0;
+        // }
+
+        
+        $notificationType = $request->input('topic')
+            ?? $request->input('topic');
+
+        $payment_id = $request->input('id')
+            ?? $request->input('id');
+
+        // Log::info('Webhook Mercado Pago recibido', [
+        //     'payload' => $request->all(),
+        //     'query'   => $request->query(),
+        //     'type'    => $notificationType,
+        //     'id'      => $payment_id,
+        // ]);
+
+        if ($notificationType !== 'payment' || !$payment_id) {
+            return response()->json([
+                'message' => 'Notificación ignorada',
+            ], 200);
         }
 
-        if (isset($_REQUEST['topic']) && $_REQUEST['topic']=='merchant_order'){
-            if(!ctype_digit($_REQUEST['id'])){
-                http_response_code(400);
-                return;
-            }
+        /*
+         * Acá necesitás el access_token correcto.
+         *
+         * En tu caso, al utilizar Split/OAuth, normalmente debe ser
+         * el access_token del comercio al que pertenece el pago.
+         */
+        $accessToken = config('services.mercadopago.access_token');
+
+        $response = Http::withToken($accessToken)
+            ->acceptJson()
+            ->get("https://api.mercadopago.com/v1/payments/{$payment_id}");
+
+        if ($response->failed()) {
+            // Log::error('No se pudo consultar el pago en Mercado Pago', [
+            //     'payment_id' => $payment_id,
+            //     'status'     => $response->status(),
+            //     'response'   => $response->json(),
+            // ]);
+
+            /*
+             * Un código distinto de 200 hace que Mercado Pago pueda
+             * volver a intentar enviar la notificación.
+             */
+            return response()->json([
+                'message' => 'No se pudo consultar el pago',
+            ], 500);
         }
 
-        //////////////////////////////////////////////////////////////
-        //Notificación de pago y referencia a la compra asociada
-        if($_REQUEST['topic']=='payment'){
+        $payment = $response->json();
 
-            $payment_info=$mp->get('/collections/notifications/'.$_REQUEST['id']);
-            $merchant_order_info=$mp->get('/merchant_orders/'.$payment_info['response']['collection']['merchant_order_id']);
+        $external_reference = $payment['external_reference'] ?? null;
+        $merchant_order_id   = data_get($payment, 'order.id');
+        $collection_id      = $payment['id'] ?? null;
+        $payment_type       = $payment['payment_type_id'] ?? null;
+        $payment_method     = $payment['payment_method_id'] ?? null;
+        $status            = $payment['status'] ?? null;
+        $status_detail      = $payment['status_detail'] ?? null;
+        $transaction_amount = $payment['transaction_amount'] ?? null;
 
-            $external_reference=$payment_info['response']['collection']['external_reference']; //$merchant_order_info['response']['collection']['external_reference'];
-            $merchant_order_id=$payment_info['response']['collection']['merchant_order_id'];
-            $collection_id=$payment_info['response']['collection']['id'];
-            $payment_type=$payment_info['response']['collection']['payment_type'];
-            $payment_id=$_REQUEST['id'];
+        $payment_info = Http::withToken($accessToken)
+            ->get("https://api.mercadopago.com/v1/payments/{$payment_id}")
+            ->throw()
+            ->json();
+
+        if ($merchant_order_id) {
+            $merchantOrderResponse = Http::withToken($accessToken)
+                ->get(
+                    "https://api.mercadopago.com/merchant_orders/{$merchant_order_id}"
+                );
+
+            $merchant_order_info = $merchantOrderResponse->json();
         }
-        //////////////////////////////////////////////////////////////
-        //Notificación de compra/transacción realizada
-        elseif($_REQUEST['topic']=='merchant_order'){
-            $merchant_order_info=$mp->get('/merchant_orders/'.$_REQUEST['id']);
 
-            $external_reference=$merchant_order_info['response']['external_reference'];
-            $merchant_order_id=$_REQUEST['id'];
-            $payment_id=0;
-        }
 
         //////////////////////////////////////////////////////////////////////////////
         //composición $external_reference
@@ -254,21 +340,21 @@ class CheckoutController extends Controller
             MercadopagoResponse::create([
                 'op_id' => 0,    
                 'cliente_id' => 0,
-                'preference_data' => var_export($_REQUEST,true),
-                'pmr_get' => 'GET: '.var_export($_GET,true),
-                'pmr_post' => 'POST: '.var_export($_POST,true),
+                'preference_data' => $request->getContent(),
+                'mpl_get' => 'GET: '.json_encode($request->query(), JSON_PRETTY_PRINT),
+                'mpl_post' => 'POST: '.json_encode($request->post(), JSON_PRETTY_PRINT),
                 'collection_id' => 0,
                 'external_reference' => 0,
                 'merchant_order_id' => 0,
                 'collection_status' => 0,
                 'payment_type' => 0,
-                'pmr_json' => 0,
-                'pmr_obs' => 'CALLBACK IPN: '.$est_tran_lab,
-                'pmr_exec' => $_SERVER['PHP_SELF'],
+                'mpl_json' => 0,
+                'mpl_obs' => 'CALLBACK IPN: '.$est_tran_lab,
+                'mpl_exec' => $request->path(),
                 'merchant_order_info' => var_export($merchant_order_info,true),
                 'payment_info' => var_export($payment_info,true),
-                'pmr_usu_alta' => 0,
-                'pmr_fecha_alta' => now(),
+                'mpl_usu_alta' => 0,
+                'mpl_fecha_alta' => now(),
             ]);
         }
 
@@ -332,21 +418,21 @@ class CheckoutController extends Controller
             MercadopagoResponse::create([
                 'op_id' => 0,    
                 'cliente_id' => 0,
-                'preference_data' => var_export($_REQUEST,true),
-                'pmr_get' => 'GET: '.var_export($_GET,true),
-                'pmr_post' => 'POST: '.var_export($_POST,true),
+                'preference_data' => $request->getContent(),
+                'mpl_get' => 'GET: '.json_encode($request->query(), JSON_PRETTY_PRINT),
+                'mpl_post' => 'POST: '.json_encode($request->post(), JSON_PRETTY_PRINT),
                 'collection_id' => 0,
                 'external_reference' => 0,
                 'merchant_order_id' => 0,
                 'collection_status' => 0,
                 'payment_type' => 0,
-                'pmr_json' => 0,
-                'pmr_obs' => 'CALLBACK IPN: PROCESAMIENTO '.$est_tran_lab,
-                'pmr_exec' => $_SERVER['PHP_SELF'],
+                'mpl_json' => 0,
+                'mpl_obs' => 'CALLBACK IPN: PROCESAMIENTO '.$est_tran_lab,
+                'mpl_exec' => $request->path(),
                 'merchant_order_info' => var_export($merchant_order_info,true),
                 'payment_info' => var_export($payment_info,true),
-                'pmr_usu_alta' => 0,
-                'pmr_fecha_alta' => now(),
+                'mpl_usu_alta' => 0,
+                'mpl_fecha_alta' => now(),
             ]);
             //////////////////////////////////////////////////////////////////////////////
 
@@ -381,39 +467,39 @@ class CheckoutController extends Controller
                 $op=OrdenPago::findOrFail($f_op_id);
 
                 if ($op['op_estado2']=='PE') {
-                    $upins="UPDATE solicitudes_certificaciones SET
-                        solc_estado3='PA',
-                        solc_mp_pago_anticipo='1',
-                        solc_mp_pago_fecha=NOW(),
-                        solc_mp_pago_referencia=' | [".date('d/m/Y H:i:s')." - MERCADOPAGO]: Pago MP: ".$dt_pagomp['pmp_id']." - Monto: $ ".$transaction_amount." - Notificado: ".$fecha_update."',
-                        ref_pago_id='".$dt_pagomp['pmp_id']."'
-                        WHERE solc_id='".$v_solc_id."' ";
+                    // $upins="UPDATE solicitudes_certificaciones SET
+                    //     solc_estado3='PA',
+                    //     solc_mp_pago_anticipo='1',
+                    //     solc_mp_pago_fecha=NOW(),
+                    //     solc_mp_pago_referencia=' | [".date('d/m/Y H:i:s')." - MERCADOPAGO]: Pago MP: ".$dt_pagomp['pmp_id']." - Monto: $ ".$transaction_amount." - Notificado: ".$fecha_update."',
+                    //     ref_pago_id='".$dt_pagomp['pmp_id']."'
+                    //     WHERE solc_id='".$v_solc_id."' ";
 
-                    $descripcion_pmp_lab="PAGO DE VOUCHER [Voucher ID: ".$f_vou_id."][MP] -  $ ".$transaction_amount;
+                    // $descripcion_pmp_lab="PAGO DE VOUCHER [Voucher ID: ".$f_vou_id."][MP] -  $ ".$transaction_amount;
 
-                    $cliente=Cliente::findOrFail($f_cli_id);
+                    // $cliente=Cliente::findOrFail($f_cli_id);
 
-                    $vec_recibo['ref_pago_id']=$dt_pagomp['pmp_id'];
-                    $vec_recibo['forma_pago_id']=6;
-                    $vec_recibo['solc_numero']=$voucher['solc_numero'];
-                    $vec_recibo['tipo_comp_id']=21;
-                    $vec_recibo['concepto_pago_id']=$concepto_pago_id;
-                    $vec_recibo['recibo_nombre']=$cliente['usu_web_nombre'];
-                    $vec_recibo['recibo_domicilio']='';
-                    $vec_recibo['usuario_id']=$voucher['solc_usuario_alta'];
-                    $vec_recibo['recibo_detalle_label']=$descripcion_pmp_lab;
-                    $vec_recibo['monto_pago']=$transaction_amount;
-                    $vec_recibo['recibo_nota']=" | [".date('d/m/Y H:i:s')." - MERCADOPAGO]: Pago MP: ".$dt_pagomp['pmp_id']." - Monto: $ ".$transaction_amount." - Notificado: ".$fecha_update;
-                    $retorno=insertar_recibo_pago_electronico_sc($voucher['solc_id'],$vec_recibo);
+                    // $vec_recibo['ref_pago_id']=$dt_pagomp['pmp_id'];
+                    // $vec_recibo['forma_pago_id']=6;
+                    // $vec_recibo['solc_numero']=$voucher['solc_numero'];
+                    // $vec_recibo['tipo_comp_id']=21;
+                    // $vec_recibo['concepto_pago_id']=$concepto_pago_id;
+                    // $vec_recibo['recibo_nombre']=$cliente['usu_web_nombre'];
+                    // $vec_recibo['recibo_domicilio']='';
+                    // $vec_recibo['usuario_id']=$voucher['solc_usuario_alta'];
+                    // $vec_recibo['recibo_detalle_label']=$descripcion_pmp_lab;
+                    // $vec_recibo['monto_pago']=$transaction_amount;
+                    // $vec_recibo['recibo_nota']=" | [".date('d/m/Y H:i:s')." - MERCADOPAGO]: Pago MP: ".$dt_pagomp['pmp_id']." - Monto: $ ".$transaction_amount." - Notificado: ".$fecha_update;
+                    // $retorno=insertar_recibo_pago_electronico_sc($voucher['solc_id'],$vec_recibo);
 
-                    $recibo_id=$retorno['recibo_id'];
+                    // $recibo_id=$retorno['recibo_id'];
 
-                    $op->update([
-                        'op_estado2' => 'PA',
-                        'comp_id' => $recibo_id,
-                        'op_fecha_mod' => now(),
-                        'op_usu_mod' => $_SESSION['sid_usuario_id']
-                    ]);
+                    // $op->update([
+                    //     'op_estado2' => 'PA',
+                    //     'comp_id' => $recibo_id,
+                    //     'op_fecha_mod' => now(),
+                    //     'op_usu_mod' => $_SESSION['sid_usuario_id']
+                    // ]);
 
                 }
             }

@@ -35,6 +35,11 @@ class Rubro extends Model
 
     public function subrubros()
     {
-        return $this->hasMany(Subrubro::class, 'rub_id', 'rub_id')->where('sub_estado', 1);
+        return $this->hasMany(Subrubro::class, 'rub_id', 'rub_id')->where('sub_estado', 1)->orderBy('sub_nombre');
+    }
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'cv_id', 'cv_id');
     }
 }

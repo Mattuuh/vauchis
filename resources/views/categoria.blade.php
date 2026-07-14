@@ -25,7 +25,7 @@
         <div class="vo-shell vo-subnavbar-inner">
             @foreach ($rubros ?? [] as $rubro)
                 <div class="vo-subnavbar-item">
-                    <a href="" class="vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}">
+                    <a href="#" class="vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}">
                         {{ $rubro->rub_nombre }}
                     </a>
 
@@ -37,6 +37,10 @@
                                     {{ $subrubro->sub_nombre }}
                                 </a>
                             @endforeach
+                        </div>
+                    @else
+                        <div class="vo-subnavbar-dropdown">
+                            <a href="#">No hay opciones disponibles</a>
                         </div>
                     @endif
                 </div>

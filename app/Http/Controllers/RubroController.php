@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use App\Models\Rubro;
 use App\Models\Subrubro;
 use Illuminate\Http\Request;
@@ -10,31 +11,30 @@ class RubroController extends Controller
 {
     public function index()
     {
-        $rubros = Rubro::orderBy('rub_id','desc')
+        $rubros = Rubro::with('categoria')
+            ->orderBy('rub_id','desc')
             // ->where('rub_estado',1)
-            ->get([
-                'rub_id', 
-                'rub_nombre', 
-                'rub_descripcion', 
-                'rub_estado', 
-                'rub_fecha_alta',
-            ]);
+            ->get();
 
         return view('rubros.index', compact('rubros'));
     }
 
     public function create()
     {
-        return view('rubros.create');
+        $categorias = Categoria::where('cv_estado', 1)
+            ->orderBy('cv_nombre')
+            ->pluck('cv_nombre', 'cv_id');
+
+        return view('rubros.create', compact('categorias'));
     }
 
     private function validarRubro(Request $request)
     {
         return $request->validate([
-            'f_codigo' => 'required|string|max:255',
+            // 'f_codigo' => 'required|string|max:255',
             'f_nombre' => 'required|string|max:255',
-            'f_descripcion' => 'required|string|max:255',
-            'f_descripcion_corta' => 'required|string|max:255',
+            // 'f_descripcion' => 'nullable|string|max:255',
+            // 'f_descripcion_corta' => 'nullable|string|max:255',
             'subrubros' => 'nullable|array',
             'subrubros.*' => 'integer|exists:subrubros,sub_id',
 
@@ -54,6 +54,7 @@ class RubroController extends Controller
             ]);
 
             $rubro = Rubro::create([
+                'cv_id' => $request->f_categoria,
                 'rub_codigo' => $request->f_codigo,
                 'rub_nombre' => $request->f_nombre,
                 'rub_descripcion' => $request->f_descripcion,
@@ -100,6 +101,10 @@ class RubroController extends Controller
     {
         $rubro = Rubro::findOrFail($id);
 
+        $categorias = Categoria::where('cv_estado', 1)
+            ->orderBy('cv_nombre')
+            ->pluck('cv_nombre', 'cv_id');
+
         $subrubrosDisponibles = Subrubro::where('sub_estado', 1)
             ->where(function ($q) use ($id) {
                 $q->whereNull('rub_id')
@@ -121,6 +126,7 @@ class RubroController extends Controller
 
         return view('rubros.edit', compact(
             'rubro',
+            'categorias',
             'subrubrosDisponibles',
             'subrubrosSeleccionados'
             ));
@@ -134,6 +140,7 @@ class RubroController extends Controller
             $rubro = Rubro::findOrFail($id);
 
             $rubro->update([
+                'cv_id' => $request->f_categoria,
                 'rub_codigo' => $request->f_codigo,
                 'rub_nombre' => $request->f_nombre,
                 'rub_descripcion' => $request->f_descripcion,

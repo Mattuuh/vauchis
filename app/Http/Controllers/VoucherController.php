@@ -1207,6 +1207,7 @@ class VoucherController extends Controller
         $rubros = Rubro::with('subrubros')
             ->where('cv_id', $id)
             ->where('rub_estado', 1)
+            ->orderBy('rub_nombre')
             ->get();
 
         $vouchers = Voucher::with('imagenes')
