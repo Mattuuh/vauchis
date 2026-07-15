@@ -350,3 +350,9 @@ INSERT INTO `subrubros` (`sub_id`, `rub_id`, `sub_codigo`, `sub_nombre`, `sub_es
 (NULL, 15, 'DEF', 'Musica', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
 (NULL, 15, 'DEF', 'Vida Activa', 1, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
 
+
+
+
+ALTER TABLE `modalidades_campos` CHANGE `mca_nombre` `mca_nombre` VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `modalidades_campos` CHANGE `mca_id` `mca_id` INT UNSIGNED NOT NULL AUTO_INCREMENT;
+

@@ -73,7 +73,7 @@ class ModalidadController extends Controller
 
             ModalidadCampo::create([
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => null,
+                'mca_nombre' => $campo['nombre'],
                 'mca_codigo' => $codigo,
                 'mca_tipo' => $campo['tipo'],
                 'mca_label' => $campo['nombre'],
@@ -137,7 +137,7 @@ class ModalidadController extends Controller
 
             $dataCampo = [
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => null,
+                'mca_nombre' => $campo['nombre'],
                 'mca_codigo' => $codigo,
                 'mca_tipo' => $campo['tipo'],
                 'mca_label' => $campo['nombre'],
