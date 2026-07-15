@@ -619,7 +619,7 @@ body {
 
 /* anchos similares al grid anterior */
 .commerce-table thead th:nth-child(1),
-.commerce-table tbody td:nth-child(1) { width: 25%; }
+.commerce-table tbody td:nth-child(1) { width: 8%; }
 
 .commerce-table thead th:nth-child(2),
 .commerce-table tbody td:nth-child(2) { width: 23%; }

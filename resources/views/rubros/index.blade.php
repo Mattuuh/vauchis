@@ -104,7 +104,7 @@ $(document).ready(function () {
                         <thead>
                             <tr class="commerce-table-head">
                                 <th style="width: 40px">ID</th>
-                                <th style="width: 100px">NOMBRE</th>
+                                <th style="width: 140px">NOMBRE</th>
                                 <th style="width: 60px">CATEGORIA</th>
                                 <th style="width: 60px">FECHA DE ALTA</th>
                                 <th style="width: 60px" class="text-center">ESTADO</th>
