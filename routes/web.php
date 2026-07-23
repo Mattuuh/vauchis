@@ -205,3 +205,15 @@ Route::get('/mercadopago/pago_pending', [CheckoutController::class, 'pending'])-
 use App\Http\Controllers\MercadoPagoOAuthController;
 Route::get('/mercadopago/conectar/{entidad}', [MercadoPagoOAuthController::class, 'redirect'])->name('mp.conectar');
 Route::get('/mercadopago/callback', [MercadoPagoOAuthController::class, 'callback'])->name('mp.callback');
+
+
+use App\Http\Controllers\CategoriaController;
+Route::get('/categorias/{categoria}/rubros/{rubro}/entidades',[CategoriaController::class, 'entidadesPorRubro'])->name('categorias.rubros.entidades');
+Route::get('/categorias/{categoria}/rubros/{rubro}/subrubros/{subrubro}/entidades',[CategoriaController::class, 'entidadesPorSubrubro'])->name('categorias.entidades.subrubro');
+
+
+use App\Http\Controllers\ResaltadorController;
+
+Route::get('/resaltadores/listado', [ResaltadorController::class, 'listado'])->name('resaltadores.listado');
+Route::resource('resaltadores', ResaltadorController::class);
+Route::post('/resaltadores/{id}/delete', [ResaltadorController::class, 'delete'])->name('resaltadores.delete');

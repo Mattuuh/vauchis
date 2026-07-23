@@ -42,4 +42,14 @@ class Rubro extends Model
     {
         return $this->belongsTo(Categoria::class, 'cv_id', 'cv_id');
     }
+
+    public function entidades()
+    {
+        return $this->belongsToMany(
+            Entidad::class,
+            'entidades_rubros',
+            'rub_id',     // FK del rubro en la tabla pivote
+            'ent_id'      // FK de la entidad en la tabla pivote
+        )->where('er_estado', 1);
+    }
 }

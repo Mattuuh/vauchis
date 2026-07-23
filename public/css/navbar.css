@@ -384,6 +384,24 @@ NAVBAR
     transition: .25s;
 }
 
+.item-objetos .icono{
+    width:28px;
+    height:28px;
+    background:url("../images/bt-objetos-1.png") center/contain no-repeat;
+}
+
+.item-experiencias .icono{
+    width:28px;
+    height:28px;
+    background:url("../images/bt-experiencias-1.png") center/contain no-repeat;
+}
+
+.item-concausa .icono{
+    width:28px;
+    height:28px;
+    background:url("../images/bt-concausa-1.png") center/contain no-repeat;
+}
+
 .v-menu-item::after{
     content: "";
     position: absolute;
@@ -399,9 +417,14 @@ NAVBAR
     width: 100%;
 }
 
-.v-menu-item.item-objetos:hover svg,
-.v-menu-item.item-objetos.active svg {
+/* .v-menu-item.item-objetos:hover img,
+.v-menu-item.item-objetos.active img {
     fill:#0065FA;
+} */
+
+.item-objetos:hover .icono,
+.item-objetos.active .icono{
+    background-image:url("../images/bt-objetos-hover-1.png");
 }
 
 .v-menu-item.item-objetos::after {
@@ -413,9 +436,13 @@ NAVBAR
     color: #0065FA;
 }
 
-.v-menu-item.item-experiencias:hover svg,
+/* .v-menu-item.item-experiencias:hover svg,
 .v-menu-item.item-experiencias.active {
     fill:#35B156;
+} */
+.item-experiencias:hover .icono,
+.item-experiencias.active .icono{
+    background-image:url("../images/vt-experiencias-hover-1.png");
 }
 
 .v-menu-item.item-experiencias::after{
@@ -427,9 +454,13 @@ NAVBAR
     color: #35B156;
 }
 
-.v-menu-item.item-concausa:hover svg, 
+/* .v-menu-item.item-concausa:hover svg, 
 .v-menu-item.item-concausa.active {
     fill:#E51281;
+} */
+.item-concausa:hover .icono,
+.item-concausa.active .icono{
+    background-image:url("../images/bt-concausa-hovver-1.png");
 }
 
 .v-menu-item.item-concausa::after{
@@ -500,7 +531,7 @@ NAVBAR
 
 .v-navbar.is-scrolled .v-navbar__search {
     grid-column: 2;
-    width: 310px;
+    width: 100%;
     height: 46px;
     margin: 0;
     padding: 0 18px;
@@ -537,6 +568,17 @@ NAVBAR
 
 .v-navbar.is-scrolled .v-navbar__note {
     display: none;
+}
+
+@media (max-width: 1200px) {
+    .v-navbar.is-scrolled .v-navbar__shell {
+        display:grid;
+        grid-template-columns:
+            12%
+            28%
+            40%
+            auto;
+    }
 }
 
 

@@ -92,12 +92,16 @@ class HomeController extends Controller
 
         $featuredBrands = Entidad::where('ent_estado', 1)
             ->with('imagenPrincipal')
+            ->with('logoPrincipal')
             ->get()
             ->map(function ($ent) {
                 return (object)[
                     'id' => $ent->ent_id,
                     'name' => $ent->ent_nombre_fantasia,
-                    'logo' => $ent->imagenPrincipal
+                    'logo' => $ent->logoPrincipal
+                        ? $ent->logoPrincipal->ef_img_path
+                        : 'default.png',
+                    'banner' => $ent->imagenPrincipal
                         ? $ent->imagenPrincipal->ef_img_path
                         : 'default.png',
                 ];

@@ -23,4 +23,14 @@ class Subrubro extends Model
     {
         return $this->belongsTo(Rubro::class, 'rub_id', 'rub_id');
     }
+
+    public function entidades()
+    {
+        return $this->belongsToMany(
+            Entidad::class,
+            'entidades_subrubros',
+            'sub_id',
+            'ent_id'
+        )->withPivot('rub_id');
+    }
 }

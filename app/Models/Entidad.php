@@ -81,6 +81,31 @@ class Entidad extends Model
 
     public function imagenPrincipal()
     {
-        return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1);
+        return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1)->where('tipo_archivo_id',2);
+    }
+
+    public function logoPrincipal()
+    {
+        return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1)->where('tipo_archivo_id',1);
+    }
+
+    public function rubros()
+    {
+        return $this->belongsToMany(
+            Rubro::class,
+            'entidades_rubros',
+            'ent_id',     // FK de la entidad en la tabla pivote
+            'rub_id'      // FK del rubro en la tabla pivote
+        )->where('er_principal', 1);
+    }
+
+    public function subrubros()
+    {
+        return $this->belongsToMany(
+            Subrubro::class,
+            'entidades_subrubros',
+            'ent_id',
+            'sub_id'
+        )->withPivot('rub_id');
     }
 }

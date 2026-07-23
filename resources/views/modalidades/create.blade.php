@@ -105,7 +105,7 @@
                                     <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
                                         <option value="">Seleccionar...</option>
                                         <option value="text" {{ (($campo['tipo'] ?? '') == 'text') ? 'selected' : '' }}>Texto</option>
-                                        <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option>
+                                        {{-- <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option> --}}
                                         <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
                                         {{-- <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option> --}}
                                         {{-- <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option> --}}

@@ -24,6 +24,7 @@
                         <li><a class="dropdown-item" href="{{ route('entidades.index') }}">Entidades</a></li>
                         <li><a class="dropdown-item" href="{{ route('tipos-entidad.index') }}">Tipos de Entidad</a></li>
                         <li><a class="dropdown-item" href="{{ route('rubros.index') }}">Rubros</a></li>
+                        <li><a class="dropdown-item" href="{{ route('resaltadores.index') }}">Resaltadores</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -177,21 +178,24 @@
         <ul class="v-navbar__menu">
             <li>
                 <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-objetos-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Objetos
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-experiencias-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Experiencias
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-concausa-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Con causa
                 </a>
             </li>
@@ -237,21 +241,24 @@
         <ul class="v-navbar__menu">
             <li>
                 <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-objetos-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Objetos
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-experiencias-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Experiencias
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
-                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
+                    {{-- <img src="{{ asset('images/bt-concausa-1.png') }}" alt=""> --}}
+                    <span class="icono"></span>
                     Con causa
                 </a>
             </li>

@@ -102,11 +102,19 @@
                     <div class="vh-card-row vh-card-row--brands">
                     @foreach ($featuredBrands as $brand)
                         @php
-                            $brandImage = $brand->image ?? $brand->logo ?? null;
-                            $imgSrc = $brandImage ? asset('storage/' . $brandImage) : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
+                            $brandImage = $brand->image ?? $brand->banner ?? null;
+                            $banner_imgSrc = $brandImage ? asset('storage/' . $brandImage) : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
+
+                            $logoImage = $brand->image ?? $brand->logo ?? null;
+                            $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : $logoFallbackImages[$loop->index % count($logoFallbackImages)];
+
                         @endphp
                         <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}">
-                            <img src="{{ $imgSrc }}" alt="{{ $brand->name }}">
+                            {{-- <img src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}"> --}}
+
+                            <img class="vh-business-card__banner" src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}">
+                            <img class="vh-business-card__logo" src="{{ $logo_imgSrc }}" alt="Logo {{ $brand->name }}">
+
                             <span class="vs-badge vh-card-badge">★ Recomendado</span>
                             <div class="vh-business-card__caption">
                                 <div>
@@ -983,12 +991,29 @@ a{
     cursor: pointer;
 }
 
-.vh-featured .vh-business-card > img{
+.vh-featured .vh-business-card .vh-business-card__banner{
     width: 100%;
     height: 121px;
     object-fit: cover;
     display: block;
     border-radius: 8px;
+}
+
+.vh-business-card {
+    position: relative;
+}
+
+.vh-business-card__logo {
+    position: absolute;
+    left: 8px;
+    bottom: 65px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* object-fit: cover; */
+    background: #fff;
+    /* border: 4px solid #fff; */
+    z-index: 2;
 }
 
 .vh-featured .vh-card-badge{

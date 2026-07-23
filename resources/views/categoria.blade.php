@@ -25,15 +25,25 @@
         <div class="vo-shell vo-subnavbar-inner">
             @foreach ($rubros ?? [] as $rubro)
                 <div class="vo-subnavbar-item">
-                    <a href="#" class="vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}">
+                    <a href="#" class="btn-rubro vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => $categoria->id, 'rubro' => $rubro->rub_id]) }}">
                         {{ $rubro->rub_nombre }}
                     </a>
 
                     @if (!empty($rubro->subrubros) && $rubro->subrubros->count())
                         <div class="vo-subnavbar-dropdown">
                             @foreach ($rubro->subrubros as $subrubro)
-                                {{-- <a href="{{ route('vouchers.buscar', ['rubro' => $rubro->rub_id,'subrubro' => $subrubro->sub_id]) }}"> --}}
-                                <a href="#">
+                                <a
+                                    href="{{ route('categorias.entidades.subrubro', [
+                                        'categoria' => $categoria->id,
+                                        'rubro' => $rubro->rub_id,
+                                        'subrubro' => $subrubro->sub_id,
+                                    ]) }}" class="vo-subnavbar-sublink"
+                                    data-url="{{ route('categorias.entidades.subrubro', [
+                                        'categoria' => $categoria->id,
+                                        'rubro' => $rubro->rub_id,
+                                        'subrubro' => $subrubro->sub_id,
+                                    ]) }}"
+                                >
                                     {{ $subrubro->sub_nombre }}
                                 </a>
                             @endforeach
@@ -48,8 +58,8 @@
         </div>
     </nav>
 
-    <section class="vo-content">
-        <div class="vo-shell ">
+    <section class="vo-content entidades-section">
+        <div class="vo-shell " id="entidades-container">
 
             {{-- <aside class="vo-filters">
                 <button class="vo-filter-pill">
@@ -68,7 +78,9 @@
                 </a>
             </aside> --}}
 
-            @include('partials.voucher-grid', ['vouchers' => $vouchers])
+            {{-- @include('partials.voucher-grid', ['vouchers' => $vouchers]) --}}
+
+                @include('categorias.partials.entidades', ['entidades' => $entidades])
 
         </div>
     </section>
@@ -476,7 +488,7 @@
     bottom: 12px;
     height: 3px;
     border-radius: 999px;
-    background: #fff;
+    /* background: #fff; */
 }
 
 @media (max-width: 768px) {
@@ -743,17 +755,87 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function cargarEntidades(url, boton) {
+        if (!url) {
+            console.warn('El rubro no tiene una URL para cargar entidades.');
+            return;
+        }
+
+        const contenedor = $('#entidades-container');
+
+        $('.vo-subnavbar-link').removeClass('active');
+        $(boton).addClass('active');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html',
+
+            beforeSend: function () {
+                contenedor.html(`
+                    <div class="text-center py-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+
+                        <p class="mt-3 mb-0">
+                            Cargando negocios...
+                        </p>
+                    </div>
+                `);
+            },
+
+            success: function (html) {
+                contenedor.html(html);
+            },
+
+            error: function (xhr) {
+                console.error(xhr.responseText);
+
+                contenedor.html(`
+                    <div class="alert alert-danger">
+                        No fue posible cargar los negocios.
+                    </div>
+                `);
+            }
+        });
+    }
+
     items.forEach(item => {
         const link = item.querySelector('.vo-subnavbar-link');
         const dropdown = item.querySelector('.vo-subnavbar-dropdown');
 
-        if (!link || !dropdown) return;
+        if (!link) {
+            return;
+        }
 
-        document.body.appendChild(dropdown);
+        /*
+         * La URL AJAX se obtiene antes de mover el dropdown.
+         */
+        const url = link.dataset.url;
+
+        if (dropdown) {
+            document.body.appendChild(dropdown);
+        }
 
         link.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+
+            /*
+             * Primera acción:
+             * cargar las entidades relacionadas con el rubro.
+             */
+            cargarEntidades(url, link);
+
+            /*
+             * Segunda acción:
+             * mostrar u ocultar los subrubros.
+             */
+            if (!dropdown) {
+                closeDropdown();
+                return;
+            }
 
             const wasOpen = dropdown.classList.contains('is-open');
 
@@ -771,9 +853,35 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        dropdown.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
+        if (dropdown) {
+            dropdown.addEventListener('click', function (e) {
+                const subrubroLink = e.target.closest(
+                    '.vo-subnavbar-sublink'
+                );
+
+                if (!subrubroLink) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                /*
+                 * Carga las entidades relacionadas con:
+                 * - el rubro
+                 * - el subrubro seleccionado
+                 */
+                cargarEntidades(
+                    subrubroLink.dataset.url,
+                    subrubroLink
+                );
+
+                /*
+                 * Cerramos el desplegable.
+                 */
+                closeDropdown();
+            });
+        }
     });
 
     document.addEventListener('click', closeDropdown);
@@ -835,4 +943,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
 @endpush

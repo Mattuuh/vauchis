@@ -279,7 +279,7 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
                     <div id="logos-container">
                         <div class="row logo-item mb-2">
@@ -291,9 +291,37 @@ $(document).ready(function () {
 
                     </div>
                 </div>
-                <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
+                <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button> --}}
 
             </div>
+        </div>
+        {{-- ARCHIVOS --}}
+        <div class="vch-card p-3 mb-3">
+            {{-- <h6 class="fw-bold mb-2">Imagenes</h6>  --}}
+
+            <div class="col-12">
+                <label class="form-label required-label">Imagen/es</label>
+                <div id="logos-container">
+                    <div class="row logo-item mb-2">
+                        <div class="col-sm-8">
+                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                        {{ $tipo['tipo_archivo_nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center"></div>
+                    </div>
+
+                </div>
+            </div>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
         </div>
 
         <!-- SUCURSALES -->
@@ -849,11 +877,20 @@ $(document).ready(function () {
 $(document).ready(function () {
 
     $('#add-logo').on('click', function () {
-
         let html = `
-            <div class="row logo-item ">
-                <div class="col-sm-11">
-                    <input type="file" name="logos[]" accept="image/*" class="form-control">
+            <div class="row logo-item mb-2">
+                <div class="col-sm-8">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                        <option value="">Selecciona el tipo de archivo</option>
+                        @foreach($tipos_archivos as $tipo)
+                            <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                {{ $tipo['tipo_archivo_nombre'] }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-sm-1 d-flex align-items-center">
                     <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>

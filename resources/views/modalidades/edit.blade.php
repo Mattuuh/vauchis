@@ -30,7 +30,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -58,15 +58,7 @@
             <div class="row g-3">
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Código</label>
-                    <input
-                        type="text"
-                        name="f_codigo"
-                        id="f_codigo"
-                        class="form-control field-required"
-                        value="{{ old('f_codigo', $modalidad->mod_codigo) }}"
-                        placeholder="Ej: PORCENTAJE"
-                        required
-                    >
+                    <input type="text" name="f_codigo" id="f_codigo" class="form-control field-required" value="{{ old('f_codigo', $modalidad->mod_codigo) }}" placeholder="Ej: PORCENTAJE" required>
 
                     <div class="form-text">Código interno único. Se recomienda usar mayúsculas y guiones bajos.</div>
 
@@ -77,14 +69,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre</label>
-                    <input
-                        type="text"
-                        name="f_nombre"
-                        class="form-control field-required"
-                        value="{{ old('f_nombre', $modalidad->mod_nombre) }}"
-                        placeholder="Ej: Descuento porcentual"
-                        required
-                    >
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre', $modalidad->mod_nombre) }}" placeholder="Ej: Descuento porcentual" required>
 
                     @error('f_nombre')
                         <div class="text-required">{{ $message }}</div>
@@ -93,12 +78,7 @@
 
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
-                    <textarea
-                        name="f_descripcion"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Notas internas o descripción opcional..."
-                    >{{ old('f_descripcion', $modalidad->mod_descripcion) }}</textarea>
+                    <textarea name="f_descripcion" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('f_descripcion', $modalidad->mod_descripcion) }}</textarea>
 
                     @error('f_descripcion')
                         <div class="text-required">{{ $message }}</div>
@@ -150,10 +130,10 @@
                                     <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
                                         <option value="">Seleccionar uno</option>
                                         <option value="text" {{ (($campo['tipo'] ?? '') == 'text') ? 'selected' : '' }}>Texto</option>
-                                        <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option>
+                                        {{-- <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option> --}}
                                         <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
-                                        <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option>
-                                        <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option>
+                                        {{-- <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option> --}}
+                                        {{-- <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option> --}}
                                         <option value="boolean" {{ (($campo['tipo'] ?? '') == 'boolean') ? 'selected' : '' }}>Sí / No</option>
                                         <option value="select" {{ (($campo['tipo'] ?? '') == 'select') ? 'selected' : '' }}>Seleccionable</option>
                                     </select>
@@ -219,24 +199,11 @@
 
         {{-- BOTONES --}}
         <div class="d-flex justify-content-between form-actions">
-            <button
-                type="button"
-                class="btn btn-danger"
-                data-id="{{ $modalidad->mod_id }}"
-                data-url="{{ route('modalidades.delete', $modalidad->mod_id) }}"
-                id="btn_eliminar"
-            >
-                Eliminar
-            </button>
+            <button type="button" class="btn btn-danger" data-id="{{ $modalidad->mod_id }}" data-url="{{ route('modalidades.delete', $modalidad->mod_id) }}" id="btn_eliminar">Eliminar</button>
 
             <div>
-                <a href="{{ route('modalidades.index') }}" class="btn btn-outline-secondary">
-                    Cancelar
-                </a>
-
-                <button type="submit" class="btn btn-success" id="btn_actualizar">
-                    Actualizar
-                </button>
+                <a href="{{ route('modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
         </div>
     </form>
@@ -249,41 +216,41 @@
         </button>
 
         <div class="row g-3">
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label required-label">Código</label>
                 <input type="text" name="campos[__INDEX__][codigo]" class="form-control field-required campo-codigo" placeholder="Ej: porcentaje" required>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-4">
-                <label class="form-label required-label">Nombre interno</label>
+                <label class="form-label required-label">Leyenda del campo</label>
                 <input type="text" name="campos[__INDEX__][nombre]" class="form-control field-required" placeholder="Ej: Porcentaje" required>
             </div>
 
             <div class="col-12 col-md-4">
-                <label class="form-label required-label">Tipo</label>
+                <label class="form-label required-label">Tipo de dato</label>
                 <select name="campos[__INDEX__][tipo]" class="form-select field-required campo-tipo" required>
                     <option value="">Seleccionar...</option>
                     <option value="text">Texto</option>
-                    <option value="textarea">Textarea</option>
+                    {{-- <option value="textarea">Textarea</option> --}}
                     <option value="number">Número</option>
-                    <option value="decimal">Decimal</option>
-                    <option value="money">Moneda</option>
+                    {{-- <option value="decimal">Decimal</option> --}}
+                    {{-- <option value="money">Moneda</option> --}}
                     <option value="boolean">Sí / No</option>
                     <option value="select">Seleccionable</option>
                 </select>
             </div>
 
-            <div class="col-12 col-md-6">
+            {{-- <div class="col-12 col-md-6">
                 <label class="form-label required-label">Label</label>
                 <input type="text" name="campos[__INDEX__][label]" class="form-control field-required" placeholder="Ej: Porcentaje de descuento" required>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-6">
-                <label class="form-label">Placeholder</label>
+                <label class="form-label">Texto de guia</label>
                 <input type="text" name="campos[__INDEX__][placeholder]" class="form-control" placeholder="Ej: Ingresá el porcentaje">
             </div>
 
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label">Orden</label>
                 <input type="number" name="campos[__INDEX__][orden]" class="form-control" min="1" value="1">
             </div>
@@ -294,7 +261,7 @@
                     <input class="form-check-input" type="checkbox" name="campos[__INDEX__][requerido]" value="1">
                     <label class="form-check-label">Sí</label>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-4">
                 <label class="form-label d-block">Activo</label>
@@ -316,7 +283,7 @@
             </div>
 
             <div class="col-12">
-                <label class="form-label">Texto de ayuda</label>
+                <label class="form-label">Texto de ayuda (se muestra abajo de cada campo)</label>
                 <input type="text" name="campos[__INDEX__][ayuda]" class="form-control" placeholder="Ej: Valor entre 1 y 100">
             </div>
         </div>

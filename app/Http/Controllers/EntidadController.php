@@ -11,6 +11,7 @@ use App\Models\Pais;
 use App\Models\Provincia;
 use App\Models\Rubro;
 use App\Models\Subrubro;
+use App\Models\TipoArchivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -171,6 +172,10 @@ class EntidadController extends Controller
         //     ['id' => 4, 'nombre' => 'Outlet'],
         // ];
 
+        $tipos_archivos = TipoArchivo::where('tipo_archivo_estado', 1)
+            ->orderBy('tipo_archivo_id', 'desc')
+            ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
+
         return view('entidades.create', compact(
             'tiposEntidad',
             'tiposResponsabilidad',
@@ -180,7 +185,8 @@ class EntidadController extends Controller
             'rubros',
             'subrubros',
             'etiquetas',
-            'organizaciones'
+            'organizaciones',
+            'tipos_archivos'
         ));
     }
 
@@ -303,21 +309,25 @@ class EntidadController extends Controller
             $path = null;
             $usu = 1;
 
-            if ($request->hasFile('logos')) {
+            if ($request->hasFile('imagenes')) {
+                $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
-                foreach ($request->file('logos') as $index => $logo) {
-                    // $filename = Str::uuid() . '.' . $logo->extension();
-                    // $path = $logo->storeAs('logos', $filename, 'public');
+                foreach ($request->file('imagenes') as $index => $imagen) {
+                    // $filename = Str::uuid() . '.' . $imagen->extension();
+                    // $path = $imagen->storeAs('logos', $filename, 'public');
+                    $tipo_archivo_id = $tiposArchivos[$index] ?? null;
 
-                    $name = sanear_string($logo->getClientOriginalName());
-                    $name_legible = $logo->getClientOriginalName();
-                    $type = $logo->getMimeType();
-                    $size = $logo->getSize();
-                    $format = $logo->getClientOriginalExtension();
-                    $path = $logo->store('logos', 'public');
+                    $name = sanear_string($imagen->getClientOriginalName());
+                    $name_legible = $imagen->getClientOriginalName();
+                    $type = $imagen->getMimeType();
+                    $size = $imagen->getSize();
+                    $format = $imagen->getClientOriginalExtension();
+                    $path = $imagen->store('logos', 'public');
 
                     $imagen = EntidadImagen::create([
-                        'ef_nombre' => $request->nombre,
+                        'ent_id' => $entId,
+                        'tipo_archivo_id' => $tipo_archivo_id,
+                        'ef_nombre' => $name,
                         'ef_img_nombre_legible' => $name_legible,
                         'ef_img_name' => $name,
                         'ef_img_path' => $path,
@@ -419,6 +429,10 @@ class EntidadController extends Controller
             ])->values()->toArray())
             ->toArray();
 
+        $tipos_archivos = TipoArchivo::where('tipo_archivo_estado', 1)
+            ->orderBy('tipo_archivo_id', 'desc')
+            ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
+
         return view('entidades.edit', compact(
             'entidad',
             'tiposEntidad',
@@ -433,6 +447,7 @@ class EntidadController extends Controller
             'sucursales',
             'rubrosPorDomicilio',
             'subrubrosPorDomicilio',
+            'tipos_archivos'
         ));
     }
 
@@ -620,24 +635,55 @@ class EntidadController extends Controller
             | Agregar nuevos logos
             |--------------------------------------------------------------------------
             */
-            if ($request->hasFile('logos')) {
+            // if ($request->hasFile('logos')) {
 
-                foreach ($request->file('logos') as $logoFile) {
+            //     foreach ($request->file('logos') as $logoFile) {
 
-                    if (!$logoFile) {
-                        continue;
-                    }
+            //         if (!$logoFile) {
+            //             continue;
+            //         }
 
-                    $path = $logoFile->store('logos', 'public');
+            //         $path = $logoFile->store('logos', 'public');
+
+            //         $imagen = EntidadImagen::create([
+            //             'ent_id' => $id,
+            //             'ef_nombre' => $request->nombre,
+            //             'ef_img_nombre_legible' => $logoFile->getClientOriginalName(),
+            //             'ef_img_name' => basename($path),
+            //             'ef_img_path' => $path,
+            //             'ef_img_format' => $logoFile->getClientOriginalExtension(),
+            //             'ef_img_size' => $logoFile->getSize(),
+            //             'ef_principal' => 0,
+            //             'ef_estado' => 1,
+            //             'ef_fecha_alta' => now(),
+            //             'ef_usu_alta' => $usu,
+            //         ]);
+            //     }
+            // }
+            if ($request->hasFile('imagenes')) {
+                $tiposArchivos = $request->input('f_tipo_archivo_id', []);
+
+                foreach ($request->file('imagenes') as $index => $imagen) {
+                    // $filename = Str::uuid() . '.' . $imagen->extension();
+                    // $path = $imagen->storeAs('logos', $filename, 'public');
+                    $tipo_archivo_id = $tiposArchivos[$index] ?? null;
+
+                    $name = sanear_string($imagen->getClientOriginalName());
+                    $name_legible = $imagen->getClientOriginalName();
+                    $type = $imagen->getMimeType();
+                    $size = $imagen->getSize();
+                    $format = $imagen->getClientOriginalExtension();
+                    $path = $imagen->store('logos', 'public');
 
                     $imagen = EntidadImagen::create([
                         'ent_id' => $id,
-                        'ef_nombre' => $request->nombre,
-                        'ef_img_nombre_legible' => $logoFile->getClientOriginalName(),
-                        'ef_img_name' => basename($path),
+                        'tipo_archivo_id' => $tipo_archivo_id,
+                        'ef_nombre' => $name,
+                        'ef_img_nombre_legible' => $name_legible,
+                        'ef_img_name' => $name,
                         'ef_img_path' => $path,
-                        'ef_img_format' => $logoFile->getClientOriginalExtension(),
-                        'ef_img_size' => $logoFile->getSize(),
+                        'ef_img_format' => $format,
+                        'ef_img_size' => $size,
                         'ef_principal' => 0,
                         'ef_estado' => 1,
                         'ef_fecha_alta' => now(),

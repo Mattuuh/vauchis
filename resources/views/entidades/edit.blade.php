@@ -12,7 +12,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -132,7 +132,7 @@
                     @enderror
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
 
                     <div class="card card-custom p-3 mb-3">
@@ -173,7 +173,7 @@
                 </div>
                 <button type="button" id="add-logo" class="btn btn-primary btn-block">
                     Agregar otro logo
-                </button>
+                </button> --}}
 
                 @if ($entidad->mp_user_id!='')
                     <div class="row g-3">
@@ -193,6 +193,63 @@
 
             </div>
         </div>
+
+        {{-- ARCHIVOS --}}
+        <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Imagenes</h6>
+            <div class="row g-3">
+                @foreach ($entidad->imagenes as $imagen)
+                    <div class="col-12 col-md-4">
+                        <div class="border rounded p-2 h-100">
+                            <img src="{{ asset('storage/'. $imagen->ef_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->ef_nombre }}" style="height:160px;border-radius:6px;">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="delete_logos[]" value="{{ $imagen->ef_id }}" id="logo-delete-{{ $imagen->ef_id }}">
+                                <label class="form-check-label" for="logo-delete-{{ $imagen->ef_id }}">Eliminar logo</label>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="logo_principal" value="{{ $imagen->ef_id }}" id="logo-principal-{{ $imagen->ef_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="logo-principal-{{ $imagen->ef_id }}">Logo principal</label>
+                            </div>
+
+                            <div class="form-check">
+                                <select name="f_tipo_archivo_id_[]" id="f_tipo_archivo_id_" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="col-12">
+                <label class="form-label required-label">Imagen/es</label>
+                <div id="logos-container">
+                    <div class="row logo-item mb-2">
+                        <div class="col-sm-8">
+                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                        {{ $tipo['tipo_archivo_nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center"></div>
+                    </div>
+
+                </div>
+            </div>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
+        </div>
+        
 
         <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -910,12 +967,22 @@ $(document).on('click', '#btn_eliminar', function (e) {
 $(document).ready(function () {
 
     $('#add-logo').on('click', function () {
+
         let html = `
             <div class="row logo-item mb-2">
-                <div class="col-sm-11">
-                    <input type="file" name="logos[]" accept="image/*"cclass="form-control">
+                <div class="col-sm-8">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                 </div>
-
+                <div class="col-sm-3">
+                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                        <option value="">Selecciona el tipo de archivo</option>
+                        @foreach($tipos_archivos as $tipo)
+                            <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                {{ $tipo['tipo_archivo_nombre'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-sm-1 d-flex align-items-center">
                     <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
                 </div>

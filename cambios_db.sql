@@ -356,3 +356,53 @@ INSERT INTO `subrubros` (`sub_id`, `rub_id`, `sub_codigo`, `sub_nombre`, `sub_es
 ALTER TABLE `modalidades_campos` CHANGE `mca_nombre` `mca_nombre` VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 ALTER TABLE `modalidades_campos` CHANGE `mca_id` `mca_id` INT UNSIGNED NOT NULL AUTO_INCREMENT;
 
+
+
+
+CREATE TABLE `resaltadores` (
+  `resal_id` int NOT NULL AUTO_INCREMENT,
+  `resal_nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `resal_descripcion` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `resal_fecha_ini` datetime DEFAULT NULL,
+  `resal_fecha_fin` datetime DEFAULT NULL,
+  `resal_publico` int DEFAULT '1',
+  `resal_estado` int DEFAULT NULL,
+  `resal_estado2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `resal_color` varchar(100) DEFAULT NULL,
+  `resal_img_nombre_legible` varchar(150) DEFAULT NULL,
+  `resal_img_name` varchar(200) DEFAULT NULL,
+  `resal_img_path` varchar(200) DEFAULT NULL,
+  `resal_img_format` varchar(200) DEFAULT NULL,
+  `resal_img_size` varchar(200) DEFAULT NULL,
+  `resal_fecha_alta` datetime DEFAULT NULL,
+  `resal_usu_alta` int DEFAULT NULL,
+  `resal_fecha_mod` datetime DEFAULT NULL,
+  `resal_usu_mod` int DEFAULT NULL,
+  `resal_fecha_baja` datetime DEFAULT NULL,
+  `resal_usu_baja` int DEFAULT NULL,
+  PRIMARY KEY (`resal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `resaltadores_entidades` (
+  `re_id` int NOT NULL AUTO_INCREMENT,
+  `resal_id` int DEFAULT NULL,
+  `ent_id` int DEFAULT NULL,
+  `re_notas` text COLLATE utf8mb4_unicode_ci,
+  `re_publico` int DEFAULT '1',
+  `re_estado` int DEFAULT NULL,
+  `re_estado2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `re_fecha_alta` datetime DEFAULT NULL,
+  `re_usu_alta` int DEFAULT NULL,
+  `re_fecha_mod` datetime DEFAULT NULL,
+  `re_usu_mod` int DEFAULT NULL,
+  `re_fecha_baja` datetime DEFAULT NULL,
+  `re_usu_baja` int DEFAULT NULL,
+  PRIMARY KEY (`re_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `resaltadores` (`resal_id`, `resal_nombre`, `resal_descripcion`, `resal_fecha_ini`, `resal_fecha_fin`, `resal_publico`, `resal_estado`, `resal_estado2`, `resal_color`, `resal_img_nombre_legible`, `resal_img_name`, `resal_img_path`, `resal_img_format`, `resal_img_size`, `resal_fecha_alta`, `resal_usu_alta`, `resal_fecha_mod`, `resal_usu_mod`, `resal_fecha_baja`, `resal_usu_baja`) VALUES
+(1, 'Recomendado', 'Recomendado', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(2, 'Con causa', 'Con causa', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(3, 'Nuevo', 'Nuevo', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
+(4, 'Destacado', 'Destacado', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
+

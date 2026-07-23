@@ -13,6 +13,7 @@ class EntidadImagen extends Model
 
     protected $fillable = [
         'ent_id',
+        'tipo_archivo_id',
         'ef_img_nombre_legible',
         'ef_img_name',
         'ef_img_path',
