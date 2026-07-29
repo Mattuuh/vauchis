@@ -141,6 +141,9 @@ Route::get('/categorias/{categoria}/rubros/{rubro}/entidades',[CategoriaControll
 Route::get('/categorias/{categoria}/rubros/{rubro}/subrubros/{subrubro}/entidades',[CategoriaController::class, 'entidadesPorSubrubro'])->name('categorias.entidades.subrubro');
 
 
+Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
+Route::get('/buscar', [VoucherController::class, 'buscar_voucher'])->name('vouchers.buscar');
+Route::get('/vouchers/{voucher}/{modalidadCampo}/comprar', [VoucherController::class, 'precompra'])->name('vouchers.comprar');
 
 
 Route::middleware(['administrador'])
@@ -182,9 +185,6 @@ Route::middleware(['administrador'])
         Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');
         Route::post('/vouchers/{voucher}/detalles/{detalle}/delete', [VoucherController::class, 'delete_voucher_detalle'])->name('vouchers.delete.detalle');
         Route::post('/vouchers/{id}/agregar-stock', [VoucherController::class, 'agregar_voucher_detalle'])->name('vouchers.update_detalle');
-        Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
-        Route::get('/buscar', [VoucherController::class, 'buscar_voucher'])->name('vouchers.buscar');
-        Route::get('/vouchers/{voucher}/{modalidadCampo}/comprar', [VoucherController::class, 'precompra'])->name('vouchers.comprar');
 
 
         Route::get('/modalidades/listado', [ModalidadController::class, 'listado'])->name('modalidades.listado');

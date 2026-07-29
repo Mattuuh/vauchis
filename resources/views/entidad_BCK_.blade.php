@@ -104,7 +104,7 @@
                                         <strong>${{ number_format($voucher->vou_monto_fijo, 0, ',', '.') }}</strong>
                                     </p>
 
-                                    <a href="{{ route('admin.vouchers.comprar', $voucher->vou_id) }}" class="vs-btn vs-btn-primary">
+                                    <a href="{{ route('vouchers.comprar', $voucher->vou_id) }}" class="vs-btn vs-btn-primary">
                                         Comprar
                                     </a>
                                 </div>

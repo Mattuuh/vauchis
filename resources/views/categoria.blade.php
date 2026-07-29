@@ -714,7 +714,7 @@
 //     function fetchVouchers(url = null) {
 //         let search = $('#vo-search-input').val();
 
-//         let currentUrl = new URL(url || "{{ route('admin.vouchers.buscar') }}", window.location.origin);
+//         let currentUrl = new URL(url || "{{ route('vouchers.buscar') }}", window.location.origin);
 
 //         currentUrl.searchParams.set('search', search);
 

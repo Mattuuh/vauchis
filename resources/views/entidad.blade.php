@@ -141,8 +141,8 @@
 
                         <div class="vp-fixed-options">
                             @foreach($voucher->modalidadValores as $campo)
-                                {{-- <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
-                                <button type="button" class="voucher-monto-btn" data-monto="{{ $campo->vmv_monto_fijo }}" data-url="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo, 0, ',', '.') }}</button>
+                                {{-- <a href="{{ route('vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
+                                <button type="button" class="voucher-monto-btn" data-monto="{{ $campo->vmv_monto_fijo }}" data-url="{{ route('vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo, 0, ',', '.') }}</button>
                             @endforeach
                         </div>
                     </div>
@@ -186,7 +186,7 @@
                         </form> --}}
                         <div class="vp-custom-form">
                         @foreach($voucher->modalidadValores as $campo)
-                            <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
+                            <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
                         @endforeach
                         </div>
                     </div>
@@ -213,7 +213,7 @@
                                     ?? 0;
                             @endphp
 
-                            {{-- <a href="{{ route('admin.vouchers.comprar', $voucher->vou_id ?? $voucher->id) }}" class="vp-product-card">
+                            {{-- <a href="{{ route('vouchers.comprar', $voucher->vou_id ?? $voucher->id) }}" class="vp-product-card">
                                 <div class="vp-product-image">
                                     <img src="{{ asset('storage/' . $image) }}" alt="{{ $voucher->vou_nombre ?? $voucher->name }}">
                                 </div>
@@ -222,9 +222,9 @@
                                 <p>${{ number_format($price, 0, ',', '.') }}</p>
                             </a> --}}
                             @foreach($voucher->modalidadValores as $campo)
-                                {{-- <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
+                                {{-- <a href="{{ route('vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
 
-                                <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}" class="vp-product-card">
+                                <a href="{{ route('vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}" class="vp-product-card">
                                 <div class="vp-product-image">
                                     <img src="{{ asset('storage/' . $image) }}" alt="{{ $voucher->vou_nombre ?? $voucher->name }}">
                                 </div>
