@@ -184,6 +184,7 @@ class OrganizacionController extends Controller
                 'org_img_path' => $logoPath,
                 'org_img_format' => $format,
                 'org_img_size' => $size,
+                'org_publico' => $request->f_publico,
                 'org_estado' => '1',
                 'org_estado2' => null,
                 'org_fecha_alta' => now(),
@@ -193,7 +194,7 @@ class OrganizacionController extends Controller
             // dd('Se guardó correctamente', $organizacion);
 
             return redirect()
-                ->route('organizacion.index')
+                ->route('admin.organizacion.index')
                 ->with('success', 'Organizacion creada correctamente');
 
         } catch (\Exception $e) {
@@ -316,6 +317,7 @@ class OrganizacionController extends Controller
                 'org_longitud' => $request->f_longitud,
                 'org_descripcion_publica' => $request->f_descripcion_publica,
                 'org_descripcion_interna' => $request->f_descripcion_interna,
+                'org_publico' => $request->f_publico,
                 'org_fecha_mod' => now(),
                 'org_usu_mod' => 1,
             ]);
@@ -335,7 +337,7 @@ class OrganizacionController extends Controller
             }
 
             return redirect()
-                ->route('organizacion.edit', $id)
+                ->route('admin.organizacion.edit', $id)
                 ->with('success', 'Organización actualizada correctamente');
 
         } catch (\Exception $e) {
@@ -355,7 +357,7 @@ class OrganizacionController extends Controller
             ]);
 
             return redirect()
-                ->route('organizacion.index')
+                ->route('admin.organizacion.index')
                 ->with('success', 'Organizacion eliminada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

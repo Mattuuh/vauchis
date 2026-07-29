@@ -42,7 +42,7 @@ class TipoEntidadController extends Controller
             ]);
 
             return redirect()
-                ->route('tipos-entidad.index')
+                ->route('admin.tipos-entidad.index')
                 ->with('success', 'Tipo de entidad creado correctamente');
 
         } catch (\Exception $e) {
@@ -72,7 +72,7 @@ class TipoEntidadController extends Controller
             ]);
 
             return redirect()
-                ->route('tipos-entidad.edit', $id)
+                ->route('admin.tipos-entidad.edit', $id)
                 ->with('success', 'Tipo de entidad actualizado correctamente');
 
         } catch (\Exception $e) {
@@ -92,7 +92,7 @@ class TipoEntidadController extends Controller
             ]);
 
             return redirect()
-                ->route('tipos-entidad.index')
+                ->route('admin.tipos-entidad.index')
                 ->with('success', 'Tipo entidad eliminado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

@@ -25,7 +25,7 @@
                     $img_category = $category->image ? asset('images/'.$category->image) : '';
                 @endphp
 
-                <a href="{{ isset($category->id) ? route('vouchers.categoria', $category->id) : '#' }}"
+                <a href="{{ isset($category->id) ? route('categorias', $category->id) : '#' }}"
                 class="vh-mobile-category-card vh-mobile-category-card--{{ $loop->index + 1 }}">
                     <strong>{{ $category->name }}</strong>
 
@@ -36,7 +36,7 @@
             @endforeach
         </div>
 
-        {{-- <form action="{{ route('vouchers.buscar') }}" method="GET" class="vh-mobile-search">
+        {{-- <form action="{{ route('admin.vouchers.buscar') }}" method="GET" class="vh-mobile-search">
             <span class="vh-mobile-search__icon">⌕</span>
             <input type="text" name="search" placeholder="Negocio, servicio, categoría..." value="{{ request('search') }}">
         </form> --}}
@@ -68,7 +68,7 @@
                                 $img_category = $category->image ? asset('images/'.$category->image) : '';
                             @endphp
 
-                            <a href="{{ isset($category->id) ? route('vouchers.categoria', $category->id) : '#' }}" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
+                            <a href="{{ isset($category->id) ? route('categorias', $category->id) : '#' }}" class="vh-category-card vh-category-card--{{ $loop->index + 1 }}">
                                 <strong>{{ $category->name }}</strong>
 
                                 @if($img_category)
@@ -109,7 +109,7 @@
                             $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : $logoFallbackImages[$loop->index % count($logoFallbackImages)];
 
                         @endphp
-                        <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}">
+                        <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('admin.vouchers.entidad', $brand->id) : '#' }}">
                             {{-- <img src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}"> --}}
 
                             <img class="vh-business-card__banner" src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}">
@@ -228,7 +228,7 @@
 
                         <article
                             class="vh-business-card entidades"
-                            data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}"
+                            data-url="{{ isset($brand->id) ? route('admin.vouchers.entidad', $brand->id) : '#' }}"
                         >
                             <div class="vh-business-card__image">
                                 <img src="{{ $imgSrc }}" alt="{{ $brand->name }}">

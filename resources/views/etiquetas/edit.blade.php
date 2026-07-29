@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('etiquetas.update', $etiqueta->eti_id) }}" id="form_main">
+    <form method="POST" action="{{ route('admin.etiquetas.update', $etiqueta->eti_id) }}" id="form_main">
         @csrf
         @method('PUT')
 
@@ -93,12 +93,12 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $etiqueta->eti_id }}" data-url="{{ route('etiquetas.delete', $etiqueta->eti_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $etiqueta->eti_id }}" data-url="{{ route('admin.etiquetas.delete', $etiqueta->eti_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('etiquetas.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.etiquetas.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
 
@@ -193,7 +193,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
             $.post(url, {
                 _token: "{{ csrf_token() }}"
             }).done(function () {
-                window.location.href = "{{ route('etiquetas.index') }}";
+                window.location.href = "{{ route('admin.etiquetas.index') }}";
             });
 
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resaltador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ResaltadorController extends Controller
 {
@@ -80,7 +81,7 @@ class ResaltadorController extends Controller
             }
 
             return redirect()
-                ->route('resaltadores.index')
+                ->route('admin.resaltadores.index')
                 ->with('success', 'Resaltador creado correctamente');
 
         } catch (\Exception $e) {
@@ -96,8 +97,42 @@ class ResaltadorController extends Controller
     {
         $resaltador = Resaltador::findOrFail($id);
 
+        $entidadesDisponibles = DB::table('entidades as e')
+            ->where('e.ent_estado', 1)
+            ->where(function ($q) use ($id) {
+                $q->whereNull('resal_id')
+                ->orWhere('resal_id', $id);
+            })
+            ->select(
+                'e.ent_id as id',
+                'e.ent_nombre_fantasia as nombre'
+            )
+            ->orderBy('e.ent_nombre_fantasia')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'nombre' => $item->nombre,
+            ])
+            ->toArray();
+
+        $entidadesSeleccionados = DB::table('entidades as e')
+            ->where('e.ent_estado', 1)
+            ->where('resal_id', $id)
+            ->select(
+                'e.ent_id as id',
+                'e.ent_nombre_fantasia as nombre'
+            )
+            ->orderBy('e.ent_nombre_fantasia')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'nombre' => $item->nombre,
+            ])
+            ->toArray();
         return view('resaltadores.edit', compact(
             'resaltador',
+            'entidadesDisponibles',
+            'entidadesSeleccionados'
         ));
     }
 
@@ -136,8 +171,22 @@ class ResaltadorController extends Controller
                 'resal_usu_mod' => 1,
             ]);
 
+            $entiades_ids = $request->input('entidades', []);
+
+            // Desvincular de este resaltador las entiades que ya no están seleccionados
+            DB::table('entidades')
+                ->where('resal_id', $id)
+                ->update(['resal_id' => null]);
+
+            // Volver a vincular los seleccionados
+            if (!empty($entiades_ids)) {
+                DB::table('entidades')
+                    ->whereIn('ent_id', $entiades_ids)
+                    ->update(['resal_id' => $id]);
+            }
+
             return redirect()
-                ->route('resaltadores.edit', $id)
+                ->route('admin.resaltadores.edit', $id)
                 ->with('success', 'Resaltador actualizado correctamente');
 
         } catch (\Exception $e) {
@@ -157,7 +206,7 @@ class ResaltadorController extends Controller
             ]);
 
             return redirect()
-                ->route('resaltadores.index')
+                ->route('admin.resaltadores.index')
                 ->with('success', 'Resaltador eliminado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

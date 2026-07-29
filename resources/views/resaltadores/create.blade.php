@@ -109,7 +109,7 @@ $(document).ready(function () {
         </div>
     </section>
 
-    <form method="POST" action="{{ route('resaltadores.store') }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.resaltadores.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
 
         <!-- CARD -->
@@ -182,7 +182,7 @@ $(document).ready(function () {
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('resaltadores.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <a href="{{ route('admin.resaltadores.index') }}" class="btn btn-outline-secondary">Cancelar</a>
             <button type="submit" class="btn btn-success">Guardar</button>
         </div>
 

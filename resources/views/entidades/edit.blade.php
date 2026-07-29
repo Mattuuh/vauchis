@@ -132,6 +132,17 @@
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $entidad->ent_publico) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+
+                    @error('f_publico')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 {{-- <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
 
@@ -360,6 +371,18 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Email 2</label>
                                 <input type="email" name="sucursales[{{ $index }}][cd_email2]" class="form-control" value="{{ old("sucursales.$index.cd_email2", $sucursal->ed_email2 ?? '') }}">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="sucursales[{{ $index }}][cd_publico]" id="cd_publico-{{ $index }}" value="1" {{ old("sucursales.$index.cd_publico", $sucursal->ed_publico) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="cd_publico-{{ $index }}">Publico</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Horario de atenci&oacute;n</label>
+                                <input type="text" name="sucursales[{{ $index }}][cd_horario_atencion]" class="form-control form-control-custom" placeholder="Horario de atención de Lun. a Vie. de 14:00 h a 20:00 h" value="{{ old("sucursales.$index.cd_horario_atencion", $sucursal->ed_horario_atencion ?? '') }}">
                             </div>
 
                             <div class="col-12">

@@ -11,7 +11,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('modalidades.store') }}">
+    <form method="POST" action="{{ route('admin.modalidades.store') }}">
         @csrf
 
         {{-- DATOS DE LA MODALIDAD --}}
@@ -115,6 +115,16 @@
                                 </div>
 
                                 <div class="col-12 col-md-4">
+                                    <label class="form-label d-block">Comportamiento</label>
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="radio" name="campos[{{ $i }}][monto_fijo]" value="1" {{ !isset($campo['monto_fijo']) || !empty($campo['monto_fijo']) ? 'checked' : '' }}>
+                                        <label class="form-check-label">Monto fijo</label>
+                                        <input class="form-check-input" type="radio" name="campos[{{ $i }}][monto_variable]" value="1" {{ !isset($campo['monto_variable']) || !empty($campo['monto_variable']) ? 'checked' : '' }}>
+                                        <label class="form-check-label">Monto variable</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-4">
                                     <label class="form-label d-block">Activo</label>
                                     <div class="form-check form-switch mt-2">
                                         <input class="form-check-input" type="checkbox" name="campos[{{ $i }}][estado]" value="1" {{ !isset($campo['estado']) || !empty($campo['estado']) ? 'checked' : '' }}>
@@ -149,13 +159,8 @@
 
         {{-- BOTONES --}}
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('modalidades.index') }}" class="btn btn-outline-secondary">
-                Cancelar
-            </a>
-
-            <button type="submit" class="btn btn-success">
-                Guardar
-            </button>
+            <a href="{{ route('admin.modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success">Guardar</button>
         </div>
     </form>
 </div>
@@ -163,16 +168,9 @@
 {{-- TEMPLATE --}}
 <template id="campo-template">
     <div class="campo-dinamico-item border rounded p-3 mb-3 position-relative" data-index="__INDEX__">
-        <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 btn-eliminar-campo">
-            ×
-        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 btn-eliminar-campo">×</button>
 
         <div class="row g-3">
-            {{-- <div class="col-12 col-md-4">
-                <label class="form-label required-label">Código</label>
-                <input type="text" name="campos[__INDEX__][codigo]" class="form-control field-required campo-codigo" placeholder="Ej: porcentaje" required>
-            </div> --}}
-
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Leyenda del campo</label>
                 <input type="text" name="campos[__INDEX__][nombre]" class="form-control field-required" placeholder="Ej: Porcentaje" required>
@@ -184,36 +182,40 @@
             </div>
 
             <div class="col-12 col-md-6">
-                <label class="form-label required-label">Tipo de dato del campo</label>
+                <label class="form-label required-label">Tipo de campo</label>
                 <select name="campos[__INDEX__][tipo]" class="form-select field-required campo-tipo" required>
                     <option value="">Seleccionar...</option>
-                    <option value="text">Texto</option>
-                    <option value="textarea">Texto expandible</option>
+                    {{-- <option value="text">Texto</option> --}}
+                    {{-- <option value="textarea">Texto expandible</option> --}}
                     <option value="number">Número</option>
-                    {{-- <option value="decimal">Decimal</option> --}}
-                    {{-- <option value="money">Moneda</option> --}}
-                    <option value="boolean">Sí / No</option>
-                    <option value="select">Seleccionable</option>
+                    <option value="button">Boton</option>
+                    {{-- <option value="boolean">Sí / No</option> --}}
+                    {{-- <option value="select">Seleccionable</option> --}}
                 </select>
             </div>
 
-            {{-- <div class="col-12 col-md-6">
-                <label class="form-label required-label">Leyenda del campo</label>
-                <input type="text" name="campos[__INDEX__][label]" class="form-control field-required" placeholder="Ej: Porcentaje de descuento" required>
-            </div> --}}
-
-            {{-- <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4">
                 <label class="form-label">Orden</label>
-                <input type="number" name="campos[__INDEX__][orden]" class="form-control" min="1" value="1">
-            </div> --}}
+                <input type="text" name="campos[__INDEX__][orden]" class="form-control" min="1" value="1">
+            </div>
 
-            {{-- <div class="col-12 col-md-4">
-                <label class="form-label d-block">Requerido</label>
+            <div class="col-12 col-md-4">
+                <label class="form-label d-block">Tipo de monto</label>
                 <div class="form-check form-switch mt-2">
-                    <input class="form-check-input" type="checkbox" name="campos[__INDEX__][requerido]" value="1">
+                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="FIJ">
+                    <label class="form-check-label" for="">Monto fijo</label>
+                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="VAR">
+                    <label class="form-check-label">Monto variable</label>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label d-block">Publico</label>
+                <div class="form-check form-switch mt-2">
+                    <input class="form-check-input" type="checkbox" name="campos[__INDEX__][estado]" value="1" checked>
                     <label class="form-check-label">Sí</label>
                 </div>
-            </div> --}}
+            </div>
 
             <div class="col-12 col-md-4">
                 <label class="form-label d-block">Activo</label>
@@ -221,17 +223,6 @@
                     <input class="form-check-input" type="checkbox" name="campos[__INDEX__][estado]" value="1" checked>
                     <label class="form-check-label">Sí</label>
                 </div>
-            </div>
-
-            <div class="col-12 campo-opciones-wrapper" style="display:none;">
-                <label class="form-label">Opciones</label>
-                <textarea name="campos[__INDEX__][opciones]" class="form-control" rows="2" placeholder="Ej: Rojo,Azul,Verde"></textarea>
-                <div class="form-text">Separá las opciones por coma.</div>
-            </div>
-
-            <div class="col-12">
-                <label class="form-label">Texto de ayuda (se muestra abajo de cada campo)</label>
-                <input type="text" name="campos[__INDEX__][ayuda]" class="form-control" placeholder="Ej: Valor entre 1 y 100">
             </div>
         </div>
     </div>

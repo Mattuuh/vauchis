@@ -59,7 +59,7 @@
         </div>
 
         <div class="d-flex gap-2">
-            <a href="{{ route('voucher_plantillas.preview', $plantilla->vpl_id) }}" target="_blank" class="btn btn-outline-success">
+            <a href="{{ route('admin.voucher_plantillas.preview', $plantilla->vpl_id) }}" target="_blank" class="btn btn-outline-success">
                 Ver preview
             </a>
         </div>
@@ -172,7 +172,7 @@
                 </button>
             </div>
 
-            <form id="builder-form" action="{{ route('voucher_plantillas.builder.save', $plantilla->vpl_id) }}" method="POST">
+            <form id="builder-form" action="{{ route('admin.voucher_plantillas.builder.save', $plantilla->vpl_id) }}" method="POST">
                 @csrf
                 <input type="hidden" name="config_json" id="config_json">
             </form>

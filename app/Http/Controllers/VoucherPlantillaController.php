@@ -76,7 +76,7 @@ class VoucherPlantillaController extends Controller
         ]);
 
         return redirect()
-            ->route('voucher_plantillas.builder', $plantilla->vpl_id)
+            ->route('admin.voucher_plantillas.builder', $plantilla->vpl_id)
             ->with('success', 'Plantilla creada correctamente.');
     }
 
@@ -136,7 +136,7 @@ class VoucherPlantillaController extends Controller
         ]);
 
         return redirect()
-            ->route('voucher_plantillas.edit', $plantilla->vpl_id)
+            ->route('admin.voucher_plantillas.edit', $plantilla->vpl_id)
             ->with('success', 'Plantilla actualizada correctamente.');
     }
 
@@ -152,7 +152,7 @@ class VoucherPlantillaController extends Controller
             ]);
 
             return redirect()
-                ->route('voucher_plantillas.index')
+                ->route('admin.voucher_plantillas.index')
                 ->with('success', 'Plantilla eliminado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -201,7 +201,7 @@ class VoucherPlantillaController extends Controller
         ]);
 
         return redirect()
-            ->route('voucher_plantillas.builder', $plantilla->vpl_id)
+            ->route('admin.voucher_plantillas.builder', $plantilla->vpl_id)
             ->with('success', 'Diseño guardado correctamente.');
     }
 

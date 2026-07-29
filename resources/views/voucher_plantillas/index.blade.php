@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <a href="{{ route('voucher_plantillas.create') }}" class="btn commerce-new-btn">
+                        <a href="{{ route('admin.voucher_plantillas.create') }}" class="btn commerce-new-btn">
                             <i class="bi bi-plus-lg"></i>
                             Nueva plantilla
                         </a>
@@ -114,13 +114,13 @@
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('voucher_plantillas.edit', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Editar">
+                                        <a href="{{ route('admin.voucher_plantillas.edit', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="{{ route('voucher_plantillas.builder', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Builder">
+                                        <a href="{{ route('admin.voucher_plantillas.builder', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" title="Builder">
                                             <i class="bi bi-gear"></i>
                                         </a>
-                                        <a href="{{ route('voucher_plantillas.preview', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" target="_blank" title="Preview">
+                                        <a href="{{ route('admin.voucher_plantillas.preview', $plantilla['vpl_id']) }}" class="btn commerce-edit-btn" target="_blank" title="Preview">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </td>

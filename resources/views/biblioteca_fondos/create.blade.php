@@ -31,7 +31,7 @@
         </div>
     @endif
 
-    <form action="{{ route('biblioteca_fondos.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.biblioteca_fondos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="card p-4">

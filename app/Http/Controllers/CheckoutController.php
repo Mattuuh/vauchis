@@ -17,25 +17,48 @@ use Illuminate\Support\Facades\Http;
 class CheckoutController extends Controller
 {
 
-    public function crearPreferencia(Request $request, int $id)
+    public function crearPreferencia(Request $request, int $vou_id, int $vmv_id)
     {
         // if (true) {
         //     return redirect()->route('mercadopago.success');
         // }
 
-        if (!session()->has('auth')) {
-            session(['url.intended' => url()->previous()]);
+        // if (!session()->has('auth')) {
+        //     session(['url.intended' => url()->previous()]);
 
-            return redirect()->route('login')->with('warning', 'Debés iniciar sesión para continuar con el pago.');
-        }
+        //     return redirect()->route('login')->with('warning', 'Debés iniciar sesión para continuar con el pago.');
+        // }
 
         // $usuario = Auth::id();
         $usuario = 1;
         $cliente = Cliente::findOrFail(1);
-        $voucher = Voucher::with('entidad')->findOrFail($id);
+
+        // $voucher = Voucher::with('entidad')->findOrFail($id);
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
+        // dd($voucher);
+        
+        $valores = $voucher->modalidadValores[0];
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto>0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        $monto = $valores->vmv_monto_fijo;
+
         $entidad = $voucher->entidad;
         $cantidad = $request->cantidad;
-        $monto_total = $voucher->vou_monto_fijo * $cantidad;
+        $monto_total = $monto * $cantidad;
         // $monto_total = 10;
 
         // $comprobante_numero
@@ -55,7 +78,7 @@ class CheckoutController extends Controller
             'tipo_comp_id' => 1,
             // 'op_numero' => $comprobante_numero->comp_numero,
             'op_numero' => 1,
-            'op_total_original' => $voucher->vou_monto_fijo,
+            'op_total_original' => $monto,
             'op_total' => $monto_total,
             'op_observaciones' => null,
             'op_observaciones_internas' => null,

@@ -30,7 +30,7 @@
 
         <td class="commerce-col commerce-col--actions" data-label="Acciones">
             <span class="commerce-mobile-label">Acciones</span>
-            <a href="{{ route('organizacion.edit', $organizacion->org_id) }}" class="btn commerce-edit-btn" title="Editar">
+            <a href="{{ route('admin.organizacion.edit', $organizacion->org_id) }}" class="btn commerce-edit-btn" title="Editar">
                 <i class="bi bi-pencil"></i>
             </a>
         </td>

@@ -30,6 +30,11 @@ class Modalidad extends Model
 
     public function campos()
     {
-        return $this->hasMany(ModalidadCampo::class, 'mod_id', 'mod_id');
+        return $this->hasMany(ModalidadCampo::class, 'mod_id', 'mod_id')->where('mca_estado', 1)->orderBy('mca_orden');
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class,'mod_id','mod_id');
     }
 }

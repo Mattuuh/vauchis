@@ -234,7 +234,7 @@ $(document).ready(function () {
                 </div>
 
                 <div class="vs-checkout-content">
-                    <form id="form" action="{{ route('checkout.voucher', $voucher->vou_id) }}" method="POST">
+                    <form id="form" action="{{ route('checkout.voucher', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]) }}" method="POST">
                         @csrf
 
                         <span class="vs-checkout-badge">Voucher</span>
@@ -253,21 +253,22 @@ $(document).ready(function () {
                         <div class="vs-checkout-field">
                             {{-- <label for="cantidad">Cantidad</label> --}}
                             <input type="hidden" id="stock" value="{{ $voucher->vou_stock ?? 0 }}">
+                            <input type="hidden" id="monto" name="monto" value="{{ $valores->vmv_monto_fijo }}">
                             {{-- <input type="text" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $voucher->vou_monto_fijo }}"> --}}
-                            <input type="hidden" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $voucher->vou_monto_fijo }}">
+                            <input type="hidden" name="cantidad" id="cantidad" class="form-control form-control-custom " value="1" min="1" data-precio="{{ $valores->vmv_monto_fijo }}">
                         </div>
 
                         <div class="vs-checkout-row">
                             <span>Precio unitario</span>
-                            <strong>${{ number_format($voucher->vou_monto_fijo, 0, ',', '.') }}</strong>
+                            <strong>${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
                         </div>
 
                         <div class="vs-checkout-total">
                             <span>Total</span>
-                            <strong id="total">${{ number_format($voucher->vou_monto_fijo, 0, ',', '.') }}</strong>
+                            <strong id="total">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
                         </div>
 
-                        <button type="submit" class="vs-checkout-button">Pagar</button>
+                        <button type="submit" class="vs-checkout-button" id="btn_pagar">Pagar</button>
                     </form>
                 </div>
 
@@ -278,6 +279,10 @@ $(document).ready(function () {
 </main>
 
 @include('partials.footer')
+
+<script id="valores-json" type="application/json">
+{!! $valores !!}
+</script>
 
 @endsection
 
@@ -297,5 +302,17 @@ $(document).ready(function () {
 
         cantidadInput.addEventListener('input', actualizarTotal);
     });
+</script>
+
+<script>
+$(document).ready(function () {
+    const valores = JSON.parse(document.getElementById('valores-json').textContent || '{}');
+
+    $('#btn_pagar').on('click', function () {
+        const monto = valores.vmv_monto_fijo;
+        
+        $('#monto').val(monto);
+    });
+});
 </script>
 @endpush

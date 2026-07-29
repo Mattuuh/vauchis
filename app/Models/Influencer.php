@@ -31,6 +31,7 @@ class Influencer extends Model
         // 'inf_telefono2',
         'inf_descripcion_publica',
         'inf_descripcion_interna',
+        'inf_publico',
         'inf_estado',
         'inf_estado2',
         'inf_fecha_alta',

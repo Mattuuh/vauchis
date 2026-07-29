@@ -80,7 +80,7 @@ class EtiquetaController extends Controller
             ]);
 
             return redirect()
-                ->route('etiquetas.index')
+                ->route('admin.etiquetas.index')
                 ->with('success', 'Etiqueta creada correctamente');
 
         } catch (\Exception $e) {
@@ -137,7 +137,7 @@ class EtiquetaController extends Controller
             ]);
 
             return redirect()
-                ->route('etiquetas.edit', $id)
+                ->route('admin.etiquetas.edit', $id)
                 ->with('success', 'Etiqueta actualizada correctamente');
 
         } catch (\Exception $e) {

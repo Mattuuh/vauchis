@@ -25,10 +25,29 @@ class Categoria extends Model
 
     protected $casts = [
         'cv_fecha_alta' => 'datetime',
+        'cv_fecha_mod' => 'datetime',
+        'cv_fecha_baja' => 'datetime',
     ];
 
     public function rubros()
     {
         return $this->hasMany(Rubro::class, 'cv_id', 'cv_id');
+    }
+
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class, 'cat_id', 'cat_id');
+    }
+
+    public function entidades()
+    {
+        return $this->hasManyThrough(
+            Entidad::class,
+            Voucher::class,
+            'cv_id', // FK de categorias en vouchers
+            'ent_id', // PK de entidades
+            'cv_id', // PK de categorias
+            'ent_id'  // FK de entidades en vouchers
+        );
     }
 }

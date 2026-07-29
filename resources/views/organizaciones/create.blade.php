@@ -147,7 +147,7 @@ $(document).ready(function () {
         </div>
     </section>
 
-    <form method="POST" action="{{ route('organizacion.store') }}" id="form_main" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.organizacion.store') }}" id="form_main" enctype="multipart/form-data">
         @csrf
 
         <div class="vch-card p-3 mb-3">
@@ -321,6 +321,17 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+
+                    @error('f_publico')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="col-12 col-md-12">
                     <label class="form-label required-label">Descripcion publica</label>
                     <input type="text" name="f_descripcion_publica" class="form-control field-required" required value="{{ old('f_descripcion_publica') }}">
@@ -341,7 +352,7 @@ $(document).ready(function () {
         </div>
 
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('organizacion.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.organizacion.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

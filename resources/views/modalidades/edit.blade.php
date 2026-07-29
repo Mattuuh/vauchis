@@ -47,7 +47,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('modalidades.update', $modalidad->mod_id) }}" id="form_main">
+    <form method="POST" action="{{ route('admin.modalidades.update', $modalidad->mod_id) }}" id="form_main">
         @csrf
         @method('PUT')
 
@@ -199,10 +199,10 @@
 
         {{-- BOTONES --}}
         <div class="d-flex justify-content-between form-actions">
-            <button type="button" class="btn btn-danger" data-id="{{ $modalidad->mod_id }}" data-url="{{ route('modalidades.delete', $modalidad->mod_id) }}" id="btn_eliminar">Eliminar</button>
+            <button type="button" class="btn btn-danger" data-id="{{ $modalidad->mod_id }}" data-url="{{ route('admin.modalidades.delete', $modalidad->mod_id) }}" id="btn_eliminar">Eliminar</button>
 
             <div>
-                <a href="{{ route('modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ route('admin.modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
         </div>

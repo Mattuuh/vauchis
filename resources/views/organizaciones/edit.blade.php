@@ -99,7 +99,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -116,7 +116,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('organizacion.update', $organizacion->org_id) }}" id="form_main" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.organizacion.update', $organizacion->org_id) }}" id="form_main" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -267,21 +267,8 @@
                         <label class="form-label">Mapa</label>
 
                         <div class="col-12 col-md-3" hidden>
-                            <input
-                                type="text"
-                                name="f_latitud"
-                                id="f_latitud"
-                                value="{{ old('f_latitud', '-24.782127') }}"
-                                hidden
-                            >
-
-                            <input
-                                type="text"
-                                name="f_longitud"
-                                id="f_longitud"
-                                value="{{ old('f_longitud', '-65.423198') }}"
-                                hidden
-                            >
+                            <input type="text" name="f_latitud" id="f_latitud" value="{{ old('f_latitud', '-24.782127') }}" hidden>
+                            <input type="text" name="f_longitud" id="f_longitud" value="{{ old('f_longitud', '-65.423198') }}" hidden>
                         </div>
 
                         <div id="map"
@@ -326,6 +313,13 @@
                     @error('f_telefono2')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $organizacion->org_publico) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
                 </div>
 
                 <div class="col-12 col-md-12">
@@ -391,12 +385,12 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $organizacion->org_id }}" data-url="{{ route('organizacion.delete', $organizacion->org_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $organizacion->org_id }}" data-url="{{ route('admin.organizacion.delete', $organizacion->org_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('organizacion.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.organizacion.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
 
@@ -531,7 +525,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
             $.post(url, {
                 _token: "{{ csrf_token() }}"
             }).done(function () {
-                window.location.href = "{{ route('organizacion.index') }}";
+                window.location.href = "{{ route('admin.organizacion.index') }}";
             });
 
         }

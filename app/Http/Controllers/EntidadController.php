@@ -252,6 +252,7 @@ class EntidadController extends Controller
                 'ent_tiktok' => $request->com_tiktok,
                 // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
+                'ent_publico' => $request->f_publico,
                 'ent_fecha_alta' => now(),
             ]);
 
@@ -271,8 +272,10 @@ class EntidadController extends Controller
                     'ed_email1' => $sucursal['cd_email1'] ?? null,
                     'ed_email2' => $sucursal['cd_email2'] ?? null,
                     'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
+                    'ed_horario_atencion' => $sucursal['cd_horario_atencion'] ?? null,
                     'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
                     'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
+                    'ed_publico' => $sucursal['cd_publico'] ?? null,
                     'ed_estado' => 1,
                     'ed_fecha_alta' => now(),
                 ]);
@@ -333,7 +336,7 @@ class EntidadController extends Controller
                         'ef_img_path' => $path,
                         'ef_img_format' => $format,
                         'ef_img_size' => $size,
-                        'ef_principal' => 0,
+                        'ef_principal' => 1,
                         'ef_estado' => 1,
                         'ef_fecha_alta' => now(),
                         'ef_usu_alta' => $usu,
@@ -474,6 +477,7 @@ class EntidadController extends Controller
                     'ent_domicilio_fiscal' => $request->com_dom_fiscal,
                     'ent_instagram' => $request->com_instagram,
                     'ent_tiktok' => $request->com_tiktok,
+                    'ent_publico' => $request->f_publico,
                     'ent_fecha_mod' => now(),
                     'ent_usu_mod' => 1,
                 ]);
@@ -513,9 +517,12 @@ class EntidadController extends Controller
                             'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
                             'ed_email1' => $sucursal['cd_email1'] ?? null,
                             'ed_email2' => $sucursal['cd_email2'] ?? null,
+                            'ed_horario_atencion' => $sucursal['cd_horario_atencion'] ?? null,
                             'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
                             'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
+                            'ed_publico' => $sucursal['cd_publico'] ?? null,
                             'ed_estado' => 1,
+                            'ed_fecha_mod' => now(),
                         ]);
 
                 } else {
@@ -534,8 +541,10 @@ class EntidadController extends Controller
                         'ed_whatsapp' => $sucursal['cd_whatsapp'] ?? null,
                         'ed_email1' => $sucursal['cd_email1'] ?? null,
                         'ed_email2' => $sucursal['cd_email2'] ?? null,
+                        'ed_horario_atencion' => $sucursal['cd_horario_atencion'] ?? null,
                         'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
                         'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
+                        'ed_publico' => $sucursal['cd_publico'] ?? null,
                         'ed_estado' => 1,
                         'ed_fecha_alta' => now(),
                     ]);
@@ -617,7 +626,7 @@ class EntidadController extends Controller
                 EntidadImagen::where('ent_id', $id)
                     ->where('ef_estado', 1)
                     ->update([
-                        'ef_principal' => 0,
+                        'ef_principal' => 1,
                     ]);
 
                 EntidadImagen::where('ent_id', $id)
@@ -660,6 +669,7 @@ class EntidadController extends Controller
             //         ]);
             //     }
             // }
+
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 

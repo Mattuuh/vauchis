@@ -23,6 +23,9 @@
 
     <nav class="vo-subnavbar">
         <div class="vo-shell vo-subnavbar-inner">
+            <div class="vo-subnavbar-item">
+                <a href="#" class="vo-subnavbar-link">Filtros</a>
+            </div>
             @foreach ($rubros ?? [] as $rubro)
                 <div class="vo-subnavbar-item">
                     <a href="#" class="btn-rubro vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => $categoria->id, 'rubro' => $rubro->rub_id]) }}">
@@ -711,7 +714,7 @@
 //     function fetchVouchers(url = null) {
 //         let search = $('#vo-search-input').val();
 
-//         let currentUrl = new URL(url || "{{ route('vouchers.buscar') }}", window.location.origin);
+//         let currentUrl = new URL(url || "{{ route('admin.vouchers.buscar') }}", window.location.origin);
 
 //         currentUrl.searchParams.set('search', search);
 

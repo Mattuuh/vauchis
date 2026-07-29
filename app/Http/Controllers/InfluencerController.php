@@ -164,6 +164,7 @@ class InfluencerController extends Controller
                 // 'inf_telefono2' => $request->f_telefono2,
                 'inf_descripcion_publica' => $request->f_descripcion_publica,
                 'inf_descripcion_interna' => $request->f_descripcion_interna,
+                'inf_publico' => $request->f_publico,
                 'inf_estado' => '1',
                 'inf_estado2' => null,
                 'inf_fecha_alta' => now(),
@@ -203,7 +204,7 @@ class InfluencerController extends Controller
             }
 
             return redirect()
-                ->route('influencers.index')
+                ->route('admin.influencers.index')
                 ->with('success', 'Influencer creado correctamente');
 
         } catch (\Exception $e) {
@@ -290,6 +291,7 @@ class InfluencerController extends Controller
                 'inf_whatsapp' => $request->f_whatsapp,
                 'inf_email1' => $request->f_email1,
                 'inf_email2' => $request->f_email2,
+                'inf_publico' => $request->f_publico,
                 'inf_descripcion_publica' => $request->f_descripcion_publica,
                 'inf_descripcion_interna' => $request->f_descripcion_interna,
             ]);
@@ -370,7 +372,7 @@ class InfluencerController extends Controller
             }
 
             return redirect()
-                ->route('influencers.edit', $id)
+                ->route('admin.influencers.edit', $id)
                 ->with('success', 'Influencer actualizado correctamente');
 
         } catch (\Exception $e) {
@@ -390,7 +392,7 @@ class InfluencerController extends Controller
             ]);
 
             return redirect()
-                ->route('influencers.index')
+                ->route('admin.influencers.index')
                 ->with('success', 'Influencer eliminado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

@@ -44,7 +44,7 @@
         </div>
     </section>
 
-    <form action="{{ route('voucher_plantillas.store') }}" method="POST" enctype="multipart/form-data" id="form_main">
+    <form action="{{ route('admin.voucher_plantillas.store') }}" method="POST" enctype="multipart/form-data" id="form_main">
         @csrf
 
         <!-- CARD -->
@@ -121,7 +121,7 @@
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('voucher_plantillas.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.voucher_plantillas.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

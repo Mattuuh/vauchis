@@ -16,6 +16,7 @@ class ModalidadCampo extends Model
         'mca_nombre', 
         'mca_codigo', 
         'mca_tipo',
+        'mca_tipo_numero',
         'mca_label',
         'mca_placeholder',
         'mca_requerido',
@@ -33,5 +34,17 @@ class ModalidadCampo extends Model
 
     protected $casts = [
         'mca_fecha_alta' => 'datetime',
+        'mca_fecha_mod' => 'datetime',
+        'mca_fecha_baja' => 'datetime',
     ];
+
+    public function modalidad()
+    {
+        return $this->belongsTo(Modalidad::class,'mod_id','mod_id');
+    }
+
+    public function valoresVoucher()
+    {
+        return $this->hasMany(VoucherModalidadValor::class,'mca_id','mca_id');
+    }
 }

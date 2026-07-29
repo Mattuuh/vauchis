@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('tipos-entidad.update', $tipo->tipo_ent_id) }}" id="form_main">
+    <form method="POST" action="{{ route('admin.tipos-entidad.update', $tipo->tipo_ent_id) }}" id="form_main">
         @csrf
         @method('PUT')
 
@@ -71,12 +71,12 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_ent_id }}" data-url="{{ route('tipos-entidad.delete', $tipo->tipo_ent_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_ent_id }}" data-url="{{ route('admin.tipos-entidad.delete', $tipo->tipo_ent_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('tipos-entidad.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.tipos-entidad.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
 

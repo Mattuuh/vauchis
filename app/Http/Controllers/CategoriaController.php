@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
+use App\Models\Entidad;
 use App\Models\Rubro;
 use Illuminate\Http\Request;
 
@@ -18,14 +20,30 @@ class CategoriaController extends Controller
         // ->where('cat_id', $categoriaId)
         ->findOrFail($rubroId);
 
-        // $query = $rubro->entidades()
-        //     ->where('ent_estado', 1)
-        //     ->orderBy('ent_nombre');
-        // dd($query->toRawSql());
+        $entidades = Entidad::query()
+            ->where('ent_estado', 1)
 
-        return view('categorias.partials.entidades', [
-            'entidades' => $rubro->entidades,
-        ]);
+            // Primer filtro: la entidad debe tener vouchers de la categoría.
+            ->whereHas('vouchers', function ($query) use ($categoriaId) {
+                $query->where('cv_id', $categoriaId)
+                    ->where('vou_estado', 1);
+            })
+
+            // Segundo filtro: la entidad debe pertenecer al rubro.
+            ->whereHas('rubros', function ($query) use ($rubroId) {
+                $query->where('rubros.rub_id', $rubroId);
+            })
+
+            // ->with([
+            //     'imagenPrincipal',
+            //     'logoPrincipal',
+            // ])
+            ->orderBy('ent_nombre')
+            ->get();
+
+            // dd($entidades->toRawSql());
+
+        return view('categorias.partials.entidades', ['entidades' => $entidades,]);
     }
 
     public function entidadesPorSubrubro($categoriaId,$rubroId,$subrubroId) {
@@ -42,8 +60,71 @@ class CategoriaController extends Controller
             ->get();
         // dd($entidades->toRawSql());
 
+
+        // $entidades = Entidad::query()
+        //     ->where('ent_estado', 1)
+
+        //     ->whereHas('vouchers', function ($query) use ($categoriaId) {
+        //         $query->where('cat_id', $categoriaId)
+        //             ->where('vou_estado', 1);
+        //     })
+
+        //     ->whereHas('rubros', function ($query) use ($rubroId) {
+        //         $query->where('rubros.rub_id', $rubroId);
+        //     })
+
+        //     ->whereHas('subrubros', function ($query) use ($rubroId, $subrubroId) {
+        //         $query
+        //             ->where('subrubros.rub_id', $rubroId)
+        //             ->where('subrubros.sub_id', $subrubroId);
+        //     })
+
+        //     ->with([
+        //         'imagenPrincipal',
+        //         'logoPrincipal',
+        //     ])
+        //     ->orderBy('ent_nombre')
+        //     ->get();
+
         return view('categorias.partials.entidades', [
             'entidades' => $entidades,
         ]);
+    }
+
+    public function mostrarCategoria($id)
+    {
+        $categoria = Categoria::where('cv_id', $id)
+            ->where('cv_estado', 1)
+            ->select(
+                'cv_id as id',
+                'cv_nombre as nombre',
+                'cv_img_path as logo'
+            )
+            ->first();
+
+        if (!$categoria) {
+            abort(404);
+        }
+
+        $rubros = Rubro::with('subrubros')
+            ->where('cv_id', $id)
+            ->where('rub_estado', 1)
+            ->orderBy('rub_nombre')
+            ->get();
+
+        $entidades = Entidad::query()
+            ->where('ent_estado', 1)
+            ->whereHas('vouchers', function ($query) use ($id) {
+                $query->where('cv_id', $id)
+                    ->where('vou_estado', 1);
+            })
+            ->with([
+                'imagenPrincipal',
+                'logoPrincipal',
+            ])
+            ->orderBy('ent_nombre')
+            ->get();
+
+        return view('categoria', compact('categoria', 'rubros','entidades'));
     }
 }

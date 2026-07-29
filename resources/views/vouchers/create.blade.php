@@ -2,6 +2,136 @@
 
 @section('title', 'Nuevo voucher')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
+
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a crear el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            f_nombre: {
+                required: true,
+            },
+            f_ent_id: {
+                required: true,
+            },
+            f_ed_id: {
+                required: true,
+            },
+            com_documento: {
+                required: true,
+                number: true,
+                minlength: 6
+            },
+            f_inf_id: {
+                required: true,
+            },
+            f_cv_id: {
+                required: true,
+            },
+            f_fecha_ini_lab: {
+                required: true,
+            },
+            f_fecha_fin_lab: {
+                required: true,
+            },
+            stock: {
+                required: true,
+            },
+            f_comision: {
+                required: true,
+            },
+            description: {
+                required: false,
+            },
+            terms: {
+                required: false,
+            },
+            observaciones: {
+                required: false,
+            },
+            f_mod_id: {
+                required: true,
+            },
+            "imagenes[]": {
+                required: false,
+            },
+            "f_tipo_archivo_id[]": {
+                required: false,
+            },
+            // "sucursales[][cd_ciudad]": {
+            //     required: true,
+            // },
+            // "sucursales[][cd_descripcion_publica]": {
+            //     required: true,
+            // },
+            // "sucursales[][cd_descripcion_interna]": {
+            //     required: true,
+            // },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/vouchers/vouchers.css') }}">
 @endpush
@@ -28,7 +158,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('vouchers.store') }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.vouchers.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
 
         <div class="vch-card p-3 mb-3">
@@ -38,7 +168,7 @@
 
                 <div class="col-12">
                     <label class="form-label required-label">Nombre público:</label>
-                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre público" required>
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre público">
 
                     @error('f_nombre')
                         <div class="text-required">{{ $message }}</div>
@@ -47,7 +177,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Entidad:</label>
-                    <select name="f_ent_id" id="f_ent_id" class="form-select field-required" required>
+                    <select name="f_ent_id" id="f_ent_id" class="form-select field-required">
                         <option value="">Selecciona la entidad</option>
                         @foreach($entidades as $entidad)
                             <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id') == $entidad['ent_id'] ? 'selected' : '' }}>
@@ -62,7 +192,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    <select name="f_ed_id" id="f_ed_id" class="form-select field-required" required>
+                    <select name="f_ed_id" id="f_ed_id" class="form-select field-required">
                         <option value="">Selecciona la sucursal</option>
                     </select>
                     @error('f_ed_id')
@@ -87,7 +217,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Categoría:</label>
-                    <select name="f_cv_id" class="form-select field-required" required>
+                    <select name="f_cv_id" class="form-select field-required">
                         <option value="">Selecciona la categoría</option>
                         @foreach($categorias as $id => $nombre)
                             <option value="{{ $id }}" {{ old('f_cv_id') == $id ? 'selected' : '' }}>
@@ -103,7 +233,7 @@
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label required-label">Fecha de inicio:</label>
-                        <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy" required>
+                        <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy">
                         <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
 
                         @error('f_fecha_ini')
@@ -113,7 +243,7 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label required-label">Fecha de vencimiento:</label>
-                        <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy" required>
+                        <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy">
                         <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
 
                         @error('f_fecha_fin')
@@ -122,18 +252,18 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Monto total:</label>
-                    <input type="text" name="f_monto_total" class="form-control field-required" value="0" placeholder="1.01" required>
+                    <input type="text" name="f_monto_total" class="form-control field-required" value="0" placeholder="1.01">
 
                     @error('f_monto_total')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Stock:</label>
-                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0" required>
+                    <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0">
 
                     @error('stock')
                         <div class="text-required">{{ $message }}</div>
@@ -142,7 +272,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
-                    <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision') }}" placeholder="0" required>
+                    <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision') }}" placeholder="0">
 
                     @error('f_comision')
                         <div class="text-required">{{ $message }}</div>
@@ -151,7 +281,7 @@
 
                 {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Permite personalización</label>
-                    <select name="f_permite_personalizacion" class="form-select field-required" required>
+                    <select name="f_permite_personalizacion" class="form-select field-required">
                         <option value="0" {{ old('f_permite_personalizacion') === '0' ? 'selected' : '' }}>NO</option>
                         <option value="1" {{ old('f_permite_personalizacion') === '1' ? 'selected' : '' }}>SI</option>
                     </select>
@@ -171,51 +301,6 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label required-label">Plantillas:</label>
-                    {{-- <div id="banners-wrapper">
-                        <div class="banner-item mb-2">
-                            <div class="row g-2 align-items-center">
-                                <div class="col-md-10">
-                                    <input type="file" name="banners[]" class="form-control field-required" required>
-                                </div>
-                                <div class="col-md-2"></div>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    @error('banners')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-
-                    @error('banners.*')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-
-                    {{-- <div class="mt-2 text-end">
-                        <button type="button" class="btn btn-primary" onclick="addBanner()">
-                            Agregar banner
-                        </button>
-                    </div> --}}
-                    <div class="card card-custom p-3 mb-3">
-                        <div class="row g-3">
-                            @foreach ($plantillas as $plantilla)
-                                <div class="col-12 col-md-4">
-                                    <div class="border rounded p-2 h-100">
-                                        <img src="{{ asset($plantilla->vpl_fondo_path) }}" class="img-fluid rounded mb-2" alt="{{ $plantilla->vpl_nombre }}" style="height:160px;border-radius:6px;">
-
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="plantillas[]" value="{{ $plantilla->vpl_id }}" id="plantilla-{{ $plantilla->vpl_id }}">
-
-                                            <label class="form-check-label" for="plantilla-{{ $plantilla->vpl_id }}">Seleccionar plantilla</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12">
                     <label class="form-label">Observaciones internas</label>
                     <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
 
@@ -232,7 +317,7 @@
 
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Modalidad:</label>
-                <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
+                <select name="f_mod_id" id="f_mod_id" class="form-select field-required">
                     <option value="">Selecciona la modalidad</option>
                     @foreach($modalidades as $modalidad)
                         <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id') == $modalidad->mod_id ? 'selected' : '' }}>
@@ -309,7 +394,7 @@
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
                         <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -327,14 +412,10 @@
         </div>
 
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
-                Cancelar
-            </a>
-
-            <button type="submit" class="btn btn-success" id="btn_guardar">
-                Guardar
-            </button>
+            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success" id="btn_guardar">Guardar</button>
         </div>
+        <br>
     </form>
 </div>
 
@@ -404,79 +485,110 @@
 
         let html = '';
 
-        if (campo.mca_tipo === 'textarea') {
-            html = `
-                <textarea
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-control"
-                    rows="3"
-                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-                    ${campo.mca_requerido ? 'required' : ''}
-                >${escapeHtml(value)}</textarea>
-            `;
-        } else if (campo.mca_tipo === 'select') {
-            const opciones = (campo.mca_opciones || '')
-                .split(',')
-                .map(item => item.trim())
-                .filter(item => item !== '');
+        // if (campo.mca_tipo === 'textarea') {
+        //     html = `
+        //         <textarea
+        //             name="modalidad_valores[${campo.mca_codigo}]"
+        //             class="form-control"
+        //             rows="3"
+        //             placeholder="${escapeHtml(campo.mca_placeholder || '')}"
+        //             ${campo.mca_requerido ? 'required' : ''}
+        //         >${escapeHtml(value)}</textarea>
+        //     `;
+        // } else if (campo.mca_tipo === 'select') {
+        //     const opciones = (campo.mca_opciones || '')
+        //         .split(',')
+        //         .map(item => item.trim())
+        //         .filter(item => item !== '');
 
+        //     html = `
+        //         <select
+        //             name="modalidad_valores[${campo.mca_codigo}]"
+        //             class="form-select"
+        //             ${campo.mca_requerido ? 'required' : ''}
+        //         >
+        //             <option value="">Seleccionar...</option>
+        //             ${opciones.map(opcion => `
+        //                 <option value="${escapeHtml(opcion)}" ${value == opcion ? 'selected' : ''}>
+        //                     ${escapeHtml(opcion)}
+        //                 </option>
+        //             `).join('')}
+        //         </select>
+        //     `;
+        // } else if (campo.mca_tipo === 'boolean') {
+        //     html = `
+        //         <div class="form-check form-switch mt-2">
+        //             <input
+        //                 class="form-check-input"
+        //                 type="checkbox"
+        //                 name="modalidad_valores[${campo.mca_codigo}]"
+        //                 value="1"
+        //                 ${checked ? 'checked' : ''}
+        //             >
+        //             <label class="form-check-label">Sí</label>
+        //         </div>
+        //     `;
+        // } else {
+        //     let inputType = 'text';
+
+        //     if (campo.mca_tipo === 'number') inputType = 'number';
+        //     if (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') inputType = 'number';
+
+        //     const step = (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') ? 'step="0.01"' : '';
+
+        //     html = `
+        //         <input
+        //             type="${inputType}"
+        //             name="modalidad_valores[${campo.mca_codigo}]"
+        //             class="form-control"
+        //             value="${escapeHtml(value)}"
+        //             placeholder="${escapeHtml(campo.mca_placeholder || '')}"
+        //             ${step}
+        //             ${campo.mca_requerido ? 'required' : ''}
+        //         >
+        //     `;
+        // }
+
+        console.log(campo)
+        if (campo.mca_tipo === 'number') {
+            let inputType = 'number';
+
+            if (campo.mca_tipo_numero=='VAR') {
+                html = `
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Monto minimo</label>
+                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control" placeholder="1.01" min="1" value="1">
+                        <div class="form-text">Monto minimo a introducir por el cliente</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Monto maximo</label>
+                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control" placeholder="10.01" min="10" value="10">
+                        <div class="form-text">Monto maximo a introducir por el cliente</div>
+                    </div>
+                `;
+            } else if (campo.mca_tipo_numero=='FIJ') {
+                html = `
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Monto total</label>
+                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="1">
+                        <div class="form-text">Monto total a pagar por el cliente</div>
+                    </div>
+                `;
+            }
+            else {
+                html = ``;
+            }
+        } else if (campo.mca_tipo === 'button') {
             html = `
-                <select
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-select"
-                    ${campo.mca_requerido ? 'required' : ''}
-                >
-                    <option value="">Seleccionar...</option>
-                    ${opciones.map(opcion => `
-                        <option value="${escapeHtml(opcion)}" ${value == opcion ? 'selected' : ''}>
-                            ${escapeHtml(opcion)}
-                        </option>
-                    `).join('')}
-                </select>
-            `;
-        } else if (campo.mca_tipo === 'boolean') {
-            html = `
-                <div class="form-check form-switch mt-2">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="modalidad_valores[${campo.mca_codigo}]"
-                        value="1"
-                        ${checked ? 'checked' : ''}
-                    >
-                    <label class="form-check-label">Sí</label>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="1">
+                    <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
                 </div>
-            `;
-        } else {
-            let inputType = 'text';
-
-            if (campo.mca_tipo === 'number') inputType = 'number';
-            if (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') inputType = 'number';
-
-            const step = (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') ? 'step="0.01"' : '';
-
-            html = `
-                <input
-                    type="${inputType}"
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-control"
-                    value="${escapeHtml(value)}"
-                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-                    ${step}
-                    ${campo.mca_requerido ? 'required' : ''}
-                >
             `;
         }
 
-        return `
-            <div class="col-12 col-md-6">
-                <label class="form-label ${campo.mca_requerido ? 'required-label' : ''}">
-                    ${escapeHtml(campo.mca_label || campo.mca_nombre)}
-                </label>
-                ${html}
-                ${campo.mca_ayuda ? `<div class="form-text">${escapeHtml(campo.mca_ayuda)}</div>` : ''}
-            </div>
-        `;
+        return html;
     }
 
     function renderModalidadCampos(modalidadId) {
@@ -632,7 +744,7 @@
                         <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                     </div>
                     <div class="col-sm-3">
-                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                             <option value="">Selecciona el tipo de archivo</option>
                             @foreach($tipos_archivos as $tipo)
                                 <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>

@@ -14,7 +14,7 @@
         @endphp
 
         <article class="vo-card">
-            <a href="{{ route('vouchers.entidad', $entidad->ent_id) }}" class="vo-card-link">
+            <a href="{{ route('admin.vouchers.entidad', $entidad->ent_id) }}" class="vo-card-link">
                 <div class="vo-card-image">
                     <img src="{{ $imageUrl }}" alt="{{ $entidad->ent_nombre_fantasia }}">
                 </div>

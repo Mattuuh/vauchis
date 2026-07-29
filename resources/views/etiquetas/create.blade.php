@@ -26,7 +26,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('etiquetas.store') }}" id="form_main">
+    <form method="POST" action="{{ route('admin.etiquetas.store') }}" id="form_main">
         @csrf
 
         <!-- CARD -->
@@ -93,7 +93,7 @@
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('etiquetas.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.etiquetas.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

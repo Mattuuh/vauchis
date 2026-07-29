@@ -48,7 +48,7 @@ class BibliotecaFondoController extends Controller
         ]);
 
         return redirect()
-            ->route('biblioteca_fondos.create')
+            ->route('admin.biblioteca_fondos.create')
             ->with('success', 'Imagen registrada correctamente.');
     }
 }

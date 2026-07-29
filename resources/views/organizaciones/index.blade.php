@@ -94,7 +94,7 @@ $(document).ready(function () {
 
                     <div class="commerce-toolbar__right">
                         <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
-                        <a href="{{ route('organizacion.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nueva organizacion</a>
+                        <a href="{{ route('admin.organizacion.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nueva organizacion</a>
                     </div>
                 </div>
 
@@ -142,7 +142,7 @@ $(document).ready(function () {
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('organizacion.edit', $organizacion->org_id) }}" class="btn commerce-edit-btn" title="Editar">
+                                        <a href="{{ route('admin.organizacion.edit', $organizacion->org_id) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </td>

@@ -36,6 +36,7 @@ class Organizacion extends Model
         'org_img_path',
         'org_img_format',
         'org_img_size',
+        'org_publico',
         'org_estado',
         'org_estado2',
         'org_fecha_alta',

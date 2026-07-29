@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <form action="{{ route('voucher_plantillas.update', $plantilla->vpl_id) }}" method="POST" enctype="multipart/form-data" id="form_main">
+    <form action="{{ route('admin.voucher_plantillas.update', $plantilla->vpl_id) }}" method="POST" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
@@ -88,18 +88,18 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $plantilla->vpl_id }}" data-url="{{ route('voucher_plantillas.delete', $plantilla->vpl_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $plantilla->vpl_id }}" data-url="{{ route('admin.voucher_plantillas.delete', $plantilla->vpl_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('voucher_plantillas.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.voucher_plantillas.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
                 <button type="submit" class="btn btn-success" id="btn_actualizar">
                     Actualizar
                 </button>
-                {{-- <a href="{{ route('voucher_plantillas.builder', $plantilla->vpl_id) }}" class="btn btn-outline-success">Ir al builder</a> --}}
+                {{-- <a href="{{ route('admin.voucher_plantillas.builder', $plantilla->vpl_id) }}" class="btn btn-outline-success">Ir al builder</a> --}}
             </div>
         </div>
     </form>

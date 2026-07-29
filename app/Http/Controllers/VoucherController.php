@@ -47,21 +47,21 @@ class VoucherController extends Controller
 
             // 'f_permite_personalizacion' => 'required|in:0,1',
 
-            'description' => 'required|string|max:5000',
-            'terms' => 'nullable|string|max:5000',
-            'observaciones' => 'nullable|string|max:2000',
+            // 'description' => 'required|string|max:5000',
+            // 'terms' => 'nullable|string|max:5000',
+            // 'observaciones' => 'nullable|string|max:2000',
 
-            'etiquetas' => 'nullable|array',
-            'etiquetas.*' => 'integer|exists:etiquetas,eti_id',
+            // 'etiquetas' => 'nullable|array',
+            // 'etiquetas.*' => 'integer|exists:etiquetas,eti_id',
 
-            'etiquetas_nuevas' => 'nullable|array',
-            'etiquetas_nuevas.*' => 'string|max:100',
+            // 'etiquetas_nuevas' => 'nullable|array',
+            // 'etiquetas_nuevas.*' => 'string|max:100',
 
-            'banners' => 'nullable|array|min:1',
-            'banners.0' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
-            'banners.*' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            // 'banners' => 'nullable|array|min:1',
+            // 'banners.0' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
+            // 'banners.*' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:5120',
 
-            'modalidad_valores' => 'nullable|array',
+            // 'modalidad_valores' => 'nullable|array',
         ];
 
         $messages = [
@@ -178,6 +178,10 @@ class VoucherController extends Controller
                             'mca_codigo' => $campo->mca_codigo,
                             'mca_nombre' => $campo->mca_nombre,
                             'mca_tipo' => $campo->mca_tipo,
+                            'mca_tipo_numero' => $campo->mca_tipo_numero,
+                            'mca_numero_minimo' => $campo->mca_numero_minimo,
+                            'mca_numero_maximo' => $campo->mca_numero_maximo,
+                            'mca_monto_fijo' => $campo->mca_monto_fijo,
                             'mca_label' => $campo->mca_label,
                             'mca_placeholder' => $campo->mca_placeholder,
                             'mca_requerido' => $campo->mca_requerido,
@@ -235,7 +239,8 @@ class VoucherController extends Controller
                 'vou_nombre' => $request->f_nombre,
                 'vou_descripcion' => $request->description,
 
-                'vou_monto_fijo' => $request->f_monto_total,
+                // 'vou_monto_fijo' => $request->f_monto_total,
+                'vou_monto_fijo' => 0,
                 'vou_monto_minimo' => null,
                 'vou_monto_maximo' => null,
                 'vou_precio_promocional' => null,
@@ -275,7 +280,8 @@ class VoucherController extends Controller
                     'vd_secuencia' => $i,
                     'vd_variante_nombre' => null,
                     'vd_variante_descripcion' => null,
-                    'vd_monto_total' => $request->f_monto_total,
+                    // 'vd_monto_total' => $request->f_monto_total,
+                    'vd_monto_total' => 0,
                     'vd_estado' => 1,
                     'vd_estado2' => 'PE',
                     'vd_estado3' => 'PE',
@@ -286,28 +292,29 @@ class VoucherController extends Controller
 
             DB::table('vouchers_detalles')->insert($detalles);
 
+            // MODALIDADES
             $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
                 ->where('mca_estado', 1)
                 ->orderBy('mca_orden')
                 ->get();
 
             foreach ($camposModalidad as $campo) {
-                $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
-
-                if ($campo->mca_tipo === 'boolean') {
-                    $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
-                }
+                $valor = $request->input('modalidad_valores.' . $campo->mca_id);
 
                 DB::table('vouchers_modalidad_valores')->insert([
                     'vou_id' => $vouId,
                     'mca_id' => $campo->mca_id,
-                    'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
+                    'vmv_valor' => null,
+                    'vmv_monto_minimo' => $valor['monto_minimo'] ?? 0,
+                    'vmv_monto_maximo' => $valor['monto_maximo'] ?? 0,
+                    'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
                     'vmv_estado' => 1,
                     'vmv_fecha_alta' => now(),
                     'vmv_usu_alta' => $usuarioId,
                 ]);
             }
 
+            // ETIQUETAS
             $etiquetasIds = collect($request->etiquetas ?? [])
                 ->map(fn ($id) => (int) $id)
                 ->unique()
@@ -364,29 +371,29 @@ class VoucherController extends Controller
                 DB::table('etiquetas_vouchers')->insert($rowsEtiquetas);
             }
 
-            $plantillas = $request->input('plantillas', []);
+            // $plantillas = $request->input('plantillas', []);
 
-            $plantillas = collect($plantillas)
-                ->map(fn ($id) => (int) $id)
-                ->unique()
-                ->values();
+            // $plantillas = collect($plantillas)
+            //     ->map(fn ($id) => (int) $id)
+            //     ->unique()
+            //     ->values();
 
-            if ($plantillas->isNotEmpty()) {
-                $rowsPlantillas = [];
+            // if ($plantillas->isNotEmpty()) {
+            //     $rowsPlantillas = [];
 
-                foreach ($plantillas as $vplId) {
-                    $rowsPlantillas[] = [
-                        'vou_id' => $vouId,
-                        'vpl_id' => $vplId,
-                        'vp_principal' => 0,
-                        'vp_estado' => 1,
-                        'vp_fecha_alta' => now(),
-                        'vp_usu_alta' => $usuarioId,
-                    ];
-                }
+            //     foreach ($plantillas as $vplId) {
+            //         $rowsPlantillas[] = [
+            //             'vou_id' => $vouId,
+            //             'vpl_id' => $vplId,
+            //             'vp_principal' => 0,
+            //             'vp_estado' => 1,
+            //             'vp_fecha_alta' => now(),
+            //             'vp_usu_alta' => $usuarioId,
+            //         ];
+            //     }
 
-                DB::table('vouchers_plantillas')->insert($rowsPlantillas);
-            }
+            //     DB::table('vouchers_plantillas')->insert($rowsPlantillas);
+            // }
 
             if ($request->hasFile('imagenes')) {
 
@@ -420,7 +427,7 @@ class VoucherController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('vouchers.index')
+                ->route('admin.vouchers.index')
                 ->with('success', 'Voucher creado correctamente.');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -442,7 +449,7 @@ class VoucherController extends Controller
 
         if (!$voucher) {
             return redirect()
-                ->route('vouchers.index')
+                ->route('admin.vouchers.index')
                 ->with('error', 'El voucher no existe.');
         }
 
@@ -604,7 +611,7 @@ class VoucherController extends Controller
 
         if (!$voucher) {
             return redirect()
-                ->route('vouchers.index')
+                ->route('admin.vouchers.index')
                 ->with('error', 'El voucher no existe.');
         }
 
@@ -928,7 +935,7 @@ class VoucherController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('vouchers.edit', $id)
+                ->route('admin.vouchers.edit', $id)
                 ->with('success', 'Voucher actualizado correctamente.');
 
         } catch (\Throwable $e) {
@@ -1084,7 +1091,7 @@ class VoucherController extends Controller
             ]);
 
             // return redirect()
-            //     ->route('vouchers.edit', $vou_id)
+            //     ->route('admin.vouchers.edit', $vou_id)
             //     ->with('success', 'Detalle eliminado correctamente');
             return response()->json([
                 'icon' => 'success',
@@ -1147,7 +1154,7 @@ class VoucherController extends Controller
             
 
             return redirect()
-                ->route('vouchers.edit', $vou_id)
+                ->route('admin.vouchers.edit', $vou_id)
                 ->with('success', 'Stock actualizado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -1179,13 +1186,51 @@ class VoucherController extends Controller
             abort(404);
         }
 
+        // $vouchers = Voucher::with('imagenes')
+        //     ->where('ent_id', $id)
+        //     ->where('vou_estado', 1)
+        //     ->get();
+
         $vouchers = Voucher::with('imagenes')
+            ->with([
+                'modalidad',
+                'modalidad.campos',
+                'modalidadValores',
+                'modalidadValores.campo',
+            ])
+            ->whereNotIn('mod_id', [14,15])
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();
-            // dd($vouchers);
 
-        return view('entidad', compact('entidad', 'domicilios', 'vouchers'));
+        $vouchers_fijos = Voucher::with('imagenes')
+            ->with([
+                'modalidad',
+                'modalidad.campos',
+                'modalidadValores',
+                'modalidadValores.campo',
+            ])
+            ->where('mod_id', 14)
+            ->where('ent_id', $id)
+            ->where('vou_estado', 1)
+            ->get();
+
+        $vouchers_eleccion = Voucher::with('imagenes')
+            ->with([
+                'modalidad',
+                'modalidad.campos',
+                'modalidadValores',
+                'modalidadValores.campo',
+            ])
+            ->where('mod_id', 15)
+            ->where('ent_id', $id)
+            ->where('vou_estado', 1)
+            ->get();
+
+            // dd($vouchers_fijos);
+            // dd($voucher->toArray());
+
+        return view('entidad', compact('entidad', 'domicilios', 'vouchers', 'vouchers_fijos', 'vouchers_eleccion'));
     }
 
     public function vouchersPorCategoria(int $id)
@@ -1299,5 +1344,43 @@ class VoucherController extends Controller
 
             'kregtotal' => $vouchers->total()
         ]);
+    }
+
+    public function precompra($vou_id, $vmv_id, Request $request)
+    {
+        // $voucher = Voucher::with('entidad')
+        //     ->with('imagenes')
+        //     ->where('vou_estado', 1)
+        //     ->findOrFail($id);
+        //     // dd($voucher);
+
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
+
+        $entidad = $voucher->entidad;
+
+        $imagenes = $voucher->imagenes;
+
+        $valores = $voucher->modalidadValores[0];
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        if (!$voucher) {
+            abort(404);
+        }
+
+        return view('vouchers.comprar', compact('voucher','entidad','imagenes','valores'));
     }
 }

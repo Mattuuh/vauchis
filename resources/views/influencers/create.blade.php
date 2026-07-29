@@ -26,7 +26,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('influencers.store') }}">
+    <form method="POST" action="{{ route('admin.influencers.store') }}">
         @csrf
 
         <!-- CARD -->
@@ -169,6 +169,13 @@
                     @enderror
                 </div> --}}
 
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+                </div>
+
                 <div class="col-12 col-md-12">
                     <label class="form-label required-label">Descripcion publica</label>
                     <input type="text" name="f_descripcion_publica" class="form-control field-required" required>
@@ -204,7 +211,7 @@
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('influencers.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.influencers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

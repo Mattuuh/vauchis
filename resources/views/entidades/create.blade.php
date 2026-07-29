@@ -279,6 +279,17 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+
+                    @error('f_publico')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 {{-- <div class="col-12">
                     <label class="form-label required-label">Imagen/es</label>
                     <div id="logos-container">
@@ -444,6 +455,18 @@ $(document).ready(function () {
                         </div>
 
                         <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="sucursales[0][cd_publico]" id="cd_publico-0" value="1" {{ old('cd_publico-0', 1) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="cd_publico-0">Publico</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Horario de atenci&oacute;n</label>
+                            <input type="text" name="sucursales[0][cd_horario_atencion]" class="form-control form-control-custom" placeholder="Horario de atención de Lun. a Vie. de 14:00 h a 20:00 h">
+                        </div>
+
+                        <div class="col-12">
                             <label class="form-label">Descripcion Publica</label>
                             <input type="text" name="sucursales[0][cd_descripcion_publica]" class="form-control form-control-custom" placeholder="Información adicional que sera publica de esta sucursal">
                         </div>
@@ -466,13 +489,7 @@ $(document).ready(function () {
                             <label class="form-label fw-semibold">Rubros disponibles</label>
                             <div class="rubros-available-box">
                                 @foreach($rubros as $id => $nombre)
-                                    <button
-                                        type="button"
-                                        class="rubro-option"
-                                        data-id="{{ $id }}"
-                                        data-name="{{ $nombre }}"
-                                        onclick="addRubroFromOption(this)"
-                                    >
+                                    <button type="button" class="rubro-option" data-id="{{ $id }}" data-name="{{ $nombre }}" onclick="addRubroFromOption(this)">
                                         {{ $nombre }}
                                     </button>
                                 @endforeach
@@ -491,14 +508,7 @@ $(document).ready(function () {
                             <label class="form-label fw-semibold">Subrubros disponibles</label>
                             <div class="subrubros-available-box">
                                 @foreach($subrubros as $subrubro)
-                                    <button
-                                        type="button"
-                                        class="subrubro-option"
-                                        data-id="{{ $subrubro['sub_id'] }}"
-                                        data-rub-id="{{ $subrubro['rub_id'] }}"
-                                        data-name="{{ $subrubro['sub_nombre'] }}"
-                                        onclick="addSubrubroFromOption(this)"
-                                    >
+                                    <button type="button" class="subrubro-option" data-id="{{ $subrubro['sub_id'] }}" data-rub-id="{{ $subrubro['rub_id'] }}" data-name="{{ $subrubro['sub_nombre'] }}" onclick="addSubrubroFromOption(this)">
                                         {{ $subrubro['sub_nombre'] }}
                                     </button>
                                 @endforeach

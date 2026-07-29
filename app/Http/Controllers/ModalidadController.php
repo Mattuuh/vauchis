@@ -76,6 +76,8 @@ class ModalidadController extends Controller
                 'mca_nombre' => $campo['nombre'],
                 'mca_codigo' => $codigo,
                 'mca_tipo' => $campo['tipo'],
+                // 'mca_tipo_numero' => $campo['tipo']=='number' ? $campo['tipo_monto'] : null,
+                'mca_tipo_numero' => $campo['tipo_monto'],
                 'mca_label' => $campo['nombre'],
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
@@ -90,7 +92,7 @@ class ModalidadController extends Controller
         }
 
         return redirect()
-            ->route('modalidades.index')
+            ->route('admin.modalidades.index')
             ->with('success', 'Modalidad creada correctamente');
     }
 
@@ -167,7 +169,7 @@ class ModalidadController extends Controller
         }
 
         return redirect()
-            ->route('modalidades.index')
+            ->route('admin.modalidades.index')
             ->with('success', 'Modalidad actualizada correctamente');
     }
 
@@ -182,7 +184,7 @@ class ModalidadController extends Controller
         ]);
 
         return redirect()
-            ->route('modalidades.index')
+            ->route('admin.modalidades.index')
             ->with('success', 'Modalidad eliminada correctamente');
     }
 

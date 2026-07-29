@@ -91,6 +91,7 @@ class HomeController extends Controller
         //     ]);
 
         $featuredBrands = Entidad::where('ent_estado', 1)
+            ->where('ent_publico',1)
             ->with('imagenPrincipal')
             ->with('logoPrincipal')
             ->get()
@@ -129,6 +130,7 @@ class HomeController extends Controller
                 }
             ])
             ->where('org_estado', 1)
+            ->where('org_publico', 1)
             ->get()
             ->map(function ($org) {
                 return (object)[
@@ -190,6 +192,7 @@ class HomeController extends Controller
         // ]);
 
         $influencers = Influencer::with('imagenPrincipal')
+            ->where('inf_publico', 1)
             ->get()
             ->map(function ($inf) {
                 return (object)[

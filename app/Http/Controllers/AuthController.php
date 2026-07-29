@@ -90,6 +90,7 @@ class AuthController extends Controller
         ]);
 
         $request->session()->regenerate();
+        $request->session()->put('ultima_actividad', now()->timestamp);
 
         AccessLog::create([
             'usu_web_id' => $usuario->usu_id,

@@ -89,7 +89,7 @@ class RubroController extends Controller
             }
 
             return redirect()
-                ->route('rubros.index')
+                ->route('admin.rubros.index')
                 ->with('success', 'Rubro creado correctamente');
 
         } catch (\Exception $e) {
@@ -177,7 +177,7 @@ class RubroController extends Controller
             }
 
             return redirect()
-                ->route('rubros.edit', $id)
+                ->route('admin.rubros.edit', $id)
                 ->with('success', 'Rubro actualizado correctamente');
 
         } catch (\Exception $e) {
@@ -197,7 +197,7 @@ class RubroController extends Controller
             ]);
 
             return redirect()
-                ->route('rubros.index')
+                ->route('admin.rubros.index')
                 ->with('success', 'Rubro eliminado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

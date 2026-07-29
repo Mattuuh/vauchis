@@ -27,6 +27,7 @@ class Entidad extends Model
         'ent_tiktok',
         'ent_estado',
         'ent_estado2',
+        'ent_publico',
         'ent_fecha_alta',
         'ent_usu_alta',
         'ent_fecha_mod',
@@ -41,6 +42,8 @@ class Entidad extends Model
 
     protected $casts = [
         'ent_fecha_alta' => 'datetime',
+        'ent_fecha_mod' => 'datetime',
+        'ent_fecha_baja' => 'datetime',
     ];
 
     public function tipo_entidad()
@@ -96,7 +99,7 @@ class Entidad extends Model
             'entidades_rubros',
             'ent_id',     // FK de la entidad en la tabla pivote
             'rub_id'      // FK del rubro en la tabla pivote
-        )->where('er_principal', 1);
+        );
     }
 
     public function subrubros()

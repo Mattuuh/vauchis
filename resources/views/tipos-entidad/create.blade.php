@@ -91,7 +91,7 @@ $(document).ready(function () {
         </div>
     </section>
 
-    <form method="POST" action="{{ route('tipos-entidad.store') }}" id="form_main">
+    <form method="POST" action="{{ route('admin.tipos-entidad.store') }}" id="form_main">
         @csrf
 
         <!-- CARD -->
@@ -126,7 +126,7 @@ $(document).ready(function () {
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('tipos-entidad.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.tipos-entidad.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

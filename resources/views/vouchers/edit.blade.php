@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('vouchers.update', $voucher->vou_id) }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.vouchers.update', $voucher->vou_id) }}" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
@@ -308,7 +308,7 @@
                                     <input class="form-check-input" type="checkbox" name="plantillas[]" value="{{ $plantilla->vpl_id }}" id="selected-plantilla-{{ $plantilla->vpl_id }}" @checked(in_array($plantilla->vpl_id, $plantillasSeleccionadas))>
 
                                     <label class="form-check-label" for="selected-plantilla-{{ $plantilla->vpl_id }}">Seleccionar plantilla</label>
-                                    <a href="{{ route('vouchers.plantillas.preview', [
+                                    <a href="{{ route('admin.vouchers.plantillas.preview', [
                                             'voucher' => $voucher->vou_id,
                                             'plantilla' => $plantilla->vpl_id
                                         ]) }}" class="btn btn-outline-primary btn-sm" target="_blank">
@@ -429,7 +429,7 @@
                                         {{ \Carbon\Carbon::parse($detalle->vd_fecha_alta)->format('d/m/Y') }}
                                     </td>
                                     <td>
-                                        <div class="btn btn-danger btn_eliminar_stock" data-url="{{ route('vouchers.delete.detalle', ['voucher' => $voucher->vou_id,'detalle' => $detalle->vd_id]) }}" {{ $detalle->vd_estado == 1 ? '' : 'hidden' }}>
+                                        <div class="btn btn-danger btn_eliminar_stock" data-url="{{ route('admin.vouchers.delete.detalle', ['voucher' => $voucher->vou_id,'detalle' => $detalle->vd_id]) }}" {{ $detalle->vd_estado == 1 ? '' : 'hidden' }}>
                                             <i class="bi bi-trash"></i>
                                         </div>
                                     </td>
@@ -442,7 +442,7 @@
         </div>
 
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('vouchers.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 
@@ -452,7 +452,7 @@
         </div>
     </form>
 
-    <form id="form_stock" class="form-horizontal" method="post" action="{{ route('vouchers.update_detalle', $voucher->vou_id) }}">
+    <form id="form_stock" class="form-horizontal" method="post" action="{{ route('admin.vouchers.update_detalle', $voucher->vou_id) }}">
         @csrf
 
         <!-- MODAL -->

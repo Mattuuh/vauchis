@@ -406,3 +406,27 @@ INSERT INTO `resaltadores` (`resal_id`, `resal_nombre`, `resal_descripcion`, `re
 (3, 'Nuevo', 'Nuevo', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL),
 (4, 'Destacado', 'Destacado', NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1900-01-01 00:00:00', 1, NULL, NULL, NULL, NULL);
 
+
+
+ALTER TABLE `entidades` ADD `ent_publico` INT NOT NULL DEFAULT '1' AFTER `ent_tiktok`;
+
+ALTER TABLE `entidades_domicilios` ADD `ed_publico` INT NOT NULL DEFAULT '1' AFTER `ed_descripcion_ia`;
+ALTER TABLE `entidades_domicilios` ADD `ed_horario_atencion` VARCHAR(250) NULL DEFAULT NULL AFTER `ed_longitud`;
+
+ALTER TABLE `organizaciones` ADD `org_publico` INT NULL DEFAULT '1' AFTER `org_img_size`;
+
+ALTER TABLE `influencers` ADD `inf_publico` INT NULL DEFAULT NULL AFTER `inf_descripcion_interna`;
+
+
+
+ALTER TABLE `entidades` ADD `resal_id` INT NULL DEFAULT NULL AFTER `tr_id`;
+
+
+
+ALTER TABLE `modalidades_campos` 
+  ADD `mca_tipo_numero` VARCHAR(10) NULL DEFAULT NULL COMMENT 'Guarda el tipo de numero/monto. VAR: variable; FIJ: fijo;' AFTER `mca_tipo`;
+  
+ALTER TABLE `vouchers_modalidad_valores` 
+  ADD `vmv_monto_minimo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_valor`, 
+  ADD `vmv_monto_maximo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_monto_minimo`,
+  ADD `vmv_monto_fijo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_monto_maximo`;

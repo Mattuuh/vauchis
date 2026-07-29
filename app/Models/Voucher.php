@@ -47,6 +47,11 @@ class Voucher extends Model
     {
         return $this->belongsTo(Modalidad::class, 'mod_id', 'mod_id');
     }
+    
+    public function modalidadValores()
+    {
+        return $this->hasMany(VoucherModalidadValor::class,'vou_id','vou_id');
+    }
 
     public function influencer()
     {

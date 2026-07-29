@@ -163,7 +163,7 @@ $(document).ready(function () {
         </div>
     </section>
 
-    <form method="POST" action="{{ route('rubros.store') }}" id="form_main">
+    <form method="POST" action="{{ route('admin.rubros.store') }}" id="form_main">
         @csrf
 
         <!-- CARD -->
@@ -287,7 +287,7 @@ $(document).ready(function () {
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('rubros.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.rubros.index') }}" class="btn btn-outline-secondary">
                 Cancelar
             </a>
 

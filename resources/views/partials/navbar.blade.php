@@ -21,10 +21,10 @@
                         Entidades
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li><a class="dropdown-item" href="{{ route('entidades.index') }}">Entidades</a></li>
-                        <li><a class="dropdown-item" href="{{ route('tipos-entidad.index') }}">Tipos de Entidad</a></li>
-                        <li><a class="dropdown-item" href="{{ route('rubros.index') }}">Rubros</a></li>
-                        <li><a class="dropdown-item" href="{{ route('resaltadores.index') }}">Resaltadores</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.entidades.index') }}">Entidades</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.tipos-entidad.index') }}">Tipos de Entidad</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.rubros.index') }}">Rubros</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.resaltadores.index') }}">Resaltadores</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -32,12 +32,12 @@
                         Vouchers
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li><a class="dropdown-item" href="{{ route('vouchers.index') }}">Vouchers</a></li>
-                        <li><a class="dropdown-item" href="{{ route('modalidades.index') }}">Modalidades</a></li>
-                        <li><a class="dropdown-item" href="{{ route('etiquetas.index') }}">Etiquetas</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.vouchers.index') }}">Vouchers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.modalidades.index') }}">Modalidades</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.etiquetas.index') }}">Etiquetas</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('voucher_emisiones.index') }}">Emision</a></li> --}}
-                        <li><a class="dropdown-item" href="{{ route('voucher_plantillas.index') }}">Plantillas</a></li>
-                        <li><a class="dropdown-item" href="{{ route('biblioteca_fondos.create') }}">Fondos</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('admin.voucher_plantillas.index') }}">Plantillas</a></li> --}}
+                        {{-- <li><a class="dropdown-item" href="{{ route('admin.biblioteca_fondos.create') }}">Fondos</a></li> --}}
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -45,7 +45,7 @@
                         Organizaciones
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li><a class="dropdown-item" href="{{ route('organizacion.index') }}">Organizaciones</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.organizacion.index') }}">Organizaciones</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -53,7 +53,7 @@
                         Influencers
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                        <li><a class="dropdown-item" href="{{ route('influencers.index') }}">Influencers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.influencers.index') }}">Influencers</a></li>
                     </ul>
                 </li>
 
@@ -69,7 +69,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="{{ route('vouchers.index') }}"><i class="bi bi-pencil-square me-2"></i>Editar perfil</a>
+                            <a class="dropdown-item" href="{{ route('admin.vouchers.index') }}"><i class="bi bi-pencil-square me-2"></i>Editar perfil</a>
                         </li>
 
                         <li><hr class="dropdown-divider"></li>
@@ -78,10 +78,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
-                                <button type="submit" class="btn btn-danger w-100 rounded-pill">
-                                    <i class="bi bi-box-arrow-right me-2"></i>
-                                    Salir
-                                </button>
+                                <button type="submit" class="btn btn-danger w-100 rounded-pill"><i class="bi bi-box-arrow-right me-2"></i>Salir</button>
                             </form>
                         </li>
                     </ul>
@@ -127,7 +124,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="{{ route('vouchers.index') }}">
+                            <a class="dropdown-item" href="{{ route('admin.vouchers.index') }}">
                                 <i class="bi bi-pencil-square me-2"></i>
                                 Mis vouchers
                             </a>
@@ -177,7 +174,7 @@
 
         <ul class="v-navbar__menu">
             <li>
-                <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-objetos-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Objetos
@@ -185,7 +182,7 @@
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-experiencias-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Experiencias
@@ -193,7 +190,7 @@
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-concausa-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Con causa
@@ -240,7 +237,7 @@
 
         <ul class="v-navbar__menu">
             <li>
-                <a href="{{ route('vouchers.categoria', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-objetos-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Objetos
@@ -248,7 +245,7 @@
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-experiencias-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Experiencias
@@ -256,7 +253,7 @@
             </li>
 
             <li>
-                <a href="{{ route('vouchers.categoria', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
+                <a href="{{ route('categorias', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}">
                     {{-- <img src="{{ asset('images/bt-concausa-1.png') }}" alt=""> --}}
                     <span class="icono"></span>
                     Con causa
@@ -306,60 +303,27 @@
         <div class="v-mobile-panel__body">
             <h3>Administrador</h3>
 
-            <a href="{{ route('home') }}">
-                <i class="bi bi-house-door"></i>
-                Inicio
-            </a>
+            <a href="{{ route('home') }}"><i class="bi bi-house-door"></i>Inicio</a>
 
-            <a href="{{ route('entidades.index') }}">
-                <i class="bi bi-shop"></i>
-                Entidades
-            </a>
+            <a href="{{ route('admin.entidades.index') }}"><i class="bi bi-shop"></i>Entidades</a>
 
-            <a href="{{ route('tipos-entidad.index') }}">
-                <i class="bi bi-tags"></i>
-                Tipos de Entidad
-            </a>
+            <a href="{{ route('admin.tipos-entidad.index') }}"><i class="bi bi-tags"></i>Tipos de Entidad</a>
 
-            <a href="{{ route('rubros.index') }}">
-                <i class="bi bi-grid"></i>
-                Rubros
-            </a>
+            <a href="{{ route('admin.rubros.index') }}"><i class="bi bi-grid"></i>Rubros</a>
 
-            <a href="{{ route('vouchers.index') }}">
-                <i class="bi bi-ticket-perforated"></i>
-                Vouchers
-            </a>
+            <a href="{{ route('admin.vouchers.index') }}"><i class="bi bi-ticket-perforated"></i>Vouchers</a>
 
-            <a href="{{ route('modalidades.index') }}">
-                <i class="bi bi-sliders"></i>
-                Modalidades
-            </a>
+            <a href="{{ route('admin.modalidades.index') }}"><i class="bi bi-sliders"></i>Modalidades</a>
 
-            <a href="{{ route('etiquetas.index') }}">
-                <i class="bi bi-bookmark"></i>
-                Etiquetas
-            </a>
+            <a href="{{ route('admin.etiquetas.index') }}"><i class="bi bi-bookmark"></i>Etiquetas</a>
 
-            <a href="{{ route('voucher_plantillas.index') }}">
-                <i class="bi bi-file-earmark-richtext"></i>
-                Plantillas
-            </a>
+            {{-- <a href="{{ route('admin.voucher_plantillas.index') }}"><i class="bi bi-file-earmark-richtext"></i>Plantillas</a> --}}
 
-            <a href="{{ route('biblioteca_fondos.create') }}">
-                <i class="bi bi-image"></i>
-                Fondos
-            </a>
+            {{-- <a href="{{ route('admin.biblioteca_fondos.create') }}"><i class="bi bi-image"></i>Fondos</a> --}}
 
-            <a href="{{ route('organizacion.index') }}">
-                <i class="bi bi-people"></i>
-                Organizaciones
-            </a>
+            <a href="{{ route('admin.organizacion.index') }}"><i class="bi bi-people"></i>Organizaciones</a>
 
-            <a href="{{ route('influencers.index') }}">
-                <i class="bi bi-person-video3"></i>
-                Influencers
-            </a>
+            <a href="{{ route('admin.influencers.index') }}"><i class="bi bi-person-video3"></i>Influencers</a>
 
             <form method="POST" action="{{ route('logout') }}" class="mt-4">
                 @csrf
@@ -396,17 +360,17 @@
     <div class="v-mobile-panel__body">
         <h3>Menú</h3>
 
-        <a href="{{ route('vouchers.categoria', 1) }}">
+        <a href="{{ route('categorias', 1) }}">
             <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
             Objetos
         </a>
 
-        <a href="{{ route('vouchers.categoria', 2) }}">
+        <a href="{{ route('categorias', 2) }}">
             <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
             Experiencias
         </a>
 
-        <a href="{{ route('vouchers.categoria', 3) }}">
+        <a href="{{ route('categorias', 3) }}">
             <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
             Con causa
         </a>

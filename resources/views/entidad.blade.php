@@ -107,8 +107,7 @@
         <div class="vp-brand-shell">
 
             <article class="vp-voucher-box vp-voucher-box--green">
-                {{-- <div class="vp-gift-icon">🎁</div> --}}
-                <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="" class="vp-gift-icon">
+                {{-- <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="" class="vp-gift-icon">
 
                 <div class="vp-voucher-box__content">
                     <h2>Monto fijo</h2>
@@ -116,25 +115,41 @@
 
                     <div class="vp-fixed-options">
                         @foreach($fixedAmounts as $amount)
-                            <a href="{{ route('checkout.voucher', $amount->vou_id ?? $amount->id) }}">
-                                ${{ number_format($amount->amount ?? $amount->vou_monto_fijo, 0, ',', '.') }}
-                            </a>
+                            <a href="{{ route('checkout.voucher', $amount->vou_id ?? $amount->id) }}">${{ number_format($amount->amount ?? $amount->vou_monto_fijo, 0, ',', '.') }}</a>
                         @endforeach
-                        <a href="#">
-                            ${{ number_format(25000, 0, ',', '.') }}
-                        </a>
-                        <a href="#">
-                            ${{ number_format(50000, 0, ',', '.') }}
-                        </a>
-                        <a href="#">
-                            ${{ number_format(120000, 0, ',', '.') }}
-                        </a>
+                        <a href="#">${{ number_format(25000, 0, ',', '.') }}</a>
+                        <a href="#">${{ number_format(50000, 0, ',', '.') }}</a>
+                        <a href="#">${{ number_format(120000, 0, ',', '.') }}</a>
                     </div>
-                </div>
+                </div> --}}
+
+                @foreach($vouchers_fijos as $voucher)
+                    @php
+                        $image = $voucher->image
+                            ?? $voucher->imagenes->first()->vf_img_path
+                            ?? 'images/default-voucher.png';
+
+                        $price = $voucher->price
+                            ?? $voucher->vou_monto_fijo
+                            ?? 0;
+                    @endphp
+                    <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="{{ $voucher->vou_nombre ?? $voucher->name }}" class="vp-gift-icon">
+
+                    <div class="vp-voucher-box__content">
+                        <h2>Monto fijo</h2>
+                        <p>Opciones del comercio</p>
+
+                        <div class="vp-fixed-options">
+                            @foreach($voucher->modalidadValores as $campo)
+                                {{-- <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
+                                <button type="button" class="voucher-monto-btn" data-monto="{{ $campo->vmv_monto_fijo }}" data-url="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo, 0, ',', '.') }}</button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
             </article>
 
-            <article class="vp-voucher-box vp-voucher-box--blue">
-                {{-- <div class="vp-gift-icon">🎁</div> --}}
+            {{-- <article class="vp-voucher-box vp-voucher-box--blue">
                 <img src="{{ asset('images/perfildemarca-regalo-azul.png') }}" alt="" class="vp-gift-icon">
 
                 <div class="vp-voucher-box__content">
@@ -146,7 +161,37 @@
                         <input type="text" name="amount" min="1" placeholder="Ingresa el monto que quieras regalar">
                     </form>
                 </div>
-            </article>
+            </article> --}}
+            @foreach($vouchers_eleccion as $voucher)
+                @php
+                    $image = $voucher->image
+                        ?? $voucher->imagenes->first()->vf_img_path
+                        ?? 'images/default-voucher.png';
+
+                    $price = $voucher->price
+                        ?? $voucher->vou_monto_fijo
+                        ?? 0;
+                @endphp
+                
+                <article class="vp-voucher-box vp-voucher-box--blue">
+                    <img src="{{ asset('images/perfildemarca-regalo-azul.png') }}" alt="" class="vp-gift-icon">
+
+                    <div class="vp-voucher-box__content">
+                        <h2>Monto a elección</h2>
+                        <p>Elige el monto que quieras regalar</p>
+
+                        {{-- <form action="" method="POST" class="vp-custom-form">
+                            @csrf
+                            <input type="text" name="amount" min="1" placeholder="Ingresa el monto que quieras regalar">
+                        </form> --}}
+                        <div class="vp-custom-form">
+                        @foreach($voucher->modalidadValores as $campo)
+                            <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
+                        @endforeach
+                        </div>
+                    </div>
+                </article>
+            @endforeach
 
             <section class="vp-products-section">
                 <h2>Vouchers seleccionados por el comercio</h2>
@@ -168,14 +213,26 @@
                                     ?? 0;
                             @endphp
 
-                            <a href="{{ route('vouchers.comprar', $voucher->vou_id ?? $voucher->id) }}" class="vp-product-card">
+                            {{-- <a href="{{ route('admin.vouchers.comprar', $voucher->vou_id ?? $voucher->id) }}" class="vp-product-card">
                                 <div class="vp-product-image">
                                     <img src="{{ asset('storage/' . $image) }}" alt="{{ $voucher->vou_nombre ?? $voucher->name }}">
                                 </div>
 
                                 <h3>{{ $voucher->vou_nombre ?? $voucher->name }}</h3>
                                 <p>${{ number_format($price, 0, ',', '.') }}</p>
+                            </a> --}}
+                            @foreach($voucher->modalidadValores as $campo)
+                                {{-- <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</a> --}}
+
+                                <a href="{{ route('admin.vouchers.comprar', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}" class="vp-product-card">
+                                <div class="vp-product-image">
+                                    <img src="{{ asset('storage/' . $image) }}" alt="{{ $voucher->vou_nombre ?? $voucher->name }}">
+                                </div>
+
+                                <h3>{{ $voucher->vou_nombre ?? $voucher->name }}</h3>
+                                <p>${{ number_format($campo->vmv_monto_fijo ?? $campo->vmv_monto_fijo, 0, ',', '.') }}</p>
                             </a>
+                            @endforeach
                         @endforeach
                     </div>
 
@@ -186,6 +243,20 @@
 
         </div>
     </section>
+
+    <form id="form-precompra" action="#" method="GET">
+        <input type="hidden" name="monto" id="monto-seleccionado">
+    </form>
+
+    <div id="resumen-compra" class="resumen-compra">
+        <div class="resumen-compra__contenido">
+            <div class="resumen-compra__subtotal">
+                <span>Subtotal</span>
+                <strong id="subtotal-texto">$0</strong>
+            </div>
+            <button type="button" id="btn-continuar" class="resumen-compra__continuar">Continuar</button>
+        </div>
+    </div>
 
     {{-- Tu footer ya va en el layout o partial --}}
 
@@ -561,5 +632,278 @@
         display: none;
     }
 }
+
+.voucher-montos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.voucher-monto-btn {
+    min-width: 86px;
+    padding: 8px 18px;
+    border: 1px solid #35b156;
+    border-radius: 30px;
+    background: #ffffff;
+    color: #35b156;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.voucher-monto-btn:hover {
+    background: #eefaf2;
+    transform: translateY(-1px);
+}
+
+.voucher-monto-btn.is-selected {
+    background: #35b156;
+    color: #ffffff;
+    box-shadow: 0 5px 12px rgba(53, 177, 86, 0.25);
+}
+
+/* Barra inferior */
+
+.resumen-compra {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+
+    padding: 16px 30px;
+    background: #123f91;
+
+    transform: translateY(100%);
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.resumen-compra.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.resumen-compra__contenido {
+    width: 100%;
+    max-width: 1280px;
+    min-height: 72px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.resumen-compra__subtotal {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+}
+
+.resumen-compra__subtotal span {
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.resumen-compra__subtotal strong {
+    font-size: 24px;
+    line-height: 1;
+    font-weight: 600;
+}
+
+.resumen-compra__continuar {
+    min-width: 180px;
+    padding: 14px 30px;
+    border: 0;
+    border-radius: 30px;
+    background: #0875ff;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.resumen-compra__continuar:hover {
+    background: #0064dd;
+    transform: translateY(-1px);
+}
+
+/*
+ * Evita que la barra tape el contenido cuando está visible.
+ * Esta clase se agregará al body mediante JavaScript.
+ */
+body.resumen-compra-visible {
+    padding-bottom: 105px;
+}
+
+@media (max-width: 576px) {
+    .resumen-compra {
+        padding: 14px 18px;
+    }
+
+    .resumen-compra__contenido {
+        min-height: 65px;
+        gap: 15px;
+    }
+
+    .resumen-compra__subtotal strong {
+        font-size: 21px;
+    }
+
+    .resumen-compra__continuar {
+        min-width: 135px;
+        padding: 12px 22px;
+    }
+}
     </style>
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    const resumenCompra = $('#resumen-compra');
+    const subtotalTexto = $('#subtotal-texto');
+    const montoSeleccionado = $('#monto-seleccionado');
+    const formPrecompra = $('#form-precompra');
+
+    function formatearMoneda(valor) {
+        return new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            currency: 'ARS',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(valor);
+    }
+
+
+    $(document).on('click', '.voucher-monto-btn', function () {
+
+        const botonSeleccionado = $(this);
+
+        // Si ya estaba seleccionado, deseleccionar
+        if (botonSeleccionado.hasClass('is-selected')) {
+
+            botonSeleccionado
+                .removeClass('is-selected')
+                .attr('aria-pressed', 'false');
+
+            $('#monto-seleccionado').val('');
+            $('#subtotal-texto').text('$0');
+
+            formPrecompra.attr('action', '#');
+            $('#resumen-compra').removeClass('is-visible');
+            $('body').removeClass('resumen-compra-visible');
+
+            return;
+        }
+
+        const monto = Number(botonSeleccionado.data('monto'));
+        const url = botonSeleccionado.data('url');
+
+        if (!Number.isFinite(monto) || monto <= 0) {
+            return;
+        }
+
+        // Quitar selección anterior
+        $('.voucher-monto-btn')
+            .removeClass('is-selected')
+            .attr('aria-pressed', 'false');
+
+        // Marcar el nuevo botón
+        botonSeleccionado
+            .addClass('is-selected')
+            .attr('aria-pressed', 'true');
+
+        $('#monto-seleccionado').val(monto);
+        $('#subtotal-texto').text(formatearMoneda(monto));
+
+        formPrecompra.attr('action', url);
+        $('#resumen-compra').addClass('is-visible');
+        $('body').addClass('resumen-compra-visible');
+    });
+
+    $(document).on('input', '.voucher-monto-input', function () {
+
+        const input = $(this);
+
+        const minimo = Number(input.attr('min'));
+        const maximo = Number(input.attr('max'));
+        const url = input.data('url');
+
+        input.rules('add', {
+            required: true,
+            number: true,
+            min: Number(input.attr('min')),
+            max: Number(input.attr('max')),
+            messages: {
+                min: 'El monto mínimo es $' + formatearMoneda(input.attr('min')),
+                max: 'El monto máximo es $' + formatearMoneda(input.attr('max'))
+            }
+        });
+
+        // Eliminar puntos y reemplazar coma por punto si hiciera falta
+        let valor = input.val()
+            .replace(/\./g, '')
+            .replace(',', '.');
+
+        valor = Number(valor);
+
+        // Si el usuario selecciona un monto manual,
+        // deseleccionamos cualquier botón.
+        $('.voucher-monto-btn')
+            .removeClass('is-selected')
+            .attr('aria-pressed', 'false');
+
+        if (!Number.isFinite(valor) || valor < minimo || valor > maximo) {
+
+            $('#monto-seleccionado').val('');
+            $('#subtotal-texto').text('$0');
+
+            formPrecompra.attr('action', '#');
+            $('#resumen-compra').removeClass('is-visible');
+            $('body').removeClass('resumen-compra-visible');
+
+            return;
+        }
+
+        $('#monto-seleccionado').val(valor);
+        $('#subtotal-texto').text(formatearMoneda(valor));
+
+        formPrecompra.attr('action', url);
+        $('#resumen-compra').addClass('is-visible');
+        $('body').addClass('resumen-compra-visible');
+
+    });
+
+    $('#btn-continuar').on('click', function () {
+        const monto = montoSeleccionado.val();
+
+        if (!monto) {
+            return;
+        }
+
+        formPrecompra.trigger('submit');
+    });
+});
+</script>
 @endpush

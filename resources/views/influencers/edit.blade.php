@@ -8,7 +8,7 @@
 
 <div class="container">
 
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
+    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('influencers.update', $influencer->inf_id) }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.influencers.update', $influencer->inf_id) }}" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
@@ -155,6 +155,13 @@
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
+                
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $influencer->inf_publico) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+                </div>
 
                 <div class="col-12 col-md-12">
                     <label class="form-label required-label">Descripcion publica</label>
@@ -213,12 +220,12 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $influencer->inf_id }}" data-url="{{ route('influencers.delete', $influencer->inf_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $influencer->inf_id }}" data-url="{{ route('admin.influencers.delete', $influencer->inf_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('influencers.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.influencers.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
 
@@ -286,7 +293,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
             $.post(url, {
                 _token: "{{ csrf_token() }}"
             }).done(function () {
-                window.location.href = "{{ route('influencers.index') }}";
+                window.location.href = "{{ route('admin.influencers.index') }}";
             });
 
         }
