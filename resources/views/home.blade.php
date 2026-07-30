@@ -1094,7 +1094,7 @@ a{
     background: #EEEFF7;
     padding: 58px 0 70px;
     overflow: hidden;
-    min-height: 100vh;
+    min-height: 70vh;
 }
 
 .vh-organizations .vh-shell{

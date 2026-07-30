@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('entidades.update', $entidad->ent_id) }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.entidades.update', $entidad->ent_id) }}" enctype="multipart/form-data" id="form_main">
         @csrf
         @method('PUT')
 
@@ -499,12 +499,12 @@
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
 
-            <button type="button" class="btn btn-danger" data-id="{{ $entidad->ent_id }}" data-url="{{ route('entidades.delete', $entidad->ent_id) }}" id="btn_eliminar">
+            <button type="button" class="btn btn-danger" data-id="{{ $entidad->ent_id }}" data-url="{{ route('admin.entidades.delete', $entidad->ent_id) }}" id="btn_eliminar">
                 Eliminar
             </button>
 
             <div>
-                <a href="{{ route('entidades.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('admin.entidades.index') }}" class="btn btn-outline-secondary">
                     Cancelar
                 </a>
 
@@ -978,7 +978,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
             $.post(url, {
                 _token: "{{ csrf_token() }}"
             }).done(function () {
-                window.location.href = "{{ route('entidades.index') }}";
+                window.location.href = "{{ route('admin.entidades.index') }}";
             });
 
         }

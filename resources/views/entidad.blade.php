@@ -106,8 +106,8 @@
     <section class="vp-brand-content">
         <div class="vp-brand-shell">
 
-            <article class="vp-voucher-box vp-voucher-box--green">
-                {{-- <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="" class="vp-gift-icon">
+            {{-- <article class="vp-voucher-box vp-voucher-box--green">
+                <img src="{{ asset('images/perfildemarca-reglao-verde.png') }}" alt="" class="vp-gift-icon">
 
                 <div class="vp-voucher-box__content">
                     <h2>Monto fijo</h2>
@@ -121,9 +121,11 @@
                         <a href="#">${{ number_format(50000, 0, ',', '.') }}</a>
                         <a href="#">${{ number_format(120000, 0, ',', '.') }}</a>
                     </div>
-                </div> --}}
+                </div>
+            </article> --}}
 
-                @foreach($vouchers_fijos as $voucher)
+            @foreach($vouchers_fijos as $voucher)
+            <article class="vp-voucher-box vp-voucher-box--green">
                     @php
                         $image = $voucher->image
                             ?? $voucher->imagenes->first()->vf_img_path
@@ -146,8 +148,8 @@
                             @endforeach
                         </div>
                     </div>
-                @endforeach
             </article>
+            @endforeach
 
             {{-- <article class="vp-voucher-box vp-voucher-box--blue">
                 <img src="{{ asset('images/perfildemarca-regalo-azul.png') }}" alt="" class="vp-gift-icon">

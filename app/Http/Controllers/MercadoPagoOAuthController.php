@@ -69,7 +69,7 @@ class MercadoPagoOAuthController extends Controller
         session()->forget('mp_entidad_id');
 
         return redirect()
-            ->route('entidades.edit', $entidadId)
+            ->route('admin.entidades.edit', $entidadId)
             ->with('success', 'Mercado Pago conectado correctamente.');
     }
 }

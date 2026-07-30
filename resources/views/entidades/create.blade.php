@@ -182,7 +182,7 @@ $(document).ready(function () {
         </div>
     </section>
 
-    <form method="POST" action="{{ route('entidades.store') }}" enctype="multipart/form-data" id="form_main">
+    <form method="POST" action="{{ route('admin.entidades.store') }}" enctype="multipart/form-data" id="form_main">
         @csrf
 
         <!-- DATOS -->
@@ -541,7 +541,7 @@ $(document).ready(function () {
         </div>
 
         <div class="d-flex justify-content-between">
-            <a href="{{ route('entidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <a href="{{ route('admin.entidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
             <button class="btn btn-success" id="btn_guardar">Guardar</button>
         </div>
 

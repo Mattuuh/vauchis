@@ -347,7 +347,7 @@ class EntidadController extends Controller
 
             DB::commit();
 
-            return redirect()->route('entidades.index')->with('success', 'Comercio creado correctamente');
+            return redirect()->route('admin.entidades.index')->with('success', 'Comercio creado correctamente');
 
         } catch (\Exception $e) {
             // DB::rollBack();
@@ -705,7 +705,7 @@ class EntidadController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('entidades.edit', $id)
+                ->route('admin.entidades.edit', $id)
                 ->with('success', 'Comercio actualizado correctamente');
 
         } catch (\Exception $e) {
@@ -726,7 +726,7 @@ class EntidadController extends Controller
             ]);
 
             return redirect()
-                ->route('entidades.index')
+                ->route('admin.entidades.index')
                 ->with('success', 'Entidad eliminada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());

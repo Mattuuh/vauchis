@@ -288,7 +288,7 @@
                 <div class="text-muted small">No hay banners cargados.</div>
             @endif
         </div> --}}
-        <div class="vch-card p-3 mb-3">
+        {{-- <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Plantillas vinculadas</h6>
 
             <p class="text-muted small mb-3">
@@ -320,7 +320,7 @@
                     @endforeach
                 </div>
             @endif
-        </div>
+        </div> --}}
 
         {{-- ARCHIVOS --}}
         <div class="vch-card p-3 mb-3">
