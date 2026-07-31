@@ -2,6 +2,80 @@
 
 @section('title', 'Nueva modalidad')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a crear el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, crear',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            f_codigo: {
+                required: true,
+            },
+            f_nombre: {
+                required: true,
+            },
+            f_tipo_mod_id: {
+                required: true,
+            },
+            f_codigo: {
+                required: true,
+            },
+            f_descripcion: {
+                required: false,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 @include('partials.navbar')
 
@@ -28,7 +102,7 @@
         </div>
     </section>
 
-    <form method="POST" action="{{ route('admin.modalidades.store') }}">
+    <form method="POST" action="{{ route('admin.modalidades.store') }}" id="form_main">
         @csrf
 
         {{-- DATOS DE LA MODALIDAD --}}
@@ -36,7 +110,7 @@
             <h6 class="fw-bold mb-3">Datos de la modalidad</h6>
 
             <div class="row g-3">
-                <div class="col-12 col-md-6">
+                {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Código</label>
                     <input type="text" name="f_codigo" id="f_codigo" class="form-control field-required" value="{{ old('f_codigo') }}" placeholder="Ej: PORCENTAJE" required>
                     <div class="form-text">Se recomienda usar mayúsculas y guiones bajos.</div>
@@ -44,13 +118,28 @@
                     @error('f_codigo')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre</label>
                     <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Ej: Descuento porcentual" required>
 
                     @error('f_nombre')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Tipo de modalidad:</label>
+                    <select name="f_tipo_mod_id" id="f_tipo_mod_id" class="form-select field-required">
+                        <option value="">Selecciona el tipo</option>
+                        @foreach($tipos_modalidades as $tipo)
+                            <option value="{{ $tipo['tipo_mod_id'] }}" {{ old('f_tipo_mod_id') == $tipo['tipo_mod_id'] ? 'selected' : '' }}>
+                                {{ $tipo['tipo_mod_nombre'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('f_tipo_mod_id')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
@@ -71,46 +160,34 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="fw-bold mb-1">Campos dinámicos</h6>
-                    <p class="text-muted small mb-0">
-                        Define qué datos deberá completar un voucher de esta modalidad.
-                    </p>
+                    <p class="text-muted small mb-0">Define qué datos deberá completar un voucher de esta modalidad.</p>
                 </div>
-
-                <button type="button" class="btn btn-primary btn-sm" id="btn-agregar-campo">
-                    + Agregar campo
-                </button>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-agregar-campo">+ Agregar campo</button>
             </div>
 
             <div id="campos-container">
                 @if(count($oldCampos))
                     @foreach($oldCampos as $i => $campo)
                         <div class="campo-dinamico-item border rounded p-3 mb-3 position-relative" data-index="{{ $i }}">
-                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 btn-eliminar-campo">
-                                ×
-                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 btn-eliminar-campo">×</button>
 
                             <div class="row g-3">
-                                <div class="col-12 col-md-6">
+                                {{-- <div class="col-12 col-md-6">
                                     <label class="form-label required-label">Leyenda del campo</label>
                                     <input type="text" name="campos[{{ $i }}][nombre]" class="form-control field-required" value="{{ $campo['nombre'] ?? '' }}" placeholder="Ej: Porcentaje" required>
-                                </div>
+                                </div> --}}
 
-                                <div class="col-12 col-md-6">
+                                {{-- <div class="col-12 col-md-6">
                                     <label class="form-label">Texto de guía</label>
                                     <input type="text" name="campos[{{ $i }}][placeholder]" class="form-control" value="{{ $campo['placeholder'] ?? '' }}" placeholder="Ej: Ingresá el porcentaje">
-                                </div>
+                                </div> --}}
 
                                 <div class="col-12 col-md-6">
                                     <label class="form-label required-label">Tipo de dato del campo</label>
                                     <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
                                         <option value="">Seleccionar...</option>
-                                        <option value="text" {{ (($campo['tipo'] ?? '') == 'text') ? 'selected' : '' }}>Texto</option>
-                                        {{-- <option value="textarea" {{ (($campo['tipo'] ?? '') == 'textarea') ? 'selected' : '' }}>Texto expandible</option> --}}
                                         <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
-                                        {{-- <option value="decimal" {{ (($campo['tipo'] ?? '') == 'decimal') ? 'selected' : '' }}>Decimal</option> --}}
-                                        {{-- <option value="money" {{ (($campo['tipo'] ?? '') == 'money') ? 'selected' : '' }}>Moneda</option> --}}
-                                        <option value="boolean" {{ (($campo['tipo'] ?? '') == 'boolean') ? 'selected' : '' }}>Sí / No</option>
-                                        <option value="select" {{ (($campo['tipo'] ?? '') == 'select') ? 'selected' : '' }}>Seleccionable</option>
+                                        <option value="button" {{ (($campo['tipo'] ?? '') == 'button') ? 'selected' : '' }}>Boton</option>
                                     </select>
                                 </div>
 
@@ -132,7 +209,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 campo-opciones-wrapper" style="{{ (($campo['tipo'] ?? '') === 'select') ? '' : 'display:none;' }}">
+                                {{-- <div class="col-12 campo-opciones-wrapper" style="{{ (($campo['tipo'] ?? '') === 'select') ? '' : 'display:none;' }}">
                                     <label class="form-label">Opciones</label>
                                     <textarea name="campos[{{ $i }}][opciones]" class="form-control" rows="2" placeholder="Ej: Rojo,Azul,Verde">{{ $campo['opciones'] ?? '' }}</textarea>
                                     <div class="form-text">Separá las opciones por coma.</div>
@@ -141,7 +218,7 @@
                                 <div class="col-12">
                                     <label class="form-label">Texto de ayuda (se muestra abajo de cada campo)</label>
                                     <input type="text" name="campos[{{ $i }}][ayuda]" class="form-control" value="{{ $campo['ayuda'] ?? '' }}" placeholder="Ej: Valor entre 1 y 100">
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     @endforeach
@@ -171,15 +248,15 @@
         <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2 btn-eliminar-campo">×</button>
 
         <div class="row g-3">
-            <div class="col-12 col-md-6">
+            {{-- <div class="col-12 col-md-6">
                 <label class="form-label required-label">Leyenda del campo</label>
                 <input type="text" name="campos[__INDEX__][nombre]" class="form-control field-required" placeholder="Ej: Porcentaje" required>
-            </div>
+            </div> --}}
 
-            <div class="col-12 col-md-6">
+            {{-- <div class="col-12 col-md-6">
                 <label class="form-label">Texto de guía</label>
                 <input type="text" name="campos[__INDEX__][placeholder]" class="form-control" placeholder="Ej: Ingresá el porcentaje">
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Tipo de campo</label>
@@ -202,20 +279,20 @@
             <div class="col-12 col-md-4">
                 <label class="form-label d-block">Tipo de monto</label>
                 <div class="form-check form-switch mt-2">
-                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="FIJ">
-                    <label class="form-check-label" for="">Monto fijo</label>
-                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="VAR">
-                    <label class="form-check-label">Monto variable</label>
+                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="FIJ" id="monto_fijo-__INDEX__">
+                    <label class="form-check-label" for="monto_fijo-__INDEX__">Monto fijo</label>
+                    <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="VAR" id="monto_variable-__INDEX__">
+                    <label class="form-check-label" for="monto_variable-__INDEX__">Monto variable</label>
                 </div>
             </div>
 
-            <div class="col-12 col-md-4">
+            {{-- <div class="col-12 col-md-4">
                 <label class="form-label d-block">Publico</label>
                 <div class="form-check form-switch mt-2">
                     <input class="form-check-input" type="checkbox" name="campos[__INDEX__][estado]" value="1" checked>
                     <label class="form-check-label">Sí</label>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="col-12 col-md-4">
                 <label class="form-label d-block">Activo</label>

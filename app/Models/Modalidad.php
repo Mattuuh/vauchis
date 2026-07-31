@@ -12,6 +12,7 @@ class Modalidad extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'tipo_mod_id',
         'mod_nombre',
         'mod_codigo',
         'mod_descripcion',
@@ -26,6 +27,8 @@ class Modalidad extends Model
 
     protected $casts = [
         'mod_fecha_alta' => 'datetime',
+        'mod_fecha_mod' => 'datetime',
+        'mod_fecha_baja' => 'datetime',
     ];
 
     public function campos()

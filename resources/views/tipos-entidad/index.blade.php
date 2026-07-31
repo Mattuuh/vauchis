@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/tipos-entidad/listado',
+            url: '/admin/tipos-entidad/listado',
             data: dataString,
 
             beforeSend: function() {

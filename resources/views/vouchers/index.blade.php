@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/vouchers/listado',
+            url: '/admin/vouchers/listado',
             data: dataString,
 
             beforeSend: function() {

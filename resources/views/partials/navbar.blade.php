@@ -34,6 +34,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
                         <li><a class="dropdown-item" href="{{ route('admin.vouchers.index') }}">Vouchers</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.modalidades.index') }}">Modalidades</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.tipos_modalidades.index') }}">Tipos de Modalidades</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.etiquetas.index') }}">Etiquetas</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('voucher_emisiones.index') }}">Emision</a></li> --}}
                         {{-- <li><a class="dropdown-item" href="{{ route('admin.voucher_plantillas.index') }}">Plantillas</a></li> --}}
@@ -314,6 +315,8 @@
             <a href="{{ route('admin.vouchers.index') }}"><i class="bi bi-ticket-perforated"></i>Vouchers</a>
 
             <a href="{{ route('admin.modalidades.index') }}"><i class="bi bi-sliders"></i>Modalidades</a>
+
+            <a href="{{ route('admin.tipos_modalidades.index') }}"><i class="bi bi-sliders"></i>Tipos de Modalidades</a>
 
             <a href="{{ route('admin.etiquetas.index') }}"><i class="bi bi-bookmark"></i>Etiquetas</a>
 

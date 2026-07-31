@@ -16,7 +16,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/entidades/listado',
+            url: '/admin/entidades/listado',
             data: dataString,
             beforeSend: function() {
                 $('#box-espere').show();

@@ -135,6 +135,7 @@ Route::get('/mercadopago/callback', [MercadoPagoOAuthController::class, 'callbac
 
 
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\TipoModalidadController;
 
 Route::get('/categorias/{id}', [CategoriaController::class, 'mostrarCategoria'])->name('categorias');
 Route::get('/categorias/{categoria}/rubros/{rubro}/entidades',[CategoriaController::class, 'entidadesPorRubro'])->name('categorias.rubros.entidades');
@@ -190,6 +191,10 @@ Route::middleware(['administrador'])
         Route::get('/modalidades/listado', [ModalidadController::class, 'listado'])->name('modalidades.listado');
         Route::resource('modalidades', ModalidadController::class);
         Route::post('/modalidades/{id}/delete', [ModalidadController::class, 'delete'])->name('modalidades.delete');
+
+        Route::get('/tipos_modalidades/listado', [TipoModalidadController::class, 'listado'])->name('tipos_modalidades.listado');
+        Route::resource('tipos_modalidades', TipoModalidadController::class);
+        Route::post('/tipos_modalidades/{id}/delete', [TipoModalidadController::class, 'delete'])->name('tipos_modalidades.delete');
 
         Route::get('/etiquetas/listado', [EtiquetaController::class, 'listado'])->name('etiquetas.listado');
         Route::resource('etiquetas', EtiquetaController::class);

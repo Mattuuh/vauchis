@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/resaltadores/listado',
+            url: '/admin/resaltadores/listado',
             data: dataString,
 
             beforeSend: function() {

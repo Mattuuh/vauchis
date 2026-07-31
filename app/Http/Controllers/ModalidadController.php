@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Modalidad;
 use App\Models\ModalidadCampo;
+use App\Models\TipoModalidad;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -51,14 +52,19 @@ class ModalidadController extends Controller
 
     public function create()
     {
-        return view('modalidades.create');
+        $tipos_modalidades = TipoModalidad::where('tipo_mod_estado', 1)
+            ->orderBy('tipo_mod_id')
+            ->get();
+
+        return view('modalidades.create', compact('tipos_modalidades'));
     }
 
     public function store(Request $request)
     {
-        $this->validarModalidad($request);
+        // $this->validarModalidad($request);
 
         $modalidad = Modalidad::create([
+            'tipo_mod_id' => $request->f_tipo_mod_id,
             'mod_nombre' => $request->f_nombre,
             'mod_codigo' => $request->f_codigo,
             'mod_descripcion' => $request->f_descripcion,
@@ -69,16 +75,16 @@ class ModalidadController extends Controller
 
         $i=1;
         foreach ($request->campos ?? [] as $campo) {
-            $codigo=sanear_string($campo['nombre']);
+            // $codigo=sanear_string($campo['nombre']);
 
             ModalidadCampo::create([
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => $campo['nombre'],
-                'mca_codigo' => $codigo,
+                'mca_nombre' => 'campo',
+                'mca_codigo' => 'campo',
                 'mca_tipo' => $campo['tipo'],
                 // 'mca_tipo_numero' => $campo['tipo']=='number' ? $campo['tipo_monto'] : null,
                 'mca_tipo_numero' => $campo['tipo_monto'],
-                'mca_label' => $campo['nombre'],
+                'mca_label' => 'campo',
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
                 'mca_orden' => $i,
@@ -98,22 +104,27 @@ class ModalidadController extends Controller
 
     public function edit($id)
     {
+        $tipos_modalidades = TipoModalidad::where('tipo_mod_estado', 1)
+            ->orderBy('tipo_mod_id')
+            ->get();
+
         $modalidad = Modalidad::with(['campos' => function ($query) {
             $query->orderBy('mca_orden')->orderBy('mca_id');
         }])->findOrFail($id);
 
-        return view('modalidades.edit', compact('modalidad'));
+        return view('modalidades.edit', compact('tipos_modalidades','modalidad'));
     }
 
     public function update(Request $request, $id)
     {
-        $this->validarModalidad($request, $id);
+        // $this->validarModalidad($request, $id);
 
         $modalidad = Modalidad::with('campos')->findOrFail($id);
 
         $modalidad->update([
+            'tipo_mod_id' => $request->f_tipo_mod_id,
             'mod_nombre' => $request->f_nombre,
-            'mod_codigo' => $request->f_codigo,
+            // 'mod_codigo' => $request->f_codigo,
             'mod_descripcion' => $request->f_descripcion,
         ]);
 
@@ -135,14 +146,15 @@ class ModalidadController extends Controller
 
         $i=1;
         foreach ($camposRequest as $campo) {
-            $codigo=sanear_string($campo['nombre']);
+            // $codigo=sanear_string($campo['nombre']);
 
             $dataCampo = [
                 'mod_id' => $modalidad->mod_id,
-                'mca_nombre' => $campo['nombre'],
-                'mca_codigo' => $codigo,
+                'mca_nombre' => 'campo',
+                'mca_codigo' => 'campo',
                 'mca_tipo' => $campo['tipo'],
-                'mca_label' => $campo['nombre'],
+                'mca_tipo_numero' => $campo['tipo_monto'],
+                'mca_label' => 'campo',
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
                 'mca_orden' => $i,

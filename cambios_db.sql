@@ -430,3 +430,29 @@ ALTER TABLE `vouchers_modalidad_valores`
   ADD `vmv_monto_minimo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_valor`, 
   ADD `vmv_monto_maximo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_monto_minimo`,
   ADD `vmv_monto_fijo` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `vmv_monto_maximo`;
+
+
+
+CREATE TABLE `tipos_modalidades` (
+  `tipo_mod_id` int NOT NULL AUTO_INCREMENT,
+  `tipo_mod_nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_mod_descripcion` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_mod_condiciones` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_mod_estado` int DEFAULT NULL,
+  `tipo_mod_estado2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tipo_mod_fecha_alta` datetime DEFAULT NULL,
+  `tipo_mod_usu_alta` int DEFAULT NULL,
+  `tipo_mod_fecha_mod` datetime DEFAULT NULL,
+  `tipo_mod_usu_mod` int DEFAULT NULL,
+  `tipo_mod_fecha_baja` datetime DEFAULT NULL,
+  `tipo_mod_usu_baja` int DEFAULT NULL,
+  PRIMARY KEY (`tipo_mod_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `modalidades` ADD `tipo_mod_id` INT NULL DEFAULT NULL AFTER `mod_id`;
+
+INSERT INTO `tipos_modalidades` (`tipo_mod_id`, `tipo_mod_nombre`, `tipo_mod_descripcion`, `tipo_mod_condiciones`, `tipo_mod_estado`, `tipo_mod_estado2`, `tipo_mod_fecha_alta`, `tipo_mod_usu_alta`, `tipo_mod_fecha_mod`, `tipo_mod_usu_mod`, `tipo_mod_fecha_baja`, `tipo_mod_usu_baja`) VALUES 
+(1, 'Monto fijo', 'Monto fijo', NULL, '1', NULL, '1900-01-01', '1', NULL, NULL, NULL, NULL),
+(2, 'Monto eleccion', 'Monto eleccion', NULL, '1', NULL, '1900-01-01', '1', NULL, NULL, NULL, NULL),
+(3, 'Producto/Servicio', 'Producto/Servicio', NULL, '1', NULL, '1900-01-01', '1', NULL, NULL, NULL, NULL);
+

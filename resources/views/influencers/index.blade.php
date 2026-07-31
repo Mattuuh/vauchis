@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'GET',
-            url: '/influencers/listado',
+            url: '/admin/influencers/listado',
             data: dataString,
             beforeSend: function() {
                 $('#box-espere').show();

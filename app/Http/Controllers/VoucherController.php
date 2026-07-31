@@ -1193,36 +1193,39 @@ class VoucherController extends Controller
 
         $vouchers = Voucher::with('imagenes')
             ->with([
-                'modalidad',
                 'modalidad.campos',
                 'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->whereNotIn('mod_id', [14,15])
+            ->withWhereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 3);
+            })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();
 
         $vouchers_fijos = Voucher::with('imagenes')
             ->with([
-                'modalidad',
                 'modalidad.campos',
                 'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->where('mod_id', 14)
+            ->withWhereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 1);
+            })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();
 
         $vouchers_eleccion = Voucher::with('imagenes')
             ->with([
-                'modalidad',
                 'modalidad.campos',
                 'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->where('mod_id', 15)
+            ->withWhereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 2);
+            })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();

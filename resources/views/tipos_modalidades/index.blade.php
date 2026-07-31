@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rubros')
+@section('title', 'Tipos de modalidad')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
@@ -9,20 +9,23 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
-    function cargar_rubros(page = 1, orderby = '')
+    function cargar_tipos_modalidad(page = 1, orderby = '')
     {
-        let dataString =$('#formftro').serialize()+'&page='+page+'&orderby=' + orderby;
+        let dataString =$('#formftro').serialize() +'&page=' + page +'&orderby=' + orderby;
 
         $.ajax({
             type: 'GET',
-            url: '/admin/rubros/listado',
+            url: '/admin/tipos_modalidades/listado',
             data: dataString,
+
             beforeSend: function() {
                 $('#box-espere').show();
             },
+
             complete: function() {
                 $('#box-espere').hide();
             },
+
             success: function(response) {
                 $('#box_body').html(response.body);
                 $('#box_foot').html(response.foot);
@@ -32,10 +35,10 @@ $(document).ready(function () {
         });
     }
 
-    // cargar_rubros($('#pag').val(), $('#ob').val());
+    cargar_tipos_modalidad($('#pag').val(), $('#ob').val());
 
     $('#btn_filtro').on('click', function () {
-        cargar_rubros($('#pag').val(), $('#ob').val());
+        cargar_tipos_modalidad($('#pag').val(), $('#ob').val());
     });
 
 	$(document).on("keypress", function(e) {
@@ -55,6 +58,7 @@ $(document).ready(function () {
 @include('partials.navbar')
 
 <main class="commerce-page">
+
     <span class="commerce-hero-wave commerce-hero-wave--one"></span>
     <span class="commerce-hero-wave commerce-hero-wave--two"></span>
 
@@ -68,8 +72,8 @@ $(document).ready(function () {
 
     <section class="commerce-hero">
         <div class="commerce-hero__content">
-            <h1 class="commerce-title">Rubros</h1>
-            <p class="commerce-subtitle">Permiten clasificar las entidades según su categoría o actividad.</p>
+            <h1 class="commerce-title">Tipos de modalidades</h1>
+            <p class="commerce-subtitle">...</p>
         </div>
     </section>
 
@@ -81,21 +85,16 @@ $(document).ready(function () {
                         <form action="" id="formftro">
                             <div class="commerce-search">
                                 <i class="bi bi-search"></i>
-                                <input type="text" class="form-control" name="buscar" id="buscar" placeholder="Buscar rubro...">
+                                <input type="text" class="form-control" id="buscar" name="buscar" placeholder="Buscar tipo de modalidad...">
                             </div>
-                        </form>
 
-                        {{-- <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button> --}}
+                            {{-- <button class="btn commerce-filter-btn" type="button"><i class="bi bi-funnel"></i>Filtro<i class="bi bi-chevron-down ms-1"></i></button> --}}
+                        </form>
                     </div>
 
                     <div class="commerce-toolbar__right">
-                        <div class="col-sm-1">
-                            <div class="overlay pull-right" id="box-espere" style="display: none;">
-                                <i class="fa fa-refresh fa-spin"></i>
-                            </div>
-                        </div>
                         <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
-                        <a href="{{ route('admin.rubros.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo rubro</a>
+                        <a href="{{ route('admin.tipos_modalidades.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo tipo de modalidad</a>
                     </div>
                 </div>
 
@@ -103,42 +102,37 @@ $(document).ready(function () {
                     <table class="commerce-table">
                         <thead>
                             <tr class="commerce-table-head">
-                                <th style="width: 40px">ID</th>
-                                <th style="width: 140px">NOMBRE</th>
-                                <th style="width: 60px">CATEGORIA</th>
-                                <th style="width: 60px">FECHA DE ALTA</th>
-                                <th style="width: 60px" class="text-center">ESTADO</th>
+                                <th style="width: 50px">ID</th>
+                                <th style="width: 160px">NOMBRE</th>
+                                <th style="width: 70px">FECHA DE ALTA</th>
+                                <th style="width: 60px">ESTADO</th>
                                 <th style="width: 60px">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody id="box_body">
-                            @foreach($rubros as $rubro)
+                            @foreach($tipos as $tipo)
                                 <tr class="commerce-row">
+
                                     <td class="commerce-col" data-label="ID">
                                         <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $rubro['rub_id'] }}</span>
+                                        <span>{{ $tipo['tipo_mod_id'] }}</span>
                                     </td>
 
                                     <td class="commerce-col" data-label="Nombre">
                                         <span class="commerce-mobile-label">Nombre</span>
-                                        <span>{{ $rubro['rub_nombre'] }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="categoria">
-                                        <span class="commerce-mobile-label">Categoria</span>
-                                        <span>{{ $rubro['categoria']['cv_nombre'] }}</span>
+                                        <span>{{ $tipo['tipo_mod_nombre'] }}</span>
                                     </td>
 
                                     <td class="commerce-col text-center" data-label="Fecha de alta">
                                         <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $rubro['rub_fecha_alta']->format('d/m/Y') }}</span>
+                                        <span>{{ $tipo['tipo_mod_fecha_alta']->format('d/m/Y') }}</span>
                                     </td>
 
                                     <td class="commerce-col text-center" data-label="Estado">
                                         <span class="commerce-mobile-label">Estado</span>
 
                                         @php
-                                            $estado = estado($rubro['rub_estado']);
+                                            $estado = estado($tipo['tipo_mod_estado']);
                                         @endphp
 
                                         <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
@@ -148,7 +142,7 @@ $(document).ready(function () {
 
                                     <td class="commerce-col commerce-col--actions" data-label="Acciones">
                                         <span class="commerce-mobile-label">Acciones</span>
-                                        <a href="{{ route('admin.rubros.edit', $rubro['rub_id']) }}" class="btn commerce-edit-btn" title="Editar">
+                                        <a href="{{ route('admin.tipos_modalidades.edit', $tipo->tipo_mod_id) }}" class="btn commerce-edit-btn" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </td>
@@ -160,7 +154,7 @@ $(document).ready(function () {
 
                 <div class="commerce-footer">
                     <div class="commerce-footer__text">
-                        Mostrando 1 a {{ $rubros->count() }} de {{ $rubros->count() }} registros
+                        Mostrando 1 a {{ $tipos->count() }} de {{ $tipos->count() }} registros
                     </div>
 
                     <div class="commerce-pagination" id="box_foot">
