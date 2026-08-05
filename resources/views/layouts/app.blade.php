@@ -105,34 +105,34 @@
         //     }
         // });
 
-        $('#btn_actualizar').on('click', function (e) {
-            e.preventDefault();
+        // $('#btn_actualizar').on('click', function (e) {
+        //     e.preventDefault();
 
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Se va a actualizar el registro",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#5cb85c',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, actualizar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
+        //     Swal.fire({
+        //         title: '¿Estás seguro?',
+        //         text: "Se va a actualizar el registro",
+        //         icon: 'warning',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#5cb85c',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Sí, actualizar',
+        //         cancelButtonText: 'Cancelar'
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
 
-                    // Loader opcional
-                    Swal.fire({
-                        title: 'Procesando...',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
+        //             // Loader opcional
+        //             Swal.fire({
+        //                 title: 'Procesando...',
+        //                 allowOutsideClick: false,
+        //                 didOpen: () => {
+        //                     Swal.showLoading();
+        //                 }
+        //             });
 
-                    $('#form_main').submit();
-                }
-            });
-        });
+        //             $('#form_main').submit();
+        //         }
+        //     });
+        // });
 
     });
     </script>

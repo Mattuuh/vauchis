@@ -162,6 +162,7 @@ $(document).ready(function () {
                     <h6 class="fw-bold mb-1">Campos dinámicos</h6>
                     <p class="text-muted small mb-0">Define qué datos deberá completar un voucher de esta modalidad.</p>
                 </div>
+                <input type="hidden" name="campo_index" id="campo_index" value="{{ count($oldCampos) ? count($oldCampos) : 0 }}">
                 <button type="button" class="btn btn-primary btn-sm" id="btn-agregar-campo">+ Agregar campo</button>
             </div>
 
@@ -184,8 +185,8 @@ $(document).ready(function () {
 
                                 <div class="col-12 col-md-6">
                                     <label class="form-label required-label">Tipo de dato del campo</label>
-                                    <select name="campos[{{ $i }}][tipo]" class="form-select field-required campo-tipo" required>
-                                        <option value="">Seleccionar...</option>
+                                    <select name="campos[{{ $i }}][tipo]" id="f_tipo_campo-__INDEX__" class="form-select field-required campo-tipo" required>
+                                        <option value="">Seleccionar una opci&oacute;n</option>
                                         <option value="number" {{ (($campo['tipo'] ?? '') == 'number') ? 'selected' : '' }}>Número</option>
                                         <option value="button" {{ (($campo['tipo'] ?? '') == 'button') ? 'selected' : '' }}>Boton</option>
                                     </select>
@@ -260,8 +261,8 @@ $(document).ready(function () {
 
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Tipo de campo</label>
-                <select name="campos[__INDEX__][tipo]" class="form-select field-required campo-tipo" required>
-                    <option value="">Seleccionar...</option>
+                <select name="campos[__INDEX__][tipo]" id="f_tipo_campo-__INDEX__" class="form-select field-required campo-tipo f_tipo_campo" required>
+                    <option value="">Seleccionar una opci&oacute;n</option>
                     {{-- <option value="text">Texto</option> --}}
                     {{-- <option value="textarea">Texto expandible</option> --}}
                     <option value="number">Número</option>
@@ -280,9 +281,9 @@ $(document).ready(function () {
                 <label class="form-label d-block">Tipo de monto</label>
                 <div class="form-check form-switch mt-2">
                     <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="FIJ" id="monto_fijo-__INDEX__">
-                    <label class="form-check-label" for="monto_fijo-__INDEX__">Monto fijo</label>
+                    <label class="form-check-label" for="monto_fijo-__INDEX__" id="label_monto_fijo-__INDEX__">Monto fijo</label>
                     <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="VAR" id="monto_variable-__INDEX__">
-                    <label class="form-check-label" for="monto_variable-__INDEX__">Monto variable</label>
+                    <label class="form-check-label" for="monto_variable-__INDEX__" id="label_monto_variable-__INDEX__">Monto variable</label>
                 </div>
             </div>
 
@@ -309,7 +310,7 @@ $(document).ready(function () {
 
 @push('scripts')
 <script>
-    let campoIndex = {{ count($oldCampos) ? count($oldCampos) : 0 }};
+    let campoIndex = Number($('#campo_index').val());
 
     function normalizarCodigo(valor) {
         return valor
@@ -378,26 +379,127 @@ $(document).ready(function () {
         });
 
         btnAgregarCampo.addEventListener('click', function () {
-            const emptyState = document.getElementById('campos-empty-state');
-            if (emptyState) {
-                emptyState.remove();
-            }
+            const tipo_mod = Number($('#f_tipo_mod_id').val());
+            let campoIndex = Number($('#campo_index').val());
 
-            let html = campoTemplate.innerHTML.replaceAll('__INDEX__', campoIndex);
-            camposContainer.insertAdjacentHTML('beforeend', html);
+            if (tipo_mod!='') {
 
-            const nuevoCampo = camposContainer.querySelector('.campo-dinamico-item[data-index="' + campoIndex + '"]');
-            if (nuevoCampo) {
-                const ordenInput = nuevoCampo.querySelector('input[name="campos[' + campoIndex + '][orden]"]');
-                if (ordenInput) {
-                    ordenInput.value = campoIndex + 1;
+                if (tipo_mod===3) {
+                    if (campoIndex>=1) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Solo puede seleccionar un campo!'
+                        });
+
+                        return;
+                    }
                 }
 
-                bindCampoEvents(nuevoCampo);
-            }
+                const emptyState = document.getElementById('campos-empty-state');
+                if (emptyState) {
+                    emptyState.remove();
+                }
 
-            campoIndex++;
+                let html = campoTemplate.innerHTML.replaceAll('__INDEX__', campoIndex);
+                camposContainer.insertAdjacentHTML('beforeend', html);
+
+                const nuevoCampo = camposContainer.querySelector('.campo-dinamico-item[data-index="' + campoIndex + '"]');
+                if (nuevoCampo) {
+                    const ordenInput = nuevoCampo.querySelector('input[name="campos[' + campoIndex + '][orden]"]');
+                    if (ordenInput) {
+                        ordenInput.value = campoIndex + 1;
+                    }
+
+                    bindCampoEvents(nuevoCampo);
+                }
+
+                if (tipo_mod===2) {
+                    // 
+                    $('.f_tipo_campo option[value="button"]').attr('hidden', true);
+
+                    $('#label_monto_fijo-'+campoIndex).css('display', 'none');
+                    $('#monto_fijo-'+campoIndex).css('display', 'none');
+                    $('#monto_fijo-'+campoIndex).removeAttr('checked');
+
+                    $('#label_monto_variable-'+campoIndex).css('display', '');
+                    $('#monto_variable-'+campoIndex).css('display', '');
+                    $('#monto_variable-'+campoIndex).attr('checked', 'checked');
+                } else {
+                    // 
+                    $('.f_tipo_campo option[value="number"]').attr('hidden', true);
+
+                    $('#label_monto_fijo-'+campoIndex).css('display', '');
+                    $('#monto_fijo-'+campoIndex).css('display', '');
+                    $('#monto_fijo-'+campoIndex).attr('checked', 'checked');
+
+                    $('#label_monto_variable-'+campoIndex).css('display', 'none');
+                    $('#monto_variable-'+campoIndex).css('display', 'none');
+                    $('#monto_variable-'+campoIndex).removeAttr('checked');
+                }
+
+                campoIndex++;
+                $('#campo_index').val(campoIndex);
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Debe seleccionar un tipo de modalidad!'
+                });
+
+                return;
+            }
+            
         });
     });
+</script>
+
+<script>
+$(document).ready(function () {
+    // 
+    $('#f_tipo_mod_id').on('change', function () {
+        $('#campo_index').val(0);
+
+        const html = `
+        <div id="campos-empty-state" class="text-muted small">
+            Todavía no agregaste campos dinámicos para esta modalidad.
+        </div>
+        `;
+
+        $('#campos-container').html(html);
+
+    });
+
+    $(document).on('change','.f_tipo_campo', function () {
+        const rid = $(this).attr('id').split('-')[1];
+        const val = $(this).val();
+
+        if (val==='number') {
+            $('#label_monto_fijo-'+rid).css('display', 'none');
+            $('#monto_fijo-'+rid).css('display', 'none');
+            $('#monto_fijo-'+rid).removeAttr('checked');
+
+            $('#label_monto_variable-'+rid).css('display', '');
+            $('#monto_variable-'+rid).css('display', '');
+            $('#monto_variable-'+rid).attr('checked', 'checked');
+        } else if (val==='button') {
+            $('#label_monto_fijo-'+rid).css('display', '');
+            $('#monto_fijo-'+rid).css('display', '');
+            $('#monto_fijo-'+rid).attr('checked', 'checked');
+
+            $('#label_monto_variable-'+rid).css('display', 'none');
+            $('#monto_variable-'+rid).css('display', 'none');
+            $('#monto_variable-'+rid).removeAttr('checked');
+
+        } else {
+            $('#label_monto_fijo-'+rid).css('display', '');
+            $('#monto_fijo-'+rid).css('display', '');
+            $('#monto_fijo-'+rid).removeAttr('checked');
+
+            $('#label_monto_variable-'+rid).css('display', '');
+            $('#monto_variable-'+rid).css('display', '');
+            $('#monto_variable-'+rid).removeAttr('checked');
+        }
+    });
+});
 </script>
 @endpush

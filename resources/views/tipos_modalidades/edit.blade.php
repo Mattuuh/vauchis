@@ -2,13 +2,79 @@
 
 @section('title', 'Editar tipo de modalidad')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a editar el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            nombre: {
+                required: true,
+            },
+            descripcion: {
+                required: false,
+            },
+            condiciones: {
+                required: true,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
 
 <div class="container">
-
-    <div class="vch-hero-wave vch-hero-wave--two"></div>
 
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -45,28 +111,29 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label">Observaciones</label>
-                    <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones', $tipo->tipo_mod_observacion) }}</textarea>
+                    <label class="form-label">Descripci&oacute;n</label>
+                    <textarea name="descripcion" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('descripcion', $tipo->tipo_mod_descripcion) }}</textarea>
 
-                    @error('observaciones')
+                    @error('descripcion')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
 
+                <div class="col-12">
+                    <label class="form-label">Condiciones</label>
+                    <textarea name="condiciones" class="form-control" rows="3" placeholder="Condiciones preestablecidas para el voucher...">{{ old('condiciones', $tipo->tipo_mod_condiciones) }}</textarea>
+                </div>
             </div>
         </div>
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_mod_id }}" data-url="{{ route('admin.tipos_modalidades.delete', $tipo->tipo_mod_id) }}" id="btn_eliminar">
-                Eliminar
-            </button>
+            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_mod_id }}" data-url="{{ route('admin.tipos_modalidades.delete', $tipo->tipo_mod_id) }}" id="btn_eliminar">Eliminar</button>
 
             <div>
                 <a href="{{ route('admin.tipos_modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
-
         </div>
 
     </form>

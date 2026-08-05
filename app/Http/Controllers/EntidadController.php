@@ -198,7 +198,7 @@ class EntidadController extends Controller
             'com_documento' => ['required', 'max:150'],
             'com_nombre_fantasia' => ['required', 'max:150'],
             'com_razon_social' => ['required', 'max:150'],
-            'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            // 'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
 
             'sucursales' => ['required', 'array', 'min:1'],
             'sucursales.*.pais_id' => ['required'],
@@ -250,6 +250,7 @@ class EntidadController extends Controller
                 'ent_domicilio_fiscal' => $request->com_dom_fiscal,
                 'ent_instagram' => $request->com_instagram,
                 'ent_tiktok' => $request->com_tiktok,
+                'ent_color_fondo' => $request->com_color_fondo,
                 // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
                 'ent_publico' => $request->f_publico,
@@ -456,6 +457,8 @@ class EntidadController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd('Entró al store', $request->all());
+
         try {
             $this->validarEntidad($request);
 
@@ -477,6 +480,7 @@ class EntidadController extends Controller
                     'ent_domicilio_fiscal' => $request->com_dom_fiscal,
                     'ent_instagram' => $request->com_instagram,
                     'ent_tiktok' => $request->com_tiktok,
+                    'ent_color_fondo' => $request->com_color_fondo,
                     'ent_publico' => $request->f_publico,
                     'ent_fecha_mod' => now(),
                     'ent_usu_mod' => 1,

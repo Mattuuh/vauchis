@@ -37,8 +37,11 @@ $(document).ready(function () {
             nombre: {
                 required: true,
             },
-            observaciones: {
+            descripcion: {
                 required: false,
+            },
+            condiciones: {
+                required: true,
             },
         },
         messages: {
@@ -111,14 +114,18 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
-                <!-- OBSERVACIONES -->
                 <div class="col-12">
-                    <label class="form-label">Observaciones</label>
-                    <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
+                    <label class="form-label">Descripci&oacute;n</label>
+                    <textarea name="descripcion" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('descripcion') }}</textarea>
 
-                    @error('observaciones')
+                    @error('descripcion')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Condiciones</label>
+                    <textarea name="condiciones" class="form-control" rows="3" placeholder="Condiciones preestablecidas para el voucher...">{{ old('condiciones') }}</textarea>
                 </div>
 
             </div>

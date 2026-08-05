@@ -242,6 +242,16 @@ $(document).ready(function () {
                 </div> --}}
 
                 <div class="col-12">
+                    <label class="form-label required-label">Color de letras</label>
+                    <input type="color" name="f_color" id="f_color" class="form-control" value="{{ old('f_color', $resaltador->resal_color) }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Color del fondo</label>
+                    <input type="color" name="f_color_fondo" id="f_color_fondo" class="form-control" value="{{ old('f_color_fondo', $resaltador->resal_color_fondo) }}">
+                </div>
+
+                <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $resaltador->resal_publico) ? 'checked' : '' }}>
                         <label class="form-check-label" for="f_publico">Publico</label>

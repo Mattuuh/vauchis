@@ -40,4 +40,9 @@ class Modalidad extends Model
     {
         return $this->hasMany(Voucher::class,'mod_id','mod_id');
     }
+
+    public function tipo_modalidad()
+    {
+        return $this->belongsTo(TipoModalidad::class, 'tipo_mod_id', 'tipo_mod_id');
+    }
 }

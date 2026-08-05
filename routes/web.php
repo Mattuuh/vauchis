@@ -181,6 +181,7 @@ Route::middleware(['administrador'])
 
 
         Route::get('/vouchers/listado', [VoucherController::class, 'listado'])->name('vouchers.listado');
+        Route::get('/vouchers/tipos_modalidades', [VoucherController::class, 'tipos_modalidades'])->name('vouchers.tipos_modalidades');
         Route::resource('vouchers', VoucherController::class);
         Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
         Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');

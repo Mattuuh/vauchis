@@ -111,4 +111,9 @@ class Entidad extends Model
             'sub_id'
         )->withPivot('rub_id');
     }
+
+    public function resaltador_entidad()
+    {
+        return $this->belongsTo(Resaltador::class, 'resal_id','resal_id');
+    }
 }

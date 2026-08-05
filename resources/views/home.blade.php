@@ -108,6 +108,8 @@
                             $logoImage = $brand->image ?? $brand->logo ?? null;
                             $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : $logoFallbackImages[$loop->index % count($logoFallbackImages)];
 
+                            $resaltador = $brand->resaltador ?? null;
+
                         @endphp
                         <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}">
                             {{-- <img src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}"> --}}
@@ -115,7 +117,12 @@
                             <img class="vh-business-card__banner" src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}">
                             <img class="vh-business-card__logo" src="{{ $logo_imgSrc }}" alt="Logo {{ $brand->name }}">
 
-                            <span class="vs-badge vh-card-badge">★ Recomendado</span>
+                            @if ($resaltador)
+                                <span class="vs-badge vh-card-badge" style="{{ $resaltador->resal_color_fondo!='' ? 'background: '.$resaltador->resal_color_fondo.' !important;' : '' }} {{ $resaltador->resal_color!='' ? 'color: '.$resaltador->resal_color.' !important' : '' }}">
+                                    ★ {{ $resaltador->resal_nombre }}
+                                </span>
+                            @endif
+
                             <div class="vh-business-card__caption">
                                 <div>
                                     <h3>{{ $brand->name }}</h3>

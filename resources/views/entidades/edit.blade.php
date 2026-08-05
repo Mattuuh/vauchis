@@ -132,6 +132,11 @@
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Color de fondo</label>
+                    <input type="color" name="com_color_fondo" class="form-control" value="{{ old('com_color_fondo', $entidad->ent_color_fondo) }}">
+                </div>
+
                 <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $entidad->ent_publico) ? 'checked' : '' }}>
@@ -244,7 +249,7 @@
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
                         <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -289,6 +294,7 @@
                                 <label class="form-label">Organización</label>
                                 <select name="sucursales[{{ $index }}][org_id]" class="form-select">
                                     <option value="">Selecciona una organización</option>
+                                    <option value="0" {{ old("sucursales.$index.org_id", $sucursal->org_id) == 0 ? 'selected' : '' }}>Sin organización</option>
                                     @foreach($organizaciones as $id => $nombre)
                                         <option value="{{ $id }}" {{ old("sucursales.$index.org_id", $sucursal->org_id) == $id ? 'selected' : '' }}>
                                             {{ $nombre }}
@@ -844,15 +850,25 @@
                 </div>
 
                 <div class="row g-2">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Organización</label>
                         <select name="sucursales[${sucursalIndex}][org_id]" class="form-select">
                             <option value="">Selecciona una organización</option>
+                            <option value="0">Sin organización</option>
                             ${Object.entries(organizaciones).map(([id, nombre]) => `<option value="${id}">${nombre}</option>`).join('')}
                         </select>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label required-label">Utilizado para Canje</label>
+                        <select name="sucursales[${sucursalIndex}][cd_canje]" class="form-select field-required" required>
+                            <option value="">Selecciona una opci&oacute;n</option>
+                            <option value="0">NO</option>
+                            <option value="1">S&iacute;</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-6">
                         <label class="form-label required-label">País</label>
                         <select name="sucursales[${sucursalIndex}][pais_id]" class="form-select pais field-required" required>
                             <option value="">Selecciona el país</option>
@@ -860,7 +876,7 @@
                         </select>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <label class="form-label required-label">Provincia</label>
                         <select name="sucursales[${sucursalIndex}][provincia_id]" class="form-select provincia field-required" required>
                             <option value="">Selecciona la provincia</option>
@@ -898,11 +914,6 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label">WhatsApp</label>
-                        <input type="text" name="sucursales[${sucursalIndex}][cd_whatsapp]" class="form-control">
-                    </div>
-
-                    <div class="col-12 col-md-6">
                         <label class="form-label">Email 1</label>
                         <input type="email" name="sucursales[${sucursalIndex}][cd_email1]" class="form-control">
                     </div>
@@ -910,6 +921,18 @@
                     <div class="col-12 col-md-6">
                         <label class="form-label">Email 2</label>
                         <input type="email" name="sucursales[${sucursalIndex}][cd_email2]" class="form-control">
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="sucursales[${sucursalIndex}][cd_publico]" id="cd_publico-${sucursalIndex}" value="1">
+                            <label class="form-check-label" for="cd_publico-${sucursalIndex}">Publico</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Horario de atenci&oacute;n</label>
+                        <input type="text" name="sucursales[${sucursalIndex}][cd_horario_atencion]" class="form-control form-control-custom" placeholder="Horario de atención de Lun. a Vie. de 14:00 h a 20:00 h">
                     </div>
 
                     <div class="col-12">

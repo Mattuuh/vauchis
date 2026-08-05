@@ -94,6 +94,7 @@ class HomeController extends Controller
             ->where('ent_publico',1)
             ->with('imagenPrincipal')
             ->with('logoPrincipal')
+            ->with('resaltador_entidad')
             ->get()
             ->map(function ($ent) {
                 return (object)[
@@ -105,6 +106,7 @@ class HomeController extends Controller
                     'banner' => $ent->imagenPrincipal
                         ? $ent->imagenPrincipal->ef_img_path
                         : 'default.png',
+                    'resaltador' => $ent->resaltador_entidad
                 ];
             });
 

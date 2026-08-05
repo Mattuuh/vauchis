@@ -83,6 +83,9 @@ $(document).ready(function () {
                 <div class="commerce-toolbar">
                     <div class="commerce-toolbar__left">
                         <form action="" id="formftro">
+                            <input type="hidden" id="pag" value="1">
+                            <input type="hidden" name="ob" id="ob" value="asc">
+
                             <div class="commerce-search">
                                 <i class="bi bi-search"></i>
                                 <input type="text" class="form-control" id="buscar" name="buscar" placeholder="Buscar resaltador...">

@@ -20,6 +20,7 @@ class Resaltador extends Model
         'resal_estado',
         'resal_estado2',
         'resal_color',
+        'resal_color_fondo',
         'resal_img_nombre_legible',
         'resal_img_name',
         'resal_img_path',

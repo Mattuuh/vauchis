@@ -456,3 +456,32 @@ INSERT INTO `tipos_modalidades` (`tipo_mod_id`, `tipo_mod_nombre`, `tipo_mod_des
 (2, 'Monto eleccion', 'Monto eleccion', NULL, '1', NULL, '1900-01-01', '1', NULL, NULL, NULL, NULL),
 (3, 'Producto/Servicio', 'Producto/Servicio', NULL, '1', NULL, '1900-01-01', '1', NULL, NULL, NULL, NULL);
 
+
+ALTER TABLE `vouchers` 
+  ADD `vou_vigencia_dias` INT NOT NULL DEFAULT '0' AFTER `vou_fecha_fin`,
+  ADD `vou_modalidad_condiciones` TEXT NULL DEFAULT NULL AFTER `vou_terminos_condiciones`;
+
+ALTER TABLE `entidades` ADD `ent_color_fondo` VARCHAR(10) NULL DEFAULT NULL AFTER `ent_tiktok`;
+
+
+ALTER TABLE `vouchers_detalles` ADD `mod_id` INT NULL DEFAULT NULL AFTER `vou_id`, ADD `mca_id` INT NULL DEFAULT NULL AFTER `mod_id`;
+
+CREATE TABLE `vouchers_sucursales` (
+  `vou_suc_id` int NOT NULL AUTO_INCREMENT,
+  `vou_id` int DEFAULT NULL,
+  `ed_id` int DEFAULT NULL,
+  `vou_suc_notas` text COLLATE utf8mb4_unicode_ci,
+  `vou_suc_estado` int DEFAULT NULL,
+  `vou_suc_estado2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `vou_suc_fecha_alta` datetime DEFAULT NULL,
+  `vou_suc_usu_alta` int DEFAULT NULL,
+  `vou_suc_fecha_mod` datetime DEFAULT NULL,
+  `vou_suc_usu_mod` int DEFAULT NULL,
+  `vou_suc_fecha_baja` datetime DEFAULT NULL,
+  `vou_suc_usu_baja` int DEFAULT NULL,
+  PRIMARY KEY (`vou_suc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `resaltadores` ADD `resal_color_fondo` VARCHAR(100) NULL DEFAULT NULL AFTER `resal_color`;
+
+

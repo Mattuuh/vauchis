@@ -12,7 +12,9 @@ use App\Models\Influencer;
 use App\Models\Modalidad;
 use App\Models\ModalidadCampo;
 use App\Models\Rubro;
+use App\Models\Subrubro;
 use App\Models\TipoArchivo;
+use App\Models\TipoModalidad;
 use App\Models\Voucher;
 use App\Models\VoucherDetalle;
 use App\Models\VoucherFile;
@@ -202,6 +204,14 @@ class VoucherController extends Controller
             ->orderBy('tipo_archivo_id', 'desc')
             ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
 
+        // $rubros = Rubro::where('rub_estado', 1)
+        //     ->orderBy('rub_nombre')
+        //     ->pluck('rub_nombre', 'rub_id');
+
+        // $subrubros = Subrubro::where('sub_estado', 1)
+        //     ->orderBy('sub_nombre')
+        //     ->get(['rub_id', 'sub_nombre', 'sub_id']);
+
         return view('vouchers.create', compact(
             'entidades',
             'sucursales',
@@ -211,12 +221,16 @@ class VoucherController extends Controller
             'etiquetasDisponibles',
             'modalidadesCamposJson',
             'plantillas',
-            'tipos_archivos'
+            'tipos_archivos',
+            // 'rubros',
+            // 'subrubros'
         ));
     }
 
     public function store(Request $request)
     {
+        // dd('Entró al store', $request->all());
+
         $this->validarVoucher($request);
 
         DB::beginTransaction();
@@ -230,7 +244,7 @@ class VoucherController extends Controller
 
             $vouId = DB::table('vouchers')->insertGetId([
                 'ent_id' => $request->f_ent_id,
-                'ed_id' => $request->f_ed_id,
+                'ed_id' => null,
                 'tv_id' => null,
                 'cv_id' => $request->f_cv_id,
                 'inf_id' => $request->f_inf_id,
@@ -251,11 +265,13 @@ class VoucherController extends Controller
 
                 'vou_fecha_inicio' => $request->f_fecha_ini,
                 'vou_fecha_fin' => $request->f_fecha_fin,
+                'vou_vigencia_dias' => $request->f_vigencia,
                 'vou_stock' => $request->stock,
                 'vou_destacado' => 0,
                 'vou_porcentaje_comision' => $request->f_comision,
 
                 'vou_terminos_condiciones' => $request->terms,
+                'vou_modalidad_condiciones' => $request->f_condiciones . $request->f_condiciones_adi,
 
                 'vou_estado' => 1,
                 'vou_estado2' => null,
@@ -265,32 +281,43 @@ class VoucherController extends Controller
                 'vou_usu_alta' => $usuarioId,
             ]);
 
-            $detalles = [];
-
-            for ($i = 1; $i <= (int) $request->stock; $i++) {
-                $codigoInterno = 'VOU-' . $vouId . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
-                $codigoPublico = strtoupper(Str::random(10));
-
-                $detalles[] = [
-                    'vou_id' => $vouId,
-                    'ent_id' => $request->f_ent_id,
-                    'cli_id' => null,
-                    'vd_codigo_interno' => $codigoInterno,
-                    'vd_codigo' => $codigoPublico,
-                    'vd_secuencia' => $i,
-                    'vd_variante_nombre' => null,
-                    'vd_variante_descripcion' => null,
-                    // 'vd_monto_total' => $request->f_monto_total,
-                    'vd_monto_total' => 0,
-                    'vd_estado' => 1,
-                    'vd_estado2' => 'PE',
-                    'vd_estado3' => 'PE',
-                    'vd_fecha_alta' => now(),
-                    'vd_usu_alta' => $usuarioId,
-                ];
+            if ($request->filled('f_ed_id')) {
+                foreach ($request->f_ed_id as $sucursal) {
+                    // 
+                    DB::table('vouchers_sucursales')->insert([
+                        'vou_id' => $vouId,
+                        'ed_id' => $sucursal,
+                        'vou_suc_estado' => 1,
+                        'vou_suc_fecha_alta' => now(),
+                        'vou_suc_usu_alta' => $usuarioId,
+                    ]);
+                }
             }
 
-            DB::table('vouchers_detalles')->insert($detalles);
+            // for ($i = 1; $i <= (int) $request->stock; $i++) {
+            //     $codigoInterno = 'VOU-' . $vouId . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
+            //     $codigoPublico = strtoupper(Str::random(10));
+
+            //     $detalles[] = [
+            //         'vou_id' => $vouId,
+            //         'ent_id' => $request->f_ent_id,
+            //         'cli_id' => null,
+            //         'vd_codigo_interno' => $codigoInterno,
+            //         'vd_codigo' => $codigoPublico,
+            //         'vd_secuencia' => $i,
+            //         'vd_variante_nombre' => null,
+            //         'vd_variante_descripcion' => null,
+            //         // 'vd_monto_total' => $request->f_monto_total,
+            //         'vd_monto_total' => 0,
+            //         'vd_estado' => 1,
+            //         'vd_estado2' => 'PE',
+            //         'vd_estado3' => 'PE',
+            //         'vd_fecha_alta' => now(),
+            //         'vd_usu_alta' => $usuarioId,
+            //     ];
+            // }
+
+            // DB::table('vouchers_detalles')->insert($detalles);
 
             // MODALIDADES
             $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
@@ -298,6 +325,7 @@ class VoucherController extends Controller
                 ->orderBy('mca_orden')
                 ->get();
 
+            $f_mod_id = $request->f_mod_id;
             foreach ($camposModalidad as $campo) {
                 $valor = $request->input('modalidad_valores.' . $campo->mca_id);
 
@@ -312,6 +340,34 @@ class VoucherController extends Controller
                     'vmv_fecha_alta' => now(),
                     'vmv_usu_alta' => $usuarioId,
                 ]);
+
+                $detalles = [];
+                for ($i = 1; $i <= (int) $request->stock; $i++) {
+                    $codigoInterno = 'VOU-' . $vouId . '-' .$campo->mca_id. '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
+                    $codigoPublico = strtoupper(Str::random(10));
+
+                    $detalles[] = [
+                        'vou_id' => $vouId,
+                        'mod_id' => $f_mod_id,
+                        'mca_id' => $campo->mca_id,
+                        'ent_id' => $request->f_ent_id,
+                        'cli_id' => null,
+                        'vd_codigo_interno' => $codigoInterno,
+                        'vd_codigo' => $codigoPublico,
+                        'vd_secuencia' => $i,
+                        'vd_variante_nombre' => null,
+                        'vd_variante_descripcion' => null,
+                        // 'vd_monto_total' => $request->f_monto_total,
+                        'vd_monto_total' => $valor['monto_total'] ?? 0,
+                        'vd_estado' => 1,
+                        'vd_estado2' => 'PE',
+                        'vd_estado3' => 'PE',
+                        'vd_fecha_alta' => now(),
+                        'vd_usu_alta' => $usuarioId,
+                    ];
+                }
+
+                DB::table('vouchers_detalles')->insert($detalles);
             }
 
             // ETIQUETAS
@@ -453,6 +509,13 @@ class VoucherController extends Controller
                 ->with('error', 'El voucher no existe.');
         }
 
+        $sucursales_seleccionadas = DB::table('vouchers_sucursales')
+            ->where('vou_id', $id)
+            ->where('vou_suc_estado', 1)
+            ->orderBy('vou_suc_id')
+            ->pluck('ed_id')
+            ->toArray();
+
         $banners = DB::table('vouchers_files')
             ->where('vou_id', $id)
             ->where('vf_estado', 1)
@@ -584,6 +647,7 @@ class VoucherController extends Controller
 
         return view('vouchers.edit', compact(
             'voucher',
+            'sucursales_seleccionadas',
             'banners',
             'entidades',
             'sucursales',
@@ -646,12 +710,27 @@ class VoucherController extends Controller
 
                     'vou_fecha_inicio' => $fechaInicio,
                     'vou_fecha_fin' => $fechaFin,
+                    'vou_vigencia_dias' => $request->f_vigencia,
                     'vou_stock' => $request->stock,
                     'vou_porcentaje_comision' => $request->f_comision,
 
                     'vou_permite_personalizacion' => $request->f_permite_personalizacion,
                     'vou_terminos_condiciones' => $request->terms,
+                    'vou_modalidad_condiciones' => $request->f_condiciones . $request->f_condiciones_adi,
                 ]);
+            
+            // if ($request->filled('f_ed_id')) {
+            //     foreach ($request->f_ed_id as $sucursal) {
+            //         // 
+            //         DB::table('vouchers_sucursales')->insert([
+            //             'vou_id' => $id,
+            //             'ed_id' => $sucursal,
+            //             'vou_suc_estado' => 1,
+            //             'vou_suc_fecha_alta' => now(),
+            //             'vou_suc_usu_alta' => $usuarioId,
+            //         ]);
+            //     }
+            // }
 
             /*
             |--------------------------------------------------------------------------
@@ -1167,15 +1246,20 @@ class VoucherController extends Controller
     }
     public function vouchersPorEntidad($id)
     {
-        $entidad = DB::table('entidades')
-            ->where('ent_id', $id)
-            ->where('ent_estado', 1)
-            ->select(
-                'ent_id as id',
-                'ent_nombre_fantasia as nombre',
-                'ent_logo_url as logo'
-            )
-            ->first();
+        // $entidad = DB::table('entidades')
+        //     ->where('ent_id', $id)
+        //     ->where('ent_estado', 1)
+        //     ->select(
+        //         'ent_id as id',
+        //         'ent_nombre_fantasia as nombre',
+        //         'ent_logo_url as logo'
+        //     )
+        //     ->first();
+        $entidad = Entidad::with('imagenPrincipal', 'logoPrincipal')
+            // ->where('ent_id',$id)
+            ->where('ent_estado',1)
+            ->findOrFail($id);
+        // dd($entidad);
 
         $domicilios = EntidadDomicilio::with('organizacion')
             ->where('ent_id', $id)
@@ -1385,5 +1469,15 @@ class VoucherController extends Controller
         }
 
         return view('vouchers.comprar', compact('voucher','entidad','imagenes','valores'));
+    }
+
+    public function tipos_modalidades(Request $request)
+    {
+        $modalidad = Modalidad::findOrFail($request->mod_id);
+        $tipo_modalidad = TipoModalidad::findOrFail($modalidad->tipo_mod_id);
+
+        return response()->json([
+            'body' => $tipo_modalidad->tipo_mod_condiciones
+        ]);
     }
 }

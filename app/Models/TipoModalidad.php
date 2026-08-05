@@ -30,4 +30,9 @@ class TipoModalidad extends Model
         'tipo_mod_fecha_mod' => 'datetime',
         'tipo_mod_fecha_baja' => 'datetime',
     ];
+
+    public function modalidades()
+    {
+        return $this->hasMany(Modalidad::class,'tipo_mod_id','tipo_mod_id');
+    }
 }

@@ -17,13 +17,13 @@
             ? $heroVoucher->imagenes->first()->vf_img_path
             : null;
 
-        $logo = $entidad->logo
-            ? asset('storage/' . $entidad->logo)
-            : asset('images/default-brand.png');
+        $logo = $entidad->logoPrincipal?->ef_img_path
+            ? asset('storage/' . $entidad->logoPrincipal->ef_img_path)
+            : '#';
 
-        $heroImage = $heroVoucherImage
-            ? asset('storage/' . $heroVoucherImage)
-            : $logo;
+        $heroImage = $entidad->imagenPrincipal?->ef_img_path
+            ? asset('storage/' . $entidad->imagenPrincipal->ef_img_path)
+            : '#';
 
         $fixedAmounts = $fixedAmounts ?? [];
         $productVouchers = $productVouchers ?? $vouchers ?? [];
@@ -34,19 +34,19 @@
 
     <section class="vp-brand-hero">
         @if (isset($heroImage))
-            <img src="{{ asset($heroImage) }}" alt="{{ $entidad->nombre ?? 'Comercio' }}">
+            <img src="{{ asset($heroImage) }}" alt="{{ $entidad->ent_nombre_fantasia ?? 'Comercio' }}">
         @endif
     </section>
 
-    <section class="vp-brand-info">
+    <section class="vp-brand-info" style="{{ $entidad->ent_color_fondo!='' ? 'background: '.$entidad->ent_color_fondo.' !important' : '' }}">
         <div class="vp-brand-shell vp-brand-info__inner">
 
             <div class="vp-brand-main">
                 <div class="vp-brand-logo">
                     @if($logo)
-                        <img src="{{ asset($logo) }}" alt="{{ $entidad->nombre ?? 'Comercio' }}">
+                        <img src="{{ asset($logo) }}" alt="{{ $entidad->ent_nombre_fantasia ?? 'Comercio' }}">
                     @else
-                        <span>{{ strtoupper(substr($entidad->nombre ?? 'V', 0, 1)) }}</span>
+                        <span>{{ strtoupper(substr($entidad->ent_nombre_fantasia ?? 'V', 0, 1)) }}</span>
                     @endif
                 </div>
 
@@ -55,7 +55,7 @@
                         <span class="vp-brand-badge">★ Recomendado</span>
                     @endif
 
-                    <h1>{{ $entidad->nombre ?? 'Nombre del comercio' }}</h1>
+                    <h1>{{ $entidad->ent_nombre_fantasia ?? 'Nombre del comercio' }}</h1>
 
                     <p class="vp-brand-category">
                         {{ $entidad->type ?? 'Comercio' }}
@@ -81,13 +81,13 @@
             @endforeach
 
             @foreach ($domicilios as $domicilio)
-                @if(!empty($domicilio->org_id)) 
+                {{-- @if(!empty($domicilio->org_id))  --}}
                     <div class="vp-brand-meta">
                         @if(!empty($domicilio->ed_direccion))
-                            <span>{{ $domicilio->ed_direccion }}</span>
+                            <span>{{ $domicilio->ed_direccion }} | {{ $domicilio->ed_horario_atencion }}</span>
                         @endif
                     </div>
-                @endif
+                {{-- @endif --}}
             @endforeach
 
             {{-- <div class="vp-brand-meta">

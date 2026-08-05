@@ -11,8 +11,6 @@
 @include('partials.navbar')
 
 <div class="container">
-
-    <div class="vch-hero-wave vch-hero-wave--one"></div>
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -62,12 +60,12 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    <select name="f_ed_id" id="f_ed_id" class="form-select field-required" required>
-                        <option value="">Selecciona la sucursal</option>
+                    <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" required multiple size="2">
+                        {{-- <option value="">Selecciona la sucursal</option> --}}
                         @foreach($sucursales as $sucursal)
                             @if ($sucursal['ent_id']==$voucher->ent_id)
-                                <option value="{{ $sucursal['ed_id'] }}" {{ old('f_ed_id', $voucher->ed_id) == $sucursal['ed_id'] ? 'selected' : '' }}>
-                                    {{ $sucursal['ed_direccion'] }}
+                                <option value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'selected' : '' }}>
+                                    {{ $sucursal['ed_direccion'] }} {{ $sucursal['ed_canje']==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE' }}
                                 </option>
                             @endif
                         @endforeach
@@ -81,6 +79,7 @@
                     <label class="form-label required-label">Influencer:</label>
                     <select name="f_inf_id" class="form-select">
                         <option value="">Selecciona el influencer</option>
+                        <option value="0" {{ old('f_inf_id', $voucher->inf_id) == 0 ? 'selected' : '' }}>Sin influencer vinculado</option>
                         @foreach($influencers as $id => $nombre)
                             <option value="{{ $id }}" {{ old('f_inf_id', $voucher->inf_id) == $id ? 'selected' : '' }}>
                                 {{ $nombre }}
@@ -117,7 +116,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Fecha de vencimiento:</label>
+                    <label class="form-label required-label">Fecha de fin:</label>
                     <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab', \Carbon\Carbon::parse($voucher->vou_fecha_fin)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
                     <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin', $voucher->vou_fecha_fin) }}">
                     @error('f_fecha_fin')
@@ -129,6 +128,14 @@
                     <label class="form-label required-label">Monto total:</label>
                     <input type="text" name="f_monto_total" class="form-control field-required" value="{{ old('f_monto_total', $voucher->vou_monto_fijo) }}" required>
                     @error('f_monto_total')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Vigencia post compra (d&iacute;as):</label>
+                    <input type="text" name="f_vigencia" class="form-control field-required" value="{{ old('f_vigencia', $voucher->vou_vigencia_dias) }}" readonly>
+                    @error('f_vigencia')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
@@ -186,9 +193,8 @@
                 <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
                     <option value="">Selecciona la modalidad</option>
                     @foreach($modalidades as $modalidad)
-                        <option value="{{ $modalidad->mod_id }}"
-                            {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : '' }}>
-                            {{ $modalidad->mod_codigo }} - {{ $modalidad->mod_nombre }}
+                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : '' }}>
+                            {{ $modalidad->mod_nombre }}
                         </option>
                     @endforeach
                 </select>
@@ -206,6 +212,13 @@
                     Seleccioná una modalidad para completar su configuración específica.
                 </div>
             </div>
+
+            <div class="col-12">
+                <label class="form-label">Condiciones:</label>
+                <p id="f_mod_condiciones"></p>
+                <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
+                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="">{{ old('f_condiciones_adi', $voucher->vou_modalidad_condiciones) }}</textarea>
+            </div>
         </div>
 
         <div class="vch-card p-3 mb-3">
@@ -215,9 +228,7 @@
                 <label class="form-label fw-semibold">Nueva etiqueta</label>
                 <div class="d-flex gap-2">
                     <input type="text" id="nueva-etiqueta-input" class="form-control" placeholder="Ej: Promoción, Regalo, Gourmet">
-                    <button type="button" class="btn btn-primary" onclick="agregarNuevaEtiqueta()">
-                        Agregar
-                    </button>
+                    <button type="button" class="btn btn-primary" onclick="agregarNuevaEtiqueta()">Agregar</button>
                 </div>
             </div>
 
@@ -251,13 +262,7 @@
                 <label class="form-label fw-semibold">Etiquetas disponibles</label>
                 <div class="chips-box">
                     @foreach($etiquetasDisponibles as $etiqueta)
-                        <button
-                            type="button"
-                            class="chip-option"
-                            data-id="{{ $etiqueta->eti_id }}"
-                            data-name="{{ $etiqueta->eti_nombre }}"
-                            onclick="addEtiquetaExistente(this)"
-                        >
+                        <button type="button" class="chip-option" data-id="{{ $etiqueta->eti_id }}" data-name="{{ $etiqueta->eti_nombre }}" onclick="addEtiquetaExistente(this)">
                             {{ $etiqueta->eti_nombre }}
                         </button>
                     @endforeach
@@ -499,7 +504,8 @@
         const sucursalSelect = $('#f_ed_id');
         let txt_canje='';
 
-        sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
+        // sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
+        sucursalSelect.html('');
 
         $.each(sucursales, function (_, sucursal) {
             if (String(sucursal.ent_id) === String(ent_id)) {

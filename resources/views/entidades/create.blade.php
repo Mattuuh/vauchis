@@ -279,6 +279,11 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Color de fondo</label>
+                    <input type="color" name="com_color_fondo" class="form-control">
+                </div>
+
                 <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
@@ -359,6 +364,7 @@ $(document).ready(function () {
                             <label class="form-label required-label">Organización</label>
                             <select name="sucursales[0][org_id]" class="form-select">
                                 <option value="">Selecciona una organización</option>
+                                <option value="0" {{ old("sucursales.$index.org_id", $sucursal->org_id) == 0 ? 'selected' : '' }}>Sin organización</option>
                                 @foreach($organizaciones as $id => $nombre)
                                     <option value="{{ $id }}">{{ $nombre }}</option>
                                 @endforeach
