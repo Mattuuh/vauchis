@@ -1433,7 +1433,7 @@ class VoucherController extends Controller
         ]);
     }
 
-    public function precompra($vou_id, $vmv_id, Request $request)
+    public function precompra_voucher($vou_id, $vmv_id, Request $request)
     {
         // $voucher = Voucher::with('entidad')
         //     ->with('imagenes')
@@ -1441,6 +1441,89 @@ class VoucherController extends Controller
         //     ->findOrFail($id);
         //     // dd($voucher);
 
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+                'modalidad',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
+
+        $entidad = $voucher->entidad;
+
+        $imagenes = $voucher->imagenes;
+
+        $valores = $voucher->modalidadValores[0];
+
+        $modalidad = $voucher->modalidad;
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        if (!$voucher) {
+            abort(404);
+        }
+
+        return view('precompra', compact('voucher','entidad','imagenes','valores','modalidad'));
+    }
+
+    public function tipos_modalidades(Request $request)
+    {
+        $modalidad = Modalidad::findOrFail($request->mod_id);
+        $tipo_modalidad = TipoModalidad::findOrFail($modalidad->tipo_mod_id);
+
+        return response()->json([
+            'body' => $tipo_modalidad->tipo_mod_condiciones
+        ]);
+    }
+
+    public function vista_previa_voucher($vou_id, $vmv_id, Request $request)
+    {
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+                'modalidad',
+                'sucursales',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
+
+        $entidad = $voucher->entidad;
+
+        $imagenes = $voucher->imagenes;
+
+        $valores = $voucher->modalidadValores[0];
+
+        $modalidad = $voucher->modalidad;
+
+        $sucursales = $voucher->sucursales;
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        if (!$voucher) {
+            abort(404);
+        }
+
+        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'));
+    }
+
+    public function compra_voucher($vou_id, $vmv_id, Request $request)
+    {
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
@@ -1468,16 +1551,38 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        return view('vouchers.comprar', compact('voucher','entidad','imagenes','valores'));
+        return view('compra', compact('voucher','entidad','imagenes','valores'));
     }
 
-    public function tipos_modalidades(Request $request)
+    public function postcompra_voucher($vou_id, $vmv_id, Request $request)
     {
-        $modalidad = Modalidad::findOrFail($request->mod_id);
-        $tipo_modalidad = TipoModalidad::findOrFail($modalidad->tipo_mod_id);
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
 
-        return response()->json([
-            'body' => $tipo_modalidad->tipo_mod_condiciones
-        ]);
+        $entidad = $voucher->entidad;
+
+        $imagenes = $voucher->imagenes;
+
+        $valores = $voucher->modalidadValores[0];
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        if (!$voucher) {
+            abort(404);
+        }
+
+        return view('postcompra', compact('voucher','entidad','imagenes','valores'));
     }
 }

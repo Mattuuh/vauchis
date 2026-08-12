@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Voucher extends Model
 {
@@ -83,6 +84,11 @@ class Voucher extends Model
     public function entidad_domicilio()
     {
         return $this->belongsTo(EntidadDomicilio::class, 'ed_id', 'ed_id');
+    }
+
+    public function sucursales(): BelongsToMany
+    {
+        return $this->belongsToMany(EntidadDomicilio::class,'vouchers_sucursales','vou_id','ed_id');
     }
 
     public function plantillas()

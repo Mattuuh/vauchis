@@ -144,7 +144,10 @@ Route::get('/categorias/{categoria}/rubros/{rubro}/subrubros/{subrubro}/entidade
 
 Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
 Route::get('/buscar', [VoucherController::class, 'buscar_voucher'])->name('vouchers.buscar');
-Route::get('/vouchers/{voucher}/{modalidadCampo}/comprar', [VoucherController::class, 'precompra'])->name('vouchers.comprar');
+Route::get('/precompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'precompra_voucher'])->name('vouchers.precompra');
+Route::get('/vista_previa/{voucher}/{modalidadCampo}', [VoucherController::class, 'vista_previa_voucher'])->name('vouchers.vista_previa');
+Route::get('/compra/{voucher}/{modalidadCampo}', [VoucherController::class, 'compra_voucher'])->name('vouchers.compra');
+Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'postcompra_voucher'])->name('vouchers.postcompra');
 
 
 Route::middleware(['administrador'])

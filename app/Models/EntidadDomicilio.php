@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EntidadDomicilio extends Model
 {
@@ -47,5 +48,10 @@ class EntidadDomicilio extends Model
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'ent_id', 'ent_id');
+    }
+
+    public function vouchers(): BelongsToMany
+    {
+        return $this->belongsToMany(Voucher::class,'vouchers_sucursales','ed_id','vou_id');
     }
 }
