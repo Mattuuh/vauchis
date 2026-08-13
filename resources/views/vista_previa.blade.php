@@ -34,6 +34,9 @@
         ]
     ]);
 
+
+    $fecha_actual_raw = new DateTime();
+    $fecha_actual = $fecha_actual_raw->format('d/m/Y');
     $fechaVencimientoRaw = new DateTime();
     $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
     $fechaVencimientoRaw->modify("+$dias_vigencia days");
@@ -239,7 +242,7 @@
         display: block;
         margin-bottom: 5px;
         color: #454545;
-        font-family: cursive;
+        font-family: 'Grape Nuts', cursive;
         font-size: 13px;
         letter-spacing: .12em;
         text-transform: uppercase;
@@ -249,8 +252,9 @@
         margin: 0 0 12px;
         padding: 0 4px 4px;
         border-bottom: 1px solid #777;
-        font-family: cursive;
+        font-family: 'Grape Nuts', cursive;
         font-size: 24px;
+        font-weight: 500;
         font-style: italic;
         text-align: center;
         line-height: 1.15;
@@ -258,7 +262,7 @@
 
     .vp-hand-message {
         margin: 27px 0 0;
-        font-family: cursive;
+        font-family: 'Grape Nuts', cursive;
         font-size: 16px;
         font-style: italic;
         line-height: 1.4;
@@ -784,8 +788,7 @@
         }
 
         .vp-desktop-navbar,
-        .vp-page-title,
-        .vp-bottom-bar {
+        .vp-page-title {
             display: none !important;
         }
 
@@ -977,211 +980,211 @@
         .vp-conditions .vp-validity { order: 3; }
 
         .vp-white-section {
-        width: 100%;
-        min-height: 350px;
+            width: 100%;
+            min-height: 350px;
 
-        padding: 20px 15px 15px;
+            padding: 20px 15px 15px;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
 
-        background: #fff;
-    }
+            background: #fff;
+        }
 
-    /* =========================
-       TARJETA QR
-       ========================= */
+        /* =========================
+        TARJETA QR
+        ========================= */
 
-    .vp-qr-column {
-        width: 100%;
+        .vp-qr-column {
+            width: 100%;
 
-        display: flex;
-        justify-content: center;
-    }
+            display: flex;
+            justify-content: center;
+        }
 
-    .vp-qr-card {
-        width: 110px;
-        min-height: 165px;
+        .vp-qr-card {
+            width: 110px;
+            min-height: 165px;
 
-        padding: 10px 10px 12px;
+            padding: 10px 10px 12px;
 
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
 
-        gap: 6px;
+            gap: 6px;
 
-        background: #fff;
+            background: #fff;
 
-        box-shadow:
-            0 2px 2px rgba(0, 0, 0, .18),
-            0 1px 2px rgba(0, 0, 0, .08);
-    }
+            box-shadow:
+                0 2px 2px rgba(0, 0, 0, .18),
+                0 1px 2px rgba(0, 0, 0, .08);
+        }
 
-    .vp-qr {
-        width: 65px;
-        height: 65px;
+        .vp-qr {
+            width: 65px;
+            height: 65px;
 
-        margin: 0 auto;
+            margin: 0 auto;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .vp-qr img {
-        width: 65px;
-        height: 65px;
+        .vp-qr img {
+            width: 65px;
+            height: 65px;
 
-        object-fit: contain;
-    }
+            object-fit: contain;
+        }
 
-    .vp-qr-info {
-        width: 100%;
+        .vp-qr-info {
+            width: 100%;
 
-        display: flex;
-        flex-direction: column;
+            display: flex;
+            flex-direction: column;
 
-        align-items: flex-start;
+            align-items: flex-start;
 
-        font-family: Montserrat, Arial, sans-serif;
+            font-family: Montserrat, Arial, sans-serif;
 
-        color: #111;
+            color: #111;
 
-        line-height: 1.05;
-    }
+            line-height: 1.05;
+        }
 
-    .vp-voucher-code,
-    .vp-qr-info > span:first-child {
-        margin-bottom: 5px;
+        .vp-voucher-code,
+        .vp-qr-info > span:first-child {
+            margin-bottom: 5px;
 
-        font-size: 9px;
-        font-weight: 600;
-    }
+            font-size: 9px;
+            font-weight: 600;
+        }
 
-    .vp-qr-info strong {
-        margin-bottom: 1px;
+        .vp-qr-info strong {
+            margin-bottom: 1px;
 
-        font-size: 10px;
-        line-height: 1.05;
+            font-size: 10px;
+            line-height: 1.05;
 
-        font-weight: 700;
+            font-weight: 700;
 
-        text-transform: uppercase;
-    }
+            text-transform: uppercase;
+        }
 
-    .vp-qr-info > span:last-child {
-        font-size: 10px;
-        line-height: 1.05;
+        .vp-qr-info > span:last-child {
+            font-size: 10px;
+            line-height: 1.05;
 
-        font-weight: 400;
+            font-weight: 400;
 
-        text-transform: uppercase;
-    }
+            text-transform: uppercase;
+        }
 
 
-    /* =========================
-       COMUNIDAD
-       ========================= */
+        /* =========================
+        COMUNIDAD
+        ========================= */
 
-    .vp-community {
-        width: 100%;
+        .vp-community {
+            width: 100%;
 
-        margin-top: 22px;
+            margin-top: 22px;
 
-        display: grid;
+            display: grid;
 
-        grid-template-columns: 1fr 85px;
-        grid-template-areas:
-            "text gifts"
-            "link link";
+            grid-template-columns: 1fr 85px;
+            grid-template-areas:
+                "text gifts"
+                "link link";
 
-        align-items: center;
+            align-items: center;
 
-        column-gap: 10px;
-        row-gap: 14px;
-    }
+            column-gap: 10px;
+            row-gap: 14px;
+        }
 
-    .vp-community-text {
-        grid-area: text;
+        .vp-community-text {
+            grid-area: text;
 
-        justify-self: start;
+            justify-self: start;
 
-        display: flex;
-        flex-direction: column;
+            display: flex;
+            flex-direction: column;
 
-        font-family: Montserrat, Arial, sans-serif;
+            font-family: Montserrat, Arial, sans-serif;
 
-        font-size: 27px;
-        line-height: 1.08;
+            font-size: 27px;
+            line-height: 1.08;
 
-        color: #0768f7;
+            color: #0768f7;
 
-        text-align: left;
-    }
+            text-align: left;
+        }
 
-    .vp-community-text span,
-    .vp-community-text strong {
-        display: block;
-    }
+        .vp-community-text span,
+        .vp-community-text strong {
+            display: block;
+        }
 
-    .vp-community-text strong {
-        font-weight: 700;
-        font-style: italic;
-    }
+        .vp-community-text strong {
+            font-weight: 700;
+            font-style: italic;
+        }
 
 
-    /* =========================
-       REGALITOS
-       ========================= */
+        /* =========================
+        REGALITOS
+        ========================= */
 
-    .vp-gifts-mark {
-        grid-area: gifts;
+        .vp-gifts-mark {
+            grid-area: gifts;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .vp-gifts-mark img {
-        width: 98px;
-        height: auto;
+        .vp-gifts-mark img {
+            width: 98px;
+            height: auto;
 
-        display: block;
-    }
+            display: block;
+        }
 
 
-    /* =========================
-       BOTÓN
-       ========================= */
+        /* =========================
+        BOTÓN
+        ========================= */
 
-    .vp-community-link {
-        grid-area: link;
+        .vp-community-link {
+            grid-area: link;
 
-        justify-self: center;
+            justify-self: center;
 
-        width: 102px;
-        height: 24px;
+            width: 102px;
+            height: 24px;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-        padding: 0;
+            padding: 0;
 
-        border: 1px solid #1670ff;
-        border-radius: 999px;
+            border: 1px solid #1670ff;
+            border-radius: 999px;
 
-        color: #1670ff;
+            color: #1670ff;
 
-        font-family: Montserrat, Arial, sans-serif;
+            font-family: Montserrat, Arial, sans-serif;
 
-        font-size: 10px;
-        font-weight: 600;
+            font-size: 10px;
+            font-weight: 600;
 
-        text-decoration: none;
-    }
+            text-decoration: none;
+        }
     }
 
     @media (max-width: 420px) {
@@ -1203,6 +1206,15 @@
     .v-mobile-navbar {
         display: none;
     }
+}
+
+.vp-bottom-bar {
+    transition: transform 0.3s ease;
+    transform: translateY(0);
+}
+
+.vp-bottom-bar.is-hidden {
+    transform: translateY(100%);
 }
 </style>
 @endpush
@@ -1290,9 +1302,13 @@
 
                     <ul class="vp-addresses">
                         @if ($sucursales->isNotEmpty())
+                            @php
+                                $direcciones_label='';
+                            @endphp
                             @foreach($sucursales as $sucursal)
                                 @php
                                     $direccion = $sucursal->ed_direccion;
+                                    $direcciones_label .= strtoupper($direccion)." o ";
                                 @endphp
                                 @if($direccion)
                                     <li>
@@ -1301,6 +1317,9 @@
                                     </li>
                                 @endif
                             @endforeach
+                            @php
+                                $direcciones_label=rtrim($direcciones_label,' o ');
+                            @endphp
                         @else
                             
                         @endif
@@ -1312,22 +1331,23 @@
                     <div class="vp-how">
                         <h2 class="vp-how-title">Cómo canjear <strong>tu Vauchis</strong></h2>
                         <ol class="vp-steps">
-                            <li><span class="vp-step-number">1</span><span>Presentá tu voucher al vendedor</span></li>
-                            <li><span class="vp-step-number">2</span><span>[Elegí el producto que más te guste]</span></li>
-                            <li><span class="vp-step-number">3</span><strong>¡Listo, ya es tuyo!</strong></li>
+                            <li><img src="{{ asset('images/ilustracion_Nro1.svg') }}" alt="1" class=""><span>Presentá tu voucher al vendedor</span></li>
+                            <li><img src="{{ asset('images/ilustracion_Nro2.svg') }}" alt="2" class=""><span>[Elegí el producto que más te guste]</span></li>
+                            <li><img src="{{ asset('images/ilustracion_Nro3.svg') }}" alt="3" class=""><strong>¡Listo, ya es tuyo!</strong></li>
                         </ol>
                     </div>
 
                     <div class="vp-conditions">
-                        <div class="vp-validity">Válido hasta {{ $fechaVencimiento }}</div>
+                        <div class="vp-validity">Válido desde {{ $fecha_actual }} hasta {{ $fechaVencimiento }}</div>
                         <h3>Tené en cuenta</h3>
                         <ul>
                             <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
-                            <li>Válido para canjear hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
+                            <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
                             <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
-                            <li>Se canjea en <b>[las sucursales informadas.]</b></li>
+                            <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
                             <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
                             <li>Envío no incluido.</li>
+                            <li>Uso único.</li>
                         </ul>
                     </div>
                 </section>
@@ -1433,6 +1453,26 @@ document.addEventListener('DOMContentLoaded', function () {
             console.warn('Definí $continuarUrl o agregá un formulario con id="form-vista-previa".');
         });
     }
+});
+</script>
+
+<script>
+$(function () {
+    let lastScrollTop = $(window).scrollTop();
+
+    $(window).on('scroll', function () {
+        const currentScrollTop = $(this).scrollTop();
+
+        if (currentScrollTop > lastScrollTop) {
+            // Scroll hacia abajo
+            $('.vp-bottom-bar').addClass('is-hidden');
+        } else {
+            // Scroll hacia arriba
+            $('.vp-bottom-bar').removeClass('is-hidden');
+        }
+
+        lastScrollTop = Math.max(currentScrollTop, 0);
+    });
 });
 </script>
 @endpush

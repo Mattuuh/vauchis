@@ -140,7 +140,7 @@
 
     .vs-summary-title {
         margin: 0 0 12px;
-        color: var(--vs-green);
+        /* color: var(--vs-green); */
         font-size: 22px;
         font-weight: 700;
         letter-spacing: .04em;
@@ -150,7 +150,7 @@
     .vs-summary-name,
     .vs-summary-price {
         display: block;
-        color: var(--vs-green);
+        /* color: var(--vs-green); */
         font-size: 16px;
         line-height: 1.45;
     }
@@ -536,8 +536,9 @@ $(function () {
                     </div>
 
                     <div class="vs-summary-info">
-                        <h2 class="vs-summary-title">Resumen de compra</h2>
-                        <span class="vs-summary-name">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
+                        <h2 class="vs-summary-title" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">Resumen de compra</h2>
+                        <span class="vs-summary-name" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
+                        <span class="vs-summary-name" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">{{ strtoupper($voucher->vou_nombre) }}</span>
                         <strong class="vs-summary-price">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
 
                         @if ($fechaVencimientoRaw)
