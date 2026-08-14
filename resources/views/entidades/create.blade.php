@@ -168,7 +168,7 @@ $(document).ready(function () {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 3px solid transparent;
+      border: 3px solid #000;
       cursor: pointer;
     }
 
@@ -177,7 +177,7 @@ $(document).ready(function () {
     }
 
     .color-option.selected {
-      border-color: #000;
+        border-color: #ff0000;
     }
 </style>
 @endpush

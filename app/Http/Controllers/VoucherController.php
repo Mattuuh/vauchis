@@ -804,12 +804,12 @@ class VoucherController extends Controller
             | Actualizar monto y entidad en detalles existentes
             |--------------------------------------------------------------------------
             */
-            DB::table('vouchers_detalles')
-                ->where('vou_id', $id)
-                ->update([
-                    'ent_id' => $request->f_ent_id,
-                    'vd_monto_total' => $request->f_monto_total,
-                ]);
+            // DB::table('vouchers_detalles')
+            //     ->where('vou_id', $id)
+            //     ->update([
+            //         'ent_id' => $request->f_ent_id,
+            //         'vd_monto_total' => $request->f_monto_total,
+            //     ]);
 
             /*
             |--------------------------------------------------------------------------
@@ -929,30 +929,30 @@ class VoucherController extends Controller
                 ->orderBy('mca_orden')
                 ->get();
 
-            DB::table('vouchers_modalidad_valores')
-                ->where('vou_id', $id)
-                ->update([
-                    'vmv_estado' => 0,
-                    'vmv_fecha_baja' => now(),
-                    'vmv_usu_baja' => 1
-                ]);
+            // DB::table('vouchers_modalidad_valores')
+            //     ->where('vou_id', $id)
+            //     ->update([
+            //         'vmv_estado' => 0,
+            //         'vmv_fecha_baja' => now(),
+            //         'vmv_usu_baja' => 1
+            //     ]);
 
-            foreach ($camposModalidad as $campo) {
-                $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
+            // foreach ($camposModalidad as $campo) {
+            //     $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
 
-                if ($campo->mca_tipo === 'boolean') {
-                    $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
-                }
+            //     if ($campo->mca_tipo === 'boolean') {
+            //         $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
+            //     }
 
-                DB::table('vouchers_modalidad_valores')->insert([
-                    'vou_id' => $id,
-                    'mca_id' => $campo->mca_id,
-                    'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
-                    'vmv_estado' => 1,
-                    'vmv_fecha_alta' => now(),
-                    'vmv_usu_alta' => $usuarioId,
-                ]);
-            }
+            //     DB::table('vouchers_modalidad_valores')->insert([
+            //         'vou_id' => $id,
+            //         'mca_id' => $campo->mca_id,
+            //         'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
+            //         'vmv_estado' => 1,
+            //         'vmv_fecha_alta' => now(),
+            //         'vmv_usu_alta' => $usuarioId,
+            //     ]);
+            // }
 
             $plantillas = $request->input('plantillas', []);
 
@@ -1529,6 +1529,7 @@ class VoucherController extends Controller
                 'imagenes',
                 'entidad',
                 'modalidad.campos',
+                'sucursales',
             ])
             ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
                 $query->where('vmv_id', $vmv_id);
@@ -1543,6 +1544,8 @@ class VoucherController extends Controller
 
         $valores = $voucher->modalidadValores[0];
 
+        $sucursales = $voucher->sucursales;
+
         if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
             $valores->vmv_monto_fijo=$request->monto;
         }
@@ -1551,7 +1554,7 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        return view('compra', compact('voucher','entidad','imagenes','valores'));
+        return view('compra', compact('voucher','entidad','imagenes','valores','sucursales'));
     }
 
     public function postcompra_voucher($vou_id, $vmv_id, Request $request)

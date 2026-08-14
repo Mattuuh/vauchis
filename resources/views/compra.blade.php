@@ -207,6 +207,7 @@
     .vp-brand-name {
         font-size: 16px;
         margin-bottom: 2px;
+        font-weight: 700;
     }
 
     .vp-brand-subtitle {
@@ -220,6 +221,7 @@
         font-weight: 500;
         line-height: 1;
         letter-spacing: -2px;
+        text-align: center;
     }
 
     .vp-summary-bottom {
@@ -234,6 +236,7 @@
         line-height: 1.3;
         text-transform: uppercase;
         margin-bottom: 10px !important;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .vp-message {
@@ -469,6 +472,14 @@
 
         .vp-login-button { display: none; }
 
+        .vp-login-card { cursor: pointer; }
+
+        .vp-login-card:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+            background-color: #07378C;
+        }
+
         .vp-field { margin-bottom: 22px; }
         .vp-field input,
         .vp-field select,
@@ -527,24 +538,35 @@
     $mensaje = old('mensaje', data_get($dat_voucher ?? null, 'mensaje', 'Querida Flor, espero que pases un cumple hermoso. Te queremos mucho.'));
 
     $volverUrl = $volverUrl ?? url()->previous();
-    $editarUrl = $editarUrl ?? $volverUrl;
+    $editarUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
     // $actionUrl = $actionUrl ?? route('checkout.voucher', [
     $actionUrl = $actionUrl ?? route('vouchers.postcompra', [
         'voucher' => data_get($voucher ?? null, 'vou_id'),
         'modalidadCampo' => data_get($valores ?? null, 'vmv_id'),
     ]);
 
+    $fecha_actual_raw = new DateTime();
+    $fecha_actual = $fecha_actual_raw->format('d/m/Y');
     $fecha_vto_raw = new DateTime();
     $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
     $fecha_vto_raw->modify("+$dias_vigencia days");
     $fecha_vto = $fecha_vto_raw ? $fecha_vto_raw->format('d/m/Y') : '01/01/99';
 
+    $direcciones_label='';
+    if ($sucursales->isNotEmpty()) {
+        foreach ($sucursales as $sucursal) {
+            $direcciones_label .= strtoupper($sucursal->ed_direccion)." o ";
+        }
+        $direcciones_label=rtrim($direcciones_label,' o ');
+    }
+    $direcciones_label=rtrim($direcciones_label,' o ');
+
     $condiciones = $condiciones ?? [
         // 'Canjeable por productos o servicios del local <b>[según modalidad del voucher]</b>',
         'Canjeable por productos o servicios del local',
-        'Válido para canjear hasta el <b>'. $fecha_vto .'</b>',
+        'Válido para canjear desde <b>'. $fecha_actual .'</b> hasta <b>'. $fecha_vto .'</b>',
         '<b>No reembolsable</b> ni canjeable por dinero',
-        'Se canjea en <b>[Av. Bicentenario, local 56]</b>',
+        'Se canjea en <b>'. $direcciones_label .'</b>',
         'Retiro a cargo del portador del voucher y a acordar con el vendedor',
         'Envío no incluído',
         'Uso único',
@@ -558,7 +580,7 @@
 <header class="vp-mobile-header">
     <a href="{{ $volverUrl }}" aria-label="Volver">‹</a>
     <h1>¡Último paso!</h1>
-    <a href="{{ $volverUrl }}" aria-label="Cerrar">×</a>
+    <a href="{{ $editarUrl }}" aria-label="Cerrar">×</a>
 </header>
 
 <main class="vp-page">
@@ -580,7 +602,7 @@
                 <section class="vp-left">
                     <h2 class="vp-section-title">Datos del comprador</h2>
 
-                    <div class="vp-login-card">
+                    <div class="vp-login-card" data-url="{{ $loginUrl ?? route('login') }}">
                         <div class="vp-login-info">
                             <div class="vp-login-icon"><img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario"></div>
                             <div class="vp-login-copy">
@@ -662,6 +684,7 @@
         <div class="vp-action-bar">
             <div class="vp-action-inner">
                 <a href="{{ $editarUrl }}" class="vp-action vp-action-secondary">Editar mensaje</a>
+                <div class="vs-checkout-total">TOTAL ${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}ARS</div>
                 <button type="submit" class="vp-action vp-action-primary">Confirmar y pagar</button>
             </div>
         </div>
@@ -716,6 +739,21 @@ $(function () {
             $(element).removeClass('is-invalid');
         }
     });
+
+    $(document).on('click', '.vp-login-card', function (e) {
+
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+
+            const url = $(this).data('url');
+
+            if (url) {
+                window.location.href = url;
+            }
+        }
+
+    });
+
 });
 </script>
 @endpush

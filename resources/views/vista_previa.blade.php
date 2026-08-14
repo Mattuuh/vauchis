@@ -36,7 +36,7 @@
 
 
     $fecha_actual_raw = new DateTime();
-    $fecha_actual = $fecha_actual_raw->format('d/m/Y');
+    $fecha_actual = $fecha_actual_raw->format('d/m/y');
     $fechaVencimientoRaw = new DateTime();
     $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
     $fechaVencimientoRaw->modify("+$dias_vigencia days");
@@ -73,8 +73,8 @@
         ]);
     }
 
-    $volverUrl = $volverUrl ?? url()->previous();
-    $editarUrl = $editarUrl ?? url()->previous();
+    $volverUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
+    $editarUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
     $continuarUrl = $continuarUrl ?? route('vouchers.compra', [
         'voucher' => data_get($voucher ?? null, 'vou_id'),
         'modalidadCampo' => data_get($valores ?? null, 'vmv_id'),
@@ -128,9 +128,15 @@
         align-items: center;
         gap: 18px;
         margin: 0 0 58px;
-        font-size: 31px;
-        font-weight: 400;
+        /* font-size: 31px; */
+        /* font-weight: 400; */
+        /* line-height: 1.2; */
+
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+        font-size: 34px;
         line-height: 1.2;
+        letter-spacing: 0;
     }
 
     .vp-back,
@@ -196,8 +202,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 18px;
+        /* margin-bottom: 18px; */
+        padding-left: 15px;
+        padding-right: 15px;
         color: #fff;
+        box-shadow: 0 3px 4px rgba(0,0,0,.22);
+        border-radius: 13px 13px 0 0;
     }
 
     .vp-code {
@@ -287,6 +297,11 @@
         font-size: 12px;
         line-height: 1.2;
         text-transform: uppercase;
+        font-weight: 300;
+    }
+
+    .vp-value-eyebrow span {
+        font-weight: 800;
     }
 
     .vp-value-amount {
@@ -295,6 +310,7 @@
         font-weight: 700;
         line-height: 1;
         letter-spacing: -.04em;
+        text-align: center;
     }
 
     .vp-recommendation {
@@ -421,7 +437,7 @@
         display: flex;
         align-items: flex-start;
         gap: 9px;
-        margin: 0 0 18px;
+        margin: 0 0 10px;
         font-size: 11px;
         line-height: 1.4;
     }
@@ -444,15 +460,19 @@
         color: #fff;
     }
 
-    .vp-blue-section::after {
-        content: '';
+    .vp-blue-section::before {
+        content: "";
         position: absolute;
-        left: 175px;
-        bottom: -130px;
-        width: 300px;
-        height: 300px;
-        border: 8px solid rgba(21,45,96,.13);
-        transform: rotate(23deg);
+        top: 30%;
+        /* inset: 0; */
+        background-image: url("/images/ilustración-estrella-voucher.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: .80;
+        pointer-events: none;
+        width: 80%;
+        height: 80%;
     }
 
     .vp-how,
@@ -1264,7 +1284,7 @@
 
                         <div class="vp-value-panel">
                             <div class="vp-value-copy">
-                                <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}<br><strong>Vale por:</strong></p>
+                                <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}<br><span>Vale por:</span></p>
 
                                 {{-- @if ($influencer>0)
                                     <div class="vp-recommendation">★ Recomendado por<br>@visitsalta_</div>
@@ -1295,7 +1315,7 @@
                         </div>
 
                         <a href="{{ data_get($entidad ?? null, 'ent_whatsapp') ? 'https://wa.me/' . preg_replace('/\D+/', '', data_get($entidad, 'ent_whatsapp')) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
-                            <i class="bi bi-whatsapp"></i>
+                            <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp">
                             Contacta al vendedor
                         </a>
                     </div>

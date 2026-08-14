@@ -475,12 +475,16 @@ $(function () {
 
     @php
         if ($modalidad->tipo_mod_id==1) {
+            $color_regalo = '#49B384';
             $imagenVoucher = asset('images/perfildemarca-reglao-verde.png');
 
         } elseif ($modalidad->tipo_mod_id==2) {
+            $color_regalo = '#0065FA';
             $imagenVoucher = asset('images/perfildemarca-regalo-azul.png');
 
         } else {
+            $color_regalo = !empty($entidad->ent_color_fondo) ? $entidad->ent_color_fondo : '#49b889';
+
             $imagenPrincipal = $voucher->imagenes->first();
             $imagenVoucher = $imagenPrincipal && $imagenPrincipal->vf_img_path
                 ? asset('storage/' . $imagenPrincipal->vf_img_path)
@@ -491,6 +495,11 @@ $(function () {
         $fechaVencimientoRaw = new DateTime();
         $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
         $fechaVencimientoRaw->modify("+$dias_vigencia days");
+
+        $dat_voucher = session('voucher');
+        $para = old('para', data_get($dat_voucher ?? null, 'para', ''));
+        $de = old('de', data_get($dat_voucher ?? null, 'de', ''));
+        $mensaje = old('mensaje', data_get($dat_voucher ?? null, 'mensaje', ''));
     @endphp
 
     <form id="form" action="{{ route('vouchers.vista_previa', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]) }}" method="GET">
@@ -502,7 +511,7 @@ $(function () {
 
         <div class="vs-gift-shell">
             <h1 class="vs-gift-title">
-                <a href="{{ url()->previous() }}" class="vs-back-link" aria-label="Volver">
+                <a href="{{ route('vouchers.entidad', $entidad->ent_id) }}" class="vs-back-link" aria-label="Volver">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M15 18l-6-6 6-6"/>
                     </svg>
@@ -514,19 +523,19 @@ $(function () {
                 <div class="vs-gift-form">
                     <div class="vs-gift-field">
                         <label for="de">1. DE:</label>
-                        <input type="text" class="c_input" name="de" id="de" value="{{ old('de') }}" placeholder="Nombre (de quién regala)" autocomplete="name">
+                        <input type="text" class="c_input" name="de" id="de" value="{{ old('de', $de) }}" placeholder="Nombre (de quién regala)" autocomplete="name">
                         <small class="vs-gift-help">Ingresa el/los nombre/s que quieras que aparezcan en el voucher</small>
                     </div>
 
                     <div class="vs-gift-field">
                         <label for="para">2. PARA:</label>
-                        <input type="text" class="c_input" name="para" id="para" value="{{ old('para') }}" placeholder="Nombre (a quién le regala)" autocomplete="off">
+                        <input type="text" class="c_input" name="para" id="para" value="{{ old('para', $para) }}" placeholder="Nombre (a quién le regala)" autocomplete="off">
                         <small class="vs-gift-help">Ingresa el nombre del destinatario</small>
                     </div>
 
                     <div class="vs-gift-field">
                         <label for="mensaje">3. MENSAJE PERSONALIZADO</label>
-                        <input type="text" class="c_input" name="mensaje" id="mensaje" value="{{ old('mensaje') }}" maxlength="255" placeholder="Escribí un mensaje para acompañar el regalo" autocomplete="off">
+                        <input type="text" class="c_input" name="mensaje" id="mensaje" value="{{ old('mensaje', $mensaje) }}" maxlength="255" placeholder="Escribí un mensaje para acompañar el regalo" autocomplete="off">
                     </div>
                 </div>
 
@@ -536,9 +545,9 @@ $(function () {
                     </div>
 
                     <div class="vs-summary-info">
-                        <h2 class="vs-summary-title" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">Resumen de compra</h2>
-                        <span class="vs-summary-name" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
-                        <span class="vs-summary-name" style="color: {{ $entidad->ent_color_fondo ?? '#49b889' }};">{{ strtoupper($voucher->vou_nombre) }}</span>
+                        <h2 class="vs-summary-title" style="color: {{ $color_regalo }};">Resumen de compra</h2>
+                        <span class="vs-summary-name" style="color: {{ $color_regalo }};">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
+                        <span class="vs-summary-name" style="color: {{ $color_regalo }};">{{ strtoupper($voucher->vou_nombre) }}</span>
                         <strong class="vs-summary-price">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
 
                         @if ($fechaVencimientoRaw)

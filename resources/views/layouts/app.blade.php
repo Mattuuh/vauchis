@@ -26,6 +26,13 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/localization/messages_es.min.js"></script>
 
+    {{--  --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Grape+Nuts&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
 
     {{-- <link href="{{ asset('css/home.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('css/vauchis-base.css') }}">

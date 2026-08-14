@@ -96,6 +96,7 @@
     }
 
     .pc-gift-image {
+        position: relative;
         width: 205px;
         height: 160px;
         margin: 0 auto 24px;
@@ -383,6 +384,108 @@
         display: none;
     }
 }
+
+/* ===================================
+   INTRO POSTCOMPRA
+   =================================== */
+
+.pc-gift-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    background-color: var(--gift-color, #49b889);
+
+    pointer-events: none;
+    overflow: hidden;
+
+    /*
+     * El fondo desaparecerá suavemente cuando
+     * empiece a reducirse el regalo.
+     */
+    transition: background-color .35s ease;
+}
+
+.pc-gift-intro.pc-gift-intro--shrinking {
+    background-color: transparent;
+}
+
+.pc-gift-animation {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    transform-origin: center center;
+
+    will-change:
+        transform,
+        width,
+        height,
+        border-radius,
+        opacity;
+
+    /*
+     * Esta curva hace la reducción bastante más orgánica.
+     */
+    transition:
+        transform 1.65s cubic-bezier(.22, 1, .36, 1),
+        width 1.65s cubic-bezier(.22, 1, .36, 1),
+        height 1.65s cubic-bezier(.22, 1, .36, 1),
+        border-radius 1.65s cubic-bezier(.22, 1, .36, 1);
+}
+
+.pc-gift-bow {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: fill;
+
+    pointer-events: none;
+    user-select: none;
+
+    transition:
+        opacity .25s ease,
+        transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Evitamos que se vea el regalo final mientras está ocurriendo
+| la animación.
+|--------------------------------------------------------------------------
+*/
+
+.pc-page.pc-is-animating .pc-gift-image {
+    opacity: 0;
+}
+
+.pc-gift-animation.pc-gift-animation--finished {
+    transition: opacity .22s ease;
+    opacity: 0;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Respeta usuarios que prefieren reducir animaciones.
+|--------------------------------------------------------------------------
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    .pc-gift-intro {
+        display: none;
+    }
+
+    .pc-page.pc-is-animating .pc-gift-image {
+        opacity: 1;
+    }
+}
 </style>
 @endpush
 
@@ -399,9 +502,9 @@
         ?? data_get($voucher ?? null, 'nombre')
         ?? 'Voucher';
 
-    $imagenPostcompra = data_get($voucher ?? null, 'imagen_postcompra')
-        ?? data_get($voucher ?? null, 'imagenRegalo')
-        ?? asset('images/voucher-regalo-verde.png');
+    $imagenPostcompra = asset('images/lazo_pequenio.png');
+
+    $colorRegalo = !empty($entidad->ent_color_fondo) ? $entidad->ent_color_fondo : '#49b889';
 
     $descargaUrl = $descargaUrl ?? '#';
     $emailUrl = $emailUrl ?? '#';
@@ -413,6 +516,17 @@
 @endphp
 
 <div class="pc-page">
+    {{-- <div id="pc-gift-intro" class="pc-gift-intro">
+        <div id="pc-gift-animation" class="pc-gift-animation" style="background-color: {{ $colorRegalo }};">
+            <img src="{{ asset('images/lazo.png') }}" data-large="{{ asset('images/lazo.png') }}" data-small="{{ asset('images/lazo_pequenio.png') }}" class="pc-gift-bow" alt="">
+        </div>
+    </div> --}}
+    <div id="pc-gift-intro" class="pc-gift-intro" style="--gift-color: {{ $colorRegalo }};">
+        <div id="pc-gift-animation" class="pc-gift-animation" style="background-color: {{ $colorRegalo }};">
+            <img src="{{ asset('images/lazo.png') }}" data-large="{{ asset('images/lazo.png') }}" data-small="{{ asset('images/lazo_pequenio.png') }}" class="pc-gift-bow" alt="">
+        </div>
+    </div>
+
     <div class="pc-desktop-nav">
         @include('partials.navbar')
     </div>
@@ -456,21 +570,21 @@
             <div class="pc-actions">
                 <a class="pc-action" href="{{ $descargaUrl }}" download>
                     <span class="pc-action-circle">
-                        <i class="bi bi-download"></i>
+                        <img src="{{ asset('images/descargar_voucher.png') }}" alt="Descargar">
                     </span>
                     <span class="pc-action-label">Descargar</span>
                 </a>
 
                 <a class="pc-action" href="{{ $emailUrl }}">
                     <span class="pc-action-circle">
-                        <i class="bi bi-envelope"></i>
+                        <img src="{{ asset('images/mail_voucher.png') }}" alt="Enviar">
                     </span>
                     <span class="pc-action-label">Enviar por mail</span>
                 </a>
 
                 <button type="button" class="pc-action" id="pc-share-button" data-share-title="{{ $voucherNombre }}" data-share-text="Tu voucher para {{ $destinatario }} ya está listo" data-share-url="{{ $descargaUrl }}">
                     <span class="pc-action-circle">
-                        <i class="bi bi-upload"></i>
+                        <img src="{{ asset('images/compartir_voucher.png') }}" alt="Compartir">
                     </span>
                     <span class="pc-action-label">Compartir</span>
                 </button>
@@ -532,6 +646,260 @@ document.addEventListener('DOMContentLoaded', function () {
             window.prompt('Copiá este enlace:', shareData.url);
         }
     });
+});
+</script>
+
+<script>
+$(function () {
+
+    const $page = $('.pc-page');
+    const $intro = $('#pc-gift-intro');
+    const $gift = $('#pc-gift-animation');
+    const $bow = $gift.find('.pc-gift-bow');
+    const $target = $('.pc-gift-image');
+
+
+    function iniciarAnimacionRegalo() {
+
+        if (
+            !$intro.length ||
+            !$gift.length ||
+            !$target.length
+        ) {
+            return;
+        }
+
+
+        $page.addClass('pc-is-animating');
+
+
+        const viewportWidth = $(window).width();
+        const viewportHeight = $(window).height();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ESTADO INICIAL
+        |--------------------------------------------------------------------------
+        */
+        const initialWidth = viewportWidth;
+        const initialHeight = viewportHeight;
+
+
+        $gift.css({
+            width: initialWidth,
+            height: initialHeight,
+            transform: 'translate3d(0, 0, 0)',
+            borderRadius: '10px'
+        });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dejamos visible el regalo grande un instante.
+        |--------------------------------------------------------------------------
+        */
+
+        setTimeout(function () {
+
+            reducirRegalo();
+
+        }, 450);
+    }
+
+
+
+    function reducirRegalo() {
+        $intro.addClass('pc-gift-intro--shrinking');
+
+        const initialOffset = $gift.offset();
+
+        const initialWidth =
+            $gift.outerWidth();
+
+        const initialHeight =
+            $gift.outerHeight();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Posición final real de .pc-gift-image
+        |--------------------------------------------------------------------------
+        */
+        // const targetOffset = $target.offset();
+        // const targetWidth = $target.outerWidth();
+        // const targetHeight = $target.outerHeight();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Como el regalo usa position: fixed, pasamos las coordenadas
+        | finales a viewport.
+        |--------------------------------------------------------------------------
+        */
+        const targetRect = $target[0].getBoundingClientRect();
+
+        // const targetTop = targetOffset.top - $(window).scrollTop();
+        // const targetLeft = targetOffset.left - $(window).scrollLeft();
+        const targetTop = targetRect.top;
+        const targetLeft = targetRect.left;
+        const targetWidth = targetRect.width;
+        const targetHeight = targetRect.height;
+
+        const initialTop = parseFloat($gift.css('top'));
+        const initialLeft = parseFloat($gift.css('left'));
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Calculamos cuánto tiene que desplazarse.
+        |--------------------------------------------------------------------------
+        */
+        const translateX = targetLeft - initialLeft;
+        const translateY = targetTop - initialTop;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cambio de lazo.
+        |--------------------------------------------------------------------------
+        |
+        | No lo hacemos instantáneamente.
+        | Primero reducimos un poco su opacidad.
+        |--------------------------------------------------------------------------
+        */
+
+        setTimeout(function () {
+
+            const smallBow =
+                $bow.data('small');
+
+            if (!smallBow) {
+                return;
+            }
+
+            $bow.css({
+                opacity: .75,
+                transform: 'scale(.98)'
+            });
+
+
+            setTimeout(function () {
+
+                $bow.attr('src', smallBow);
+
+                $bow.css({
+                    opacity: 1,
+                    transform: 'scale(1)'
+                });
+
+            }, 120);
+
+        }, 450);
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | UNA SOLA TRANSICIÓN
+        |--------------------------------------------------------------------------
+        |
+        | Acá está la diferencia principal respecto de .animate().
+        |--------------------------------------------------------------------------
+        */
+
+        requestAnimationFrame(function () {
+
+            requestAnimationFrame(function () {
+
+                $gift.css({
+
+                    width: targetWidth,
+                    height: targetHeight,
+
+                    transform:
+                        'translate3d(' +
+                        translateX + 'px, ' +
+                        translateY + 'px, 0)',
+
+                    borderRadius: '14px'
+
+                });
+
+            });
+
+        });
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cuando termina la transición hacemos el intercambio
+        | con el elemento definitivo.
+        |--------------------------------------------------------------------------
+        */
+
+        $gift.one('transitionend', function (event) {
+
+            if (
+                event.originalEvent.propertyName !== 'transform'
+            ) {
+                return;
+            }
+
+            finalizarAnimacion();
+        });
+    }
+
+
+
+    function finalizarAnimacion() {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mostramos el elemento definitivo justo debajo.
+        |--------------------------------------------------------------------------
+        */
+
+        $target.css('opacity', 1);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fade muy corto para que no haya un corte.
+        |--------------------------------------------------------------------------
+        */
+
+        $gift.addClass('pc-gift-animation--finished');
+
+        setTimeout(function () {
+            $page.removeClass('pc-is-animating');
+            $intro.remove();
+        }, 240);
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Esperamos que el lazo haya cargado.
+    |--------------------------------------------------------------------------
+    */
+
+    if ($bow.length && !$bow[0].complete) {
+
+        $bow.one('load', function () {
+
+            iniciarAnimacionRegalo();
+
+        });
+
+    } else {
+
+        iniciarAnimacionRegalo();
+
+    }
+
 });
 </script>
 @endpush

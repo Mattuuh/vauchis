@@ -441,7 +441,7 @@
 .vp-voucher-box--green,
 .vp-voucher-box--green h2,
 .vp-voucher-box--green p {
-    color: #35B156;
+    color: #49B384;
 }
 
 .vp-voucher-box--blue,
@@ -459,8 +459,8 @@
 .vp-fixed-options a {
     min-width: 125px;
     text-align: center;
-    border: 1.5px solid #35B156;
-    color: #35B156;
+    border: 1.5px solid #49B384;
+    color: #49B384;
     background: transparent;
     border-radius: 18px;
     padding: 7px 18px;
@@ -644,10 +644,10 @@
 .voucher-monto-btn {
     min-width: 86px;
     padding: 8px 18px;
-    border: 1px solid #35b156;
+    border: 1px solid #49B384;
     border-radius: 30px;
     background: #ffffff;
-    color: #35b156;
+    color: #49B384;
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
     font-weight: 600;
@@ -665,7 +665,7 @@
 }
 
 .voucher-monto-btn.is-selected {
-    background: #35b156;
+    background: #49B384;
     color: #ffffff;
     box-shadow: 0 5px 12px rgba(53, 177, 86, 0.25);
 }
