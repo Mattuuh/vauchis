@@ -18,6 +18,7 @@ class CategoriaController extends Controller
             }
         ])
         // ->where('cat_id', $categoriaId)
+        // ->orderBy('rub_orden', 'asc')
         ->findOrFail($rubroId);
 
         $entidades = Entidad::query()
@@ -109,7 +110,8 @@ class CategoriaController extends Controller
         $rubros = Rubro::with('subrubros')
             ->where('cv_id', $id)
             ->where('rub_estado', 1)
-            ->orderBy('rub_nombre')
+            // ->orderBy('rub_nombre')
+            ->orderBy('rub_orden', 'asc')
             ->get();
 
         $entidades = Entidad::query()

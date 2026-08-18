@@ -92,6 +92,7 @@ class HomeController extends Controller
 
         $featuredBrands = Entidad::where('ent_estado', 1)
             ->where('ent_publico',1)
+            ->where('ent_destacado',1)
             ->with('imagenPrincipal')
             ->with('logoPrincipal')
             ->with('resaltador_entidad')

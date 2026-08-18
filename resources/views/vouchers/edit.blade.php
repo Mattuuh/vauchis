@@ -60,8 +60,7 @@
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" required multiple size="2">
-                        {{-- <option value="">Selecciona la sucursal</option> --}}
+                    {{-- <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" required multiple size="2">
                         @foreach($sucursales as $sucursal)
                             @if ($sucursal['ent_id']==$voucher->ent_id)
                                 <option value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'selected' : '' }}>
@@ -69,7 +68,14 @@
                                 </option>
                             @endif
                         @endforeach
-                    </select>
+                    </select> --}}
+                    <div id="f_domicilios">
+                        @foreach($sucursales as $sucursal)
+                            @if ($sucursal['ent_id']==$voucher->ent_id)
+                                <input type="checkbox" name="f_ed_id[]" id="f_ed_id-{{ $sucursal['ed_id'] }}" value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'checked' : '' }}> <label for="f_ed_id-{{ $sucursal['ed_id'] }}">{{ $sucursal['ed_direccion'] }} {{ $sucursal['ed_canje']==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE' }}</label><br>
+                            @endif
+                        @endforeach
+                    </div>
                     @error('f_ed_id')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -337,7 +343,7 @@
                             <img src="{{ asset('storage/'. $imagen->vf_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->vf_nombre }}" style="height:160px;border-radius:6px;">
 
                             <div class="form-check">
-                                <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
@@ -357,7 +363,7 @@
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
                         <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -447,14 +453,10 @@
         </div>
 
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">
-                Cancelar
-            </a>
-
-            <button type="submit" class="btn btn-success" id="btn_actualizar">
-                Actualizar
-            </button>
+            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
         </div>
+        <br>
     </form>
 
     <form id="form_stock" class="form-horizontal" method="post" action="{{ route('admin.vouchers.update_detalle', $voucher->vou_id) }}">
@@ -501,23 +503,27 @@
 
     $(document).on('change', '#f_ent_id', function () {
         const ent_id = $(this).val();
-        const sucursalSelect = $('#f_ed_id');
+        const sucursalSelect = $('#f_domicilios');
         let txt_canje='';
 
         // sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
         sucursalSelect.html('');
+        let str = '';
 
         $.each(sucursales, function (_, sucursal) {
             if (String(sucursal.ent_id) === String(ent_id)) {
                 txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
-                sucursalSelect.append(
-                    $('<option>', {
-                        value: sucursal.ent_id,
-                        text: sucursal.ed_direccion+txt_canje
-                    })
-                );
+                direccion = sucursal.ed_direccion+txt_canje;
+                // sucursalSelect.append(
+                //     $('<option>', {
+                //         value: sucursal.ent_id,
+                //         text: sucursal.ed_direccion+txt_canje
+                //     })
+                // );
+                str += '<input type="checkbox" name="f_ed_id[]" id="f_ed_id-'+sucursal.ed_id+'" value="'+sucursal.ed_id+'"> <label for="f_ed_id-'+sucursal.ed_id+'">'+direccion+'</label><br>';
             }
         });
+        sucursalSelect.html(str);
     });
 </script>
 
@@ -864,7 +870,7 @@
                         <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                     </div>
                     <div class="col-sm-3">
-                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                             <option value="">Selecciona el tipo de archivo</option>
                             @foreach($tipos_archivos as $tipo)
                                 <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>

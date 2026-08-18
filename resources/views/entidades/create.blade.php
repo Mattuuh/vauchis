@@ -323,13 +323,15 @@ $(document).ready(function () {
 
                 <div class="col-12">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1)==1 ? 'checked' : '' }}>
                         <label class="form-check-label" for="f_publico">Publico</label>
                     </div>
-
-                    @error('f_publico')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_destacado" id="f_destacado" value="0" {{ old('f_destacado', 0)==1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_destacado">Destacado</label>
+                    </div>
                 </div>
 
                 {{-- <div class="col-12">

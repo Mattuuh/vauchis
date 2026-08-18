@@ -429,4 +429,40 @@ class InfluencerController extends Controller
             'kregtotal' => $influencers->total()
         ]);
     }
+
+    public function ordenar()
+    {
+        $influencers = Influencer::where('inf_publico',1)
+            ->where('inf_estado',1)
+            ->orderByRaw('CASE WHEN inf_orden IS NULL OR inf_orden = 0 THEN 1 ELSE 0 END')
+            ->orderBy('inf_orden')
+            ->orderBy('inf_id')
+            ->get([
+                'inf_id', 
+                'inf_nombre_fantasia', 
+                'inf_nombre', 
+                'inf_apellido', 
+                'inf_estado', 
+                'inf_fecha_alta',
+            ]);
+
+        return view('influencers.orden', compact('influencers'));
+    }
+
+    public function guardar_orden(Request $request)
+    {
+        foreach ($request->orden as $index => $id) {
+            Influencer::where('inf_id', $id)
+                ->update([
+                    'inf_orden' => $index + 1,
+                    'inf_fecha_mod' => now(),
+                    'inf_usu_mod' => $usu ?? 0
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Orden guardado correctamente'
+        ]);
+    }
 }

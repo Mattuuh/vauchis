@@ -485,3 +485,20 @@ CREATE TABLE `vouchers_sucursales` (
 ALTER TABLE `resaltadores` ADD `resal_color_fondo` VARCHAR(100) NULL DEFAULT NULL AFTER `resal_color`;
 
 
+ALTER TABLE `entidades` 
+  ADD `ent_destacado` INT NULL DEFAULT '0' AFTER `ent_publico`,
+  ADD `ent_destacado_orden` INT NULL DEFAULT '0' AFTER `ent_destacado`,
+  ADD `ent_orden` INT NULL DEFAULT '0' AFTER `ent_color_fondo`;
+
+ALTER TABLE `rubros` 
+  ADD `rub_orden` INT NULL DEFAULT '0' AFTER `rub_orden_visual`,
+  ADD `rub_publico` INT NULL DEFAULT '1' AFTER `rub_orden`;
+
+ALTER TABLE `vouchers` 
+  ADD `vou_orden` INT NULL DEFAULT '0' AFTER `vou_modalidad_condiciones`, 
+  ADD `vou_publico` INT NULL DEFAULT '1' AFTER `vou_orden`;
+
+ALTER TABLE `organizaciones` ADD `org_orden` INT NULL DEFAULT '0' AFTER `org_img_size`;
+
+ALTER TABLE `influencers` ADD `inf_orden` INT NULL DEFAULT '0' AFTER `inf_descripcion_interna`;
+

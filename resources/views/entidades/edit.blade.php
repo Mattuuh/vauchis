@@ -175,13 +175,15 @@
 
                 <div class="col-12">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $entidad->ent_publico) ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $entidad->ent_publico)==1 ? 'checked' : '' }}>
                         <label class="form-check-label" for="f_publico">Publico</label>
                     </div>
-
-                    @error('f_publico')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_destacado" id="f_destacado" value="1" {{ old('f_destacado', $entidad->ent_destacado)==1 ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_destacado">Destacado</label>
+                    </div>
                 </div>
 
                 {{-- <div class="col-12">
@@ -556,6 +558,7 @@
             </div>
 
         </div>
+        <br>
 
     </form>
 </div>

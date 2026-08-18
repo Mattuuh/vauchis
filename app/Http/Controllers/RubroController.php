@@ -234,4 +234,46 @@ class RubroController extends Controller
             'kregtotal' => $rubros->total()
         ]);
     }
+
+    public function ordenar()
+    {
+        // $rubros = Rubro::with('categoria')
+        //     ->orderBy('rub_id','desc')
+        //     // ->where('rub_estado',1)
+        //     ->get();
+
+        $rubros = Rubro::with('categoria')
+            ->where('rub_publico',1)
+            ->where('rub_estado',1)
+            ->orderByRaw('CASE WHEN rub_orden IS NULL OR rub_orden = 0 THEN 1 ELSE 0 END')
+            ->orderBy('rub_orden')
+            ->orderBy('rub_id')
+            ->get();
+
+        return view('rubros.orden', compact('rubros'));
+    }
+
+    public function guardar_orden(Request $request)
+    {
+        // dd($request);
+        // $request->validate([
+        //     'orden' => ['required', 'array'],
+        //     'orden.*' => ['required', 'integer'],
+        // ]);
+
+        foreach ($request->orden as $index => $rub_id) {
+
+            Rubro::where('rub_id', $rub_id)
+                ->update([
+                    'rub_orden' => $index + 1,
+                    'rub_fecha_mod' => now(),
+                    'rub_usu_mod' => $usu ?? 0
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Orden guardado correctamente'
+        ]);
+    }
 }

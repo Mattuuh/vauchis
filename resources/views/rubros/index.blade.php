@@ -95,6 +95,7 @@ $(document).ready(function () {
                             </div>
                         </div>
                         <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
+                        <a href="{{ route('admin.rubros.ordenar') }}" class="btn btn-outline-primary">Ordenar</a>
                         <a href="{{ route('admin.rubros.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo rubro</a>
                     </div>
                 </div>

@@ -253,7 +253,8 @@ class EntidadController extends Controller
                 'ent_color_fondo' => $request->com_color_fondo,
                 // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
-                'ent_publico' => $request->f_publico,
+                'ent_publico' => $request->f_publico ?? 0,
+                'ent_destacado' => $request->f_destacado ?? 0,
                 'ent_fecha_alta' => now(),
             ]);
 
@@ -481,7 +482,8 @@ class EntidadController extends Controller
                     'ent_instagram' => $request->com_instagram,
                     'ent_tiktok' => $request->com_tiktok,
                     'ent_color_fondo' => $request->com_color_fondo,
-                    'ent_publico' => $request->f_publico,
+                    'ent_publico' => $request->f_publico ?? 0,
+                    'ent_destacado' => $request->f_destacado ?? 0,
                     'ent_fecha_mod' => now(),
                     'ent_usu_mod' => 1,
                 ]);
@@ -769,6 +771,48 @@ class EntidadController extends Controller
             )->render(),
 
             'kregtotal' => $entidades->total()
+        ]);
+    }
+
+    public function ordenar()
+    {   
+        $entidades = Entidad::with('tipo_entidad')
+            ->with('tipo_responsabilidad')
+            ->withCount('domicilios')
+            ->withCount('vouchersActivos')
+            ->where('ent_publico',1)
+            ->where('ent_estado',1)
+            ->orderByRaw('CASE WHEN ent_orden IS NULL OR ent_orden = 0 THEN 1 ELSE 0 END')
+            ->orderBy('ent_orden')
+            ->orderBy('ent_id')
+            ->get([
+                'ent_id', 
+                'tipo_ent_id', 
+                'tipo_resp_id', 
+                'ent_nombre_fantasia', 
+                'ent_nombre', 
+                'ent_razon_social', 
+                'ent_estado', 
+                'ent_fecha_alta',
+            ]);
+
+        return view('entidades.orden', compact('entidades'));
+    }
+
+    public function guardar_orden(Request $request)
+    {
+        foreach ($request->orden as $index => $id) {
+            Entidad::where('ent_id', $id)
+                ->update([
+                    'ent_orden' => $index + 1,
+                    'ent_fecha_mod' => now(),
+                    'ent_usu_mod' => $usu ?? 0
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Orden guardado correctamente'
         ]);
     }
 }

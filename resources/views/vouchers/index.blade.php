@@ -96,6 +96,7 @@ $(document).ready(function () {
 
                     <div class="commerce-toolbar__right">
                         <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
+                        <a href="{{ route('admin.vouchers.ordenar') }}" class="btn btn-outline-primary">Ordenar</a>
                         <a href="{{ route('admin.vouchers.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nuevo voucher</a>
                     </div>
                 </div>

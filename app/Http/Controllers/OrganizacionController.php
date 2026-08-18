@@ -394,4 +394,40 @@ class OrganizacionController extends Controller
             'kregtotal' => $organizaciones->total()
         ]);
     }
+
+    public function ordenar()
+    {
+        $organizaciones = Organizacion::where('org_publico',1)
+            ->where('org_estado',1)
+            ->orderByRaw('CASE WHEN org_orden IS NULL OR org_orden = 0 THEN 1 ELSE 0 END')
+            ->orderBy('org_orden')
+            ->orderBy('org_id')
+            ->get([
+                'org_id', 
+                'org_nombre_fantasia', 
+                'org_nombre', 
+                'org_razon_social', 
+                'org_estado', 
+                'org_fecha_alta',
+            ]);
+
+        return view('organizaciones.orden', compact('organizaciones'));
+    }
+
+    public function guardar_orden(Request $request)
+    {
+        foreach ($request->orden as $index => $id) {
+            Organizacion::where('org_id', $id)
+                ->update([
+                    'org_orden' => $index + 1,
+                    'org_fecha_mod' => now(),
+                    'org_usu_mod' => $usu ?? 0
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Orden guardado correctamente'
+        ]);
+    }
 }

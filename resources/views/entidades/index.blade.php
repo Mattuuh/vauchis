@@ -91,6 +91,7 @@ $(document).ready(function () {
 
                     <div class="commerce-toolbar__right">
                         <button type="button" id="btn_filtro" class="btn commerce-filter-btn">Mostrar</button>
+                        <a href="{{ route('admin.entidades.ordenar') }}" class="btn btn-outline-primary">Ordenar</a>
                         <a href="{{ route('admin.entidades.create') }}" class="btn commerce-new-btn"><i class="bi bi-plus-lg"></i>Nueva entidad</a>
                     </div>
                 </div>

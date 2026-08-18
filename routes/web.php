@@ -156,10 +156,14 @@ Route::middleware(['administrador'])
     ->group(function () {
 
         Route::get('/entidades/listado', [EntidadController::class, 'listado'])->name('entidades.listado');
+        Route::post('/entidades/guardar-orden', [EntidadController::class, 'guardar_orden'])->name('entidades.guardar_orden');
+        Route::get('/entidades/ordenar', [EntidadController::class, 'ordenar'])->name('entidades.ordenar');
         Route::resource('entidades', EntidadController::class);
         Route::post('/entidades/{id}/delete', [EntidadController::class, 'delete'])->name('entidades.delete');
 
         Route::get('/rubros/listado', [RubroController::class, 'listado'])->name('rubros.listado');
+        Route::post('/rubros/guardar-orden', [RubroController::class, 'guardar_orden'])->name('rubros.guardar_orden');
+        Route::get('/rubros/ordenar', [RubroController::class, 'ordenar'])->name('rubros.ordenar');
         Route::resource('rubros', RubroController::class);
         Route::post('/rubros/{id}/delete', [RubroController::class, 'delete'])->name('rubros.delete');
 
@@ -174,17 +178,23 @@ Route::middleware(['administrador'])
 
 
         Route::get('/organizacion/listado', [OrganizacionController::class, 'listado'])->name('organizacion.listado');
+        Route::post('/organizacion/guardar-orden', [OrganizacionController::class, 'guardar_orden'])->name('organizacion.guardar_orden');
+        Route::get('/organizacion/ordenar', [OrganizacionController::class, 'ordenar'])->name('organizacion.ordenar');
         Route::resource('organizacion', OrganizacionController::class);
         Route::post('/organizacion/{id}/delete', [OrganizacionController::class, 'delete'])->name('organizacion.delete');
 
 
         Route::get('/influencers/listado', [InfluencerController::class, 'listado'])->name('influencers.listado');
+        Route::post('/influencers/guardar-orden', [InfluencerController::class, 'guardar_orden'])->name('influencers.guardar_orden');
+        Route::get('/influencers/ordenar', [InfluencerController::class, 'ordenar'])->name('influencers.ordenar');
         Route::resource('influencers', InfluencerController::class);
         Route::post('/influencers/{id}/delete', [InfluencerController::class, 'delete'])->name('influencers.delete');
 
 
         Route::get('/vouchers/listado', [VoucherController::class, 'listado'])->name('vouchers.listado');
         Route::get('/vouchers/tipos_modalidades', [VoucherController::class, 'tipos_modalidades'])->name('vouchers.tipos_modalidades');
+        Route::post('/vouchers/guardar-orden', [VoucherController::class, 'guardar_orden'])->name('vouchers.guardar_orden');
+        Route::get('/vouchers/ordenar', [VoucherController::class, 'ordenar'])->name('vouchers.ordenar');
         Route::resource('vouchers', VoucherController::class);
         Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
         Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');

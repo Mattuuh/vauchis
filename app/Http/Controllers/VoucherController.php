@@ -719,18 +719,25 @@ class VoucherController extends Controller
                     'vou_modalidad_condiciones' => $request->f_condiciones . $request->f_condiciones_adi,
                 ]);
             
-            // if ($request->filled('f_ed_id')) {
-            //     foreach ($request->f_ed_id as $sucursal) {
-            //         // 
-            //         DB::table('vouchers_sucursales')->insert([
-            //             'vou_id' => $id,
-            //             'ed_id' => $sucursal,
-            //             'vou_suc_estado' => 1,
-            //             'vou_suc_fecha_alta' => now(),
-            //             'vou_suc_usu_alta' => $usuarioId,
-            //         ]);
-            //     }
-            // }
+            if ($request->filled('f_ed_id')) {
+                DB::table('vouchers_sucursales')->where('vou_id', $id)
+                    ->update([
+                        'vou_suc_estado' => 0,
+                        'vou_suc_fecha_baja' => now(),
+                        'vou_suc_usu_baja' => $usuarioId,
+                    ]);
+
+                foreach ($request->f_ed_id as $sucursal) {
+                    // 
+                    DB::table('vouchers_sucursales')->insert([
+                        'vou_id' => $id,
+                        'ed_id' => $sucursal,
+                        'vou_suc_estado' => 1,
+                        'vou_suc_fecha_alta' => now(),
+                        'vou_suc_usu_alta' => $usuarioId,
+                    ]);
+                }
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -1587,5 +1594,46 @@ class VoucherController extends Controller
         }
 
         return view('postcompra', compact('voucher','entidad','imagenes','valores'));
+    }
+
+    public function ordenar()
+    {
+        $vouchers = Voucher::with('categoria')
+            ->with('modalidad')
+            ->where('vou_publico',1)
+            ->where('vou_estado',1)
+            ->orderByRaw('CASE WHEN vou_orden IS NULL OR vou_orden = 0 THEN 1 ELSE 0 END')
+            ->orderBy('vou_orden')
+            ->orderBy('vou_id')
+            ->get([
+                'vou_id', 
+                'ent_id', 
+                'cv_id', 
+                'inf_id', 
+                'mod_id', 
+                'vou_nombre', 
+                'vou_stock', 
+                'vou_estado', 
+                'vou_fecha_alta',
+            ]);
+
+        return view('vouchers.orden', compact('vouchers'));
+    }
+
+    public function guardar_orden(Request $request)
+    {
+        foreach ($request->orden as $index => $id) {
+            Voucher::where('vou_id', $id)
+                ->update([
+                    'vou_orden' => $index + 1,
+                    'vou_fecha_mod' => now(),
+                    'vou_usu_mod' => $usu ?? 0
+                ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Orden guardado correctamente'
+        ]);
     }
 }

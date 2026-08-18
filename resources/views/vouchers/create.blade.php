@@ -195,9 +195,10 @@ $(document).ready(function () {
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" multiple size="2">
+                    {{-- <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" multiple size="2">
                         <option value="">Selecciona la sucursal</option>
-                    </select>
+                    </select> --}}
+                    <div id="f_domicilios"></div>
                     @error('f_ed_id')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
@@ -496,23 +497,28 @@ $(document).ready(function () {
 
     $(document).on('change', '#f_ent_id', function () {
         const ent_id = $(this).val();
-        const sucursalSelect = $('#f_ed_id');
+        const sucursalSelect = $('#f_domicilios');
         let txt_canje='';
 
         // sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
         sucursalSelect.html('');
+        let str = '';
 
         $.each(sucursales, function (_, sucursal) {
             if (String(sucursal.ent_id) === String(ent_id)) {
                 txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
-                sucursalSelect.append(
-                    $('<option>', {
-                        value: sucursal.ed_id,
-                        text: sucursal.ed_direccion+txt_canje
-                    })
-                );
+                direccion = sucursal.ed_direccion+txt_canje;
+                // sucursalSelect.append(
+                //     $('<option>', {
+                //         value: sucursal.ed_id,
+                //         text: sucursal.ed_direccion+txt_canje
+                //     })
+                // );
+                str += '<input type="checkbox" name="f_ed_id[]" id="f_ed_id-'+sucursal.ed_id+'" value="'+sucursal.ed_id+'"> <label for="f_ed_id-'+sucursal.ed_id+'">'+direccion+'</label><br>';
             }
         });
+        // console.log(str)
+        sucursalSelect.html(str);
     });
 </script>
 
