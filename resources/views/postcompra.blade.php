@@ -506,7 +506,9 @@
 
     $colorRegalo = !empty($entidad->ent_color_fondo) ? $entidad->ent_color_fondo : '#49b889';
 
-    $descargaUrl = $descargaUrl ?? '#';
+    // $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', $vou_detalles->vd_id);
+    // $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', $voucher->vou_id);
+    $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
     $emailUrl = $emailUrl ?? '#';
     $loginUrl = $loginUrl ?? route('login');
     $ayudaUrl = $ayudaUrl ?? '#';
@@ -568,7 +570,7 @@
             </div>
 
             <div class="pc-actions">
-                <a class="pc-action" href="{{ $descargaUrl }}" download>
+                <a class="pc-action" href="{{ $descargaUrl }}">
                     <span class="pc-action-circle">
                         <img src="{{ asset('images/descargar_voucher.png') }}" alt="Descargar">
                     </span>
@@ -839,21 +841,28 @@ $(function () {
         |--------------------------------------------------------------------------
         */
 
-        $gift.one('transitionend', function (event) {
+        $gift.on('transitionend.pcGift', function (event) {
 
-            if (
-                event.originalEvent.propertyName !== 'transform'
-            ) {
+            if (event.originalEvent.propertyName !== 'transform') {
                 return;
             }
+
+            // Recién eliminamos el evento cuando termina transform.
+            $gift.off('transitionend.pcGift');
 
             finalizarAnimacion();
         });
     }
 
 
-
+    let animationFinished = false;
     function finalizarAnimacion() {
+
+        if (animationFinished) {
+            return;
+        }
+
+        animationFinished = true;
 
         /*
         |--------------------------------------------------------------------------

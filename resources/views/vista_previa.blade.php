@@ -8,6 +8,7 @@
      | Podés enviar estas variables desde el controlador o adaptar los nombres
      | a las propiedades reales de tus modelos.
      */
+    // dd(session());
     $voucher_id = data_get($voucher ?? null, 'vou_id', data_get($voucher ?? null, 'vou_id', '00056970'));
     $mca_id = data_get($valores ?? null, 'mca_id', data_get($valores ?? null, 'mca_id', '00056970'));
     $vmv_id = data_get($valores ?? null, 'vmv_id', data_get($valores ?? null, 'vmv_id', '00056970'));
@@ -22,17 +23,17 @@
     $nombrePara = old('para', session('voucher.para', request('para', 'Flor')));
     $mensajeVoucher = old('mensaje', session('voucher.mensaje', request('mensaje', 'Querida Flor, espero que pases un cumple hermoso. Te queremos mucho.')));
 
-    session([
-        'voucher' => [
-            'vou_id' => $voucher_id,
-            'mca_id' => $mca_id,
-            'vmv_id' => $vmv_id,
-            'monto' => $montoVoucher,
-            'de' => $nombreDe,
-            'para' => $nombrePara,
-            'mensaje' => $mensajeVoucher,
-        ]
-    ]);
+    // session([
+    //     'voucher' => [
+    //         'vou_id' => $voucher_id,
+    //         'mca_id' => $mca_id,
+    //         'vmv_id' => $vmv_id,
+    //         'monto' => $montoVoucher,
+    //         'de' => $nombreDe,
+    //         'para' => $nombrePara,
+    //         'mensaje' => $mensajeVoucher,
+    //     ]
+    // ]);
 
 
     $fecha_actual_raw = new DateTime();
@@ -65,13 +66,13 @@
     $qrImagen = $qrImagen ?? data_get($voucher ?? null, 'qr_url');
 
     // $sucursales = collect($sucursales ?? data_get($entidad ?? null, 'sucursales', []));
-    if ($sucursales->isEmpty()) {
-        $sucursales = collect([
-            (object) ['direccion' => 'Av. del Bicentenario de la Batalla de Salta 702, Salta'],
-            (object) ['direccion' => 'Balcarce 127, Salta'],
-            (object) ['direccion' => 'La Comarca, San Lorenzo Chico, Villa San Lorenzo, Salta'],
-        ]);
-    }
+    // if ($sucursales->isEmpty()) {
+    //     $sucursales = collect([
+    //         (object) ['direccion' => 'Av. del Bicentenario de la Batalla de Salta 702, Salta'],
+    //         (object) ['direccion' => 'Balcarce 127, Salta'],
+    //         (object) ['direccion' => 'La Comarca, San Lorenzo Chico, Villa San Lorenzo, Salta'],
+    //     ]);
+    // }
 
     $volverUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
     $editarUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
@@ -1321,10 +1322,10 @@
                     </div>
 
                     <ul class="vp-addresses">
+                        @php
+                            $direcciones_label='';
+                        @endphp
                         @if ($sucursales->isNotEmpty())
-                            @php
-                                $direcciones_label='';
-                            @endphp
                             @foreach($sucursales as $sucursal)
                                 @php
                                     $direccion = $sucursal->ed_direccion;
@@ -1352,7 +1353,7 @@
                         <h2 class="vp-how-title">Cómo canjear <strong>tu Vauchis</strong></h2>
                         <ol class="vp-steps">
                             <li><img src="{{ asset('images/ilustracion_Nro1.svg') }}" alt="1" class=""><span>Presentá tu voucher al vendedor</span></li>
-                            <li><img src="{{ asset('images/ilustracion_Nro2.svg') }}" alt="2" class=""><span>[Elegí el producto que más te guste]</span></li>
+                            <li><img src="{{ asset('images/ilustracion_Nro2.svg') }}" alt="2" class=""><span>{{ $modalidad->mod_texto_canje ?? 'Elegí el producto que más te guste' }}</span></li>
                             <li><img src="{{ asset('images/ilustracion_Nro3.svg') }}" alt="3" class=""><strong>¡Listo, ya es tuyo!</strong></li>
                         </ol>
                     </div>

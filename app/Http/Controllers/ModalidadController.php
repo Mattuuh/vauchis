@@ -68,6 +68,7 @@ class ModalidadController extends Controller
             'mod_nombre' => $request->f_nombre,
             'mod_codigo' => $request->f_codigo,
             'mod_descripcion' => $request->f_descripcion,
+            'mod_texto_canje' => $request->f_texto_canje,
             'mod_estado' => 1,
             'mod_fecha_alta' => now(),
             'mod_usu_alta' => 1,
@@ -126,6 +127,7 @@ class ModalidadController extends Controller
             'mod_nombre' => $request->f_nombre,
             // 'mod_codigo' => $request->f_codigo,
             'mod_descripcion' => $request->f_descripcion,
+            'mod_texto_canje' => $request->f_texto_canje,
         ]);
 
         $camposRequest = $request->campos ?? [];
@@ -153,7 +155,7 @@ class ModalidadController extends Controller
                 'mca_nombre' => 'campo',
                 'mca_codigo' => 'campo',
                 'mca_tipo' => $campo['tipo'],
-                'mca_tipo_numero' => $campo['tipo_monto'],
+                'mca_tipo_numero' => $campo['tipo_monto'] ?? null,
                 'mca_label' => 'campo',
                 'mca_placeholder' => $campo['placeholder'] ?? null,
                 'mca_requerido' => !empty($campo['requerido']) ? 1 : 0,
@@ -162,6 +164,7 @@ class ModalidadController extends Controller
                 'mca_ayuda' => $campo['ayuda'] ?? null,
                 'mca_estado' => !empty($campo['estado']) ? 1 : 0,
             ];
+            // dd($dataCampo);
             $i++;
 
             if (!empty($campo['id'])) {

@@ -657,6 +657,11 @@ $(document).ready(function () {
                     <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="1">
                     <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
                 </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control" placeholder="1.01" min="1" value="1">
+                    <div class="form-text">Stock de vouchers para este boton</div>
+                </div>
             `;
         }
 

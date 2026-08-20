@@ -152,6 +152,15 @@ $(document).ready(function () {
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="col-12">
+                    <label class="form-label">Texto de canje</label>
+                    <input name="f_texto_canje" class="form-control" placeholder="Texto que se vera en el paso 2 (dos) en el voucher" value="{{ old('f_texto_canje', 'Elegí el producto que más te guste') }}">
+
+                    @error('f_texto_canje')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 

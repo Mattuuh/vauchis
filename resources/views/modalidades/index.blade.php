@@ -102,8 +102,8 @@ $(document).ready(function () {
                         <thead>
                             <tr class="commerce-table-head">
                                 <th style="width: 30px">ID</th>
-                                <th style="width: 70px">CODIGO</th>
-                                <th style="width: 110px">NOMBRE</th>
+                                {{-- <th style="width: 70px">CODIGO</th> --}}
+                                <th style="width: 180px">NOMBRE</th>
                                 <th style="width: 70px" class="text-center">FECHA DE ALTA</th>
                                 <th style="width: 60px" class="text-center">ESTADO</th>
                                 <th style="width: 60px">ACCIONES</th>
@@ -118,10 +118,10 @@ $(document).ready(function () {
                                         <span>{{ $modalidad['mod_id'] }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="codigo">
+                                    {{-- <td class="commerce-col" data-label="codigo">
                                         <span class="commerce-mobile-label">Codigo</span>
                                         <span>{{ $modalidad['mod_codigo'] }}</span>
-                                    </td>
+                                    </td> --}}
 
                                     <td class="commerce-col" data-label="Nombre">
                                         <span class="commerce-mobile-label">Nombre</span>

@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
 
 class VoucherController extends Controller
 {
@@ -305,8 +306,8 @@ class VoucherController extends Controller
             //         'vd_codigo_interno' => $codigoInterno,
             //         'vd_codigo' => $codigoPublico,
             //         'vd_secuencia' => $i,
-            //         'vd_variante_nombre' => null,
-            //         'vd_variante_descripcion' => null,
+            //         'vd_variante_nombre_de' => null,
+            //         'vd_variante_mensaje' => null,
             //         // 'vd_monto_total' => $request->f_monto_total,
             //         'vd_monto_total' => 0,
             //         'vd_estado' => 1,
@@ -336,13 +337,15 @@ class VoucherController extends Controller
                     'vmv_monto_minimo' => $valor['monto_minimo'] ?? 0,
                     'vmv_monto_maximo' => $valor['monto_maximo'] ?? 0,
                     'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
+                    'vmv_stock' => $valor['stock'] ?? 0,
                     'vmv_estado' => 1,
                     'vmv_fecha_alta' => now(),
                     'vmv_usu_alta' => $usuarioId,
                 ]);
 
                 $detalles = [];
-                for ($i = 1; $i <= (int) $request->stock; $i++) {
+                $voucher_stock = $valor['stock'] ?? $request->stock;
+                for ($i = 1; $i <= (int) $voucher_stock; $i++) {
                     $codigoInterno = 'VOU-' . $vouId . '-' .$campo->mca_id. '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
                     $codigoPublico = strtoupper(Str::random(10));
 
@@ -355,8 +358,8 @@ class VoucherController extends Controller
                         'vd_codigo_interno' => $codigoInterno,
                         'vd_codigo' => $codigoPublico,
                         'vd_secuencia' => $i,
-                        'vd_variante_nombre' => null,
-                        'vd_variante_descripcion' => null,
+                        'vd_variante_nombre_de' => null,
+                        'vd_variante_mensaje' => null,
                         // 'vd_monto_total' => $request->f_monto_total,
                         'vd_monto_total' => $valor['monto_total'] ?? 0,
                         'vd_estado' => 1,
@@ -582,8 +585,8 @@ class VoucherController extends Controller
                 'vd_codigo_interno',
                 'vd_codigo',
                 'cli_id',
-                'vd_variante_nombre',
-                'vd_variante_descripcion',
+                'vd_variante_nombre_de',
+                'vd_variante_mensaje',
                 'vd_monto_total',
                 'vd_estado',
                 'vd_estado2',
@@ -592,10 +595,18 @@ class VoucherController extends Controller
             ]);
 
         $voucherModalidadValores = DB::table('vouchers_modalidad_valores as vmv')
-            ->join('modalidades_campos as mc', 'mc.mca_id', '=', 'vmv.mca_id')
+            // ->join('modalidades_campos as mc', 'mc.mca_id', '=', 'vmv.mca_id')
             ->where('vmv.vou_id', $id)
             ->where('vmv.vmv_estado', 1)
-            ->pluck('vmv.vmv_valor', 'mc.mca_codigo')
+            // ->pluck(['vmv.vmv_monto_minimo','vmv.vmv_monto_maximo','vmv.vmv_monto_fijo'], 'vmv.mca_id')
+            ->get()
+            ->keyBy('mca_id')
+            ->map(fn ($item) => [
+                'vmv_monto_minimo' => $item->vmv_monto_minimo,
+                'vmv_monto_maximo' => $item->vmv_monto_maximo,
+                'vmv_monto_fijo' => $item->vmv_monto_fijo,
+                'vmv_stock' => $item->vmv_stock,
+            ])
             ->toArray();
 
         $modalidadesCamposJson = $modalidades
@@ -607,6 +618,10 @@ class VoucherController extends Controller
                             'mca_codigo' => $campo->mca_codigo,
                             'mca_nombre' => $campo->mca_nombre,
                             'mca_tipo' => $campo->mca_tipo,
+                            'mca_tipo_numero' => $campo->mca_tipo_numero,
+                            'mca_numero_minimo' => $campo->mca_numero_minimo,
+                            'mca_numero_maximo' => $campo->mca_numero_maximo,
+                            'mca_monto_fijo' => $campo->mca_monto_fijo,
                             'mca_label' => $campo->mca_label,
                             'mca_placeholder' => $campo->mca_placeholder,
                             'mca_requerido' => $campo->mca_requerido,
@@ -760,8 +775,8 @@ class VoucherController extends Controller
                         'cli_id' => null,
                         'vd_codigo_interno' => $codigoInterno,
                         'vd_codigo' => $codigoPublico,
-                        'vd_variante_nombre' => null,
-                        'vd_variante_descripcion' => null,
+                        'vd_variante_nombre_de' => null,
+                        'vd_variante_mensaje' => null,
                         'vd_monto_total' => $request->f_monto_total,
                         'vd_estado' => 1,
                         'vd_estado2' => 1,
@@ -1224,8 +1239,8 @@ class VoucherController extends Controller
                     'vd_codigo_interno' => $codigoInterno,
                     'vd_codigo' => $codigoPublico,
                     'vd_secuencia' => $secuencia,
-                    'vd_variante_nombre' => null,
-                    'vd_variante_descripcion' => null,
+                    'vd_variante_nombre_de' => null,
+                    'vd_variante_mensaje' => null,
                     'vd_monto_total' => $detalle->vd_monto_total,
                     'vd_estado' => 1,
                     'vd_estado2' => 'PE',
@@ -1493,6 +1508,7 @@ class VoucherController extends Controller
 
     public function vista_previa_voucher($vou_id, $vmv_id, Request $request)
     {
+        // dd($request->all());
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
@@ -1525,6 +1541,18 @@ class VoucherController extends Controller
         if (!$voucher) {
             abort(404);
         }
+
+        session([
+            'voucher' => [
+                'vou_id' => $voucher->vou_id,
+                'mca_id' => $valores->mca_id,
+                'vmv_id' => $vmv_id,
+                'monto' => $valores->vmv_monto_fijo,
+                'de' => $request->de,
+                'para' => $request->para,
+                'mensaje' => $request->mensaje,
+            ]
+        ]);
 
         return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'));
     }
@@ -1634,6 +1662,123 @@ class VoucherController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Orden guardado correctamente'
+        ]);
+    }
+
+    // public function descargar_pdf($id)
+    public function descargar_pdf($vou_id, $vmv_id, Request $request)
+    {
+        // $voucher = Voucher::findOrFail($id);
+
+        // $data = [
+        //     'voucher' => $voucher,
+
+        //     // Ejemplo:
+        //     // 'entidad' => $entidad,
+        //     // 'codigoVoucher' => $codigoVoucher,
+        //     // 'nombrePara' => $nombrePara,
+        //     // 'nombreDe' => $nombreDe,
+        //     // 'mensajeVoucher' => $mensajeVoucher,
+        //     // 'montoVoucher' => $montoVoucher,
+        //     // 'imagenVoucher' => $imagenVoucher,
+        //     // 'logoEntidad' => $logoEntidad,
+        //     // 'nombreEntidad' => $nombreEntidad,
+        //     // 'descripcionEntidad' => $descripcionEntidad,
+        //     // 'sucursales' => $sucursales,
+        //     // 'qrImagen' => $qrImagen,
+        //     // 'modalidad' => $modalidad,
+        //     // 'fecha_actual' => $fecha_actual,
+        //     // 'fechaVencimiento' => $fechaVencimiento,
+        // ];
+
+        // $html = view('voucher_pdf', $data)->render();
+
+        $voucher = Voucher::query()
+            ->with([
+                'imagenes',
+                'entidad',
+                'modalidad.campos',
+                'modalidad',
+                'sucursales',
+            ])
+            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
+                $query->where('vmv_id', $vmv_id);
+            })
+            ->where('vou_id', $vou_id)
+            ->where('vou_estado', 1)
+            ->firstOrFail();
+
+        $entidad = $voucher->entidad;
+
+        $imagenes = $voucher->imagenes;
+
+        $valores = $voucher->modalidadValores[0];
+
+        $modalidad = $voucher->modalidad;
+
+        $sucursales = $voucher->sucursales;
+
+        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
+            $valores->vmv_monto_fijo=$request->monto;
+        }
+
+        if (!$voucher) {
+            abort(404);
+        }
+
+        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'))->render();
+
+
+        $pdf = Browsershot::html($html)
+            // ->timeout(240)
+            ->disableJavascript()
+            ->showBackground()
+            ->format('A4')
+            ->margins(0, 0, 0, 0)
+            ->pdf();
+
+        return response($pdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header(
+                'Content-Disposition',
+                'attachment; filename="voucher-' . $id . '.pdf"'
+            );
+        
+        // Acá va exactamente la misma lógica con la que
+        // actualmente preparás tu vista previa.
+
+        $html = view('vouchers.pdf', [
+            'entidad' => $entidad,
+            'codigoVoucher' => $codigoVoucher,
+            'nombrePara' => $nombrePara,
+            'nombreDe' => $nombreDe,
+            'mensajeVoucher' => $mensajeVoucher,
+            'montoVoucher' => $montoVoucher,
+            'imagenVoucher' => $imagenVoucher,
+            'nombreVoucher' => $nombreVoucher,
+            'logoEntidad' => $logoEntidad,
+            'nombreEntidad' => $nombreEntidad,
+            'descripcionEntidad' => $descripcionEntidad,
+            'sucursales' => $sucursales,
+            'qrImagen' => $qrImagen,
+            'modalidad' => $modalidad,
+            'fecha_actual' => $fecha_actual,
+            'fechaVencimiento' => $fechaVencimiento,
+        ])->render();
+
+        $pdf = Browsershot::html($html)
+            ->showBackground()
+            ->allowFileAccessFromFiles()
+            ->format('A4')
+            ->margins(0, 0, 0, 0)
+            ->pdf();
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' =>
+                'attachment; filename="voucher-' .
+                str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) .
+                '.pdf"',
         ]);
     }
 }

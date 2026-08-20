@@ -148,6 +148,8 @@ Route::get('/precompra/{voucher}/{modalidadCampo}', [VoucherController::class, '
 Route::get('/vista_previa/{voucher}/{modalidadCampo}', [VoucherController::class, 'vista_previa_voucher'])->name('vouchers.vista_previa');
 Route::get('/compra/{voucher}/{modalidadCampo}', [VoucherController::class, 'compra_voucher'])->name('vouchers.compra');
 Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'postcompra_voucher'])->name('vouchers.postcompra');
+// Route::get('/voucher/{id}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
+Route::get('/voucher/{voucher}/{modalidadCampo}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
 
 
 Route::middleware(['administrador'])

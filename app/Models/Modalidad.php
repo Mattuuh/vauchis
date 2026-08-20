@@ -16,6 +16,7 @@ class Modalidad extends Model
         'mod_nombre',
         'mod_codigo',
         'mod_descripcion',
+        'mod_texto_canje',
         'mod_estado',
         'mod_fecha_alta',
         'mod_usu_alta',

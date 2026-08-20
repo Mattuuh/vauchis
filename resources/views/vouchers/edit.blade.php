@@ -146,7 +146,7 @@
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6" id="div_stock">
                     <label class="form-label required-label">Stock:</label>
                     <input type="text" name="stock" class="form-control field-required" value="{{ old('stock', $voucher->vou_stock) }}" readonly>
                     @error('stock')
@@ -418,9 +418,9 @@
                                     <td>{{ $detalle->vd_codigo ?? '-' }}</td>
                                     {{-- <td>{{ $detalle->cli_id ?? 'Libre' }}</td> --}}
                                     <td>
-                                        @if($detalle->vd_variante_nombre)
-                                            <div class="fw-semibold">{{ $detalle->vd_variante_nombre }}</div>
-                                            <div class="text-muted small">{{ $detalle->vd_variante_descripcion }}</div>
+                                        @if($detalle->vd_variante_nombre_de)
+                                            <div class="fw-semibold">{{ $detalle->vd_variante_nombre_de }}</div>
+                                            <div class="text-muted small">{{ $detalle->vd_variante_mensaje }}</div>
                                         @else
                                             <span class="">Libre</span>
                                         @endif
@@ -559,84 +559,61 @@
     }
 
     function renderCampoInput(campo, values = {}) {
-        const value = values[campo.mca_codigo] ?? '';
+        const value = values[campo.mca_id] ?? '';
         const checked = value == 1 || value === '1';
 
         let html = '';
 
-        if (campo.mca_tipo === 'textarea') {
-            html = `
-                <textarea
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-control"
-                    rows="3"
-                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-                    ${campo.mca_requerido ? 'required' : ''}
-                >${escapeHtml(value)}</textarea>
-            `;
-        } else if (campo.mca_tipo === 'select') {
-            const opciones = (campo.mca_opciones || '')
-                .split(',')
-                .map(item => item.trim())
-                .filter(item => item !== '');
+        if (campo.mca_tipo === 'number') {
+
+            if (campo.mca_tipo_numero=='VAR') {
+                html = `
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Monto minimo</label>
+                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control" value="${value.vmv_monto_minimo}" readonly>
+                        <div class="form-text">Monto minimo a introducir por el cliente</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Monto maximo</label>
+                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control" value="${value.vmv_monto_maximo}" readonly>
+                        <div class="form-text">Monto maximo a introducir por el cliente</div>
+                    </div>
+                `;
+            } else if (campo.mca_tipo_numero=='FIJ') {
+                campo.mca_nombre = 'Monto total';
+                campo.mca_ayuda = 'Monto total a pagar por el cliente';
+
+                html = `
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Monto total</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" value="${value.vmv_monto_fijo}" readonly>
+                    <div class="form-text">Monto total a pagar por el cliente</div>
+                </div>
+                `;
+            }
+            else {
+                html = ``;
+            }
+        } else if (campo.mca_tipo === 'button') {
+            $('#div_stock').attr('hidden','hidden');
 
             html = `
-                <select
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-select"
-                    ${campo.mca_requerido ? 'required' : ''}
-                >
-                    <option value="">Seleccionar...</option>
-                    ${opciones.map(opcion => `
-                        <option value="${escapeHtml(opcion)}" ${value == opcion ? 'selected' : ''}>
-                            ${escapeHtml(opcion)}
-                        </option>
-                    `).join('')}
-                </select>
-            `;
-        } else if (campo.mca_tipo === 'boolean') {
-            html = `
-                <div class="form-check form-switch mt-2">
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="modalidad_valores[${campo.mca_codigo}]"
-                        value="1"
-                        ${checked ? 'checked' : ''}
-                    >
-                    <label class="form-check-label">Sí</label>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="${value.vmv_monto_fijo}">
+                    <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control" placeholder="1.01" min="1" value="${value.vmv_stock}">
+                    <div class="form-text">Stock de vouchers para este boton</div>
                 </div>
             `;
         } else {
-            let inputType = 'text';
-
-            if (campo.mca_tipo === 'number') inputType = 'number';
-            if (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') inputType = 'number';
-
-            const step = (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') ? 'step="0.01"' : '';
-
-            html = `
-                <input
-                    type="${inputType}"
-                    name="modalidad_valores[${campo.mca_codigo}]"
-                    class="form-control"
-                    value="${escapeHtml(value)}"
-                    placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-                    ${step}
-                    ${campo.mca_requerido ? 'required' : ''}
-                >
-            `;
+            html = ``;
         }
 
-        return `
-            <div class="col-12 col-md-6">
-                <label class="form-label ${campo.mca_requerido ? 'required-label' : ''}">
-                    ${escapeHtml(campo.mca_label || campo.mca_nombre)}
-                </label>
-                ${html}
-                ${campo.mca_ayuda ? `<div class="form-text">${escapeHtml(campo.mca_ayuda)}</div>` : ''}
-            </div>
-        `;
+        return html;
     }
 
     function renderModalidadCampos(modalidadId) {

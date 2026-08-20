@@ -6,10 +6,10 @@
             <span>{{ $modalidad['mod_id'] }}</span>
         </td>
 
-        <td class="commerce-col" data-label="codigo">
+        {{-- <td class="commerce-col" data-label="codigo">
             <span class="commerce-mobile-label">Codigo</span>
             <span>{{ $modalidad['mod_codigo'] }}</span>
-        </td>
+        </td> --}}
 
         <td class="commerce-col" data-label="Nombre">
             <span class="commerce-mobile-label">Nombre</span>

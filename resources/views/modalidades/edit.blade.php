@@ -100,6 +100,15 @@
                         <div class="text-required">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="col-12">
+                    <label class="form-label">Texto de canje</label>
+                    <input name="f_texto_canje" class="form-control" placeholder="Texto que se vera en el paso 2 (dos) en el voucher" value="{{ old('f_texto_canje', $modalidad->mod_texto_canje) }}">
+
+                    @error('f_texto_canje')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 
@@ -163,10 +172,10 @@
                                 <div class="col-12 col-md-4">
                                     <label class="form-label d-block">Tipo de monto</label>
                                     <div class="form-check form-switch mt-2">
-                                        <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="FIJ" id="monto_fijo-__INDEX__" {{ (($campo['tipo_monto'] ?? '') == 'FIJ') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="monto_fijo-__INDEX__">Monto fijo</label>
-                                        <input class="" type="radio" name="campos[__INDEX__][tipo_monto]" value="VAR" id="monto_variable-__INDEX__" {{ (($campo['tipo_monto'] ?? '') == 'VAR') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="monto_variable-__INDEX__">Monto variable</label>
+                                        <input class="" type="radio" name="campos[{{ $i }}][tipo_monto]" value="FIJ" id="monto_fijo-{{ $i }}" {{ (($campo['tipo_monto'] ?? '') == 'FIJ') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monto_fijo-{{ $i }}">Monto fijo</label>
+                                        <input class="" type="radio" name="campos[{{ $i }}][tipo_monto]" value="VAR" id="monto_variable-{{ $i }}" {{ (($campo['tipo_monto'] ?? '') == 'VAR') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="monto_variable-{{ $i }}">Monto variable</label>
                                     </div>
                                 </div>
 
