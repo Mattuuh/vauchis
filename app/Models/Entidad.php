@@ -25,6 +25,8 @@ class Entidad extends Model
         'ent_domicilio_fiscal',
         'ent_instagram',
         'ent_tiktok',
+        'ent_color_fondo',
+        'ent_descripcion_publica',
         'ent_publico',
         'ent_destacado',
         'ent_estado',

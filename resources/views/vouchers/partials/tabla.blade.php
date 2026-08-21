@@ -23,9 +23,13 @@
             <span>{{ $voucher->categoria->cv_nombre ?? 'Sin categoría' }}</span>
         </td>
 
-        <td class="commerce-col" data-label="Modalidad">
+        {{-- <td class="commerce-col" data-label="Modalidad">
             <span class="commerce-mobile-label">Modalidad</span>
             <span>{{ $voucher->modalidad->mod_codigo ?? 'Sin modalidad' }}</span>
+        </td> --}}
+        <td class="commerce-col" data-label="Entidad">
+            <span class="commerce-mobile-label">Entidad</span>
+            <span>{{ $voucher->entidad->ent_nombre_fantasia ?? 'Sin entidad' }}</span>
         </td>
 
         <td class="commerce-col" data-label="Fecha de alta">

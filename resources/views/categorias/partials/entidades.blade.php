@@ -22,7 +22,7 @@
                 <div class="vo-card-body">
                     <div>
                         <h3>{{ $commerceName }}</h3>
-                        <p>{{ $entidad->vou_nombre }}</p>
+                        <p>{{ $entidad->ent_descripcion_publica }}</p>
                     </div>
 
                     <span class="vo-price">

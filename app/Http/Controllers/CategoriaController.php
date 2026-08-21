@@ -14,6 +14,7 @@ class CategoriaController extends Controller
         $rubro = Rubro::with([
             'entidades' => function ($query) {
                 $query->where('ent_estado', 1)
+                    ->where('ent_publico', 1)
                     ->orderBy('ent_nombre');
             }
         ])
@@ -23,6 +24,7 @@ class CategoriaController extends Controller
 
         $entidades = Entidad::query()
             ->where('ent_estado', 1)
+            ->where('ent_publico', 1)
 
             // Primer filtro: la entidad debe tener vouchers de la categoría.
             ->whereHas('vouchers', function ($query) use ($categoriaId) {
@@ -53,6 +55,7 @@ class CategoriaController extends Controller
 
         $entidades = $rubro->entidades()
             ->where('ent_estado', 1)
+            ->where('ent_publico', 1)
             ->whereHas('subrubros', function ($query) use ($subrubroId, $rubroId) {
                 $query->where('subrubros.sub_id', $subrubroId)
                     ->where('entidades_subrubros.rub_id', $rubroId);
@@ -116,6 +119,7 @@ class CategoriaController extends Controller
 
         $entidades = Entidad::query()
             ->where('ent_estado', 1)
+            ->where('ent_publico', 1)
             ->whereHas('vouchers', function ($query) use ($id) {
                 $query->where('cv_id', $id)
                     ->where('vou_estado', 1);

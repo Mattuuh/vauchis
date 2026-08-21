@@ -1960,11 +1960,11 @@ a{
         }
     }
 
-    window.addEventListener('scroll', updateCenterCard);
-    window.addEventListener('resize', updateCenterCard);
+    // window.addEventListener('scroll', updateCenterCard);
+    // window.addEventListener('resize', updateCenterCard);
 
-    document.querySelector('.vh-mobile-categories')?.addEventListener('scroll', updateCenterCard);
+    // document.querySelector('.vh-mobile-categories')?.addEventListener('scroll', updateCenterCard);
 
-    updateCenterCard();
+    // updateCenterCard();
 </script>
 @endpush

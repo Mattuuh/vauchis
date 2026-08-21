@@ -298,7 +298,7 @@
             white-space: nowrap;
             font-size: 10px;
             color: #4c5665;
-            font-weight: 600;
+            /* font-weight: 600; */
         }
 
         .vo-empty {

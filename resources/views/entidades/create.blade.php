@@ -27,7 +27,7 @@ $(document).ready(function () {
                 showCancelButton: true,
                 confirmButtonColor: '#5cb85c',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, crear',
+                confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -74,6 +74,10 @@ $(document).ready(function () {
             },
             com_tiktok: {
                 required: false,
+            },
+            com_descripcion_publica: {
+                required: false,
+                maxlength: 255,
             },
             "logos[]": {
                 required: true,
@@ -300,6 +304,11 @@ $(document).ready(function () {
                     @error('com_tiktok')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Descripción:</label>
+                    <textarea id="com_descripcion_publica" name="com_descripcion_publica" rows="4" class="form-control" placeholder="Descripción publica">{{ old('com_descripcion_publica') }}</textarea>
                 </div>
 
                 <div class="col-12 col-md-6">

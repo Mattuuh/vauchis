@@ -506,10 +506,16 @@ ALTER TABLE `influencers` ADD `inf_orden` INT NULL DEFAULT '0' AFTER `inf_descri
 ALTER TABLE `vouchers_detalles` 
   CHANGE `vd_variante_nombre` `vd_variante_nombre_de` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   ADD `vd_variante_nombre_para` VARCHAR(100) NULL DEFAULT NULL AFTER `vd_variante_nombre_de`, 
-  CHANGE `vd_variante_mensaje` `vd_variante_mensaje` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, 
+  CHANGE `vd_variante_descripcion` `vd_variante_mensaje` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, 
   ADD `vd_datos_json` TEXT NULL AFTER `vd_monto_total`;
 
 ALTER TABLE `vouchers_modalidad_valores` ADD `vmv_stock` INT NULL DEFAULT '0' AFTER `vmv_monto_fijo`;
 
 ALTER TABLE `modalidades` ADD `mod_texto_canje` VARCHAR(255) NULL DEFAULT NULL AFTER `mod_descripcion`;
+
+
+
+ALTER TABLE `entidades` ADD `ent_descripcion_publica` VARCHAR(255) NULL DEFAULT NULL AFTER `ent_color_fondo`;
+
+
 

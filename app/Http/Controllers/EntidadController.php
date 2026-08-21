@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TipoDocumento;
 use App\Models\TipoEntidad;
 use App\Models\TipoResponsabilidad;
+use App\Models\Voucher;
 
 class EntidadController extends Controller
 {
@@ -251,6 +252,7 @@ class EntidadController extends Controller
                 'ent_instagram' => $request->com_instagram,
                 'ent_tiktok' => $request->com_tiktok,
                 'ent_color_fondo' => $request->com_color_fondo,
+                'ent_descripcion_publica' => $request->com_descripcion_publica,
                 // 'ent_logo_url' => $logoPath,
                 'ent_estado' => 1,
                 'ent_publico' => $request->f_publico ?? 0,
@@ -438,6 +440,12 @@ class EntidadController extends Controller
             ->orderBy('tipo_archivo_id', 'desc')
             ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
 
+        $vouchers = Voucher::with('categoria')
+            ->where('ent_id',$id)
+            ->where('vou_estado', 1)
+            ->orderBy('vou_fecha_alta', 'desc')
+            ->get();
+
         return view('entidades.edit', compact(
             'entidad',
             'tiposEntidad',
@@ -452,7 +460,8 @@ class EntidadController extends Controller
             'sucursales',
             'rubrosPorDomicilio',
             'subrubrosPorDomicilio',
-            'tipos_archivos'
+            'tipos_archivos',
+            'vouchers'
         ));
     }
 
@@ -482,6 +491,7 @@ class EntidadController extends Controller
                     'ent_instagram' => $request->com_instagram,
                     'ent_tiktok' => $request->com_tiktok,
                     'ent_color_fondo' => $request->com_color_fondo,
+                    'ent_descripcion_publica' => $request->com_descripcion_publica,
                     'ent_publico' => $request->f_publico ?? 0,
                     'ent_destacado' => $request->f_destacado ?? 0,
                     'ent_fecha_mod' => now(),

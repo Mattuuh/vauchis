@@ -123,7 +123,7 @@ class VoucherController extends Controller
 
     public function index()
     {
-        $vouchers = Voucher::with('categoria')
+        $vouchers = Voucher::with(['categoria','entidad'])
             ->with('modalidad')
             ->orderBy('vou_id','desc')
             ->get([
@@ -1277,7 +1277,7 @@ class VoucherController extends Controller
         //         'ent_logo_url as logo'
         //     )
         //     ->first();
-        $entidad = Entidad::with('imagenPrincipal', 'logoPrincipal')
+        $entidad = Entidad::with('imagenPrincipal', 'logoPrincipal', 'resaltador_entidad')
             // ->where('ent_id',$id)
             ->where('ent_estado',1)
             ->findOrFail($id);
@@ -1741,7 +1741,7 @@ class VoucherController extends Controller
             ->header('Content-Type', 'application/pdf')
             ->header(
                 'Content-Disposition',
-                'attachment; filename="voucher-' . $id . '.pdf"'
+                'attachment; filename="voucher-' . $vou_id . '.pdf"'
             );
         
         // Acá va exactamente la misma lógica con la que

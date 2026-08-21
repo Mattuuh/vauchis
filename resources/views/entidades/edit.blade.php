@@ -2,6 +2,163 @@
 
 @section('title', 'Editar entidad')
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
+
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a modificar el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            tipo_entidad_id: {
+                required: true,
+            },
+            tipo_resp_id: {
+                required: true,
+            },
+            tipo_doc_id: {
+                required: true,
+            },
+            com_documento: {
+                required: true,
+                number: true,
+                minlength: 6
+            },
+            com_nombre_fantasia: {
+                required: true,
+            },
+            com_razon_social: {
+                required: true,
+            },
+            com_dom_fiscal: {
+                required: true,
+            },
+            com_instagram: {
+                required: false,
+            },
+            com_tiktok: {
+                required: false,
+            },
+            com_descripcion_publica: {
+                required: false,
+                maxlength: 255,
+            },
+            "logos[]": {
+                required: true,
+            },
+            "sucursales[][org_id]": {
+                required: false,
+            },
+            "sucursales[][cd_canje]": {
+                required: true,
+            },
+            "sucursales[][pais_id]": {
+                required: true,
+            },
+            "sucursales[][provincia_id]": {
+                required: true,
+            },
+            "sucursales[][cd_ciudad]": {
+                required: true,
+            },
+            "sucursales[][cd_barrio]": {
+                required: true,
+            },
+            "sucursales[][cd_direccion]": {
+                required: true,
+            },
+            "sucursales[][cd_codigo_postal]": {
+                required: true,
+            },
+            "sucursales[][cd_telefono1]": {
+                required: true,
+                number: true,
+                minlength: 8
+            },
+            "sucursales[][cd_telefono2]": {
+                required: false,
+                // number: true,
+                // minlength: 8
+            },
+            "sucursales[][cd_email1]": {
+                required: true,
+                email: true,
+                minlength: 5
+            },
+            "sucursales[][cd_email2]": {
+                required: false,
+                // email: true,
+                // minlength: 5
+            },
+            "sucursales[][cd_descripcion_publica]": {
+                required: true,
+            },
+            "sucursales[][cd_descripcion_interna]": {
+                required: true,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/entidades/entidades.css') }}">
 
@@ -153,6 +310,11 @@
                     @error('com_tiktok')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Descripción:</label>
+                    <textarea id="com_descripcion_publica" name="com_descripcion_publica" rows="4" class="form-control" placeholder="Descripción publica">{{ old('com_descripcion_publica', $entidad->ent_descripcion_publica) }}</textarea>
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -322,9 +484,7 @@
                                     <span class="badge text-bg-success ms-2">Principal</span>
                                 @endif
                             </div>
-                            <button type="button" class="btn-delete-sucursal {{ $index === 0 ? 'd-none' : '' }}" onclick="removeSucursal(this)">
-                                Eliminar sucursal
-                            </button>
+                            <button type="button" class="btn-delete-sucursal {{ $index === 0 ? 'd-none' : '' }}" onclick="removeSucursal(this)">Eliminar sucursal</button>
                         </div>
 
                         <div class="row g-2">
@@ -464,13 +624,7 @@
                                 <label class="form-label fw-semibold">Rubros disponibles</label>
                                 <div class="rubros-available-box">
                                     @foreach($rubros as $id => $nombre)
-                                        <button
-                                            type="button"
-                                            class="rubro-option"
-                                            data-id="{{ $id }}"
-                                            data-name="{{ $nombre }}"
-                                            onclick="addRubroFromOption(this)"
-                                        >
+                                        <button type="button" class="rubro-option" data-id="{{ $id }}" data-name="{{ $nombre }}" onclick="addRubroFromOption(this)">
                                             {{ $nombre }}
                                         </button>
                                     @endforeach
@@ -489,14 +643,7 @@
                                 <label class="form-label fw-semibold">Subrubros disponibles</label>
                                 <div class="subrubros-available-box">
                                     @foreach($subrubros as $subrubro)
-                                        <button
-                                            type="button"
-                                            class="subrubro-option"
-                                            data-id="{{ $subrubro['sub_id'] }}"
-                                            data-rub-id="{{ $subrubro['rub_id'] }}"
-                                            data-name="{{ $subrubro['sub_nombre'] }}"
-                                            onclick="addSubrubroFromOption(this)"
-                                        >
+                                        <button type="button" class="subrubro-option" data-id="{{ $subrubro['sub_id'] }}" data-rub-id="{{ $subrubro['rub_id'] }}" data-name="{{ $subrubro['sub_nombre'] }}"onclick="addSubrubroFromOption(this)">
                                             {{ $subrubro['sub_nombre'] }}
                                         </button>
                                     @endforeach
@@ -511,17 +658,9 @@
                                 <div class="subrubros-hidden-inputs"></div>
                             </div>
 
-                            <input
-                                type="hidden"
-                                class="rubros-data"
-                                value='@json(array_values($rubrosSeleccionados))'
-                            >
+                            <input type="hidden" class="rubros-data" value='@json(array_values($rubrosSeleccionados))'>
 
-                            <input
-                                type="hidden"
-                                class="subrubros-data"
-                                value='@json(array_values($subrubrosSeleccionados))'
-                            >
+                            <input type="hidden" class="subrubros-data" value='@json(array_values($subrubrosSeleccionados))'>
                         </div>
                     </div>
                 @empty
@@ -531,13 +670,71 @@
                                 <strong>Sucursal 1</strong>
                                 <span class="badge text-bg-success ms-2">Principal</span>
                             </div>
-                            <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">
-                                Eliminar
-                            </button>
+                            <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">Eliminar</button>
                         </div>
                     </div>
                 @endforelse
             </div>
+        </div>
+
+        <div class="vch-card p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1">Vouchers vinculados a la entidad</h6>
+                </div>
+            </div>
+
+            @if($vouchers->isEmpty())
+                <p class="text-muted mb-0">No hay vouchers generados.</p>
+            @else
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Stock</th>
+                                <th>Comprados</th>
+                                <th>Canjeados</th>
+                                <th>Estado</th>
+                                <th>Fecha alta</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($vouchers as $voucher)
+                                <tr>
+                                    <td class="text-danger">{{ $voucher->vou_id }}</td>
+                                    <td>{{ $voucher->vou_nombre }}</td>
+                                    <td>{{ $voucher->categoria->cv_nombre ?? 'Sin categoría' }}</td>
+                                    <td>{{ $voucher->stock ?? '-' }}</td>
+                                    <td>{{ $voucher->comprados ?? '-' }}</td>
+                                    <td>{{ $voucher->canjeados ?? '-' }}</td>
+                                    <td>
+                                        <div class="small">
+                                            @php
+                                            $estado = estado($voucher->vou_estado);
+                                            @endphp
+                                            <span class="status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
+                                                <i class="bi bi-{{ $estado['icon'] }}"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($voucher->vou_fecha_alta)->format('d/m/Y') }}
+                                    </td>
+                                    <td class="" data-label="Acciones">
+                                        <a href="{{ route('admin.vouchers.edit', $voucher->vou_id) }}" class="btn commerce-edit-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
 
         <!-- BOTONES -->
@@ -1100,7 +1297,7 @@ $(document).ready(function () {
         // Guardar el color
         selectedColor.value = color.dataset.color;
 
-        console.log("Color seleccionado:", selectedColor.value);
+        // console.log("Color seleccionado:", selectedColor.value);
         });
     });
 </script>

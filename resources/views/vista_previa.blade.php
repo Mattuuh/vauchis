@@ -860,9 +860,9 @@
             padding: 46px 14px 34px;
         }
 
-        .vp-voucher-topline {
+        /* .vp-voucher-topline {
             margin: 0 10px 18px;
-        }
+        } */
 
         .vp-brand {
             font-size: 28px;

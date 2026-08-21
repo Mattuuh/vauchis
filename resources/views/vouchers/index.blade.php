@@ -108,7 +108,8 @@ $(document).ready(function () {
                                 <th style="width: 40px">ID</th>
                                 <th style="width: 100px">NOMBRE</th>
                                 <th style="width: 60px">CATEGORIA</th>
-                                <th style="width: 70px">MODALIDAD</th>
+                                {{-- <th style="width: 70px">MODALIDAD</th> --}}
+                                <th style="width: 70px">ENTIDAD</th>
                                 <th style="width: 60px">FECHA DE ALTA</th>
                                 <th style="width: 40px">STOCK</th>
                                 <th style="width: 50px">ESTADO</th>
@@ -141,9 +142,13 @@ $(document).ready(function () {
                                         <span>{{ $voucher->categoria->cv_nombre ?? 'Sin categoría' }}</span>
                                     </td>
 
-                                    <td class="commerce-col" data-label="Modalidad">
+                                    {{-- <td class="commerce-col" data-label="Modalidad">
                                         <span class="commerce-mobile-label">Modalidad</span>
                                         <span>{{ $voucher->modalidad->mod_codigo ?? 'Sin modalidad' }}</span>
+                                    </td> --}}
+                                    <td class="commerce-col" data-label="Entidad">
+                                        <span class="commerce-mobile-label">Entidad</span>
+                                        <span>{{ $voucher->entidad->ent_nombre_fantasia ?? 'Sin entidad' }}</span>
                                     </td>
 
                                     <td class="commerce-col" data-label="Fecha de alta">

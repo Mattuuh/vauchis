@@ -37,6 +37,8 @@ class Voucher extends Model
         'vou_porcentaje_comision',
         'vou_terminos_condiciones',
         'vou_modalidad_condiciones',
+        'vou_orden',
+        'vou_publico',
         'vou_estado',
         'vou_estado2',
         'vou_estado3',

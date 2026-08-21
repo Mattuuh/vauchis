@@ -160,24 +160,24 @@
             // toggleNavbar();
             // window.addEventListener('scroll', toggleNavbar);
 
-            @if(request()->routeIs('home'))
-                function toggleNavbar() {
-                    if (window.scrollY > 40) {
-                        navbar.classList.add('is-scrolled');
-                    } else {
-                        navbar.classList.remove('is-scrolled');
-                    }
-                }
+            // @if(request()->routeIs('home'))
+            //     function toggleNavbar() {
+            //         if (window.scrollY > 40) {
+            //             navbar.classList.add('is-scrolled');
+            //         } else {
+            //             navbar.classList.remove('is-scrolled');
+            //         }
+            //     }
 
-                toggleNavbar();
-                window.addEventListener('scroll', toggleNavbar);
-            @else
-                @if (session('auth.tu_id')==1)
+            //     toggleNavbar();
+            //     window.addEventListener('scroll', toggleNavbar);
+            // @else
+            //     @if (session('auth.tu_id')==1)
                     
-                @else
-                    navbar.classList.add('is-scrolled');
-                @endif
-            @endif
+            //     @else
+            //         navbar.classList.add('is-scrolled');
+            //     @endif
+            // @endif
         });
     </script>
 

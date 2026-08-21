@@ -91,7 +91,7 @@
 
 @elseif (session('auth.tu_id')==2)
 
-<nav class="v-navbar" id="vNavbar">
+<nav class="v-navbar is-scrolled" id="vNavbar">
     <div class="v-navbar__shell">
 
         <div class="v-navbar__top">
@@ -209,7 +209,7 @@
 
 @else
 
-<nav class="v-navbar" id="vNavbar">
+<nav class="v-navbar is-scrolled" id="vNavbar">
     <div class="v-navbar__shell">
 
         <div class="v-navbar__top">
