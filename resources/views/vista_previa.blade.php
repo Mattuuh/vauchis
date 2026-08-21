@@ -49,13 +49,17 @@
         $fechaVencimiento = '01/01/99';
     }
 
-    $imagenPrincipal = isset($voucher) && isset($voucher->imagenes)
-        ? $voucher->imagenes->first()
+    $imagenPrincipal = isset($voucher) && isset($imagenes)
+        ? $imagenes->first()
         : null;
 
     $bannerEntidadRelacion = data_get($entidad ?? null, 'imagenPrincipal');
     $imagenVoucher = data_get($bannerEntidadRelacion, 'ef_img_path')
         ? asset('storage/' . data_get($bannerEntidadRelacion, 'ef_img_path'))
+        : asset('images/default-voucher.png');
+
+    $imagen_voucher_vou = data_get($imagenPrincipal, 'vf_img_path')
+        ? asset('storage/' . data_get($imagenPrincipal, 'vf_img_path'))
         : asset('images/default-voucher.png');
 
     $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');
@@ -236,7 +240,7 @@
         display: grid;
         grid-template-columns: 1fr 1.08fr;
         min-height: 245px;
-        max-height: 50vh;
+        /* max-height: 50vh; */
         overflow: hidden;
         border-radius: 0 0 13px 13px;
         background: var(--vp-cream);
@@ -309,6 +313,24 @@
         margin: 16px 0 0;
         font-size: 53px;
         font-weight: 700;
+        line-height: 1;
+        letter-spacing: -.04em;
+        text-align: center;
+    }
+
+    .vp-title {
+        margin: 16px 0 0;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -.04em;
+        text-align: center;
+    }
+
+    .vp-subtitle {
+        margin: 16px 0 0;
+        font-size: 16px;
+        font-weight: 400;
         line-height: 1;
         letter-spacing: -.04em;
         text-align: center;
@@ -1284,6 +1306,7 @@
                         </div>
 
                         <div class="vp-value-panel">
+                            @if ($modalidad->tipo_mod_id==1 || $modalidad->tipo_mod_id==2)
                             <div class="vp-value-copy">
                                 <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}<br><span>Vale por:</span></p>
 
@@ -1296,6 +1319,24 @@
                             <div class="vp-value-image">
                                 <img src="{{ $imagenVoucher }}" alt="{{ $nombreVoucher }}">
                             </div>
+
+                            @else
+
+                            <div class="vp-value-copy">
+                                <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}</p>
+
+                                {{-- @if ($influencer>0)
+                                    <div class="vp-recommendation">★ Recomendado por<br>@visitsalta_</div>
+                                @endif --}}
+
+                                <p class="vp-title">{{ $nombreVoucher }}</p>
+                                <p class="vp-subtitle">{{ $voucher->vou_descripcion }}</p>
+                            </div>
+                            <div class="vp-value-image">
+                                <img src="{{ $imagen_voucher_vou }}" alt="{{ $nombreVoucher }}">
+                            </div>
+                            @endif
+                            
                         </div>
                     </div>
 

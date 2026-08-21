@@ -187,41 +187,74 @@
     }
 
     .vp-summary-top {
-        /* background: var(--vp-green); */
-        min-height: 146px;
+        min-height: 186px;
         display: grid;
-        grid-template-columns: 118px 1fr;
+        grid-template-columns: 58px 1fr;
+        grid-template-rows: auto 1fr;
+        column-gap: 18px;
+        row-gap: 18px;
         align-items: center;
-        padding: 22px 30px;
+        padding: 22px 42px 28px;
         color: #fff;
     }
 
     .vp-brand-logo {
-        width: 72px;
-        height: 72px;
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
         border-radius: 50%;
-        object-fit: cover;
-        background: #0a7346;
+    }
+
+    .vp-brand-info {
+        align-self: center;
     }
 
     .vp-brand-name {
         font-size: 16px;
-        margin-bottom: 2px;
-        font-weight: 700;
+        font-weight: 600;
+        line-height: 1.2;
     }
 
     .vp-brand-subtitle {
+        margin-top: 2px;
         font-size: 14px;
-        opacity: .9;
-        margin-bottom: 7px;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: .5px;
     }
 
     .vp-price {
+        grid-column: 1 / -1;
+        width: 100%;
         font-size: clamp(48px, 5vw, 68px);
         font-weight: 500;
         line-height: 1;
         letter-spacing: -2px;
         text-align: center;
+        margin-top: -2px;
+    }
+
+    .vp-voucher-info {
+        grid-column: 1 / -1;
+        width: 100%;
+        text-align: center;
+        align-self: center;
+    }
+
+    .vp-title {
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: 0;
+    }
+
+    .vp-subtitle {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.3;
+        letter-spacing: 0;
     }
 
     .vp-summary-bottom {
@@ -643,11 +676,18 @@
                     <article class="vp-summary-card">
                         <div class="vp-summary-top" style="background: {{ $entidad->ent_color_fondo ?? '#49b889' }};">
                             <img src="{{ $logoEntidad }}" alt="{{ $entidadNombre }}" class="vp-brand-logo">
-                            <div>
+                            <div class="vp-brand-info">
                                 <div class="vp-brand-name">{{ $entidadNombre }}</div>
                                 <div class="vp-brand-subtitle">VALE POR</div>
                             </div>
-                            <div class="vp-price">${{ number_format($monto, 0, ',', '.') }}</div>
+                            @if ($modalidad->tipo_mod_id==1 || $modalidad->tipo_mod_id==2)
+                                <div class="vp-price">${{ number_format($monto, 0, ',', '.') }}</div>
+                            @else
+                                <div class="vp-voucher-info">
+                                    <p class="vp-title">{{ $voucher->vou_nombre }}</p>
+                                    <p class="vp-subtitle">{{ $voucher->vou_descripcion }}</p>
+                                </div>
+                            @endif
                         </div>
                         <div class="vp-summary-bottom">
                             <p class="vp-recipient">PARA: {{ $para }}<br>DE: {{ $de }}</p>

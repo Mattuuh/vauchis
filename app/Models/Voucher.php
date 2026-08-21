@@ -90,7 +90,7 @@ class Voucher extends Model
 
     public function sucursales(): BelongsToMany
     {
-        return $this->belongsToMany(EntidadDomicilio::class,'vouchers_sucursales','vou_id','ed_id');
+        return $this->belongsToMany(EntidadDomicilio::class,'vouchers_sucursales','vou_id','ed_id')->where('ed_estado',1);
     }
 
     public function plantillas()

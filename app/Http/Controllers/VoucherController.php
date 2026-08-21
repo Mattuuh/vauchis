@@ -1564,6 +1564,7 @@ class VoucherController extends Controller
                 'imagenes',
                 'entidad',
                 'modalidad.campos',
+                'modalidad',
                 'sucursales',
             ])
             ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
@@ -1579,6 +1580,8 @@ class VoucherController extends Controller
 
         $valores = $voucher->modalidadValores[0];
 
+        $modalidad = $voucher->modalidad;
+
         $sucursales = $voucher->sucursales;
 
         if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
@@ -1589,7 +1592,7 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        return view('compra', compact('voucher','entidad','imagenes','valores','sucursales'));
+        return view('compra', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'));
     }
 
     public function postcompra_voucher($vou_id, $vmv_id, Request $request)
