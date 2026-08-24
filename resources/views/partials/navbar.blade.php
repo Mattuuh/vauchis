@@ -340,17 +340,9 @@
 
 @else
 <nav class="v-mobile-navbar">
-    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu">
-        <i class="bi bi-list"></i>
-    </button>
-
-    <a href="{{ route('home') }}" class="v-mobile-navbar__logo">
-        <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
-    </a>
-
-    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileSearch">
-        <i class="bi bi-search"></i>
-    </button>
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu"><i class="bi bi-list"></i></button>
+    <a href="{{ route('home') }}" class="v-mobile-navbar__logo"><img src="{{ asset('images/logo-1.png') }}" alt="Vauchis"></a>
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileSearch"><i class="bi bi-search"></i></button>
 </nav>
 <div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileMenu">
     <div class="v-mobile-panel__header">
@@ -363,30 +355,94 @@
     <div class="v-mobile-panel__body">
         <h3>Menú</h3>
 
-        <a href="{{ route('categorias', 1) }}">
-            <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
-            Objetos
-        </a>
+        {{-- OBJETOS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 1) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
+                    <span>Objetos</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuObjetos" aria-expanded="false" aria-controls="menuObjetos">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuObjetos">
+                {{-- @foreach($rubrosObjetos as $rubro)
+                    <a href="{{ route('categorias', ['categoria' => 1, 'rubro' => $rubro->rubro_id ]) }}">
+                        {{ $rubro->rubro_nombre }}
+                    </a>
+                @endforeach --}}
+                <a href="#">Rubro 1</a>
+                <a href="#">Rubro 2</a>
+                <a href="#">Rubro 3</a>
+                <a href="#">Rubro 4</a>
+            </div>
+        </div>
 
-        <a href="{{ route('categorias', 2) }}">
-            <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
-            Experiencias
-        </a>
 
-        <a href="{{ route('categorias', 3) }}">
-            <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
-            Con causa
-        </a>
+        {{-- EXPERIENCIAS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 2) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
+                    <span>Experiencias</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuExperiencias" aria-expanded="false" aria-controls="menuExperiencias">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuExperiencias">
+                {{-- @foreach($rubrosExperiencias as $rubro)
+                    <a href="{{ route('categorias', ['categoria' => 2, 'rubro' => $rubro->rubro_id ]) }}">
+                        {{ $rubro->rubro_nombre }}
+                    </a>
+                @endforeach --}}
+                <a href="#">Rubro 1</a>
+                <a href="#">Rubro 2</a>
+                <a href="#">Rubro 3</a>
+                <a href="#">Rubro 4</a>
+            </div>
+        </div>
 
-        <a href="{{ route('login') }}">
-            <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">Usuario
-        </a>
 
-        <a href="#">
-            <img src="{{ asset('images/icono-Ayuda.png') }}" alt="Ayuda">Ayuda
-        </a>
+        {{-- CON CAUSA --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 3) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
+                    <span>Con causa</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuConCausa" aria-expanded="false" aria-controls="menuConCausa">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuConCausa">
+                {{-- @foreach($rubrosConCausa as $rubro)
+                    <a href="{{ route('categorias', [ 'categoria' => 3, 'rubro' => $rubro->rubro_id ]) }}">
+                        {{ $rubro->rubro_nombre }}
+                    </a>
+                @endforeach --}}
+                <a href="#">Rubro 1</a>
+                <a href="#">Rubro 2</a>
+                <a href="#">Rubro 3</a>
+                <a href="#">Rubro 4</a>
+            </div>
+        </div>
+
+        {{-- ACCIONES DEL MENÚ --}}
+        <div class="v-mobile-menu-actions">
+            <a href="{{ route('login') }}" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Perfil.png') }}" alt="">
+                <span>Usuario</span>
+            </a>
+            <a href="#" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Ayuda.png') }}" alt="">
+                <span>Ayuda</span>
+            </a>
+        </div>
     </div>
 </div>
+
 <div class="offcanvas offcanvas-end v-search-panel" tabindex="-1" id="vMobileSearch">
     <div class="v-search-panel__top">
         <div class="v-search-panel__input">

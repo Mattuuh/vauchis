@@ -23,6 +23,7 @@ class CategoriaController extends Controller
         ->findOrFail($rubroId);
 
         $entidades = Entidad::query()
+            ->with('resaltador_entidad')
             ->where('ent_estado', 1)
             ->where('ent_publico', 1)
 

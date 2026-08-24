@@ -3,6 +3,8 @@
 <div class="vo-grid">
     @foreach ($entidades as $entidad)
         @php
+            $resaltador = $entidad->resaltador_entidad ?? null;
+
             $image = optional($entidad->imagenPrincipal)->ef_img_path;
             $imageUrl = $image 
                 ? asset('storage/' . $image) 
@@ -16,6 +18,11 @@
         <article class="vo-card">
             <a href="{{ route('vouchers.entidad', $entidad->ent_id) }}" class="vo-card-link">
                 <div class="vo-card-image">
+                    @if (!empty($resaltador))
+                        <span class="vo-card-badge" style="{{ $resaltador->resal_color_fondo != '' ? 'background: '.$resaltador->resal_color_fondo.' !important;' : '' }} {{ $resaltador->resal_color != '' ? 'color: '.$resaltador->resal_color.' !important;' : '' }}">
+                            {{ $resaltador->resal_nombre }}
+                        </span>
+                    @endif
                     <img src="{{ $imageUrl }}" alt="{{ $entidad->ent_nombre_fantasia }}">
                 </div>
 

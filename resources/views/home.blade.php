@@ -96,7 +96,6 @@
             </div>
 
             <div class="vh-slider-wrap">
-                {{-- <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior"><img src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda"></button> --}}
                 <img class="vh-slider-btn vh-slider-btn--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
                 <div class="vh-carousel-viewport" data-carousel="brands">
                     <div class="vh-card-row vh-card-row--brands">
@@ -109,19 +108,20 @@
                             $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : $logoFallbackImages[$loop->index % count($logoFallbackImages)];
 
                             $resaltador = $brand->resaltador ?? null;
-
                         @endphp
                         <article class="vh-business-card entidades" data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}">
-                            {{-- <img src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}"> --}}
 
-                            <img class="vh-business-card__banner" src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}">
-                            <img class="vh-business-card__logo" src="{{ $logo_imgSrc }}" alt="Logo {{ $brand->name }}">
+                            <div class="vh-business-card__media">
+                                <img class="vh-business-card__banner" src="{{ $banner_imgSrc }}" alt="{{ $brand->name }}">
+                                <img class="vh-business-card__logo" src="{{ $logo_imgSrc }}" alt="Logo {{ $brand->name }}">
 
-                            @if ($resaltador)
-                                <span class="vs-badge vh-card-badge" style="{{ $resaltador->resal_color_fondo!='' ? 'background: '.$resaltador->resal_color_fondo.' !important;' : '' }} {{ $resaltador->resal_color!='' ? 'color: '.$resaltador->resal_color.' !important' : '' }}">
-                                    ★ {{ $resaltador->resal_nombre }}
-                                </span>
-                            @endif
+                                @if ($resaltador)
+                                    <span class="vs-badge vh-card-badge"
+                                        style="{{ $resaltador->resal_color_fondo != '' ? 'background: '.$resaltador->resal_color_fondo.' !important;' : '' }} {{ $resaltador->resal_color != '' ? 'color: '.$resaltador->resal_color.' !important;' : '' }}">
+                                        ★ {{ $resaltador->resal_nombre }}
+                                    </span>
+                                @endif
+                            </div>
 
                             <div class="vh-business-card__caption">
                                 <div>
@@ -133,7 +133,6 @@
                     @endforeach
                     </div>
                 </div>
-                {{-- <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente"><img src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha"></button> --}}
                 <img class="vh-slider-btn vh-slider-btn--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
             </div>
         </div>
@@ -218,7 +217,6 @@
             </div>
 
             <div class="vh-slider-wrap">
-                {{-- <button class="vh-slider-btn vh-slider-btn--left" type="button" aria-label="Anterior"><img src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda"></button> --}}
                 <img class="vh-slider-btn vh-slider-btn--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
 
                 <div class="vh-carousel-viewport" data-carousel="explore">
@@ -262,7 +260,6 @@
                     </div>
                 </div>
 
-                {{-- <button class="vh-slider-btn vh-slider-btn--right" type="button" aria-label="Siguiente"><img src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha"></button> --}}
                 <img class="vh-slider-btn vh-slider-btn--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
             </div>
         </div>
@@ -289,12 +286,8 @@
 
                     <a href="#" class="vh-collection-card">
                         <img src="{{ $imgSrc }}" alt="{{ $collection->name }}">
-
                         <span class="vh-collection-card__overlay"></span>
-
-                        <strong>
-                            {{ $collection->name }}
-                        </strong>
+                        <strong>{{ $collection->name }}</strong>
                     </a>
                 @endforeach
             </div>
@@ -314,10 +307,7 @@
                     <i>la comunidad</i><br>
                     <span>vauchis</span>
                 </h2>
-
-                <a href="#negocios" class="vh-final-banner__btn">
-                    Explorá Vauchis
-                </a>
+                <a href="#negocios" class="vh-final-banner__btn">Quiero ser parte</a>
             </div>
 
         </div>
@@ -1081,13 +1071,7 @@ a{
 .vh-featured .vh-slider-btn{
     top: 63px;
     width: 4%;
-    /* height: 27px; */
-    /* border: 2px solid #FDFDFE; */
     background: transparent;
-    /* color: #FDFDFE; */
-    /* font-size: 32px; */
-    /* line-height: 20px; */
-    /* font-weight: 200; */
 }
 
 .vh-featured .vh-slider-btn--left{ left: -48px; }
@@ -1521,8 +1505,7 @@ a{
     }
 
     .vh-card-row--brands,
-    .vh-card-row--collections,
-    .vh-collections-grid{
+    .vh-card-row--collections{
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -1561,8 +1544,7 @@ a{
         margin-bottom: 48px;
     }
 
-    .vh-explore-grid,
-    .vh-collections-grid{
+    .vh-explore-grid{
         grid-template-columns: 1fr;
         gap: 24px;
     }
@@ -1668,41 +1650,6 @@ a{
         width: 40px;
         height: 4px;
         background: #003d9c;
-    }
-
-    .vh-collections-grid {
-        display: flex;
-        gap: 20px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-snap-type: x mandatory;
-        padding-bottom: 8px;
-        padding-right: 34px;
-    }
-
-    .vh-collections-grid::-webkit-scrollbar {
-        display: none;
-    }
-
-    .vh-collection-card {
-        flex: 0 0 340px;
-        height: 340px;
-        border-radius: 14px;
-        overflow: hidden;
-        scroll-snap-align: start;
-    }
-
-    .vh-collection-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .vh-collection-card strong {
-        font-size: 24px;
-        line-height: 1.05;
-        max-width: 180px;
-        text-align: center;
     }
 }
 
@@ -1838,22 +1785,112 @@ a{
 /* Mobile */
 @media (max-width: 768px) {
     .vh-final-banner {
-        padding: 48px 0;
-        text-align: center;
+        position: relative;
+        padding: 32px 22px 42px;
+        text-align: left;
+        overflow: hidden;
+        min-height: 495px;
+        box-sizing: border-box;
+    }
+
+    /* Fondo decorativo / rulo */
+    .vh-final-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("../images/comunidad-vauhcis-1.png");
+        background-repeat: no-repeat;
+        /*
+         * Lo hacemos más grande para que el rulo
+         * aparezca arriba a la derecha y abajo.
+         */
+        background-size: 145% auto;
+        background-position: center center;
+        opacity: .32;
+        pointer-events: none;
+        z-index: 0;
     }
 
     .vh-final-banner__inner {
-        grid-template-columns: 1fr;
-        gap: 28px;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: none;
+        gap: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
     }
 
-    .vh-final-banner__image img {
-        width: 310px;
-        margin: 0 auto;
+    /* =================================
+       TEXTO
+       ================================= */
+
+    .vh-final-banner__copy {
+        order: 1;
+        width: 100%;
+        text-align: left;
     }
 
     .vh-final-banner__copy h2 {
-        font-size: 32px;
+        margin: 0;
+        font-size: 29px;
+        line-height: 1.18;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .vh-final-banner__copy h2 span,
+    .vh-final-banner__copy h2 i {
+        display: inline;
+    }
+
+    .vh-final-banner__copy h2 i {
+        font-weight: 300;
+    }
+
+    /* =================================
+       BOTÓN
+       ================================= */
+
+    .vh-final-banner__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 196px;
+        height: 31px;
+        margin: 24px auto 0;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        text-decoration: none;
+        z-index: 1;
+    }
+
+    /* =================================
+       IMAGEN
+       ================================= */
+
+    .vh-final-banner__image {
+        order: 2;
+        width: 100%;
+        margin-top: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+    }
+
+    .vh-final-banner__image img {
+        display: block;
+        width: 250px;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+        z-index: 1;
     }
 }
 
@@ -1865,6 +1902,552 @@ a{
 .vh-mobile-category-card.active-center {
     transform: scale(1.08);
     z-index: 2;
+}
+
+/* ==========================================================
+   NEGOCIOS DESTACADOS - MOBILE
+   No modifica el diseño desktop
+========================================================== */
+
+@media (max-width: 768px) {
+
+    /* CONTENEDOR */
+    .vh-featured .vh-shell {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 18px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+
+    /* TITULO */
+    .vh-featured .vh-section-title {
+        margin-bottom: 34px;
+    }
+
+
+    /* VIEWPORT DEL CARRUSEL */
+    .vh-featured .vh-carousel-viewport {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+
+        scroll-snap-type: x proximity;
+    }
+
+    .vh-featured .vh-carousel-viewport::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    /* FILA DE CARDS */
+    .vh-featured .vh-card-row--brands {
+        display: flex;
+
+        /*
+         * En la referencia las tarjetas
+         * están bastante juntas
+         */
+        gap: 10px;
+
+        width: max-content;
+
+        transition: none;
+    }
+
+
+    /* =============================================
+       CARD
+       ============================================= */
+
+    .vh-featured .vh-business-card {
+
+        /*
+         * Queremos aproximadamente 2 tarjetas
+         * visibles simultáneamente.
+         */
+        width: calc((100vw - 46px) / 2);
+        min-width: calc((100vw - 46px) / 2);
+        max-width: calc((100vw - 46px) / 2);
+
+        /*
+         * Sobrescribe height:178px del desktop
+         */
+        height: auto;
+
+        overflow: visible;
+
+        background: transparent;
+
+        flex: 0 0 calc((100vw - 46px) / 2);
+
+        scroll-snap-align: start;
+    }
+
+
+    /* =============================================
+       IMAGEN PRINCIPAL
+       ============================================= */
+
+    .vh-featured .vh-business-card .vh-business-card__banner {
+
+        /*
+         * Sobrescribe:
+         *
+         * width:100%;
+         * height:121px;
+         *
+         * del desktop.
+         */
+
+        width: 100%;
+        height: auto;
+
+        /*
+         * En el diseño objetivo la imagen es
+         * prácticamente cuadrada.
+         */
+        aspect-ratio: 1 / 1;
+
+        object-fit: cover;
+
+        display: block;
+
+        /*
+         * Esquinas bastante redondeadas,
+         * como en la captura.
+         */
+        border-radius: 18px;
+    }
+
+
+    /* =============================================
+       LOGO DEL NEGOCIO
+       ============================================= */
+
+    .vh-featured .vh-business-card__logo {
+
+        /*
+         * Sobrescribimos el posicionamiento
+         * del desktop.
+         */
+
+        left: 10px;
+
+        /*
+         * Como el HTML actual no tiene un wrapper
+         * exclusivo para la imagen, posicionamos
+         * el logo respecto de la card.
+         */
+        top: calc(((100vw - 46px) / 2) - 58px);
+
+        bottom: auto;
+
+        width: 48px;
+        height: 48px;
+
+        border-radius: 50%;
+
+        object-fit: cover;
+
+        background: #fff;
+
+        z-index: 3;
+    }
+
+
+    /* =============================================
+       BADGE
+       ============================================= */
+
+    .vh-featured .vh-card-badge {
+
+        top: 8px;
+        left: 10px;
+
+        height: 20px;
+        min-width: 72px;
+
+        padding: 0 8px;
+
+        font-size: 8px;
+
+        border-radius: 5px;
+
+        z-index: 4;
+    }
+
+
+    /* =============================================
+       TEXTO DEBAJO DE LA IMAGEN
+       ============================================= */
+
+    .vh-featured .vh-business-card__caption {
+
+        /*
+         * Sobrescribe height:57px del desktop
+         */
+        height: auto;
+
+        padding: 11px 8px 0;
+
+        display: block;
+
+        background: transparent;
+    }
+
+
+    .vh-featured .vh-business-card__caption h3 {
+
+        margin: 0 0 4px;
+
+        color: #FDFDFE;
+
+        /*
+         * Mucho más grande que los 11px
+         * actuales.
+         */
+        font-size: 14px;
+
+        line-height: 1.1;
+
+        font-weight: 700;
+    }
+
+
+    .vh-featured .vh-business-card__caption p {
+
+        margin: 0;
+
+        max-width: 100%;
+
+        color: #FDFDFE;
+
+        /*
+         * Sobrescribe los 9px actuales.
+         */
+        font-size: 12px;
+
+        line-height: 1.25;
+
+        font-weight: 300;
+    }
+
+
+    /* No necesitamos el small en mobile */
+    .vh-featured .vh-business-card__caption small {
+        display: none;
+    }
+
+
+    /* =============================================
+       FLECHAS
+       ============================================= */
+
+    /*
+     * En celular se desplaza con el dedo.
+     * Ocultamos las flechas del desktop.
+     */
+
+    .vh-featured .vh-slider-btn {
+        display: none;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .vh-collections .vh-shell {
+        max-width: 100%;
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 0;
+    }
+
+    .vh-collections .btn-ver-todos {
+        display: none;
+    }
+
+    .vh-collections .vh-section-heading {
+        margin-bottom: 58px;
+    }
+
+    .vh-collections-grid {
+        display: flex;
+        gap: 8px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        padding: 0 16px 8px 0;
+
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+
+        scrollbar-width: none;
+    }
+
+    .vh-collections-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vh-collection-card {
+        flex: 0 0 10em;
+
+        width: 200px;
+        height: 260px;
+
+        border-radius: 14px;
+
+        scroll-snap-align: start;
+    }
+
+    .vh-collection-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .vh-collection-card strong {
+        font-size: 15px;
+        line-height: 1.1;
+        max-width: 130px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    /* =========================
+       SECCION
+    ========================= */
+
+    .vh-inspiration {
+        padding: 28px 0 34px;
+        overflow: hidden;
+    }
+
+    .vh-inspiration .vh-shell {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0 0 0 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /* TITULO + BOTON SUPERIOR */
+    .vh-inspiration .row {
+        display: contents;
+    }
+
+    .vh-inspiration .col-sm-10 {
+        order: 1;
+        width: 100%;
+        padding: 0;
+    }
+
+    .vh-inspiration .col-sm-2 {
+        order: 3;
+        width: 100%;
+        padding: 0 20px 0 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .vh-inspiration .vh-section-title {
+        margin: 0 0 28px;
+    }
+
+    .vh-inspiration .vh-section-title h2 {
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.05;
+        letter-spacing: .2px;
+        font-weight: 400;
+    }
+
+    .vh-inspiration .vh-section-title h2 strong {
+        font-weight: 700;
+    }
+
+
+    /* CARRUSEL */
+    .vh-inspiration .vh-influencer-carousel-wrap {
+        order: 2;
+        position: relative;
+        width: 100%;
+        height: auto !important;
+        margin: 0 0 28px;
+        overflow: visible !important;
+    }
+
+    .vh-inspiration .vh-carousel-viewport {
+        width: 100%;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+    }
+
+    .vh-inspiration .vh-carousel-viewport::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .vh-inspiration .vh-card-row--influencers {
+        display: flex !important;
+        align-items: flex-start;
+        width: max-content !important;
+        height: auto !important;
+        gap: 26px;
+        padding: 0 28px 20px 10px;
+        transform: none !important;
+        transition: none !important;
+    }
+
+
+    /* CARD */
+    .vh-inspiration .vh-influencer-card {
+        position: relative;
+        flex: 0 0 235px !important;
+        width: 235px !important;
+        min-width: 235px !important;
+        max-width: 235px !important;
+        height: auto !important;
+        min-height: 0 !important;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        scroll-snap-align: start;
+        box-shadow:
+            0 10px 18px rgba(0, 0, 0, .14),
+            0 3px 6px rgba(0, 0, 0, .06);
+    }
+
+
+    /* IMAGEN PRINCIPAL */
+    .vh-inspiration .vh-influencer-card__cover {
+        display: block;
+        width: 100% !important;
+        height: 318px !important;
+        flex: 0 0 318px;
+        margin: 0;
+        padding: 0;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 0;
+    }
+
+
+    /* PIE DE LA CARD */
+    .vh-inspiration .vh-influencer-card__body {
+        position: relative;
+        width: 100%;
+        min-height: 92px;
+        height: auto !important;
+        flex: 0 0 auto;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        background: #fff;
+        overflow: visible;
+    }
+
+
+    /* AVATAR */
+    .vh-inspiration .vh-avatar {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px;
+        flex: 0 0 42px;
+        margin: 0;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #006cff;
+        box-sizing: border-box;
+    }
+
+
+    /* DATOS DEL INFLUENCER */
+    .vh-inspiration .vh-influencer-card__body > div {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .vh-inspiration .vh-influencer-card__body h3 {
+        margin: 0 0 2px;
+        color: #111;
+        font-size: 11px;
+        line-height: 1.1;
+        font-weight: 600;
+    }
+
+    .vh-inspiration .vh-influencer-card__body p {
+        margin: 0 0 4px;
+        color: #006cff;
+        font-size: 9px;
+        line-height: 1.1;
+        font-weight: 400;
+    }
+
+    .vh-inspiration .vh-influencer-card__body small {
+        display: block;
+        margin: 0;
+        color: #444;
+        font-size: 8px;
+        line-height: 1.2;
+        font-weight: 400;
+    }
+
+
+    /* FLECHA DEL DESKTOP */
+    .vh-inspiration .vh-round-next,
+    .vh-inspiration .vh-round-next--inspiration {
+        display: none !important;
+    }
+
+
+    /* BOTON VER TODO */
+    .vh-inspiration .btn-ver-todos {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 84px;
+        min-width: 84px;
+        height: 31px;
+        margin: 0 auto;
+        padding: 0;
+        border: 1px solid #006cff;
+        border-radius: 999px;
+        background: transparent;
+        color: #006cff;
+        font-size: 10px;
+        line-height: 1;
+        font-weight: 600;
+    }
+
+    .vh-inspiration .btn-ver-todos i {
+        display: none;
+    }
+
 }
 
 </style>
@@ -1960,11 +2543,11 @@ a{
         }
     }
 
-    // window.addEventListener('scroll', updateCenterCard);
-    // window.addEventListener('resize', updateCenterCard);
+    window.addEventListener('scroll', updateCenterCard);
+    window.addEventListener('resize', updateCenterCard);
 
-    // document.querySelector('.vh-mobile-categories')?.addEventListener('scroll', updateCenterCard);
+    document.querySelector('.vh-mobile-categories')?.addEventListener('scroll', updateCenterCard);
 
-    // updateCenterCard();
+    updateCenterCard();
 </script>
 @endpush

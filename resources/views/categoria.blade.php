@@ -214,33 +214,6 @@
             gap: 22px 28px;
         }
 
-        .vo-card {
-            background: #fff;
-            border-radius: 9px;
-            overflow: hidden;
-            box-shadow: 0 2px 7px rgba(0,0,0,.18);
-        }
-
-        .vo-card-link {
-            color: inherit;
-            text-decoration: none;
-            display: block;
-        }
-
-        .vo-card-image {
-            height: 116px;
-            position: relative;
-            background: #eef2f6;
-            overflow: hidden;
-        }
-
-        .vo-card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
         .vo-badge {
             position: absolute;
             top: 7px;
@@ -270,6 +243,33 @@
         .vo-badge--pink {
             background: #ffe5f0;
             color: #d43d7c;
+        }
+
+        .vo-card {
+            background: #fff;
+            border-radius: 9px;
+            overflow: hidden;
+            box-shadow: 0 2px 7px rgba(0,0,0,.18);
+        }
+
+        .vo-card-link {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+        }
+
+        .vo-card-image {
+            height: 116px;
+            position: relative;
+            background: #eef2f6;
+            overflow: hidden;
+        }
+
+        .vo-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .vo-card-body {
@@ -518,6 +518,125 @@
     .vo-subnavbar-inner {
         justify-content: flex-start;
         gap: 28px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .vo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 8px;
+        padding: 10px 15px 20px;
+        background: #eef3ff;
+    }
+
+    .vo-card {
+        width: 100%;
+        min-width: 0;
+        background: #fff;
+        border-radius: 11px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .20);
+    }
+
+    .vo-card-link {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .vo-card-image {
+        position: relative;
+        width: 100%;
+        height: 96px;
+        background: #eef2f6;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .vo-card-badge {
+        position: absolute;
+        top: 7px;
+        left: 10px;
+        z-index: 2;
+
+        display: inline-flex;
+        align-items: center;
+
+        padding: 3px 7px;
+        border-radius: 4px;
+
+        font-size: 8px;
+        line-height: 1;
+        font-weight: 500;
+
+        white-space: nowrap;
+    }
+
+    .vo-card-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .vo-card-body {
+        min-height: 72px;
+        padding: 15px 11px 9px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0;
+    }
+
+    .vo-card-body > div {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .vo-card-body h3 {
+        margin: 0 0 1px;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.15;
+        font-weight: 600;
+        color: #161616;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vo-card-body p {
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+        line-height: 1.15;
+        font-weight: 400;
+        color: #555;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vo-price {
+        display: block;
+        width: 100%;
+        margin-top: 1px;
+
+        font-size: 9px;
+        line-height: 1.2;
+        font-weight: 400;
+        color: #9a9a9a;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
