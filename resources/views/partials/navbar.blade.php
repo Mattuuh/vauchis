@@ -104,57 +104,38 @@
 
                 {{-- Usuario --}}
                 <div class="dropdown">
-                    <a href="#"
-                        class="v-navbar__icon dropdown-toggle"
-                        id="mobileUserDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-
+                    <a href="#" class="v-navbar__icon dropdown-toggle" id="mobileUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown">
-
                         <li class="px-3 py-2 border-bottom">
-                            <div class="fw-semibold">
-                                {{ session('auth.nombre') }}
-                            </div>
-                            <small class="text-muted">
-                                {{ session('auth.email') }}
-                            </small>
+                            <div class="fw-semibold">{{ session('auth.nombre') }}</div>
+                            <small class="text-muted">{{ session('auth.email') }}</small>
                         </li>
-
                         <li>
-                            <a class="dropdown-item" href="{{ route('admin.vouchers.index') }}">
-                                <i class="bi bi-pencil-square me-2"></i>
-                                Mis vouchers
+                            <a class="dropdown-item" href="{{ route('usuarios.vouchers', session('auth.usuario_id')) }}">
+                                <i class="bi bi-pencil-square me-2"></i>Mis vouchers
                             </a>
                         </li>
-
                         <li>
                             <a class="dropdown-item" href="">
-                                <i class="bi bi-person me-2"></i>
-                                Editar perfil
+                                <i class="bi bi-person me-2"></i>Editar perfil
                             </a>
                         </li>
-
                         <li>
                             <a class="dropdown-item" href="#">
-                                <i class="bi bi-heart me-2"></i>
-                                Favoritos
+                                <i class="bi bi-heart me-2"></i>Favoritos
                             </a>
                         </li>
-
                         <li><hr class="dropdown-divider"></li>
 
                         <li class="px-2 pb-2">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
-                                <button type="submit"
-                                    class="btn btn-danger w-100 rounded-pill">
-                                    <i class="bi bi-box-arrow-right me-2"></i>
-                                    Salir
+                                <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Salir
                                 </button>
                             </form>
                         </li>
@@ -367,19 +348,13 @@
                 </button>
             </div>
             <div class="collapse v-mobile-submenu" id="menuObjetos">
-                {{-- @foreach($rubrosObjetos as $rubro)
-                    <a href="{{ route('categorias', ['categoria' => 1, 'rubro' => $rubro->rubro_id ]) }}">
-                        {{ $rubro->rubro_nombre }}
+                @foreach($rubros->where('cv_id', 1)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
                     </a>
-                @endforeach --}}
-                <a href="#">Rubro 1</a>
-                <a href="#">Rubro 2</a>
-                <a href="#">Rubro 3</a>
-                <a href="#">Rubro 4</a>
+                @endforeach
             </div>
         </div>
-
-
         {{-- EXPERIENCIAS --}}
         <div class="v-mobile-menu-item">
             <div class="v-mobile-menu-row">
@@ -392,19 +367,13 @@
                 </button>
             </div>
             <div class="collapse v-mobile-submenu" id="menuExperiencias">
-                {{-- @foreach($rubrosExperiencias as $rubro)
-                    <a href="{{ route('categorias', ['categoria' => 2, 'rubro' => $rubro->rubro_id ]) }}">
-                        {{ $rubro->rubro_nombre }}
+                @foreach($rubros->where('cv_id', 2)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
                     </a>
-                @endforeach --}}
-                <a href="#">Rubro 1</a>
-                <a href="#">Rubro 2</a>
-                <a href="#">Rubro 3</a>
-                <a href="#">Rubro 4</a>
+                @endforeach
             </div>
         </div>
-
-
         {{-- CON CAUSA --}}
         <div class="v-mobile-menu-item">
             <div class="v-mobile-menu-row">
@@ -417,15 +386,11 @@
                 </button>
             </div>
             <div class="collapse v-mobile-submenu" id="menuConCausa">
-                {{-- @foreach($rubrosConCausa as $rubro)
-                    <a href="{{ route('categorias', [ 'categoria' => 3, 'rubro' => $rubro->rubro_id ]) }}">
-                        {{ $rubro->rubro_nombre }}
+                @foreach($rubros->where('cv_id', 3)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
                     </a>
-                @endforeach --}}
-                <a href="#">Rubro 1</a>
-                <a href="#">Rubro 2</a>
-                <a href="#">Rubro 3</a>
-                <a href="#">Rubro 4</a>
+                @endforeach
             </div>
         </div>
 

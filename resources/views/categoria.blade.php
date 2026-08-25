@@ -214,7 +214,7 @@
             gap: 22px 28px;
         }
 
-        .vo-badge {
+        .vo-card-badge {
             position: absolute;
             top: 7px;
             left: 9px;
@@ -223,26 +223,24 @@
             font-size: 10px;
             font-weight: 800;
             line-height: 1;
-        }
-
-        .vo-badge--green {
-            background: #d6f3df;
-            color: #098141;
-        }
-
-        .vo-badge--blue {
-            background: #dce7ff;
-            color: #2456a6;
-        }
-
-        .vo-badge--yellow {
-            background: #fff0bc;
-            color: #ad7b00;
-        }
-
-        .vo-badge--pink {
-            background: #ffe5f0;
-            color: #d43d7c;
+            /* top: 8px;
+            left: 10px; */
+            z-index: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 0;
+            height: 20px;
+            /* padding: 0 9px; */
+            /* border-radius: 10px; */
+            font-family: Montserrat, sans-serif;
+            /* font-size: 9px; */
+            /* font-weight: 600; */
+            white-space: nowrap;
+            margin: 0;
+            border: none;
+            box-shadow: none;
         }
 
         .vo-card {
@@ -298,7 +296,6 @@
             white-space: nowrap;
             font-size: 10px;
             color: #4c5665;
-            /* font-weight: 600; */
         }
 
         .vo-empty {
@@ -866,203 +863,235 @@
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const items = document.querySelectorAll('.vo-subnavbar-item');
+$(function () {
+
     let currentDropdown = null;
 
+    /* CERRAR DROPDOWN DE SUBRUBROS */
     function closeDropdown() {
         if (currentDropdown) {
-            currentDropdown.classList.remove('is-open');
+            $(currentDropdown).removeClass('is-open');
             currentDropdown = null;
         }
     }
 
+    /* CARGAR ENTIDADES POR AJAX */
     function cargarEntidades(url, boton) {
+
         if (!url) {
             console.warn('El rubro no tiene una URL para cargar entidades.');
             return;
         }
 
-        const contenedor = $('#entidades-container');
+        const $contenedor = $('#entidades-container');
 
-        $('.vo-subnavbar-link').removeClass('active');
-        $(boton).addClass('active');
+        if (!$contenedor.length) {
+            console.warn('No se encontró #entidades-container.');
+            return;
+        }
+
+        /* Quitamos active tanto de desktop como de mobile. */
+        $('.vo-subnavbar-link, .v-mobile-submenu-link, .vo-subnavbar-sublink').removeClass('active');
+
+
+        if (boton) {
+            $(boton).addClass('active');
+        }
 
         $.ajax({
             url: url,
             type: 'GET',
             dataType: 'html',
-
             beforeSend: function () {
-                contenedor.html(`
+                $contenedor.html(`
                     <div class="text-center py-5">
+
                         <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Cargando...</span>
+                            <span class="visually-hidden">
+                                Cargando...
+                            </span>
                         </div>
 
                         <p class="mt-3 mb-0">
                             Cargando negocios...
                         </p>
+
                     </div>
                 `);
             },
-
             success: function (html) {
-                contenedor.html(html);
+                $contenedor.html(html);
             },
-
             error: function (xhr) {
                 console.error(xhr.responseText);
-
-                contenedor.html(`
+                $contenedor.html(`
                     <div class="alert alert-danger">
                         No fue posible cargar los negocios.
                     </div>
                 `);
             }
         });
+
     }
 
-    items.forEach(item => {
-        const link = item.querySelector('.vo-subnavbar-link');
-        const dropdown = item.querySelector('.vo-subnavbar-dropdown');
+    /* MOBILE: SI VIENE ?rubro=XX DESDE EL MENÚ MOBILE */
+    const params = new URLSearchParams(window.location.search);
+    const rubroId = params.get('rubro');
 
-        if (!link) {
+    /*
+     * No hacemos return si no existe rubroId.
+     * De esta forma el código desktop sigue inicializándose normalmente.
+     */
+    if (rubroId) {
+        const $botonRubro = $(
+            '.vo-subnavbar-link[data-rubro-id="' + rubroId + '"]'
+        ).first();
+
+        if ($botonRubro.length) {
+            const url = $botonRubro.data('url');
+            cargarEntidades(url, $botonRubro[0]);
+        }
+    }
+
+    /* DESKTOP: PREPARAR RUBROS Y DROPDOWNS */
+    $('.vo-subnavbar-item').each(function () {
+        const $item = $(this);
+        const $link = $item.find('.vo-subnavbar-link').first();
+        const $dropdown = $item.find('.vo-subnavbar-dropdown').first();
+
+        if (!$link.length) {
             return;
         }
 
-        /*
-         * La URL AJAX se obtiene antes de mover el dropdown.
-         */
-        const url = link.dataset.url;
+        /* Guardamos la URL antes de mover el dropdown. */
+        const url = $link.data('url');
 
-        if (dropdown) {
-            document.body.appendChild(dropdown);
+        /* Si existe dropdown de subrubros, lo movemos al body. */
+        if ($dropdown.length) {
+            $('body').append($dropdown);
         }
 
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        /* Guardamos la relación entre el link y su dropdown. */
+        $link.data('dropdown', $dropdown.length ? $dropdown : null);
+        $link.data('ajax-url', url);
+    });
 
-            /*
-             * Primera acción:
-             * cargar las entidades relacionadas con el rubro.
-             */
-            cargarEntidades(url, link);
+    /* DESKTOP: CLICK EN RUBRO */
+    $(document).on('click', '.vo-subnavbar-link', function (e) {
 
-            /*
-             * Segunda acción:
-             * mostrar u ocultar los subrubros.
-             */
-            if (!dropdown) {
-                closeDropdown();
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $link = $(this);
+        const url = $link.data('ajax-url') || $link.data('url');
+        const $dropdown = $link.data('dropdown');
+
+        /* Cargar entidades del rubro. */
+        cargarEntidades(url, this);
+
+        /* Si el rubro no tiene subrubros, simplemente cerramos cualquier dropdown abierto. */
+        if (!$dropdown || !$dropdown.length) {
+            closeDropdown();
+            return;
+        }
+
+        const wasOpen = $dropdown.hasClass('is-open');
+
+        closeDropdown();
+
+        /* Si estaba cerrado, lo abrimos. */
+        if (!wasOpen) {
+            const rect = this.getBoundingClientRect();
+
+            $dropdown.css({
+                top: (rect.bottom + 12) + 'px',
+                left: (rect.left + rect.width / 2) + 'px',
+                transform: 'translateX(-50%)'
+            });
+
+            $dropdown.addClass('is-open');
+            currentDropdown = $dropdown[0];
+        }
+    });
+
+    /* DESKTOP: CLICK EN SUBRUBRO */
+    $(document).on('click', '.vo-subnavbar-sublink', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $subrubro = $(this);
+        const url = $subrubro.data('url');
+
+        cargarEntidades(url, this);
+
+        closeDropdown();
+    });
+
+    /* CERRAR DROPDOWN */
+    $(document).on('click', function () {
+        closeDropdown();
+    });
+
+    $(window).on('scroll resize', function () {
+        closeDropdown();
+    });
+
+    /* SLIDER HORIZONTAL DESKTOP */
+    const $slider = $('.vo-subnavbar-inner');
+    if ($slider.length) {
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let moved = false;
+
+        $slider.on('mousedown', function (e) {
+            isDown = true;
+            moved = false;
+            $(this).addClass('is-dragging');
+            startX = e.pageX - $(this).offset().left;
+            scrollLeft = this.scrollLeft;
+        });
+
+        $slider.on('mouseleave', function () {
+            isDown = false;
+            $(this).removeClass('is-dragging');
+        });
+
+        $slider.on('mouseup', function () {
+            isDown = false;
+            $(this).removeClass('is-dragging');
+        });
+
+        $slider.on('mousemove', function (e) {
+            if (!isDown) {
                 return;
             }
 
-            const wasOpen = dropdown.classList.contains('is-open');
+            e.preventDefault();
 
-            closeDropdown();
-
-            if (!wasOpen) {
-                const rect = link.getBoundingClientRect();
-
-                dropdown.style.top = `${rect.bottom + 12}px`;
-                dropdown.style.left = `${rect.left + rect.width / 2}px`;
-                dropdown.style.transform = 'translateX(-50%)';
-
-                dropdown.classList.add('is-open');
-                currentDropdown = dropdown;
+            const x = e.pageX - $(this).offset().left;
+            const walk = x - startX;
+            if (Math.abs(walk) > 5) {
+                moved = true;
             }
+
+            this.scrollLeft = scrollLeft - walk;
         });
 
-        if (dropdown) {
-            dropdown.addEventListener('click', function (e) {
-                const subrubroLink = e.target.closest(
-                    '.vo-subnavbar-sublink'
-                );
-
-                if (!subrubroLink) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                /*
-                 * Carga las entidades relacionadas con:
-                 * - el rubro
-                 * - el subrubro seleccionado
-                 */
-                cargarEntidades(
-                    subrubroLink.dataset.url,
-                    subrubroLink
-                );
-
-                /*
-                 * Cerramos el desplegable.
-                 */
-                closeDropdown();
-            });
-        }
-    });
-
-    document.addEventListener('click', closeDropdown);
-    window.addEventListener('scroll', closeDropdown);
-    window.addEventListener('resize', closeDropdown);
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const slider = document.querySelector('.vo-subnavbar-inner');
-
-    if (!slider) return;
-
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-    let moved = false;
-
-    slider.addEventListener('mousedown', function (e) {
-        isDown = true;
-        moved = false;
-        slider.classList.add('is-dragging');
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mouseleave', function () {
-        isDown = false;
-        slider.classList.remove('is-dragging');
-    });
-
-    slider.addEventListener('mouseup', function () {
-        isDown = false;
-        slider.classList.remove('is-dragging');
-    });
-
-    slider.addEventListener('mousemove', function (e) {
-        if (!isDown) return;
-
-        e.preventDefault();
-
-        const x = e.pageX - slider.offsetLeft;
-        const walk = x - startX;
-
-        if (Math.abs(walk) > 5) {
-            moved = true;
-        }
-
-        slider.scrollLeft = scrollLeft - walk;
-    });
-
-    slider.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', function (e) {
+        /*
+         * Evita disparar click cuando
+         * realmente el usuario estaba arrastrando.
+         */
+        $slider.on('click', 'a', function (e) {
             if (moved) {
                 e.preventDefault();
-                e.stopPropagation();
+                e.stopImmediatePropagation();
+                moved = false;
             }
         });
-    });
+    }
+
 });
 </script>
 

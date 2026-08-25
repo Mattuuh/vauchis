@@ -1,3 +1,94 @@
+@php
+    /*
+     |--------------------------------------------------------------------------
+     | Variables con valores de respaldo
+     |--------------------------------------------------------------------------
+     | Podés enviar estas variables desde el controlador o adaptar los nombres
+     | a las propiedades reales de tus modelos.
+     */
+    // dd(session());
+    $voucher_id = data_get($voucher ?? null, 'vou_id', data_get($voucher ?? null, 'vou_id', '00056970'));
+    $mca_id = data_get($valores ?? null, 'mca_id', data_get($valores ?? null, 'mca_id', '00056970'));
+    $vmv_id = data_get($valores ?? null, 'vmv_id', data_get($valores ?? null, 'vmv_id', '00056970'));
+
+    $montoVoucher = data_get($valores ?? null, 'vmv_monto_fijo', data_get($voucher ?? null, 'vou_monto_fijo', 175000));
+    $codigoVoucher = data_get($voucher ?? null, 'vou_codigo', data_get($voucher ?? null, 'vou_id', '00056970'));
+    $nombreVoucher = data_get($voucher ?? null, 'vou_nombre', 'Voucher Cumbres');
+    $nombreEntidad = data_get($entidad ?? null, 'ent_nombre_fantasia', data_get($entidad ?? null, 'ent_nombre', 'Cumbres'));
+    $descripcionEntidad = data_get($entidad ?? null, 'ent_descripcion_corta', 'Parte de: Alto Noa Shopping');
+
+    $nombreDe = old('de', session('voucher.de', request('de', 'Sole m., Gabi T. & Santi')));
+    $nombrePara = old('para', session('voucher.para', request('para', 'Flor')));
+    $mensajeVoucher = old('mensaje', session('voucher.mensaje', request('mensaje', 'Querida Flor, espero que pases un cumple hermoso. Te queremos mucho.')));
+
+    // session([
+    //     'voucher' => [
+    //         'vou_id' => $voucher_id,
+    //         'mca_id' => $mca_id,
+    //         'vmv_id' => $vmv_id,
+    //         'monto' => $montoVoucher,
+    //         'de' => $nombreDe,
+    //         'para' => $nombrePara,
+    //         'mensaje' => $mensajeVoucher,
+    //     ]
+    // ]);
+
+
+    $fecha_actual_raw = new DateTime();
+    $fecha_actual = $fecha_actual_raw->format('d/m/y');
+    $fechaVencimientoRaw = new DateTime();
+    $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
+    $fechaVencimientoRaw->modify("+$dias_vigencia days");
+    try {
+        $fechaVencimiento = $fechaVencimientoRaw
+            ? $fechaVencimientoRaw->format('d/m/y')
+            : '01/01/99';
+    } catch (\Throwable $e) {
+        $fechaVencimiento = '01/01/99';
+    }
+
+    $imagenPrincipal = isset($voucher) && isset($voucher->imagenes)
+        ? $voucher->imagenes->first()
+        : null;
+
+    $bannerEntidadRelacion = data_get($entidad ?? null, 'imagenPrincipal');
+    $imagenVoucher = data_get($bannerEntidadRelacion, 'ef_img_path')
+        ? asset('storage/' . data_get($bannerEntidadRelacion, 'ef_img_path'))
+        : asset('images/default-voucher.png');
+    $imagenVoucher_raw = data_get($bannerEntidadRelacion, 'ef_img_path');
+
+    $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');
+    $logoEntidad = data_get($logoEntidadRelacion, 'ef_img_path')
+        ? asset('storage/' . data_get($logoEntidadRelacion, 'ef_img_path'))
+        : null;
+    $logoEntidad_raw = data_get($logoEntidadRelacion, 'ef_img_path');
+
+    $qrImagen = $qrImagen ?? data_get($voucher ?? null, 'qr_url');
+
+    /*
+    |--------------------------------------------------------------------------
+    | IMÁGENES LOCALES
+    |--------------------------------------------------------------------------
+    |
+    | Para imágenes almacenadas dentro de /public usamos file://.
+    | Esto evita depender de que APP_URL sea accesible desde Chromium.
+    |
+    */
+
+    $pdfImage = function ($path) {
+        return 'file://' . str_replace('\\', '/', public_path($path));
+    };
+
+    $logoVauchis = imagenBase64(public_path('images/logo-2.png'));
+    $logoEntidad = imagenBase64(storage_path('app/public/' . $logoEntidad_raw));
+    $imagenVoucher = imagenBase64(storage_path('app/public/' . $imagenVoucher_raw));
+    $wpplogo = imagenBase64(public_path('images/icono-wpp.png'));
+    $ilustracion_1 = imagenBase64(public_path('images/ilustracion_Nro1.svg'));
+    $ilustracion_2 = imagenBase64(public_path('images/ilustracion_Nro2.svg'));
+    $ilustracion_3 = imagenBase64(public_path('images/ilustracion_Nro3.svg'));
+    $regalitos = imagenBase64(public_path('images/Regalitos.svg'));
+@endphp
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +102,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .vp-stage {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .vp-voucher {
+            width: 100%;
+            margin: 0;
+        }
+
         :root {
             --vp-green: #49b889;
             --vp-green-dark: #36a779;
@@ -35,6 +155,11 @@
             background: var(--vp-page);
             color: var(--vp-text);
             font-family: Montserrat, sans-serif;
+        }
+
+        .v-footer__logo{
+            height: 42px;
+            margin-bottom: 20px;
         }
 
         .vp-mobile-header {
@@ -159,7 +284,7 @@
             display: grid;
             grid-template-columns: 1fr 1.08fr;
             min-height: 245px;
-            max-height: 50vh;
+            /* max-height: 50vh; */
             overflow: hidden;
             border-radius: 0 0 13px 13px;
             background: var(--vp-cream);
@@ -232,6 +357,24 @@
             margin: 16px 0 0;
             font-size: 53px;
             font-weight: 700;
+            line-height: 1;
+            letter-spacing: -.04em;
+            text-align: center;
+        }
+
+        .vp-title {
+            margin: 16px 0 0;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -.04em;
+            text-align: center;
+        }
+
+        .vp-subtitle {
+            margin: 16px 0 0;
+            font-size: 16px;
+            font-weight: 400;
             line-height: 1;
             letter-spacing: -.04em;
             text-align: center;
@@ -725,441 +868,6 @@
             background: var(--vp-action);
             color: #fff;
         }
-
-        @media (max-width: 991.98px) {
-            body {
-                background: #fff;
-            }
-
-            .vp-desktop-navbar,
-            .vp-page-title {
-                display: none !important;
-            }
-
-            .vp-page {
-                padding: 0;
-                background: #fff;
-            }
-
-            .vp-mobile-header {
-                position: sticky;
-                top: 0;
-                z-index: 100;
-                display: grid;
-                grid-template-columns: 42px 1fr 42px;
-                align-items: center;
-                height: 82px;
-                padding: 0 12px;
-                background: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,.22);
-            }
-
-            .vp-mobile-header h1 {
-                margin: 0;
-                font-size: 16px;
-                font-weight: 700;
-                text-align: center;
-            }
-
-            .vp-shell {
-                width: 100%;
-                padding: 0;
-            }
-
-            .vp-stage {
-                width: 100%;
-                max-height: none;
-                overflow: visible;
-                margin: 0;
-                border-radius: 0;
-                box-shadow: none;
-            }
-
-            .vp-voucher {
-                border-radius: 0;
-            }
-
-            .vp-green-section {
-                padding: 46px 14px 34px;
-            }
-
-            .vp-voucher-topline {
-                margin: 0 10px 18px;
-            }
-
-            .vp-brand {
-                font-size: 28px;
-            }
-
-            .vp-gift-card {
-                display: flex;
-                flex-direction: column;
-                border-radius: 0;
-                box-shadow: none;
-                background: transparent;
-            }
-
-            .vp-message-panel {
-                min-height: 208px;
-                padding: 26px 28px 24px;
-                border-right: 0;
-                border-bottom: 3px dashed #111;
-                border-radius: 0 0 15px 15px;
-            }
-
-            .vp-hand-value {
-                font-size: 21px;
-            }
-
-            .vp-hand-message {
-                margin-top: 25px;
-                font-size: 14px;
-            }
-
-            .vp-value-panel {
-                overflow: hidden;
-                border-radius: 15px;
-            }
-
-            .vp-value-copy {
-                flex-basis: auto;
-                min-height: 158px;
-                padding: 35px 28px 20px;
-            }
-
-            .vp-value-amount {
-                margin-top: 25px;
-                font-size: 49px;
-            }
-
-            .vp-value-image {
-                height: 185px;
-            }
-
-            .vp-commerce-row {
-                display: block;
-                padding: 34px 18px 20px;
-            }
-
-            .vp-commerce {
-                margin-bottom: 32px;
-            }
-
-            .vp-commerce-logo {
-                flex-basis: 70px;
-                width: 70px;
-                height: 70px;
-            }
-
-            .vp-commerce-name {
-                font-size: 18px;
-            }
-
-            .vp-whatsapp {
-                width: 100%;
-                min-width: 0;
-                height: 55px;
-                font-size: 14px;
-            }
-
-            .vp-addresses {
-                width: 100%;
-                padding: 0 20px;
-            }
-
-            .vp-addresses li {
-                font-size: 11px;
-            }
-
-            .vp-blue-section {
-                display: block;
-                min-height: 0;
-                padding: 42px 34px 0;
-            }
-
-            .vp-how-title {
-                font-size: 25px;
-            }
-
-            .vp-how-title strong {
-                font-size: 27px;
-            }
-
-            .vp-steps li {
-                font-size: 11px;
-                margin-bottom: 9px;
-            }
-
-            .vp-conditions {
-                margin-top: 48px;
-            }
-
-            .vp-conditions h3 {
-                font-size: 24px;
-                text-transform: none;
-            }
-
-            .vp-conditions ul {
-                font-size: 10px;
-                line-height: 1.65;
-            }
-
-            .vp-validity {
-                position: relative;
-                left: -34px;
-                width: calc(100% + 68px);
-                height: 52px;
-                margin: 45px 0 0;
-                border-radius: 0;
-                order: 3;
-            }
-
-            .vp-conditions {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .vp-conditions h3 { order: 1; }
-            .vp-conditions ul { order: 2; }
-            .vp-conditions .vp-validity { order: 3; }
-
-            .vp-white-section {
-                width: 100%;
-                min-height: 350px;
-
-                padding: 20px 15px 15px;
-
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                background: #fff;
-            }
-
-            /* =========================
-            TARJETA QR
-            ========================= */
-
-            .vp-qr-column {
-                width: 100%;
-
-                display: flex;
-                justify-content: center;
-            }
-
-            .vp-qr-card {
-                width: 110px;
-                min-height: 165px;
-
-                padding: 10px 10px 12px;
-
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-
-                gap: 6px;
-
-                background: #fff;
-
-                box-shadow:
-                    0 2px 2px rgba(0, 0, 0, .18),
-                    0 1px 2px rgba(0, 0, 0, .08);
-            }
-
-            .vp-qr {
-                width: 65px;
-                height: 65px;
-
-                margin: 0 auto;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .vp-qr img {
-                width: 65px;
-                height: 65px;
-
-                object-fit: contain;
-            }
-
-            .vp-qr-info {
-                width: 100%;
-
-                display: flex;
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                font-family: Montserrat, Arial, sans-serif;
-
-                color: #111;
-
-                line-height: 1.05;
-            }
-
-            .vp-voucher-code,
-            .vp-qr-info > span:first-child {
-                margin-bottom: 5px;
-
-                font-size: 9px;
-                font-weight: 600;
-            }
-
-            .vp-qr-info strong {
-                margin-bottom: 1px;
-
-                font-size: 10px;
-                line-height: 1.05;
-
-                font-weight: 700;
-
-                text-transform: uppercase;
-            }
-
-            .vp-qr-info > span:last-child {
-                font-size: 10px;
-                line-height: 1.05;
-
-                font-weight: 400;
-
-                text-transform: uppercase;
-            }
-
-
-            /* =========================
-            COMUNIDAD
-            ========================= */
-
-            .vp-community {
-                width: 100%;
-
-                margin-top: 22px;
-
-                display: grid;
-
-                grid-template-columns: 1fr 85px;
-                grid-template-areas:
-                    "text gifts"
-                    "link link";
-
-                align-items: center;
-
-                column-gap: 10px;
-                row-gap: 14px;
-            }
-
-            .vp-community-text {
-                grid-area: text;
-
-                justify-self: start;
-
-                display: flex;
-                flex-direction: column;
-
-                font-family: Montserrat, Arial, sans-serif;
-
-                font-size: 27px;
-                line-height: 1.08;
-
-                color: #0768f7;
-
-                text-align: left;
-            }
-
-            .vp-community-text span,
-            .vp-community-text strong {
-                display: block;
-            }
-
-            .vp-community-text strong {
-                font-weight: 700;
-                font-style: italic;
-            }
-
-
-            /* =========================
-            REGALITOS
-            ========================= */
-
-            .vp-gifts-mark {
-                grid-area: gifts;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .vp-gifts-mark img {
-                width: 98px;
-                height: auto;
-
-                display: block;
-            }
-
-
-            /* =========================
-            BOTÓN
-            ========================= */
-
-            .vp-community-link {
-                grid-area: link;
-
-                justify-self: center;
-
-                width: 102px;
-                height: 24px;
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                padding: 0;
-
-                border: 1px solid #1670ff;
-                border-radius: 999px;
-
-                color: #1670ff;
-
-                font-family: Montserrat, Arial, sans-serif;
-
-                font-size: 10px;
-                font-weight: 600;
-
-                text-decoration: none;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .vp-value-amount {
-                font-size: 44px;
-            }
-
-            .vp-recommendation {
-                right: 8px;
-                min-width: 93px;
-            }
-
-            .vp-commerce-description {
-                font-size: 11px;
-            }
-        }
-
-    @media (max-width: 768px) {
-        .v-mobile-navbar {
-            display: none;
-        }
-    }
-
-    .vp-bottom-bar {
-        transition: transform 0.3s ease;
-        transform: translateY(0);
-    }
-
-    .vp-bottom-bar.is-hidden {
-        transform: translateY(100%);
-    }
     </style>
 
     <style>
@@ -1170,187 +878,138 @@
         */
 
         @page {
-            size: A4;
+            size: 768px 1024px;
             margin: 0;
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
         }
 
         html,
         body {
-            width: 100%;
+            width: 768px !important;
+            height: 1024px !important;
+
             margin: 0 !important;
             padding: 0 !important;
 
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
+            overflow: hidden !important;
 
-        body {
             background: #ffffff;
-        }
 
-        /*
-         * Eliminamos cualquier comportamiento pensado para scroll
-         * o posicionamiento en pantalla.
-         */
-        .vp-stage {
-            width: 100% !important;
-            min-height: auto !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: visible !important;
-        }
-
-        .vp-voucher {
-            width: 100% !important;
-            max-width: none !important;
-            margin: 0 !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            overflow: visible !important;
-        }
-
-        .vp-green-section,
-        .vp-blue-section,
-        .vp-white-section {
-            position: relative;
-            width: 100%;
-        }
-
-        /*
-         * Evita que Chromium modifique los colores.
-         */
-        .vp-green-section,
-        .vp-blue-section,
-        .vp-white-section,
-        .vp-gift-card,
-        .vp-message-panel,
-        .vp-value-panel,
-        .vp-qr-card {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        /*
-         * Evitamos cortes internos incómodos.
-         */
-        .vp-gift-card,
-        .vp-commerce-row,
-        .vp-how,
-        .vp-conditions,
-        .vp-qr-card,
-        .vp-community {
-            break-inside: avoid;
-            page-break-inside: avoid;
+        * {
+            box-sizing: border-box;
         }
 
-        /*
-         * Elementos exclusivamente de la web que no queremos
-         * imprimir pueden llevar la clase .no-pdf.
-         */
-        .no-pdf {
-            display: none !important;
-        }
 
-        img {
-            max-width: 100%;
-        }
+.vp-stage {
+    width: 768px !important;
+    height: 1024px !important;
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: block !important;
+    overflow: hidden !important;
+}
+
+.vp-voucher {
+    width: 768px !important;
+    height: 1024px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: hidden !important;
+
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+
+    break-before: avoid !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+}
+
+
+/* =====================================================
+   SECCION VERDE
+   ===================================================== */
+
+.vp-green-section {
+    width: 100% !important;
+    height: 486px !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding:
+        35px
+        44px
+        24px !important;
+
+    overflow: hidden !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   SECCION AZUL
+   ===================================================== */
+
+.vp-blue-section {
+    width: 100% !important;
+
+    height: 247px !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding:
+        32px
+        68px !important;
+
+    overflow: hidden !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+
+    position: relative;
+}
+
+
+/* =====================================================
+   SECCION BLANCA
+   ===================================================== */
+
+.vp-white-section {
+    width: 100% !important;
+
+    height: 291px !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding:
+        27px
+        70px
+        30px !important;
+
+    overflow: hidden !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
     </style>
 
 </head>
 
 <body>
-
-@php
-    /*
-     |--------------------------------------------------------------------------
-     | Variables con valores de respaldo
-     |--------------------------------------------------------------------------
-     | Podés enviar estas variables desde el controlador o adaptar los nombres
-     | a las propiedades reales de tus modelos.
-     */
-    // dd(session());
-    $voucher_id = data_get($voucher ?? null, 'vou_id', data_get($voucher ?? null, 'vou_id', '00056970'));
-    $mca_id = data_get($valores ?? null, 'mca_id', data_get($valores ?? null, 'mca_id', '00056970'));
-    $vmv_id = data_get($valores ?? null, 'vmv_id', data_get($valores ?? null, 'vmv_id', '00056970'));
-
-    $montoVoucher = data_get($valores ?? null, 'vmv_monto_fijo', data_get($voucher ?? null, 'vou_monto_fijo', 175000));
-    $codigoVoucher = data_get($voucher ?? null, 'vou_codigo', data_get($voucher ?? null, 'vou_id', '00056970'));
-    $nombreVoucher = data_get($voucher ?? null, 'vou_nombre', 'Voucher Cumbres');
-    $nombreEntidad = data_get($entidad ?? null, 'ent_nombre_fantasia', data_get($entidad ?? null, 'ent_nombre', 'Cumbres'));
-    $descripcionEntidad = data_get($entidad ?? null, 'ent_descripcion_corta', 'Parte de: Alto Noa Shopping');
-
-    $nombreDe = old('de', session('voucher.de', request('de', 'Sole m., Gabi T. & Santi')));
-    $nombrePara = old('para', session('voucher.para', request('para', 'Flor')));
-    $mensajeVoucher = old('mensaje', session('voucher.mensaje', request('mensaje', 'Querida Flor, espero que pases un cumple hermoso. Te queremos mucho.')));
-
-    // session([
-    //     'voucher' => [
-    //         'vou_id' => $voucher_id,
-    //         'mca_id' => $mca_id,
-    //         'vmv_id' => $vmv_id,
-    //         'monto' => $montoVoucher,
-    //         'de' => $nombreDe,
-    //         'para' => $nombrePara,
-    //         'mensaje' => $mensajeVoucher,
-    //     ]
-    // ]);
-
-
-    $fecha_actual_raw = new DateTime();
-    $fecha_actual = $fecha_actual_raw->format('d/m/y');
-    $fechaVencimientoRaw = new DateTime();
-    $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
-    $fechaVencimientoRaw->modify("+$dias_vigencia days");
-    try {
-        $fechaVencimiento = $fechaVencimientoRaw
-            ? $fechaVencimientoRaw->format('d/m/y')
-            : '01/01/99';
-    } catch (\Throwable $e) {
-        $fechaVencimiento = '01/01/99';
-    }
-
-    $imagenPrincipal = isset($voucher) && isset($voucher->imagenes)
-        ? $voucher->imagenes->first()
-        : null;
-
-    $bannerEntidadRelacion = data_get($entidad ?? null, 'imagenPrincipal');
-    $imagenVoucher = data_get($bannerEntidadRelacion, 'ef_img_path')
-        ? asset('storage/' . data_get($bannerEntidadRelacion, 'ef_img_path'))
-        : asset('images/default-voucher.png');
-
-    $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');
-    $logoEntidad = data_get($logoEntidadRelacion, 'ef_img_path')
-        ? asset('storage/' . data_get($logoEntidadRelacion, 'ef_img_path'))
-        : null;
-
-    $qrImagen = $qrImagen ?? data_get($voucher ?? null, 'qr_url');
-
-    /*
-    |--------------------------------------------------------------------------
-    | IMÁGENES LOCALES
-    |--------------------------------------------------------------------------
-    |
-    | Para imágenes almacenadas dentro de /public usamos file://.
-    | Esto evita depender de que APP_URL sea accesible desde Chromium.
-    |
-    */
-
-    $pdfImage = function ($path) {
-        return 'file://' . str_replace('\\', '/', public_path($path));
-    };
-@endphp
-
 
 <div class="vp-stage">
     <article class="vp-voucher">
@@ -1358,7 +1017,8 @@
             <div class="vp-voucher-topline">
                 <span class="vp-code">{{ str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) }}</span>
                 <span class="vp-brand">
-                    <img src="{{ asset('images/logo-2.png') }}" alt="Vauchis" class="v-footer__logo">
+                    {{-- <img src="{{ asset('images/logo-2.png') }}" alt="Vauchis" class="v-footer__logo"> --}}
+                    <img src="{{ $logoVauchis }}" alt="Vauchis" class="v-footer__logo">
                 </span>
             </div>
 
@@ -1404,7 +1064,8 @@
                 </div>
 
                 <a href="{{ data_get($entidad ?? null, 'ent_whatsapp') ? 'https://wa.me/' . preg_replace('/\D+/', '', data_get($entidad, 'ent_whatsapp')) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
-                    <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp">
+                    {{-- <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp"> --}}
+                    <img src="{{ $wpplogo }}" alt="Whatsapp">
                     Contacta al vendedor
                 </a>
             </div>
@@ -1440,9 +1101,12 @@
             <div class="vp-how">
                 <h2 class="vp-how-title">Cómo canjear <strong>tu Vauchis</strong></h2>
                 <ol class="vp-steps">
-                    <li><img src="{{ asset('images/ilustracion_Nro1.svg') }}" alt="1" class=""><span>Presentá tu voucher al vendedor</span></li>
-                    <li><img src="{{ asset('images/ilustracion_Nro2.svg') }}" alt="2" class=""><span>{{ $modalidad->mod_texto_canje ?? 'Elegí el producto que más te guste' }}</span></li>
-                    <li><img src="{{ asset('images/ilustracion_Nro3.svg') }}" alt="3" class=""><strong>¡Listo, ya es tuyo!</strong></li>
+                    {{-- <li><img src="{{ asset('images/ilustracion_Nro1.svg') }}" alt="1" class=""><span>Presentá tu voucher al vendedor</span></li> --}}
+                    {{-- <li><img src="{{ asset('images/ilustracion_Nro2.svg') }}" alt="2" class=""><span>{{ $modalidad->mod_texto_canje ?? 'Elegí el producto que más te guste' }}</span></li> --}}
+                    {{-- <li><img src="{{ asset('images/ilustracion_Nro3.svg') }}" alt="3" class=""><strong>¡Listo, ya es tuyo!</strong></li> --}}
+                    <li><img src="{{ $ilustracion_1 }}" alt="1" class=""><span>Presentá tu voucher al vendedor</span></li>
+                    <li><img src="{{ $ilustracion_2 }}" alt="2" class=""><span>{{ $modalidad->mod_texto_canje ?? 'Elegí el producto que más te guste' }}</span></li>
+                    <li><img src="{{ $ilustracion_3 }}" alt="3" class=""><strong>¡Listo, ya es tuyo!</strong></li>
                 </ol>
             </div>
 
@@ -1469,7 +1133,7 @@
 
                     <div class="vp-qr">
                         @if($qrImagen)
-                            <img src="{{ $qrImagen }}" alt="Código QR del voucher">
+                            {{-- <img src="{{ $qrImagen }}" alt="Código QR del voucher"> --}}
                         @else
                             <div class="vp-qr-placeholder" aria-label="Código QR de ejemplo">
                                 @for($i = 0; $i < 49; $i++)
@@ -1518,10 +1182,8 @@
                 </a>
 
                 <div class="vp-gifts-mark" aria-hidden="true">
-                    <img
-                        src="{{ asset('images/Regalitos.svg') }}"
-                        alt="Vauchis"
-                    >
+                    {{-- <img src="{{ asset('images/Regalitos.svg') }}" alt="Vauchis"> --}}
+                    <img src="{{ $regalitos }}" alt="Vauchis">
                 </div>
 
             </div>

@@ -145,40 +145,54 @@
     });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             const navbar = document.getElementById('vNavbar');
 
-            // function toggleNavbar() {
-            //     if (window.scrollY > 40) {
-            //         navbar.classList.add('is-scrolled');
-            //     } else {
-            //         navbar.classList.remove('is-scrolled');
-            //     }
-            // }
+            function toggleNavbar() {
+                if (window.scrollY > 40) {
+                    navbar.classList.add('is-scrolled');
+                } else {
+                    navbar.classList.remove('is-scrolled');
+                }
+            }
 
-            // toggleNavbar();
-            // window.addEventListener('scroll', toggleNavbar);
+            toggleNavbar();
+            window.addEventListener('scroll', toggleNavbar);
 
-            // @if(request()->routeIs('home'))
-            //     function toggleNavbar() {
-            //         if (window.scrollY > 40) {
-            //             navbar.classList.add('is-scrolled');
-            //         } else {
-            //             navbar.classList.remove('is-scrolled');
-            //         }
-            //     }
+            @if(request()->routeIs('home'))
+                function toggleNavbar() {
+                    if (window.scrollY > 40) {
+                        navbar.classList.add('is-scrolled');
+                    } else {
+                        navbar.classList.remove('is-scrolled');
+                    }
+                }
 
-            //     toggleNavbar();
-            //     window.addEventListener('scroll', toggleNavbar);
-            // @else
-            //     @if (session('auth.tu_id')==1)
+                toggleNavbar();
+                window.addEventListener('scroll', toggleNavbar);
+            @else
+                @if (session('auth.tu_id')==1)
                     
-            //     @else
-            //         navbar.classList.add('is-scrolled');
-            //     @endif
-            // @endif
+                @else
+                    navbar.classList.add('is-scrolled');
+                @endif
+            @endif
         });
+    </script> --}}
+
+    <script>
+    $(document).ready(function () {
+        $(document).on('click', '.v-mobile-submenu-link', function (e) {
+            e.preventDefault();
+
+            const categoria = $(this).data('categoria');
+            const rubro = $(this).data('rubro-id');
+
+            window.location.href = `/categorias/${categoria}?rubro=${rubro}`;
+            // console.log(`/categorias/${categoria}?rubro=${rubro}`)
+        });
+    });
     </script>
 
     @stack('scripts')

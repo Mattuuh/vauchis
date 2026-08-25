@@ -114,6 +114,7 @@ class CategoriaController extends Controller
         $rubros = Rubro::with('subrubros')
             ->where('cv_id', $id)
             ->where('rub_estado', 1)
+            ->where('rub_publico', 1)
             // ->orderBy('rub_nombre')
             ->orderBy('rub_orden', 'asc')
             ->get();

@@ -25,7 +25,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Spatie\Browsershot\Browsershot;
 
 class VoucherController extends Controller
@@ -1455,6 +1457,16 @@ class VoucherController extends Controller
         ]);
     }
 
+    public function tipos_modalidades(Request $request)
+    {
+        $modalidad = Modalidad::findOrFail($request->mod_id);
+        $tipo_modalidad = TipoModalidad::findOrFail($modalidad->tipo_mod_id);
+
+        return response()->json([
+            'body' => $tipo_modalidad->tipo_mod_condiciones
+        ]);
+    }
+
     public function precompra_voucher($vou_id, $vmv_id, Request $request)
     {
         // $voucher = Voucher::with('entidad')
@@ -1494,16 +1506,6 @@ class VoucherController extends Controller
         }
 
         return view('precompra', compact('voucher','entidad','imagenes','valores','modalidad'));
-    }
-
-    public function tipos_modalidades(Request $request)
-    {
-        $modalidad = Modalidad::findOrFail($request->mod_id);
-        $tipo_modalidad = TipoModalidad::findOrFail($modalidad->tipo_mod_id);
-
-        return response()->json([
-            'body' => $tipo_modalidad->tipo_mod_condiciones
-        ]);
     }
 
     public function vista_previa_voucher($vou_id, $vmv_id, Request $request)
@@ -1554,7 +1556,23 @@ class VoucherController extends Controller
             ]
         ]);
 
-        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'));
+        // $url = route('voucher.validar', [
+        //     'token' => $detalle->vd_token
+        // ]);
+
+        // $token = Str::random(64);
+        // $qrImagen = QrCode::format('png')
+        //     ->size(300)
+        //     ->margin(1)
+        //     ->generate($token);
+        //     // ->generate($token, storage_path('app/public/qrs/voucher_'.$vou_id.'.png'));
+        //     // ->generate($url);
+        // // $qrImagen='';
+
+        $qrImagen = QrCode::size(250)
+            ->generate('VAUCHIS');
+
+        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
     }
 
     public function compra_voucher($vou_id, $vmv_id, Request $request)
@@ -1623,6 +1641,47 @@ class VoucherController extends Controller
         if (!$voucher) {
             abort(404);
         }
+        
+        $fecha_vto_raw = new DateTime();
+        $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
+        $fecha_vto_raw->modify("+$dias_vigencia days");
+        
+        $detalle = VoucherDetalle::where('vou_id', $vou_id)
+            ->where('mca_id', $valores->mca_id)
+            ->where('vd_estado', 1)
+            ->whereNull('cli_id') // suponiendo que NULL significa disponible
+            ->where('vd_estado2', 'PE') // opcional: estado "Disponible"
+            ->first();
+
+        if (!$detalle) {
+            throw new \Exception('No hay vouchers disponibles para esta modalidad.');
+        }
+
+        $detalle->update([
+            'cli_id' => session('auth.usuario_id') ?? null,
+
+            'vd_cliente_nombre' => $request->nombre,
+            'vd_cliente_apellido' => $request->apellido,
+            'vd_cliente_tipo_doc_id' => $request->tipo_doc_id,
+            'vd_cliente_documento' => $request->documento,
+            'vd_cliente_email' => $request->email,
+            'vd_cliente_telefono' => $request->telefono,
+
+            'vd_variante_nombre_de' => session('voucher.de'),
+            'vd_variante_nombre_para' => session('voucher.para'),
+            'vd_variante_mensaje' => session('voucher.mensaje'),
+
+            'vd_fecha_compra' => now(),
+            'vd_fecha_vencimiento' => $fecha_vto_raw->format('Y-m-d'),
+
+            'vd_monto_total' => session('voucher.monto') ?? 0,
+            'vd_datos_json' => [],
+            'vd_estado2' => 'PA',
+            'vd_estado3' => 'PE',
+
+            'vd_usu_mod' => session('auth.usuario_id') ?? null,
+            'vd_fecha_mod' => now(),
+        ]);
 
         return view('postcompra', compact('voucher','entidad','imagenes','valores'));
     }
@@ -1673,29 +1732,6 @@ class VoucherController extends Controller
     {
         // $voucher = Voucher::findOrFail($id);
 
-        // $data = [
-        //     'voucher' => $voucher,
-
-        //     // Ejemplo:
-        //     // 'entidad' => $entidad,
-        //     // 'codigoVoucher' => $codigoVoucher,
-        //     // 'nombrePara' => $nombrePara,
-        //     // 'nombreDe' => $nombreDe,
-        //     // 'mensajeVoucher' => $mensajeVoucher,
-        //     // 'montoVoucher' => $montoVoucher,
-        //     // 'imagenVoucher' => $imagenVoucher,
-        //     // 'logoEntidad' => $logoEntidad,
-        //     // 'nombreEntidad' => $nombreEntidad,
-        //     // 'descripcionEntidad' => $descripcionEntidad,
-        //     // 'sucursales' => $sucursales,
-        //     // 'qrImagen' => $qrImagen,
-        //     // 'modalidad' => $modalidad,
-        //     // 'fecha_actual' => $fecha_actual,
-        //     // 'fechaVencimiento' => $fechaVencimiento,
-        // ];
-
-        // $html = view('voucher_pdf', $data)->render();
-
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
@@ -1729,15 +1765,36 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'))->render();
+        // $data = [
+        //     'voucher'          => $voucher,
+        //     'entidad'          => $voucher->entidad,
+        //     'modalidad'        => $voucher->modalidad,
+        //     'codigoVoucher'    => $voucher->vou_codigo,
+        //     'nombrePara'       => $voucher->vou_para,
+        //     'nombreDe'         => $voucher->vou_de,
+        //     'mensajeVoucher'   => $voucher->vou_mensaje,
+        //     'montoVoucher'     => $voucher->vou_monto,
+        //     'nombreVoucher'    => $voucher->vou_nombre,
+        //     'nombreEntidad'    => $voucher->entidad->ent_nombre_fantasia,
+        //     'descripcionEntidad' => $voucher->entidad->ent_descripcion,
+        //     'logoEntidad'      => null,
+        //     'imagenVoucher'    => null,
+        //     'qrImagen'         => null,
+        //     'sucursales'       => collect(),
+        //     'fecha_actual'     => now()->format('d/m/Y'),
+        //     'fechaVencimiento' => optional($voucher->vou_fecha_hasta)->format('d/m/Y'),
+        //     'influencer'       => 0,
+        // ];
 
+        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'))->render();
+        // $html = view('vouchers.pdf', $data)->render();
 
         $pdf = Browsershot::html($html)
-            // ->timeout(240)
-            ->disableJavascript()
             ->showBackground()
-            ->format('A4')
+            ->paperSize(8, 10.6666667, 'in')
             ->margins(0, 0, 0, 0)
+            ->deviceScaleFactor(1)
+            ->timeout(120)
             ->pdf();
 
         return response($pdf)
@@ -1746,42 +1803,6 @@ class VoucherController extends Controller
                 'Content-Disposition',
                 'attachment; filename="voucher-' . $vou_id . '.pdf"'
             );
-        
-        // Acá va exactamente la misma lógica con la que
-        // actualmente preparás tu vista previa.
 
-        $html = view('vouchers.pdf', [
-            'entidad' => $entidad,
-            'codigoVoucher' => $codigoVoucher,
-            'nombrePara' => $nombrePara,
-            'nombreDe' => $nombreDe,
-            'mensajeVoucher' => $mensajeVoucher,
-            'montoVoucher' => $montoVoucher,
-            'imagenVoucher' => $imagenVoucher,
-            'nombreVoucher' => $nombreVoucher,
-            'logoEntidad' => $logoEntidad,
-            'nombreEntidad' => $nombreEntidad,
-            'descripcionEntidad' => $descripcionEntidad,
-            'sucursales' => $sucursales,
-            'qrImagen' => $qrImagen,
-            'modalidad' => $modalidad,
-            'fecha_actual' => $fecha_actual,
-            'fechaVencimiento' => $fechaVencimiento,
-        ])->render();
-
-        $pdf = Browsershot::html($html)
-            ->showBackground()
-            ->allowFileAccessFromFiles()
-            ->format('A4')
-            ->margins(0, 0, 0, 0)
-            ->pdf();
-
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' =>
-                'attachment; filename="voucher-' .
-                str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) .
-                '.pdf"',
-        ]);
     }
 }

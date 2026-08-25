@@ -68,3 +68,15 @@ function sanear_string($string,$case='L'){
 	else return strtolower($string);
 
 }
+
+function imagenBase64(?string $path): ?string
+{
+    if (!$path || !file_exists($path)) {
+        return null;
+    }
+
+    $mime = mime_content_type($path);
+    $contenido = file_get_contents($path);
+
+    return 'data:' . $mime . ';base64,' . base64_encode($contenido);
+}

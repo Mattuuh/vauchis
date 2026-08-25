@@ -15,12 +15,22 @@ class VoucherDetalle extends Model
         'vou_id',
         'ent_id',
         'cli_id',
+        'vd_cliente_nombre',
+        'vd_cliente_apellido',
+        'vd_cliente_tipo_doc_id',
+        'vd_cliente_documento',
+        'vd_cliente_email',
+        'vd_cliente_telefono',
         'vd_codigo_interno',
         'vd_codigo',
         'vd_secuencia',
         'vd_variante_nombre_de',
+        'vd_variante_nombre_para',
         'vd_variante_mensaje',
         'vd_monto_total',
+        'vd_fecha_compra',
+        'vd_fecha_vencimiento',
+        'vd_datos_json',
         'vd_estado',
         'vd_estado2',
         'vd_estado3',
@@ -31,4 +41,17 @@ class VoucherDetalle extends Model
         'vd_fecha_baja',
         'vd_usu_baja',
     ];
+
+    protected $casts = [
+        'vd_fecha_compra' => 'datetime',
+        'vd_fecha_vencimiento' => 'datetime',
+        'vd_fecha_alta' => 'datetime',
+        'vd_fecha_mod' => 'datetime',
+        'vd_fecha_baja' => 'datetime',
+    ];
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class, 'vou_id', 'vou_id');
+    }
 }

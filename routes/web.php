@@ -152,6 +152,10 @@ Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class,
 Route::get('/voucher/{voucher}/{modalidadCampo}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
 
 
+use App\Http\Controllers\UsuarioController;
+Route::get('/usuarios/vouchers/{id}', [UsuarioController::class, 'vouchers'])->name('usuarios.vouchers');
+
+
 Route::middleware(['administrador'])
     ->prefix('admin')
     ->name('admin.')

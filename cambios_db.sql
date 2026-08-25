@@ -519,3 +519,14 @@ ALTER TABLE `entidades` ADD `ent_descripcion_publica` VARCHAR(255) NULL DEFAULT 
 
 
 
+ALTER TABLE `vouchers_detalles` 
+  ADD `vd_cliente_nombre` VARCHAR(150) NULL DEFAULT NULL AFTER `cli_id`, 
+  ADD `vd_cliente_apellido` VARCHAR(150) NULL DEFAULT NULL AFTER `vd_cliente_nombre`, 
+  ADD `vd_cliente_tipo_doc_id` INT NULL DEFAULT NULL AFTER `vd_cliente_apellido`, 
+  ADD `vd_cliente_documento` VARCHAR(50) NULL DEFAULT NULL AFTER `vd_cliente_tipo_doc_id`, 
+  ADD `vd_cliente_email` VARCHAR(150) NULL DEFAULT NULL AFTER `vd_cliente_documento`, 
+  ADD `vd_cliente_telefono` VARCHAR(50) NULL DEFAULT NULL AFTER `vd_cliente_email`, 
+  ADD `vd_fecha_compra` DATETIME NULL DEFAULT NULL AFTER `vd_monto_total`, 
+  ADD `vd_fecha_vencimiento` DATETIME NULL DEFAULT NULL AFTER `vd_fecha_compra`;
+
+

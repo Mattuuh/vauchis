@@ -1422,7 +1422,8 @@
 
                             <div class="vp-qr">
                                 @if($qrImagen)
-                                    <img src="{{ $qrImagen }}" alt="Código QR del voucher">
+                                    {{-- <img src="{{ $qrImagen }}" alt="Código QR del voucher"> --}}
+                                    {!! $qrImagen !!}
                                 @else
                                     <div class="vp-qr-placeholder" aria-label="Código QR de ejemplo">
                                         @for($i = 0; $i < 49; $i++)
