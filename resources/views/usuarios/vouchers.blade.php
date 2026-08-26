@@ -112,11 +112,11 @@ $(document).ready(function () {
                                         <span class="mv-date">{{ $voucher->vd_fecha_compra!='' ? $voucher->vd_fecha_compra->format('d/m/Y') : '' }}</span>
                                     </td>
                                     <td data-label="Fecha de vencimiento">
-                                        <span class="mv-date">{{ $voucher->rub_fecha_vencimiento!='' ? $voucher->rub_fecha_vencimiento->format('d/m/Y') : '' }}</span>
+                                        <span class="mv-date">{{ $voucher->vd_fecha_vencimiento!='' ? $voucher->vd_fecha_vencimiento->format('d/m/Y') : '' }}</span>
                                     </td>
                                     <td class="text-center" data-label="Estado de canje">
                                         @php
-                                            $estado = estado($voucher->vd_estado_3);
+                                            $estado = estado($voucher->vd_estado);
                                         @endphp
 
                                         <span class="mv-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">

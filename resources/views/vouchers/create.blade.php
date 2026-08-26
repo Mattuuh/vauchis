@@ -204,6 +204,11 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-12">
+                    <label class="form-label required-label">Telefono de contacto:</label>
+                    <div id="f_telefonos"></div>
+                </div>
+
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Influencer:</label>
                     <select name="f_inf_id" class="form-select field-required">
@@ -334,7 +339,7 @@ $(document).ready(function () {
                 <select name="f_mod_id" id="f_mod_id" class="form-select field-required">
                     <option value="">Selecciona la modalidad</option>
                     @foreach($modalidades as $modalidad)
-                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id') == $modalidad->mod_id ? 'selected' : '' }}>
+                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id') == $modalidad->mod_id ? 'selected' : '' }} data-condiciones="{{ $modalidad->mod_condiciones }}">
                             {{ $modalidad->mod_nombre }}
                         </option>
                     @endforeach
@@ -356,9 +361,9 @@ $(document).ready(function () {
 
             <div class="col-12">
                 <label class="form-label">Condiciones:</label>
-                <p id="f_mod_condiciones"></p>
+                <div id="f_mod_condiciones"></div>
                 <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
-                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="">***</textarea>
+                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="Condiciones adiciones"></textarea>
             </div>
         </div>
 
@@ -508,17 +513,40 @@ $(document).ready(function () {
             if (String(sucursal.ent_id) === String(ent_id)) {
                 txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
                 direccion = sucursal.ed_direccion+txt_canje;
-                // sucursalSelect.append(
-                //     $('<option>', {
-                //         value: sucursal.ed_id,
-                //         text: sucursal.ed_direccion+txt_canje
-                //     })
-                // );
+
                 str += '<input type="checkbox" name="f_ed_id[]" id="f_ed_id-'+sucursal.ed_id+'" value="'+sucursal.ed_id+'"> <label for="f_ed_id-'+sucursal.ed_id+'">'+direccion+'</label><br>';
             }
         });
         // console.log(str)
         sucursalSelect.html(str);
+
+        $('#f_telefonos').html('');
+    });
+
+    $(document).on('change', 'input[name="f_ed_id[]"]', function () {
+        let telefonosHtml = '';
+
+        // Recorremos solamente las sucursales seleccionadas
+        $('input[name="f_ed_id[]"]:checked').each(function () {
+            const ed_id = $(this).val();
+
+            // Buscamos la sucursal dentro del array
+            const sucursal = sucursales.find(function (item) {
+                return String(item.ed_id) === String(ed_id);
+            });
+
+            // Verificamos que exista y tenga teléfono
+            if (sucursal && sucursal.ed_telefono1) {
+                telefonosHtml += `
+                <div>
+                    <input type="radio" name="f_telefono" id="f_telefono-${sucursal.ed_id}" value="${sucursal.ed_id}">
+                    <label for="f_telefono-${sucursal.ed_id}">${sucursal.ed_telefono1} - ${sucursal.ed_direccion}</label>
+                </div>
+                `;
+            }
+        });
+
+        $('#f_telefonos').html(telefonosHtml);
     });
 </script>
 
@@ -762,7 +790,7 @@ $(document).ready(function () {
 
         modalidadSelect.addEventListener('change', function () {
             renderModalidadCampos(this.value);
-            condiciones_modalidades(this.value)
+            // condiciones_modalidades(this.value)
         });
 
         if (modalidadSelect.value) {
@@ -858,6 +886,37 @@ $(document).ready(function () {
 
         $(document).on('click', '.remove-logo', function () {
             $(this).closest('.logo-item').remove();
+        });
+
+        $(document).on('change', '#f_mod_id', function () {
+            let condiciones = $(this).find('option:selected').data('condiciones') || '';
+            condiciones = $.trim(condiciones);
+
+            if (condiciones !== '') {
+
+                let items = condiciones
+                    .split('#|#')
+                    .map(item => $.trim(item))
+                    .filter(item => item !== '');
+
+                let html = '<ul>';
+
+                $.each(items, function(index, item) {
+                    item = item.replace(/<<FECHA_INICIO>>/g, '<i>FECHA DE INICIO</i>');
+                    item = item.replace(/<<FECHA_FIN>>/g, '<i>FECHA DE VENCIMIENTO</i>');
+                    item = item.replace(/<<SUCURSALES>>/g, '<i>SUCURSALES</i>');
+
+                    html += '<li>' + item + '</li>';
+                });
+
+                html += '</ul>';
+
+                $('#f_mod_condiciones').html(html);
+
+            } else {
+                $('#f_mod_condiciones').html('');
+            }
+
         });
     });
 </script>

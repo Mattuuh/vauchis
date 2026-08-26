@@ -88,6 +88,43 @@
 
     // $voucher = session('voucher');
     // dd($voucher);
+
+    $telefono = $sucursal_telefono->ed_telefono1;
+
+    $direcciones_label='';
+    if ($sucursales->isNotEmpty()) {
+        foreach($sucursales as $sucursal) {
+            $direccion = $sucursal->ed_direccion;
+            $direcciones_label .= strtoupper($direccion)." o ";
+        }
+
+        $direcciones_label=rtrim($direcciones_label,' o ');
+    }
+
+    $condiciones = '';
+    if (trim($voucher->vou_modalidad_condiciones ?? '') !== '') {
+        $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
+        $condiciones = '<ul>';
+
+        foreach ($items as $item) {
+            $item = trim($item);
+
+            // Evitar elementos vacíos
+            if ($item === '') {
+                continue;
+            }
+
+            // Reemplazar variables
+            $item = str_replace('<<FECHA_INICIO>>',"<b>$fecha_actual</b>",$item);
+            $item = str_replace('<<FECHA_FIN>>',"<b>$fechaVencimiento</b>",$item);
+            $item = str_replace('<<SUCURSALES>>',"<b>$direcciones_label</b>",$item);
+
+            $condiciones .= '<li>' . $item . '</li>';
+        }
+
+        $condiciones .= '</ul>';
+    }
+
 @endphp
 
 @push('styles')
@@ -1356,21 +1393,17 @@
                             </div>
                         </div>
 
-                        <a href="{{ data_get($entidad ?? null, 'ent_whatsapp') ? 'https://wa.me/' . preg_replace('/\D+/', '', data_get($entidad, 'ent_whatsapp')) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
+                        <a href="{{ $telefono!='' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
                             <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp">
                             Contacta al vendedor
                         </a>
                     </div>
 
                     <ul class="vp-addresses">
-                        @php
-                            $direcciones_label='';
-                        @endphp
                         @if ($sucursales->isNotEmpty())
                             @foreach($sucursales as $sucursal)
                                 @php
                                     $direccion = $sucursal->ed_direccion;
-                                    $direcciones_label .= strtoupper($direccion)." o ";
                                 @endphp
                                 @if($direccion)
                                     <li>
@@ -1379,9 +1412,6 @@
                                     </li>
                                 @endif
                             @endforeach
-                            @php
-                                $direcciones_label=rtrim($direcciones_label,' o ');
-                            @endphp
                         @else
                             
                         @endif
@@ -1402,15 +1432,19 @@
                     <div class="vp-conditions">
                         <div class="vp-validity">Válido desde {{ $fecha_actual }} hasta {{ $fechaVencimiento }}</div>
                         <h3>Tené en cuenta</h3>
-                        <ul>
-                            <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
-                            <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
-                            <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
-                            <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
-                            <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
-                            <li>Envío no incluido.</li>
-                            <li>Uso único.</li>
-                        </ul>
+                        @if ($condiciones!='')
+                            {!! $condiciones !!}
+                        @else
+                            <ul>
+                                <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
+                                <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
+                                <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
+                                <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
+                                <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
+                                <li>Envío no incluido.</li>
+                                <li>Uso único.</li>
+                            </ul>
+                        @endif
                     </div>
                 </section>
 

@@ -530,3 +530,6 @@ ALTER TABLE `vouchers_detalles`
   ADD `vd_fecha_vencimiento` DATETIME NULL DEFAULT NULL AFTER `vd_fecha_compra`;
 
 
+ALTER TABLE `modalidades` ADD `mod_condiciones` TEXT NULL DEFAULT NULL AFTER `mod_descripcion`;
+
+ALTER TABLE `vouchers` ADD `vou_telefono_ed_id` INT NULL DEFAULT NULL AFTER `ed_id`;

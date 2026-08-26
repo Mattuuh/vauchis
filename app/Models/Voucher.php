@@ -15,6 +15,7 @@ class Voucher extends Model
     protected $fillable = [
         'ent_id',
         'ed_id',
+        'vou_telefono_ed_id',
         'tv_id',
         'cv_id',
         'inf_id',

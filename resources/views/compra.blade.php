@@ -594,16 +594,29 @@
     }
     $direcciones_label=rtrim($direcciones_label,' o ');
 
-    $condiciones = $condiciones ?? [
-        // 'Canjeable por productos o servicios del local <b>[según modalidad del voucher]</b>',
-        'Canjeable por productos o servicios del local',
-        'Válido para canjear desde <b>'. $fecha_actual .'</b> hasta <b>'. $fecha_vto .'</b>',
-        '<b>No reembolsable</b> ni canjeable por dinero',
-        'Se canjea en <b>'. $direcciones_label .'</b>',
-        'Retiro a cargo del portador del voucher y a acordar con el vendedor',
-        'Envío no incluído',
-        'Uso único',
-    ];
+    $condiciones = '';
+    if (trim($voucher->vou_modalidad_condiciones ?? '') !== '') {
+        $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
+        $condiciones = '<ul>';
+
+        foreach ($items as $item) {
+            $item = trim($item);
+
+            // Evitar elementos vacíos
+            if ($item === '') {
+                continue;
+            }
+
+            // Reemplazar variables
+            $item = str_replace('<<FECHA_INICIO>>',"<b>$fecha_actual</b>",$item);
+            $item = str_replace('<<FECHA_FIN>>',"<b>$fecha_vto</b>",$item);
+            $item = str_replace('<<SUCURSALES>>',"<b>$direcciones_label</b>",$item);
+
+            $condiciones .= '<li>' . $item . '</li>';
+        }
+
+        $condiciones .= '</ul>';
+    }
 @endphp
 
 <div class="vp-desktop-navbar">
@@ -647,22 +660,32 @@
                     </div>
 
                     <div class="vp-field">
-                        <label for="nombre">1. Nombre completo*</label>
-                        <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Escribe tu nombre completo" required>
+                        <label for="nombre">1. Nombre*</label>
+                        <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Escribe tu nombre completo">
                     </div>
 
                     <div class="vp-field">
+                        <label for="apellido">2. Apellido*</label>
+                        <input type="text" id="apellido" name="apellido" value="{{ old('apellido') }}" placeholder="Escribe tu apellido completo">
+                    </div>
+
+                    {{-- <div class="vp-field">
+                        <label for="documento">3. Documento*</label>
+                        <input type="text" id="documento" name="documento" value="{{ old('documento') }}" placeholder="Escribe tu documento completo">
+                    </div> --}}
+
+                    <div class="vp-field">
                         <label for="email">2. Email*</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="@gmail.com" required>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="@gmail.com">
                     </div>
 
                     <div class="vp-field">
                         <label for="email_confirmation">Confirma tu email*</label>
-                        <input type="email" id="email_confirmation" name="email_confirmation" value="{{ old('email_confirmation') }}" placeholder="@gmail.com" required>
+                        <input type="email" id="email_confirmation" name="email_confirmation" value="{{ old('email_confirmation') }}" placeholder="@gmail.com">
                     </div>
 
                     <div class="vp-field">
-                        <label for="telefono">3. Celular <span style="font-weight:400">(opcional)</span></label>
+                        <label for="telefono">4. Celular <span style="font-weight:400">(opcional)</span></label>
                         <div class="vp-phone">
                             <select id="codigo_pais" name="codigo_pais" aria-label="Código de país">
                                 <option value="+54">AR +54</option>
@@ -697,11 +720,19 @@
 
                     <div class="vp-terms">
                         <h2>Condiciones de uso</h2>
-                        <ul>
-                            @foreach ($condiciones as $condicion)
-                                <li>{!! $condicion !!}</li>
-                            @endforeach
-                        </ul>
+                        @if ($condiciones!='')
+                            {!! $condiciones !!}
+                        @else
+                            <ul>
+                                <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
+                                <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
+                                <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
+                                <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
+                                <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
+                                <li>Envío no incluido.</li>
+                                <li>Uso único.</li>
+                            </ul>
+                        @endif
 
                         <label class="vp-check-row" for="acepta_terminos">
                             <input type="checkbox" id="acepta_terminos" name="acepta_terminos" value="1" required>

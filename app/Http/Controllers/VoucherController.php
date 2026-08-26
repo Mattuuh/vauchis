@@ -151,7 +151,7 @@ class VoucherController extends Controller
 
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->orderBy('ent_id', 'desc')
-            ->get(['ed_canje', 'ed_direccion', 'ent_id', 'ed_id']);
+            ->get(['ed_canje', 'ed_telefono1', 'ed_telefono2', 'ed_direccion', 'ent_id', 'ed_id']);
 
         $influencers = Influencer::where('inf_estado', 1)
             ->orderBy('inf_id', 'desc')
@@ -164,7 +164,7 @@ class VoucherController extends Controller
             }])
             ->where('mod_estado', 1)
             ->orderBy('mod_id', 'desc')
-            ->get(['mod_id', 'mod_nombre', 'mod_codigo']);
+            ->get(['mod_id', 'mod_nombre', 'mod_codigo', 'mod_condiciones']);
 
         $categorias = Categoria::where('cv_estado', 1)
             ->orderBy('cv_id', 'desc')
@@ -238,6 +238,11 @@ class VoucherController extends Controller
 
         DB::beginTransaction();
 
+            $modalidades = Modalidad::findOrFail($request->f_mod_id);
+            // $condiciones = $modalidades->mod_condiciones . $request->f_condiciones_adi .'#|# ';
+            $condiciones = $request->f_condiciones_adi .'#|# ';
+            $condiciones = $modalidades->mod_condiciones . $condiciones;
+
         try {
             $usuarioId = Auth::id() ?? 1;
 
@@ -248,6 +253,7 @@ class VoucherController extends Controller
             $vouId = DB::table('vouchers')->insertGetId([
                 'ent_id' => $request->f_ent_id,
                 'ed_id' => null,
+                'vou_telefono_ed_id' => $request->f_telefono,
                 'tv_id' => null,
                 'cv_id' => $request->f_cv_id,
                 'inf_id' => $request->f_inf_id,
@@ -274,7 +280,7 @@ class VoucherController extends Controller
                 'vou_porcentaje_comision' => $request->f_comision,
 
                 'vou_terminos_condiciones' => $request->terms,
-                'vou_modalidad_condiciones' => $request->f_condiciones . $request->f_condiciones_adi,
+                'vou_modalidad_condiciones' => $condiciones,
 
                 'vou_estado' => 1,
                 'vou_estado2' => null,
@@ -533,7 +539,7 @@ class VoucherController extends Controller
 
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->orderBy('ent_id', 'desc')
-            ->get(['ed_canje', 'ed_direccion', 'ent_id', 'ed_id']);
+            ->get(['ed_canje', 'ed_telefono1', 'ed_telefono2', 'ed_direccion', 'ent_id', 'ed_id']);
 
         $influencers = DB::table('influencers')
             ->where('inf_estado', 1)
@@ -547,7 +553,7 @@ class VoucherController extends Controller
             }])
             ->where('mod_estado', 1)
             ->orderBy('mod_nombre')
-            ->get(['mod_id', 'mod_nombre', 'mod_codigo']);
+            ->get(['mod_id', 'mod_nombre', 'mod_codigo', 'mod_condiciones']);
 
         $categorias = DB::table('categorias_vouchers')
             ->where('cv_estado', 1)
@@ -714,6 +720,7 @@ class VoucherController extends Controller
                 ->where('vou_id', $id)
                 ->update([
                     'ent_id' => $request->f_ent_id,
+                    'vou_telefono_ed_id' => $request->f_telefono,
                     'tv_id' => null,
                     'cv_id' => $request->f_cv_id,
                     'inf_id' => $request->f_inf_id,
@@ -1544,6 +1551,8 @@ class VoucherController extends Controller
             abort(404);
         }
 
+        $sucursal_telefono = EntidadDomicilio::findOrFail($voucher->vou_telefono_ed_id);
+
         session([
             'voucher' => [
                 'vou_id' => $voucher->vou_id,
@@ -1572,7 +1581,7 @@ class VoucherController extends Controller
         $qrImagen = QrCode::size(250)
             ->generate('VAUCHIS');
 
-        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
+        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','sucursal_telefono','qrImagen'));
     }
 
     public function compra_voucher($vou_id, $vmv_id, Request $request)

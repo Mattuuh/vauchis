@@ -102,6 +102,16 @@
                 </div>
 
                 <div class="col-12">
+                    <label class="form-label">Condiciones</label>
+                    <p>{!! $condiciones !!}</p>
+                    {{-- <textarea name="f_condiciones" class="form-control" rows="3" placeholder="Condiciones de la modalidad...">{{ old('f_condiciones', $condiciones) }}</textarea>
+
+                    @error('f_condiciones')
+                        <div class="text-required">{{ $message }}</div>
+                    @enderror --}}
+                </div>
+
+                <div class="col-12">
                     <label class="form-label">Texto de canje</label>
                     <input name="f_texto_canje" class="form-control" placeholder="Texto que se vera en el paso 2 (dos) en el voucher" value="{{ old('f_texto_canje', $modalidad->mod_texto_canje) }}">
 

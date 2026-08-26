@@ -81,6 +81,20 @@
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-12">
+                    <label class="form-label required-label">Telefono de contacto:</label>
+                    <div id="f_telefonos">
+                        @foreach($sucursales as $sucursal)
+                            @if ($sucursal->ent_id==$voucher->ent_id)
+                            <div>
+                                <input type="radio" name="f_telefono" id="f_telefono-{{ $sucursal->ed_id }}" value="{{ $sucursal->ed_id }}" {{ $sucursal->ed_id==$voucher->vou_telefono_ed_id ? 'checked' : '' }}>
+                                <label for="f_telefono-{{ $sucursal->ed_id }}">{{ $sucursal->ed_telefono1 }} - {{ $sucursal->ed_direccion }}</label>
+                            </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Influencer:</label>
                     <select name="f_inf_id" class="form-select">
@@ -524,6 +538,34 @@
             }
         });
         sucursalSelect.html(str);
+
+        $('#f_telefonos').html('');
+    });
+
+    $(document).on('change', 'input[name="f_ed_id[]"]', function () {
+        let telefonosHtml = '';
+
+        // Recorremos solamente las sucursales seleccionadas
+        $('input[name="f_ed_id[]"]:checked').each(function () {
+            const ed_id = $(this).val();
+
+            // Buscamos la sucursal dentro del array
+            const sucursal = sucursales.find(function (item) {
+                return String(item.ed_id) === String(ed_id);
+            });
+
+            // Verificamos que exista y tenga teléfono
+            if (sucursal && sucursal.ed_telefono1) {
+                telefonosHtml += `
+                <div>
+                    <input type="radio" name="f_telefono" id="f_telefono-${sucursal.ed_id}" value="${sucursal.ed_telefono1}">
+                    <label for="f_telefono-${sucursal.ed_id}">${sucursal.ed_telefono1} - ${sucursal.ed_direccion}</label>
+                </div>
+                `;
+            }
+        });
+
+        $('#f_telefonos').html(telefonosHtml);
     });
 </script>
 

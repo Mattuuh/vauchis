@@ -62,12 +62,14 @@ class ModalidadController extends Controller
     public function store(Request $request)
     {
         // $this->validarModalidad($request);
+        $condiciones = 'Canjeable por productos o servicios del local según modalidad del voucher.#|# Válido para canjear desde <<FECHA_INICIO>> hasta el <<FECHA_FIN>>.#|# No reembolsable ni canjeable por dinero.#|# Se canjea en <<SUCURSALES>>.#|# Retiro a cargo del portador del voucher y a acordar con el vendedor.#|# Envío no incluido.#|# Uso único.#|# ';
 
         $modalidad = Modalidad::create([
             'tipo_mod_id' => $request->f_tipo_mod_id,
             'mod_nombre' => $request->f_nombre,
             'mod_codigo' => $request->f_codigo,
             'mod_descripcion' => $request->f_descripcion,
+            'mod_condiciones' => $condiciones,
             'mod_texto_canje' => $request->f_texto_canje,
             'mod_estado' => 1,
             'mod_fecha_alta' => now(),
@@ -113,7 +115,15 @@ class ModalidadController extends Controller
             $query->orderBy('mca_orden')->orderBy('mca_id');
         }])->findOrFail($id);
 
-        return view('modalidades.edit', compact('tipos_modalidades','modalidad'));
+        $condiciones = trim($modalidad->mod_condiciones!='') ? str_replace('#|# ','<br>',$modalidad->mod_condiciones) : '';
+        if (trim($modalidad->mod_condiciones!='')) {
+            $condiciones = str_replace('#|# ','<br>',$modalidad->mod_condiciones);
+            $condiciones = str_replace('<<FECHA_INICIO>>','<i>FECHA DE INICIO</i>',$condiciones);
+            $condiciones = str_replace('<<FECHA_FIN>>','<i>FECHA DE VENCIMIENTO</i>',$condiciones);
+            $condiciones = str_replace('<<SUCURSALES>>','<i>SUCURSALES</i>',$condiciones);
+        }
+
+        return view('modalidades.edit', compact('tipos_modalidades','modalidad','condiciones'));
     }
 
     public function update(Request $request, $id)
