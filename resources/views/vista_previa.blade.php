@@ -89,7 +89,7 @@
     // $voucher = session('voucher');
     // dd($voucher);
 
-    $telefono = $sucursal_telefono->ed_telefono1;
+    $telefono = $sucursal_telefono->ed_telefono1 ?? '3871234567';
 
     $direcciones_label='';
     if ($sucursales->isNotEmpty()) {
@@ -102,7 +102,7 @@
     }
 
     $condiciones = '';
-    if (trim($voucher->vou_modalidad_condiciones ?? '') !== '') {
+    if (trim($voucher->vou_modalidad_condiciones) !== '') {
         $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
         $condiciones = '<ul>';
 

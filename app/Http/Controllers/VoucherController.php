@@ -1551,7 +1551,7 @@ class VoucherController extends Controller
             abort(404);
         }
 
-        $sucursal_telefono = EntidadDomicilio::findOrFail($voucher->vou_telefono_ed_id);
+        $sucursal_telefono = EntidadDomicilio::find($voucher->vou_telefono_ed_id);
 
         session([
             'voucher' => [
