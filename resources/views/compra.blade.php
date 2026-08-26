@@ -624,7 +624,7 @@
 </div>
 
 <header class="vp-mobile-header">
-    <a href="{{ $volverUrl }}" aria-label="Volver">‹</a>
+    <a href="{{ $editarUrl }}" aria-label="Volver">‹</a>
     <h1>¡Último paso!</h1>
     <a href="{{ $editarUrl }}" aria-label="Cerrar">×</a>
 </header>
@@ -640,7 +640,7 @@
 
         <div class="vp-shell">
             <div class="vp-title-row">
-                <a href="{{ $volverUrl }}" class="vp-back" aria-label="Volver">‹</a>
+                <a href="{{ $editarUrl }}" class="vp-back" aria-label="Volver">‹</a>
                 <h1 class="vp-title">¡Último paso!</h1>
             </div>
 

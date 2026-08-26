@@ -452,13 +452,44 @@ $(function () {
 </script>
 @endpush
 
+@php
+    if ($modalidad->tipo_mod_id==1) {
+        $color_regalo = '#49B384';
+        $imagenVoucher = asset('images/perfildemarca-reglao-verde.png');
+
+    } elseif ($modalidad->tipo_mod_id==2) {
+        $color_regalo = '#0065FA';
+        $imagenVoucher = asset('images/perfildemarca-regalo-azul.png');
+
+    } else {
+        $color_regalo = !empty($entidad->ent_color_fondo) ? $entidad->ent_color_fondo : '#49b889';
+
+        $imagenPrincipal = $voucher->imagenes->first();
+        $imagenVoucher = $imagenPrincipal && $imagenPrincipal->vf_img_path
+            ? asset('storage/' . $imagenPrincipal->vf_img_path)
+            : asset('images/default-voucher.png');
+    }
+
+    // $fechaVencimiento = data_get($voucher, 'vou_fecha_vencimiento');
+    $fechaVencimientoRaw = new DateTime();
+    $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
+    $fechaVencimientoRaw->modify("+$dias_vigencia days");
+
+    $dat_voucher = session('voucher');
+    $para = old('para', data_get($dat_voucher ?? null, 'para', ''));
+    $de = old('de', data_get($dat_voucher ?? null, 'de', ''));
+    $mensaje = old('mensaje', data_get($dat_voucher ?? null, 'mensaje', ''));
+
+    $volverUrl = route('vouchers.entidad', $entidad->ent_id);
+@endphp
+
 @section('content')
 
 <main class="vs-gift-page">
     @include('partials.navbar')
 
     <header class="vs-mobile-header">
-        <a href="{{ url()->previous() }}" class="vs-back-link" aria-label="Volver">
+        <a href="{{ $volverUrl }}" class="vs-back-link" aria-label="Volver">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M15 18l-6-6 6-6"/>
             </svg>
@@ -466,41 +497,12 @@ $(function () {
 
         <h1>Completá tu regalo</h1>
 
-        <a href="{{ url()->previous() }}" class="vs-close-link" aria-label="Cerrar">
+        <a href="{{ $volverUrl }}" class="vs-close-link" aria-label="Cerrar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18"/>
             </svg>
         </a>
     </header>
-
-    @php
-        if ($modalidad->tipo_mod_id==1) {
-            $color_regalo = '#49B384';
-            $imagenVoucher = asset('images/perfildemarca-reglao-verde.png');
-
-        } elseif ($modalidad->tipo_mod_id==2) {
-            $color_regalo = '#0065FA';
-            $imagenVoucher = asset('images/perfildemarca-regalo-azul.png');
-
-        } else {
-            $color_regalo = !empty($entidad->ent_color_fondo) ? $entidad->ent_color_fondo : '#49b889';
-
-            $imagenPrincipal = $voucher->imagenes->first();
-            $imagenVoucher = $imagenPrincipal && $imagenPrincipal->vf_img_path
-                ? asset('storage/' . $imagenPrincipal->vf_img_path)
-                : asset('images/default-voucher.png');
-        }
-
-        // $fechaVencimiento = data_get($voucher, 'vou_fecha_vencimiento');
-        $fechaVencimientoRaw = new DateTime();
-        $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
-        $fechaVencimientoRaw->modify("+$dias_vigencia days");
-
-        $dat_voucher = session('voucher');
-        $para = old('para', data_get($dat_voucher ?? null, 'para', ''));
-        $de = old('de', data_get($dat_voucher ?? null, 'de', ''));
-        $mensaje = old('mensaje', data_get($dat_voucher ?? null, 'mensaje', ''));
-    @endphp
 
     <form id="form" action="{{ route('vouchers.vista_previa', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]) }}" method="GET">
         @csrf
@@ -511,7 +513,7 @@ $(function () {
 
         <div class="vs-gift-shell">
             <h1 class="vs-gift-title">
-                <a href="{{ route('vouchers.entidad', $entidad->ent_id) }}" class="vs-back-link" aria-label="Volver">
+                <a href="{{ $volverUrl }}" class="vs-back-link" aria-label="Volver">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M15 18l-6-6 6-6"/>
                     </svg>
@@ -590,7 +592,7 @@ $(function () {
             // $('#btn_pagar').removeClass('btn-deshabilitado');
             $('#btn_pagar').addClass('btn-habilitado');
             $('#btn_pagar').removeAttr('disabled');
-            console.log('validado')
+            // console.log('validado')
         } else {
             $('#btn_pagar').removeClass('btn-habilitado');
             // $('#btn_pagar').addClass('btn-deshabilitado');

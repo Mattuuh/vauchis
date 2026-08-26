@@ -83,6 +83,7 @@ class AuthController extends Controller
         session([
             'auth' => [
                 'usuario_id' => $usuario->usu_id,
+                'ent_id' => $usuario->ref_id,
                 'tu_id' => $usuario->tu_id,
                 'nombre' => $usuario->usu_nombre,
                 'email' => $usuario->usu_email1,
@@ -104,7 +105,12 @@ class AuthController extends Controller
         ]);
 
         // return redirect()->route('home');
-        return redirect()->intended(route('home'));
+
+        if ($usuario->ref_id!='' && $usuario->ref_id>0) {
+            return redirect()->intended(route('clientes.index'));
+        } else {
+            return redirect()->intended(route('home'));
+        }
     }
 
     public function showRegister(): View
@@ -189,7 +195,7 @@ class AuthController extends Controller
         Auth::login($usuario);
 
         // return redirect('/')->with('success', 'Tu cuenta fue creada correctamente.');
-        return redirect()->intended(route('home'))->with('success', 'Tu cuenta fue creada correctamente.');
+        return redirect()->intended(route('login'))->with('success', 'Tu cuenta fue creada correctamente.');
     }
 
     public function logout(Request $request): RedirectResponse

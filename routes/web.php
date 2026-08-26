@@ -156,6 +156,11 @@ use App\Http\Controllers\UsuarioController;
 Route::get('/usuarios/vouchers/{id}', [UsuarioController::class, 'vouchers'])->name('usuarios.vouchers');
 
 
+use App\Http\Controllers\ClienteController;
+// Route::resource('clientes', ClienteController::class);
+Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+
+
 Route::middleware(['administrador'])
     ->prefix('admin')
     ->name('admin.')
