@@ -15,6 +15,7 @@ use App\Models\Rubro;
 use App\Models\Subrubro;
 use App\Models\TipoArchivo;
 use App\Models\TipoModalidad;
+use App\Models\Usuario;
 use App\Models\Voucher;
 use App\Models\VoucherDetalle;
 use App\Models\VoucherFile;
@@ -1615,11 +1616,16 @@ class VoucherController extends Controller
             $valores->vmv_monto_fijo=$request->monto;
         }
 
+        $usuario='';
+        if (!empty(session('auth.usuario_id'))) {
+            $usuario = Usuario::find(session('auth.usuario_id'));
+        }
+
         if (!$voucher) {
             abort(404);
         }
 
-        return view('compra', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'));
+        return view('compra', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','usuario'));
     }
 
     public function postcompra_voucher($vou_id, $vmv_id, Request $request)
@@ -1647,6 +1653,11 @@ class VoucherController extends Controller
             $valores->vmv_monto_fijo=$request->monto;
         }
 
+        $usuario='';
+        if (!empty(session('auth.usuario_id'))) {
+            $usuario = Usuario::find(session('auth.usuario_id'));
+        }
+
         if (!$voucher) {
             abort(404);
         }
@@ -1669,12 +1680,12 @@ class VoucherController extends Controller
         $detalle->update([
             'cli_id' => session('auth.usuario_id') ?? null,
 
-            'vd_cliente_nombre' => $request->nombre,
-            'vd_cliente_apellido' => $request->apellido,
-            'vd_cliente_tipo_doc_id' => $request->tipo_doc_id,
-            'vd_cliente_documento' => $request->documento,
-            'vd_cliente_email' => $request->email,
-            'vd_cliente_telefono' => $request->telefono,
+            'vd_cliente_nombre' => $usuario->usu_nombre ?? $request->nombre,
+            'vd_cliente_apellido' => $usuario->usu_apellido ?? $request->apellido,
+            'vd_cliente_tipo_doc_id' => $usuario->tipo_doc_id ?? $request->tipo_doc_id,
+            'vd_cliente_documento' => $usuario->usu_documento ?? $request->documento,
+            'vd_cliente_email' => $usuario->usu_email1 ?? $request->email,
+            'vd_cliente_telefono' => $usuario->usu_celular1 ?? $request->telefono,
 
             'vd_variante_nombre_de' => session('voucher.de'),
             'vd_variante_nombre_para' => session('voucher.para'),

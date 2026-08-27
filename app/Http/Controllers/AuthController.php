@@ -194,6 +194,9 @@ class AuthController extends Controller
 
         Auth::login($usuario);
 
+        // Verificar si hay vouchers comprados con el mail usuado para el registro
+        // si hay vouchers, vincularlos al ID del usuario creado
+
         // return redirect('/')->with('success', 'Tu cuenta fue creada correctamente.');
         return redirect()->intended(route('login'))->with('success', 'Tu cuenta fue creada correctamente.');
     }

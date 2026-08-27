@@ -151,6 +151,15 @@
         outline: none;
     }
 
+    .vp-field span {
+        width: 100%;
+        height: 40px;
+        padding: 0 17px;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 800;
+    }
+
     .vp-field input::placeholder { color: #b8bac1; }
 
     .vp-field input:focus,
@@ -648,51 +657,83 @@
                 <section class="vp-left">
                     <h2 class="vp-section-title">Datos del comprador</h2>
 
-                    <div class="vp-login-card" data-url="{{ $loginUrl ?? route('login') }}">
-                        <div class="vp-login-info">
-                            <div class="vp-login-icon"><img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario"></div>
-                            <div class="vp-login-copy">
-                                <strong>Inicia sesión</strong>
-                                <span>Iniciá sesión y comprá más rápido</span>
+                    @if (empty($usuario))
+                        <div class="vp-login-card" data-url="{{ $loginUrl ?? route('login') }}">
+                            <div class="vp-login-info">
+                                <div class="vp-login-icon"><img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario"></div>
+                                <div class="vp-login-copy">
+                                    <strong>Inicia sesión</strong>
+                                    <span>Iniciá sesión y comprá más rápido</span>
+                                </div>
+                            </div>
+                            <a href="{{ $loginUrl ?? route('login') }}" class="vp-login-button">Iniciar sesión</a>
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="nombre">1. Nombre*</label>
+                            <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Escribe tu nombre completo">
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="apellido">2. Apellido*</label>
+                            <input type="text" id="apellido" name="apellido" value="{{ old('apellido') }}" placeholder="Escribe tu apellido completo">
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="documento">3. Documento*</label>
+                            <input type="text" id="documento" name="documento" value="{{ old('documento') }}" placeholder="Escribe tu documento sin puntos">
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="email">4. Email*</label>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="@gmail.com">
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="email_confirmation">Confirma tu email*</label>
+                            <input type="email" id="email_confirmation" name="email_confirmation" value="{{ old('email_confirmation') }}" placeholder="@gmail.com">
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="telefono">5. Celular <span style="font-weight:400">(opcional)</span></label>
+                            <div class="vp-phone">
+                                <select id="codigo_pais" name="codigo_pais" aria-label="Código de país">
+                                    <option value="+54">AR +54</option>
+                                </select>
+                                <input type="tel" id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Número de Teléfono">
                             </div>
                         </div>
-                        <a href="{{ $loginUrl ?? route('login') }}" class="vp-login-button">Iniciar sesión</a>
-                    </div>
-
-                    <div class="vp-field">
-                        <label for="nombre">1. Nombre*</label>
-                        <input type="text" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Escribe tu nombre completo">
-                    </div>
-
-                    <div class="vp-field">
-                        <label for="apellido">2. Apellido*</label>
-                        <input type="text" id="apellido" name="apellido" value="{{ old('apellido') }}" placeholder="Escribe tu apellido completo">
-                    </div>
-
-                    {{-- <div class="vp-field">
-                        <label for="documento">3. Documento*</label>
-                        <input type="text" id="documento" name="documento" value="{{ old('documento') }}" placeholder="Escribe tu documento completo">
-                    </div> --}}
-
-                    <div class="vp-field">
-                        <label for="email">2. Email*</label>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="@gmail.com">
-                    </div>
-
-                    <div class="vp-field">
-                        <label for="email_confirmation">Confirma tu email*</label>
-                        <input type="email" id="email_confirmation" name="email_confirmation" value="{{ old('email_confirmation') }}" placeholder="@gmail.com">
-                    </div>
-
-                    <div class="vp-field">
-                        <label for="telefono">4. Celular <span style="font-weight:400">(opcional)</span></label>
-                        <div class="vp-phone">
-                            <select id="codigo_pais" name="codigo_pais" aria-label="Código de país">
-                                <option value="+54">AR +54</option>
-                            </select>
-                            <input type="tel" id="telefono" name="telefono" value="{{ old('telefono') }}" placeholder="Número de Teléfono">
+                    @else
+                        <div class="vp-field">
+                            <label for="nombre">1. Nombre</label>
+                            <input type="hidden" id="nombre" name="nombre" value="{{ $usuario->usu_nombre }}">
+                            <span>{{ $usuario->usu_nombre }}</span>
                         </div>
-                    </div>
+
+                        <div class="vp-field">
+                            <label for="apellido">2. Apellido</label>
+                            <input type="hidden" id="apellido" name="apellido" value="{{ $usuario->usu_apellido }}">
+                            <span>{{ $usuario->usu_apellido }}</span>
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="documento">3. Documento</label>
+                            <input type="hidden" id="documento" name="documento" value="{{ $usuario->usu_documento }}">
+                            <span>{{ $usuario->usu_documento }}</span>
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="email">4. Email</label>
+                            <input type="hidden" id="email" name="email" value="{{ $usuario->usu_email1 }}">
+                            <span>{{ $usuario->usu_email1 }}</span>
+                        </div>
+
+                        <div class="vp-field">
+                            <label for="telefono">5. Celular</label>
+                            <input type="hidden" id="telefono" name="telefono" value="{{ $usuario->usu_celular1 }}">
+                            <span>{{ $usuario->usu_celular1 }}</span>
+                        </div>
+                    @endif
                 </section>
 
                 <section class="vp-right">
@@ -770,13 +811,42 @@ $(function () {
 
     $('#vp-form').validate({
         rules: {
-            nombre: { required: true, maxlength: 120 },
-            email: { required: true, email: true },
-            email_confirmation: { required: true, email: true, equalTo: '#email' },
-            acepta_terminos: { required: true }
+            nombre: {
+                required: true,
+                maxlength: 120
+            },
+            apellido: {
+                required: true,
+                maxlength: 120
+            },
+            documento: {
+                required: true,
+                minlength: 7,
+                number: true
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            email_confirmation: {
+                required: true,
+                email: true,
+                equalTo: '#email'
+            },
+            acepta_terminos: {
+                required: true
+            }
         },
         messages: {
-            nombre: { required: 'Ingresá tu nombre completo.' },
+            nombre: { 
+                required: 'Ingresá tu nombre completo.'
+            },
+            apellido: {
+                required: 'Ingresá tu apellido completo.'
+            },
+            documento: {
+                required: 'Ingresá tu documento.'
+            },
             email: {
                 required: 'Ingresá tu email.',
                 email: 'Ingresá un email válido.'

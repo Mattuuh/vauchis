@@ -333,7 +333,7 @@
         }
 
         .pc-action-label {
-            font-size: 14px;
+            font-size: 12px;
             transform: none;
         }
 
@@ -375,7 +375,7 @@
 
     @media (max-width: 390px) {
         .pc-main { padding-inline: 20px; }
-        .pc-actions { gap: 18px; }
+        /* .pc-actions { gap: 18px; } */
         .pc-gift-image { width: 220px; height: 174px; }
     }
 
