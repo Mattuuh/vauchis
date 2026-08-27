@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AccessLog;
 use App\Models\TipoDocumento;
 use App\Models\Usuario;
+use App\Models\VoucherDetalle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -196,6 +197,17 @@ class AuthController extends Controller
 
         // Verificar si hay vouchers comprados con el mail usuado para el registro
         // si hay vouchers, vincularlos al ID del usuario creado
+        VoucherDetalle::whereNull('cli_id')
+            ->where('vd_estado2','PA')
+            ->where(function ($query) use ($validated) {
+                $query->where('vd_cliente_documento', $validated['usu_documento'])
+                    ->orWhere('vd_cliente_email', $validated['usu_email1']);
+            })
+            ->update([
+                'cli_id' => $usuario->usu_id,
+                'vd_fecha_mod' => now(),
+                'vd_usu_mod' => 0
+            ]);
 
         // return redirect('/')->with('success', 'Tu cuenta fue creada correctamente.');
         return redirect()->intended(route('login'))->with('success', 'Tu cuenta fue creada correctamente.');
