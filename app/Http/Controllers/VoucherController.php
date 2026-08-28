@@ -1587,6 +1587,10 @@ class VoucherController extends Controller
 
     public function compra_voucher($vou_id, $vmv_id, Request $request)
     {
+        if (empty(session('voucher'))) {
+            return redirect()->route('home');
+        }
+
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
@@ -1630,6 +1634,10 @@ class VoucherController extends Controller
 
     public function postcompra_voucher($vou_id, $vmv_id, Request $request)
     {
+        if (empty(session('voucher'))) {
+            return redirect()->route('home');
+        }
+
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
@@ -1649,6 +1657,12 @@ class VoucherController extends Controller
 
         $valores = $voucher->modalidadValores[0];
 
+        $modalidad = $voucher->modalidad;
+
+        $sucursales = $voucher->sucursales;
+
+        $sucursal_telefono = EntidadDomicilio::find($voucher->vou_telefono_ed_id);
+
         if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
             $valores->vmv_monto_fijo=$request->monto;
         }
@@ -1662,9 +1676,15 @@ class VoucherController extends Controller
             abort(404);
         }
         
+        $fecha_actual = date('d/m/Y');
         $fecha_vto_raw = new DateTime();
         $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
         $fecha_vto_raw->modify("+$dias_vigencia days");
+        try {
+            $fecha_vto = $fecha_vto_raw ? $fecha_vto_raw->format('d/m/y') : '01/01/99';
+        } catch (\Throwable $e) {
+            $fecha_vto = '01/01/99';
+        }
         
         $detalle = VoucherDetalle::where('vou_id', $vou_id)
             ->where('mca_id', $valores->mca_id)
@@ -1676,6 +1696,87 @@ class VoucherController extends Controller
         if (!$detalle) {
             throw new \Exception('No hay vouchers disponibles para esta modalidad.');
         }
+
+        $datos_json = [];
+        $condicion_2 = $modalidad->mod_texto_canje ?? 'Elegí el producto que más te guste';
+        $color_banner = $entidad->ent_color_fondo;
+        $telefono = $sucursal_telefono->ed_telefono1 ?? '3871234567';
+        $imagen_logo = $entidad->ef_img_path;
+        if ($modalidad->tipo_mod_id==1 || $modalidad->tipo_mod_id==2) {
+            $imagen_voucher = $imagenes->first()?->vf_img_path;
+        } else {
+            $imagen_voucher = $entidad->logoPrincipal->ef_img_path;
+        }
+
+        $direcciones_label='';
+        if ($sucursales->isNotEmpty()) {
+            foreach($sucursales as $sucursal) {
+                $direccion = $sucursal->ed_direccion;
+                $direcciones_label .= strtoupper($direccion)." o ";
+            }
+
+            $direcciones_label=rtrim($direcciones_label,' o ');
+        }
+
+        $condiciones = '';
+        if (trim($voucher->vou_modalidad_condiciones) !== '') {
+            $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
+            $condiciones = '<ul>';
+
+            foreach ($items as $item) {
+                $item = trim($item);
+
+                // Evitar elementos vacíos
+                if ($item === '') {
+                    continue;
+                }
+
+                // Reemplazar variables
+                $item = str_replace('<<FECHA_INICIO>>',"<b>$fecha_actual</b>",$item);
+                $item = str_replace('<<FECHA_FIN>>',"<b>$fecha_vto</b>",$item);
+                $item = str_replace('<<SUCURSALES>>',"<b>$direcciones_label</b>",$item);
+
+                $condiciones .= '<li>' . $item . '</li>';
+            }
+
+            $condiciones .= '</ul>';
+        }
+
+        $token=$detalle->vd_id;
+        $url = route('voucher.canjear', ['token' => $token]);
+        $qrImagen = QrCode::size(250)
+            ->generate($url);
+
+        $datos_json = [
+            "sucursales" => $direcciones_label,
+            "condicion_2" => $condicion_2,
+            "condiciones" => $condiciones,
+            "color_banner" => $color_banner,
+            "telefono" => $telefono,
+            "imagen_voucher" => $imagen_voucher,
+            "imagen_logo" => $imagen_logo,
+            "qr" => $qrImagen,
+        ];
+
+        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
+
+        $nombreArchivo = 'voucher-' . $token . '.pdf';
+        $rutaRelativa = 'vouchers/pdf/' . $nombreArchivo;
+        $rutaCompleta = storage_path('app/public/' . $rutaRelativa);
+
+        // Crear carpeta si no existe
+        if (!is_dir(dirname($rutaCompleta))) {
+            mkdir(dirname($rutaCompleta), 0775, true);
+        }
+
+        Browsershot::html($html)
+            ->showBackground()
+            ->paperSize(8, 10.6666667, 'in')
+            ->margins(0, 0, 0, 0)
+            ->deviceScaleFactor(1)
+            ->timeout(120)
+            ->savePdf($rutaCompleta);
+
 
         $detalle->update([
             'cli_id' => session('auth.usuario_id') ?? null,
@@ -1695,15 +1796,16 @@ class VoucherController extends Controller
             'vd_fecha_vencimiento' => $fecha_vto_raw->format('Y-m-d'),
 
             'vd_monto_total' => session('voucher.monto') ?? 0,
-            'vd_datos_json' => [],
+            'vd_datos_json' => json_encode($datos_json,JSON_PRETTY_PRINT),
             'vd_estado2' => 'PA',
             'vd_estado3' => 'PE',
+            'vd_pdf_desktop' => $rutaRelativa,
 
             'vd_usu_mod' => session('auth.usuario_id') ?? null,
             'vd_fecha_mod' => now(),
         ]);
 
-        return view('postcompra', compact('voucher','entidad','imagenes','valores'));
+        return view('postcompra', compact('voucher','entidad','imagenes','valores','detalle'));
     }
 
     public function ordenar()
@@ -1748,81 +1850,29 @@ class VoucherController extends Controller
     }
 
     // public function descargar_pdf($id)
-    public function descargar_pdf($vou_id, $vmv_id, Request $request)
+    public function descargar_pdf($vd_id, Request $request)
     {
         // $voucher = Voucher::findOrFail($id);
 
-        $voucher = Voucher::query()
-            ->with([
-                'imagenes',
-                'entidad',
-                'modalidad.campos',
-                'modalidad',
-                'sucursales',
-            ])
-            ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
-                $query->where('vmv_id', $vmv_id);
-            })
-            ->where('vou_id', $vou_id)
-            ->where('vou_estado', 1)
-            ->firstOrFail();
+        $nombreArchivo = 'voucher-' . $vd_id . '.pdf';
+        $rutaCompleta = storage_path(
+            'app/public/vouchers/pdf/' . $nombreArchivo
+        );
 
-        $entidad = $voucher->entidad;
-
-        $imagenes = $voucher->imagenes;
-
-        $valores = $voucher->modalidadValores[0];
-
-        $modalidad = $voucher->modalidad;
-
-        $sucursales = $voucher->sucursales;
-
-        if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
-            $valores->vmv_monto_fijo=$request->monto;
+        if (!file_exists($rutaCompleta)) {
+            return redirect()->back();
         }
 
-        if (!$voucher) {
-            abort(404);
-        }
+        // return response()->file($rutaCompleta, [
+        //     'Content-Type' => 'application/pdf',
+        //     'Content-Disposition' =>
+        //         'inline; filename="' . $nombreArchivo . '"',
+        // ]);
 
-        // $data = [
-        //     'voucher'          => $voucher,
-        //     'entidad'          => $voucher->entidad,
-        //     'modalidad'        => $voucher->modalidad,
-        //     'codigoVoucher'    => $voucher->vou_codigo,
-        //     'nombrePara'       => $voucher->vou_para,
-        //     'nombreDe'         => $voucher->vou_de,
-        //     'mensajeVoucher'   => $voucher->vou_mensaje,
-        //     'montoVoucher'     => $voucher->vou_monto,
-        //     'nombreVoucher'    => $voucher->vou_nombre,
-        //     'nombreEntidad'    => $voucher->entidad->ent_nombre_fantasia,
-        //     'descripcionEntidad' => $voucher->entidad->ent_descripcion,
-        //     'logoEntidad'      => null,
-        //     'imagenVoucher'    => null,
-        //     'qrImagen'         => null,
-        //     'sucursales'       => collect(),
-        //     'fecha_actual'     => now()->format('d/m/Y'),
-        //     'fechaVencimiento' => optional($voucher->vou_fecha_hasta)->format('d/m/Y'),
-        //     'influencer'       => 0,
-        // ];
-
-        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad'))->render();
-        // $html = view('vouchers.pdf', $data)->render();
-
-        $pdf = Browsershot::html($html)
-            ->showBackground()
-            ->paperSize(8, 10.6666667, 'in')
-            ->margins(0, 0, 0, 0)
-            ->deviceScaleFactor(1)
-            ->timeout(120)
-            ->pdf();
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header(
-                'Content-Disposition',
-                'attachment; filename="voucher-' . $vou_id . '.pdf"'
-            );
+        return response()->download(
+            $rutaCompleta,
+            'voucher-' . $vd_id . '.pdf'
+        );
 
     }
 }

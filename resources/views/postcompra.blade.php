@@ -508,7 +508,7 @@
 
     // $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', $vou_detalles->vd_id);
     // $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', $voucher->vou_id);
-    $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
+    $descargaUrl = $descargaUrl ?? route('vouchers.voucher_pdf', ['voucher' => $detalle->vd_id]);
     $emailUrl = $emailUrl ?? '#';
     $loginUrl = $loginUrl ?? route('login');
     $ayudaUrl = $ayudaUrl ?? '#';

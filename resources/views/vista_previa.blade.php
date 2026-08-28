@@ -613,13 +613,10 @@
     .vp-white-section {
         width: 100%;
         min-height: 385px;
-
         display: flex;
         flex-direction: column;
         align-items: center;
-
-        padding: 38px 75px 42px;
-
+        padding: 25px 75px 42px;
         background: #fff;
     }
 
@@ -635,18 +632,13 @@
     }
 
     .vp-qr-card {
-        width: 405px;
-        min-height: 160px;
-
+        width: 550px;
+        min-height: 170px;
         display: flex;
         align-items: center;
-
         gap: 28px;
-
-        padding: 22px 14px;
-
+        padding: 12px 14px;
         background: #fff;
-
         box-shadow:
             0 3px 3px rgba(0, 0, 0, 0.20),
             0 1px 2px rgba(0, 0, 0, 0.08);
@@ -656,11 +648,9 @@
     /* QR */
 
     .vp-qr {
-        width: 105px;
-        height: 105px;
-
+        width: 145px;
+        height: 145px;
         flex-shrink: 0;
-
         display: flex;
         align-items: center;
         justify-content: center;
@@ -677,13 +667,10 @@
 
     .vp-qr-info {
         flex: 1;
-
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-
         font-family: Montserrat, Arial, sans-serif;
-
         color: #111;
         line-height: 1.05;
     }
@@ -695,24 +682,20 @@
 
     .vp-voucher-code {
         margin-bottom: 16px;
-
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 600;
     }
 
     .vp-qr-info strong {
         margin-bottom: 2px;
-
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 700;
-
         text-transform: uppercase;
     }
 
     .vp-qr-info > span:last-child {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 400;
-
         text-transform: uppercase;
     }
 
@@ -724,18 +707,13 @@
     .vp-community {
         width: 100%;
         max-width: 550px;
-
         margin-top: 20px;
-
         display: grid;
-
         grid-template-columns:
             minmax(150px, 1fr)
             minmax(185px, 1fr)
             minmax(100px, .75fr);
-
         align-items: center;
-
         column-gap: 25px;
     }
 
@@ -1062,9 +1040,7 @@
         .vp-white-section {
             width: 100%;
             min-height: 350px;
-
             padding: 20px 15px 15px;
-
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1458,14 +1434,6 @@
                                 @if($qrImagen)
                                     {{-- <img src="{{ $qrImagen }}" alt="Código QR del voucher"> --}}
                                     {!! $qrImagen !!}
-                                @else
-                                    <div class="vp-qr-placeholder" aria-label="Código QR de ejemplo">
-                                        @for($i = 0; $i < 49; $i++)
-                                            <span
-                                                style="opacity: {{ in_array($i, [1,3,5,7,8,9,11,13,15,17,19,21,22,24,25,27,29,31,32,34,36,38,40,41,43,45,47,48]) ? 1 : 0 }}">
-                                            </span>
-                                        @endfor
-                                    </div>
                                 @endif
                             </div>
 

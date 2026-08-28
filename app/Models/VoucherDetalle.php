@@ -34,6 +34,8 @@ class VoucherDetalle extends Model
         'vd_estado',
         'vd_estado2',
         'vd_estado3',
+        'vd_pdf_desktop',
+        'vd_pdf_mobile',
         'vd_fecha_alta',
         'vd_usu_alta',
         'vd_fecha_mod',

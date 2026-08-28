@@ -744,8 +744,9 @@ a{
 
     .vh-gift-preview {
         top: -15px;
-        right: 125px;
-        width: 410px;
+        /* right: 125px; */
+        /* width: 410px; */
+        width: 35em;
     }
 
     .vh-hero-categories {

@@ -12,7 +12,7 @@
     $vmv_id = data_get($valores ?? null, 'vmv_id', data_get($valores ?? null, 'vmv_id', '00056970'));
 
     $montoVoucher = data_get($valores ?? null, 'vmv_monto_fijo', data_get($voucher ?? null, 'vou_monto_fijo', 175000));
-    $codigoVoucher = data_get($voucher ?? null, 'vou_codigo', data_get($voucher ?? null, 'vou_id', '00056970'));
+    $codigoVoucher = data_get($voucher ?? null, 'vd_codigo', data_get($voucher ?? null, 'vou_id', '00056970'));
     $nombreVoucher = data_get($voucher ?? null, 'vou_nombre', 'Voucher Cumbres');
     $nombreEntidad = data_get($entidad ?? null, 'ent_nombre_fantasia', data_get($entidad ?? null, 'ent_nombre', 'Cumbres'));
     $descripcionEntidad = data_get($entidad ?? null, 'ent_descripcion_corta', 'Parte de: Alto Noa Shopping');
@@ -79,6 +79,42 @@
         return 'file://' . str_replace('\\', '/', public_path($path));
     };
 
+    $telefono = $sucursal_telefono->ed_telefono1 ?? '3871234567';
+
+    $direcciones_label='';
+    if ($sucursales->isNotEmpty()) {
+        foreach($sucursales as $sucursal) {
+            $direccion = $sucursal->ed_direccion;
+            $direcciones_label .= strtoupper($direccion)." o ";
+        }
+
+        $direcciones_label=rtrim($direcciones_label,' o ');
+    }
+
+    $condiciones = '';
+    if (trim($voucher->vou_modalidad_condiciones) !== '') {
+        $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
+        $condiciones = '<ul>';
+
+        foreach ($items as $item) {
+            $item = trim($item);
+
+            // Evitar elementos vacíos
+            if ($item === '') {
+                continue;
+            }
+
+            // Reemplazar variables
+            $item = str_replace('<<FECHA_INICIO>>',"<b>$fecha_actual</b>",$item);
+            $item = str_replace('<<FECHA_FIN>>',"<b>$fechaVencimiento</b>",$item);
+            $item = str_replace('<<SUCURSALES>>',"<b>$direcciones_label</b>",$item);
+
+            $condiciones .= '<li>' . $item . '</li>';
+        }
+
+        $condiciones .= '</ul>';
+    }
+
     $logoVauchis = imagenBase64(public_path('images/logo-2.png'));
     $logoEntidad = imagenBase64(storage_path('app/public/' . $logoEntidad_raw));
     $imagenVoucher = imagenBase64(storage_path('app/public/' . $imagenVoucher_raw));
@@ -93,13 +129,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-
-    <title>
-        Voucher {{ $entidad->ent_nombre_fantasia ?? '' }} -
-        {{-- {{ str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) }} --}}
-    </title>
+    <title>Voucher {{ $entidad->ent_nombre_fantasia ?? '' }} - {{-- {{ str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) }} --}}</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -620,13 +653,10 @@
         .vp-white-section {
             width: 100%;
             min-height: 385px;
-
             display: flex;
             flex-direction: column;
             align-items: center;
-
-            padding: 38px 75px 42px;
-
+            padding: 25px 75px 42px;
             background: #fff;
         }
 
@@ -642,18 +672,13 @@
         }
 
         .vp-qr-card {
-            width: 405px;
-            min-height: 160px;
-
+            width: 550px;
+            min-height: 170px;
             display: flex;
             align-items: center;
-
             gap: 28px;
-
-            padding: 22px 14px;
-
+            padding: 12px 14px;
             background: #fff;
-
             box-shadow:
                 0 3px 3px rgba(0, 0, 0, 0.20),
                 0 1px 2px rgba(0, 0, 0, 0.08);
@@ -663,11 +688,9 @@
         /* QR */
 
         .vp-qr {
-            width: 105px;
-            height: 105px;
-
+            width: 145px;
+            height: 145px;
             flex-shrink: 0;
-
             display: flex;
             align-items: center;
             justify-content: center;
@@ -684,13 +707,10 @@
 
         .vp-qr-info {
             flex: 1;
-
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-
             font-family: Montserrat, Arial, sans-serif;
-
             color: #111;
             line-height: 1.05;
         }
@@ -702,24 +722,20 @@
 
         .vp-voucher-code {
             margin-bottom: 16px;
-
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
         .vp-qr-info strong {
             margin-bottom: 2px;
-
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 700;
-
             text-transform: uppercase;
         }
 
         .vp-qr-info > span:last-child {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 400;
-
             text-transform: uppercase;
         }
 
@@ -868,149 +884,96 @@
             background: var(--vp-action);
             color: #fff;
         }
-    </style>
 
-    <style>
-        /*
-        |--------------------------------------------------------------------------
-        | AJUSTES ESPECÍFICOS PARA PDF
-        |--------------------------------------------------------------------------
-        */
+        /* =========================================================
+   AJUSTES EXCLUSIVOS PARA GENERAR EL PDF
+   ========================================================= */
 
-        @page {
-            size: 768px 1024px;
-            margin: 0;
-        }
+@page {
+    size: 8in 10.6666667in;
+    margin: 0;
+}
 
-        html,
-        body {
-            width: 768px !important;
-            height: 1024px !important;
-
-            margin: 0 !important;
-            padding: 0 !important;
-
-            overflow: hidden !important;
-
-            background: #ffffff;
-
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-.vp-stage {
+html,
+body {
     width: 768px !important;
     height: 1024px !important;
 
     margin: 0 !important;
     padding: 0 !important;
 
-    display: block !important;
-    overflow: hidden !important;
-}
-
-.vp-voucher {
-    width: 768px !important;
-    height: 1024px !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
+    background: #ffffff !important;
 
     overflow: hidden !important;
 
-    page-break-before: avoid !important;
-    page-break-after: avoid !important;
-    page-break-inside: avoid !important;
-
-    break-before: avoid !important;
-    break-after: avoid !important;
-    break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
 }
 
 
-/* =====================================================
-   SECCION VERDE
-   ===================================================== */
+/*
+ * Hoja física del PDF.
+ *
+ * No modifica absolutamente nada del voucher.
+ */
+.pdf-sheet {
+    width: 768px;
+    height: 1024px;
 
-.vp-green-section {
-    width: 100% !important;
-    height: 486px !important;
-    min-height: 0 !important;
+    display: flex;
 
-    margin: 0 !important;
+    justify-content: center;
+    align-items: flex-start;
 
-    padding:
-        35px
-        44px
-        24px !important;
+    padding-top: 15px;
 
-    overflow: hidden !important;
+    overflow: hidden;
 
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-
-    position: relative;
+    background: #ffffff;
 }
 
 
-/* =====================================================
-   SECCION AZUL
-   ===================================================== */
+/*
+ * Reducimos el voucher completo.
+ *
+ * Todas sus proporciones internas permanecen iguales.
+ */
+.pdf-scale {
+    width: 720px;
 
-.vp-blue-section {
-    width: 100% !important;
-
-    height: 247px !important;
-    min-height: 0 !important;
-
-    margin: 0 !important;
-
-    padding:
-        32px
-        68px !important;
-
-    overflow: hidden !important;
-
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-
-    position: relative;
+    zoom: 0.63;
 }
 
 
-/* =====================================================
-   SECCION BLANCA
-   ===================================================== */
+/*
+ * Sólo anulamos comportamientos propios de la vista web.
+ */
+.pdf-scale .vp-stage {
+    margin: 0 auto;
 
-.vp-white-section {
-    width: 100% !important;
+    overflow: visible;
 
-    height: 291px !important;
-    min-height: 0 !important;
+    scrollbar-width: none;
+}
 
-    margin: 0 !important;
+.pdf-scale .vp-stage::-webkit-scrollbar {
+    display: none;
+}
 
-    padding:
-        27px
-        70px
-        30px !important;
 
-    overflow: hidden !important;
-
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+/*
+ * Para PDF queremos conservar el borde redondeado.
+ */
+.pdf-scale .vp-voucher {
+    overflow: hidden;
 }
     </style>
-
 </head>
 
 <body>
 
+<div class="pdf-sheet">
+<div class="pdf-scale">
 <div class="vp-stage">
     <article class="vp-voucher">
         <section class="vp-green-section" style="background: {{ $entidad->ent_color_fondo ?? '#49b889' }};">
@@ -1063,10 +1026,8 @@
                     </div>
                 </div>
 
-                <a href="{{ data_get($entidad ?? null, 'ent_whatsapp') ? 'https://wa.me/' . preg_replace('/\D+/', '', data_get($entidad, 'ent_whatsapp')) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
-                    {{-- <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp"> --}}
-                    <img src="{{ $wpplogo }}" alt="Whatsapp">
-                    Contacta al vendedor
+                <a href="{{ $telefono!='' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
+                    <img src="{{ $wpplogo }}" alt="Whatsapp">Contacta al vendedor
                 </a>
             </div>
 
@@ -1078,7 +1039,6 @@
                     @foreach($sucursales as $sucursal)
                         @php
                             $direccion = $sucursal->ed_direccion;
-                            $direcciones_label .= strtoupper($direccion)." o ";
                         @endphp
                         @if($direccion)
                             <li>
@@ -1087,11 +1047,6 @@
                             </li>
                         @endif
                     @endforeach
-                    @php
-                        $direcciones_label=rtrim($direcciones_label,' o ');
-                    @endphp
-                @else
-                    
                 @endif
                 
             </ul>
@@ -1113,15 +1068,19 @@
             <div class="vp-conditions">
                 <div class="vp-validity">Válido desde {{ $fecha_actual }} hasta {{ $fechaVencimiento }}</div>
                 <h3>Tené en cuenta</h3>
-                <ul>
-                    <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
-                    <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
-                    <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
-                    <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
-                    <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
-                    <li>Envío no incluido.</li>
-                    <li>Uso único.</li>
-                </ul>
+                @if ($condiciones!='')
+                    {!! $condiciones !!}
+                @else
+                    <ul>
+                        <li>Canjeable por productos o servicios del local según modalidad del voucher.</li>
+                        <li>Válido para canjear desde <strong>{{ $fecha_actual }}</strong> hasta el <strong>{{ $fechaVencimiento }}</strong>.</li>
+                        <li><strong>No reembolsable</strong> ni canjeable por dinero.</li>
+                        <li>Se canjea en <b>{{ $direcciones_label }}</b></li>
+                        <li>Retiro a cargo del portador del voucher y a acordar con el vendedor.</li>
+                        <li>Envío no incluido.</li>
+                        <li>Uso único.</li>
+                    </ul>
+                @endif
             </div>
         </section>
 
@@ -1134,14 +1093,7 @@
                     <div class="vp-qr">
                         @if($qrImagen)
                             {{-- <img src="{{ $qrImagen }}" alt="Código QR del voucher"> --}}
-                        @else
-                            <div class="vp-qr-placeholder" aria-label="Código QR de ejemplo">
-                                @for($i = 0; $i < 49; $i++)
-                                    <span
-                                        style="opacity: {{ in_array($i, [1,3,5,7,8,9,11,13,15,17,19,21,22,24,25,27,29,31,32,34,36,38,40,41,43,45,47,48]) ? 1 : 0 }}">
-                                    </span>
-                                @endfor
-                            </div>
+                            {!! $qrImagen !!}
                         @endif
                     </div>
 
@@ -1190,6 +1142,8 @@
 
         </section>
     </article>
+</div>
+</div>
 </div>
 
 </body>

@@ -533,3 +533,5 @@ ALTER TABLE `vouchers_detalles`
 ALTER TABLE `modalidades` ADD `mod_condiciones` TEXT NULL DEFAULT NULL AFTER `mod_descripcion`;
 
 ALTER TABLE `vouchers` ADD `vou_telefono_ed_id` INT NULL DEFAULT NULL AFTER `ed_id`;
+
+ALTER TABLE `vouchers_detalles` ADD `vd_pdf_desktop` TEXT NULL DEFAULT NULL AFTER `vd_estado3`, ADD `vd_pdf_mobile` TEXT NULL DEFAULT NULL AFTER `vd_pdf_desktop`;

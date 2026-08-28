@@ -124,9 +124,9 @@ $(document).ready(function () {
                                         </span>
                                     </td>
                                     <td class="text-center" data-label="PDF">
-                                        <button type="button" class="mv-pdf-btn" title="Descargar voucher">
+                                        <a class="mv-pdf-btn" title="Descargar voucher" href="{{ route('vouchers.voucher_pdf', ['voucher' => $voucher->vd_id]) }}">
                                             <i class="bi bi-file-earmark-pdf"></i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

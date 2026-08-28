@@ -149,7 +149,13 @@ Route::get('/vista_previa/{voucher}/{modalidadCampo}', [VoucherController::class
 Route::get('/compra/{voucher}/{modalidadCampo}', [VoucherController::class, 'compra_voucher'])->name('vouchers.compra');
 Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'postcompra_voucher'])->name('vouchers.postcompra');
 // Route::get('/voucher/{id}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
-Route::get('/voucher/{voucher}/{modalidadCampo}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
+Route::get('/voucher/{voucher}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
+
+
+use App\Http\Controllers\VoucherCanjeController;
+Route::get('/voucher/canjear/{token}', [VoucherCanjeController::class, 'show'])->name('voucher.canjear');
+
+Route::post('/voucher/canjear/{token}', [VoucherCanjeController::class, 'canjear'])->name('voucher.canjear.confirmar');
 
 
 use App\Http\Controllers\UsuarioController;
