@@ -551,6 +551,7 @@ $(document).ready(function () {
 
     .mv-page {
         background: #fff;
+        padding-top: 70px;
     }
 
     .mv-header {

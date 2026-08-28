@@ -5,13 +5,15 @@
 @push('styles')
 <style>
     .vc-page {
-        min-height: calc(100vh - 120px);
+        min-height: 100vh;
         display: flex;
-        align-items: center;
         justify-content: center;
-        padding: 40px 20px;
+        align-items: flex-start;
+        /* Espacio para navbar desktop + separación visual */
+        /* padding: 140px 20px 50px; */
         background: #f7f8fb;
         font-family: 'Montserrat', sans-serif;
+        box-sizing: border-box;
     }
 
     .vc-card {
@@ -20,7 +22,7 @@
         background: #fff;
         border-radius: 18px;
         padding: 32px;
-        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .08);
         text-align: center;
     }
 
@@ -118,7 +120,15 @@
 
     @media (max-width: 576px) {
         .vc-page {
-            padding: 20px 14px;
+            min-height: 100dvh;
+
+            /*
+            * Espacio para navbar mobile.
+            * Ajustá 90px si tu navbar tiene otra altura.
+            */
+            padding-top: 70px;
+
+            align-items: flex-start;
         }
 
         .vc-card {

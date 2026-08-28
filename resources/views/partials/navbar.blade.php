@@ -319,6 +319,125 @@
         </div>
     </div>
 
+@elseif (session('auth.tu_id')==2)
+<nav class="v-mobile-navbar">
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu"><i class="bi bi-list"></i></button>
+    <a href="{{ route('home') }}" class="v-mobile-navbar__logo"><img src="{{ asset('images/logo-1.png') }}" alt="Vauchis"></a>
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileSearch"><i class="bi bi-search"></i></button>
+</nav>
+<div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileMenu">
+    <div class="v-mobile-panel__header">
+        <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="v-mobile-panel__body">
+        <h3>Menú</h3>
+
+        {{-- OBJETOS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 1) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
+                    <span>Objetos</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuObjetos" aria-expanded="false" aria-controls="menuObjetos">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuObjetos">
+                @foreach($rubros->where('cv_id', 1)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        {{-- EXPERIENCIAS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 2) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
+                    <span>Experiencias</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuExperiencias" aria-expanded="false" aria-controls="menuExperiencias">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuExperiencias">
+                @foreach($rubros->where('cv_id', 2)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        {{-- CON CAUSA --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 3) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
+                    <span>Con causa</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuConCausa" aria-expanded="false" aria-controls="menuConCausa">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuConCausa">
+                @foreach($rubros->where('cv_id', 3)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ACCIONES DEL MENÚ --}}
+        <div class="v-mobile-menu-actions">
+            <a href="#" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Perfil.png') }}" alt="">
+                <span>{{ session('auth.nombre') }} - {{ session('auth.email') }}</span>
+            </a>
+            <a href="{{ route('usuarios.vouchers', session('auth.usuario_id')) }}" class="v-mobile-action-link">
+                <span><i class="bi bi-pencil-square me-2"></i> Mis vouchers</span>
+            </a>
+            <a href="#" class="v-mobile-action-link">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                        <i class="bi bi-box-arrow-right me-2"></i>Salir
+                    </button>
+                </form>
+            </a>
+            <a href="#" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Ayuda.png') }}" alt="">
+                <span>Ayuda</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end v-search-panel" tabindex="-1" id="vMobileSearch">
+    <div class="v-search-panel__top">
+        <div class="v-search-panel__input">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Buscar..." autofocus>
+        </div>
+
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="v-search-panel__results">
+        <a href="#">Hoyts Salta</a>
+        <a href="#">Hotelería</a>
+        <a href="#">Hotel Salta</a>
+    </div>
+</div>
 @else
 <nav class="v-mobile-navbar">
     <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu"><i class="bi bi-list"></i></button>
