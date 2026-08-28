@@ -1770,6 +1770,11 @@ class VoucherController extends Controller
         }
 
         Browsershot::html($html)
+            ->setChromePath('/var/www/.cache/puppeteer/chrome-headless-shell/linux-148.0.7778.97/chrome-headless-shell-linux64/chrome-headless-shell')
+            ->setOption('args', [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+            ])
             ->showBackground()
             ->paperSize(8, 10.6666667, 'in')
             ->margins(0, 0, 0, 0)
