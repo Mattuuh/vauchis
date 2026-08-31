@@ -9,6 +9,10 @@ class VoucherCanjeController extends Controller
 {
     public function show($token)
     {
+        if (session('auth.tu_id')!=3) {
+            return redirect()->intended(route('login'))->with('warning', 'Necesita iniciar sesion para canjear el voucher.');
+        }
+
         $voucher = DB::table('vouchers_detalles as vd')
             ->join('vouchers as v', 'v.vou_id', '=', 'vd.vou_id')
             ->join('entidades as e', 'e.ent_id', '=', 'v.ent_id')
@@ -31,6 +35,10 @@ class VoucherCanjeController extends Controller
 
     public function canjear(Request $request, $token)
     {
+        if (session('auth.tu_id')!=3) {
+            return redirect()->intended(route('login'))->with('warning', 'Necesita iniciar sesion para canjear el voucher.');
+        }
+
         $voucher = DB::table('vouchers_detalles')
             // ->where('vd_token', $token)
             ->where('vd_id', $token)

@@ -129,6 +129,7 @@
                         <div class="vp-custom-form">
                         @foreach($voucher->modalidadValores as $campo)
                             <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
+                            <small class="vp-amount-help">Podes ingresar monto superior a <b>${{ number_format($campo->vmv_monto_minimo,2,',','.') }}</b> y menor a <b>${{ number_format($campo->vmv_monto_maximo,2,',','.') }}</b>.</small>
                         @endforeach
                         </div>
                     </div>
@@ -418,6 +419,21 @@
 
 .vp-custom-form input::placeholder {
     color: #4e85ca;
+}
+
+.vp-custom-form small {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: #0065FA;
+    letter-spacing: -0.1px;
+    max-width: 430px;
+}
+
+.vp-amount-help b {
+    font-weight: 600;
 }
 
 .vp-products-section {
@@ -797,6 +813,13 @@
         width: 100%;
         margin: 0;
         padding: 0;
+    }
+
+    .vp-custom-form small {
+        margin-top: 6px;
+        font-size: 12px;
+        line-height: 1.4;
+        max-width: 100%;
     }
 
     .vp-voucher-box--blue .voucher-monto-input {

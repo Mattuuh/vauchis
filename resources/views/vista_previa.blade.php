@@ -295,7 +295,7 @@
         margin-bottom: 5px;
         color: #454545;
         font-family: 'Grape Nuts', cursive;
-        font-size: 13px;
+        font-size: 15px;
         letter-spacing: .12em;
         text-transform: uppercase;
     }
@@ -315,7 +315,7 @@
     .vp-hand-message {
         margin: 27px 0 0;
         font-family: 'Grape Nuts', cursive;
-        font-size: 16px;
+        font-size: 18px;
         font-style: italic;
         line-height: 1.4;
         text-align: center;
@@ -602,7 +602,7 @@
     .vp-conditions ul {
         margin: 0;
         padding-left: 13px;
-        font-size: 10px;
+        font-size: 12px;
         line-height: 1.55;
     }
 
@@ -927,7 +927,7 @@
 
         .vp-hand-message {
             margin-top: 25px;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .vp-value-panel {
@@ -982,7 +982,7 @@
         }
 
         .vp-addresses li {
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .vp-blue-section {
@@ -1000,7 +1000,7 @@
         }
 
         .vp-steps li {
-            font-size: 11px;
+            font-size: 12px;
             margin-bottom: 9px;
         }
 
@@ -1014,7 +1014,7 @@
         }
 
         .vp-conditions ul {
-            font-size: 10px;
+            font-size: 11px;
             line-height: 1.65;
         }
 

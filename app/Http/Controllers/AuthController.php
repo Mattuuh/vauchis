@@ -19,6 +19,14 @@ class AuthController extends Controller
 {
     public function showLogin(): View
     {
+        $previous_path = parse_url(url()->previous(), PHP_URL_PATH);
+
+        if (str_starts_with($previous_path, '/compra/')) {
+            session(['registro_url_anterior' => $previous_path]);
+        } elseif (str_starts_with($previous_path, '/voucher/canjear/')) {
+            session(['registro_url_anterior' => $previous_path]);
+        }
+
         return view('auth.login');
     }
 
@@ -106,11 +114,13 @@ class AuthController extends Controller
         ]);
 
         // return redirect()->route('home');
+        $url_anterior = session()->pull('registro_url_anterior');
 
         if ($usuario->ref_id!='' && $usuario->ref_id>0) {
-            return redirect()->intended(route('clientes.index'));
+            // return redirect()->intended(route('clientes.index'));
+            return redirect($url_anterior ?? route('clientes.index'));
         } else {
-            return redirect()->intended(route('home'));
+            return redirect($url_anterior ?? route('home'));
         }
     }
 
@@ -209,7 +219,6 @@ class AuthController extends Controller
                 'vd_usu_mod' => 0
             ]);
 
-        // return redirect('/')->with('success', 'Tu cuenta fue creada correctamente.');
         return redirect()->intended(route('login'))->with('success', 'Tu cuenta fue creada correctamente.');
     }
 

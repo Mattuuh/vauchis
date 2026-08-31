@@ -57,7 +57,7 @@
         text: '{{ session('success') }}'
     });
     </script>
-    @elseif ($errors->any())
+    @elseif ($errors->any() || session('error')!='')
     <script>
     Swal.fire({
         icon: 'error',

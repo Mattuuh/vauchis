@@ -10,7 +10,7 @@
         justify-content: center;
         align-items: flex-start;
         /* Espacio para navbar desktop + separación visual */
-        /* padding: 140px 20px 50px; */
+        padding: 7.5em 20px 50px;
         background: #f7f8fb;
         font-family: 'Montserrat', sans-serif;
         box-sizing: border-box;
@@ -126,7 +126,7 @@
             * Espacio para navbar mobile.
             * Ajustá 90px si tu navbar tiene otra altura.
             */
-            padding-top: 70px;
+            padding-top: 7em;
 
             align-items: flex-start;
         }
@@ -160,13 +160,9 @@
 
     <div class="vc-card">
 
-        <div class="vc-icon">
-            <i class="bi bi-gift"></i>
-        </div>
+        <div class="vc-icon"><i class="bi bi-gift"></i></div>
 
-        <h1 class="vc-title">
-            Canjear voucher
-        </h1>
+        <h1 class="vc-title">Canjear voucher</h1>
 
         <p class="vc-subtitle">
             Verificá los datos antes de confirmar el canje.
@@ -231,30 +227,15 @@
         </div>
 
         @if($voucher->vd_estado2 !== 'CA')
-
-            <form
-                method="POST"
-                action="{{ route('voucher.canjear.confirmar', $voucher->vd_id) }}"
-            >
+            <form method="POST" action="{{ route('voucher.canjear.confirmar', $voucher->vd_id) }}">
                 @csrf
 
-                <button
-                    type="submit"
-                    class="vc-btn"
-                    onclick="return confirm('¿Confirmás el canje de este voucher?')"
-                >
+                <button type="submit" class="vc-btn" onclick="return confirm('¿Confirmás el canje de este voucher?')">
                     Confirmar canje
                 </button>
-
             </form>
-
         @else
-
-            <div class="vc-status success">
-                <i class="bi bi-check-circle-fill"></i>
-                Voucher ya canjeado
-            </div>
-
+            <div class="vc-status success"><i class="bi bi-check-circle-fill"></i>Voucher ya canjeado</div>
         @endif
 
     </div>
