@@ -124,6 +124,31 @@ $(document).ready(function () {
 </script>
 @endpush
 
+@push('styles')
+<style>
+    .color-selector {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-option {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid #000;
+      cursor: pointer;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+        border-color: #ff0000;
+    }
+</style>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
@@ -200,10 +225,10 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label required-label">Logo</label>
                     <input type="file" name="logo" class="form-control" value="{{ old('logo') }}">
-                </div>
+                </div> --}}
 
                 <div class="row g-3">
 
@@ -321,6 +346,24 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Color de fondo</label>
+
+                    <div class="color-selector">
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#0065FA' ? 'selected' : '' }}" data-color="#0065FA" style="background-color: #0065FA"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#07378C' ? 'selected' : '' }}" data-color="#07378C" style="background-color: #07378C"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#3C66AD' ? 'selected' : '' }}" data-color="#3C66AD" style="background-color: #3C66AD"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#49B384' ? 'selected' : '' }}" data-color="#49B384" style="background-color: #49B384"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#E51281' ? 'selected' : '' }}" data-color="#E51281" style="background-color: #E51281"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#FECF44' ? 'selected' : '' }}" data-color="#FECF44" style="background-color: #FECF44"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#A2A2A1' ? 'selected' : '' }}" data-color="#A2A2A1" style="background-color: #A2A2A1"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo')=='#FDFDFE' ? 'selected' : '' }}" data-color="#FDFDFE" style="background-color: #FDFDFE"></button>
+                    </div>
+
+                    <input type="hidden" id="selectedColor" name="f_color_fondo" value="{{ old('f_color_fondo') }}">
+                    <br>
+                </div>
+
                 <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
@@ -346,6 +389,35 @@ $(document).ready(function () {
                     @error('f_descripcion_interna')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
+                </div>
+
+                {{-- ARCHIVOS --}}
+                <div class="vch-card p-3 mb-3">
+                    {{-- <h6 class="fw-bold mb-2">Imagenes</h6>  --}}
+
+                    <div class="col-12">
+                        <label class="form-label required-label">Imagen/es</label>
+                        <div id="logos-container">
+                            <div class="row logo-item mb-2">
+                                <div class="col-sm-8">
+                                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                                        <option value="">Selecciona el tipo de archivo</option>
+                                        @foreach($tipos_archivos as $tipo)
+                                            <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                                {{ $tipo['tipo_archivo_nombre'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-1 d-flex align-items-center"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
                 </div>
 
             </div>
@@ -548,6 +620,28 @@ $(document).ready(function () {
     })({});
 
     initMap();
+</script>
+
+
+<script>
+    const colors = document.querySelectorAll(".color-option");
+    const selectedColor = document.getElementById("selectedColor");
+
+    colors.forEach(color => {
+        color.addEventListener("click", () => {
+
+        // Sacar selección anterior
+        colors.forEach(c => c.classList.remove("selected"));
+
+        // Marcar seleccionado
+        color.classList.add("selected");
+
+        // Guardar el color
+        selectedColor.value = color.dataset.color;
+
+        // console.log("Color seleccionado:", selectedColor.value);
+        });
+    });
 </script>
 @endpush
 @endsection

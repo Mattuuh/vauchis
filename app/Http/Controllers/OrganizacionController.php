@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entidad;
+use App\Models\EntidadDomicilio;
 use App\Models\Organizacion;
+use App\Models\OrganizacionImagen;
 use App\Models\Pais;
 use App\Models\Provincia;
+use App\Models\TipoArchivo;
 use App\Models\TipoDocumento;
 use App\Models\TipoResponsabilidad;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -91,11 +96,16 @@ class OrganizacionController extends Controller
             ->orderBy('provincia_nombre')
             ->get(['provincia_id', 'provincia_nombre', 'pais_id']);
 
+        $tipos_archivos = TipoArchivo::where('tipo_archivo_estado', 1)
+            ->orderBy('tipo_archivo_id', 'desc')
+            ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
+
         return view('organizaciones.create', compact(
             'tiposResponsabilidad',
             'tiposDocumento',
             'paises',
             'provincias',
+            'tipos_archivos'
         ));
     }
 
@@ -147,17 +157,17 @@ class OrganizacionController extends Controller
         // var_dump($request->all());
 
         try {
-            $this->validarOrganizacion($request);
+            // $this->validarOrganizacion($request);
 
             $logoPath = null;
 
-            if ($request->hasFile('logo')) {
-                $name_legible = $request->file('logo')->getClientOriginalName();
-                $type = $request->file('logo')->getMimeType();
-                $size = $request->file('logo')->getSize();
-                $format = $request->file('logo')->getClientOriginalExtension();
-                $logoPath = $request->file('logo')->store('org_logos', 'public');
-            }
+            // if ($request->hasFile('logo')) {
+            //     $name_legible = $request->file('logo')->getClientOriginalName();
+            //     $type = $request->file('logo')->getMimeType();
+            //     $size = $request->file('logo')->getSize();
+            //     $format = $request->file('logo')->getClientOriginalExtension();
+            //     $logoPath = $request->file('logo')->store('org_logos', 'public');
+            // }
 
             $organizacion = Organizacion::create([
                 'tipo_doc_id' => $request->tipo_doc_id,
@@ -179,17 +189,53 @@ class OrganizacionController extends Controller
                 'org_longitud' => $request->f_longitud,
                 'org_descripcion_publica' => $request->f_descripcion_publica,
                 'org_descripcion_interna' => $request->f_descripcion_interna,
-                'org_img_nombre_legible' => $name_legible,
-                'org_img_name' => $name_legible,
-                'org_img_path' => $logoPath,
-                'org_img_format' => $format,
-                'org_img_size' => $size,
+                // 'org_img_nombre_legible' => $name_legible,
+                // 'org_img_name' => $name_legible,
+                // 'org_img_path' => $logoPath,
+                // 'org_img_format' => $format,
+                // 'org_img_size' => $size,
+                'org_color_fondo' => $request->f_color_fondo,
                 'org_publico' => $request->f_publico,
                 'org_estado' => '1',
                 'org_estado2' => null,
                 'org_fecha_alta' => now(),
                 'org_usu_alta' => '1',
             ]);
+
+            $path = null;
+            $usu = 1;
+
+            if ($request->hasFile('imagenes')) {
+                $tiposArchivos = $request->input('f_tipo_archivo_id', []);
+
+                foreach ($request->file('imagenes') as $index => $imagen) {
+                    // $filename = Str::uuid() . '.' . $imagen->extension();
+                    // $path = $imagen->storeAs('logos', $filename, 'public');
+                    $tipo_archivo_id = $tiposArchivos[$index] ?? null;
+
+                    $name = sanear_string($imagen->getClientOriginalName());
+                    $name_legible = $imagen->getClientOriginalName();
+                    $type = $imagen->getMimeType();
+                    $size = $imagen->getSize();
+                    $format = $imagen->getClientOriginalExtension();
+                    $path = $imagen->store('organizaciones', 'public');
+
+                    $imagen = OrganizacionImagen::create([
+                        'org_id' => $organizacion->org_id,
+                        'tipo_archivo_id' => $tipo_archivo_id,
+                        'of_nombre' => $name,
+                        'of_img_nombre_legible' => $name_legible,
+                        'of_img_name' => $name,
+                        'of_img_path' => $path,
+                        'of_img_format' => $format,
+                        'of_img_size' => $size,
+                        'of_principal' => 1,
+                        'of_estado' => 1,
+                        'of_fecha_alta' => now(),
+                        'of_usu_alta' => $usu,
+                    ]);
+                }
+            }
 
             // dd('Se guardó correctamente', $organizacion);
 
@@ -208,7 +254,9 @@ class OrganizacionController extends Controller
 
     public function edit($id)
     {
-        $organizacion = Organizacion::findOrFail($id);
+        $organizacion = Organizacion::with([
+            'imagenes'
+        ])->findOrFail($id);
 
         $tiposDocumento = TipoDocumento::where('tipo_doc_estado', 1)
             ->orderBy('tipo_doc_id', 'desc')
@@ -262,6 +310,10 @@ class OrganizacionController extends Controller
             ])
             ->toArray();
 
+        $tipos_archivos = TipoArchivo::where('tipo_archivo_estado', 1)
+            ->orderBy('tipo_archivo_id', 'desc')
+            ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
+
         return view('organizaciones.edit', compact(
             'organizacion',
             'tiposDocumento',
@@ -269,17 +321,19 @@ class OrganizacionController extends Controller
             'provincias',
             'domiciliosDisponibles',
             'domiciliosSeleccionados',
+            'tipos_archivos'
         ));
     }
 
     public function update(Request $request, $id)
     {
         try {
-            $this->validarOrganizacion($request);
+            // $this->validarOrganizacion($request);
 
             $organizacion = Organizacion::findOrFail($id);
 
             $logoPath = null;
+            $usu=1;
 
             if ($request->hasFile('logo')) {
                 $name_legible = $request->file('logo')->getClientOriginalName();
@@ -317,6 +371,7 @@ class OrganizacionController extends Controller
                 'org_longitud' => $request->f_longitud,
                 'org_descripcion_publica' => $request->f_descripcion_publica,
                 'org_descripcion_interna' => $request->f_descripcion_interna,
+                'org_color_fondo' => $request->f_color_fondo,
                 'org_publico' => $request->f_publico,
                 'org_fecha_mod' => now(),
                 'org_usu_mod' => 1,
@@ -334,6 +389,80 @@ class OrganizacionController extends Controller
                 DB::table('entidades_domicilios')
                     ->whereIn('ed_id', $domiciliosIds)
                     ->update(['org_id' => $id]);
+            }
+
+            
+            // Eliminar logos marcados
+            if ($request->filled('delete_logos')) {
+
+                $logos = OrganizacionImagen::where('org_id', $id)
+                    ->whereIn('of_id', $request->delete_logos)
+                    ->get();
+
+                foreach ($logos as $logo) {
+
+                    if ($logo->imagen && $logo->imagen->of_img_path) {
+                        // Storage::disk('public')->delete($logo->imagen->of_img_path);
+                    }
+
+                    $logo->update([
+                        'of_principal' => 0,
+                        'of_estado' => 0,
+                        'of_fecha_baja' => now(),
+                        'of_usu_baja' => $usu,
+                    ]);
+                }
+            }
+
+            // LOGO PRINCIPAL
+            if ($request->filled('logo_principal')) {
+
+                OrganizacionImagen::where('ent_id', $id)
+                    ->where('of_estado', 1)
+                    ->update([
+                        'of_principal' => 1,
+                    ]);
+
+                OrganizacionImagen::where('ent_id', $id)
+                    ->where('of_id', $request->logo_principal)
+                    ->where('of_estado', 1)
+                    ->update([
+                        'of_principal' => 1,
+                        'of_fecha_mod' => now(),
+                        'of_usu_mod' => $usu,
+                    ]);
+            }
+
+            if ($request->hasFile('imagenes')) {
+                $tiposArchivos = $request->input('f_tipo_archivo_id', []);
+
+                foreach ($request->file('imagenes') as $index => $imagen) {
+                    // $filename = Str::uuid() . '.' . $imagen->extension();
+                    // $path = $imagen->storeAs('logos', $filename, 'public');
+                    $tipo_archivo_id = $tiposArchivos[$index] ?? null;
+
+                    $name = sanear_string($imagen->getClientOriginalName());
+                    $name_legible = $imagen->getClientOriginalName();
+                    $type = $imagen->getMimeType();
+                    $size = $imagen->getSize();
+                    $format = $imagen->getClientOriginalExtension();
+                    $path = $imagen->store('logos', 'public');
+
+                    $imagen = OrganizacionImagen::create([
+                        'org_id' => $id,
+                        'tipo_archivo_id' => $tipo_archivo_id,
+                        'of_nombre' => $name,
+                        'of_img_nombre_legible' => $name_legible,
+                        'of_img_name' => $name,
+                        'of_img_path' => $path,
+                        'of_img_format' => $format,
+                        'of_img_size' => $size,
+                        'of_principal' => 1,
+                        'of_estado' => 1,
+                        'of_fecha_alta' => now(),
+                        'of_usu_alta' => $usu,
+                    ]);
+                }
             }
 
             return redirect()
@@ -429,5 +558,76 @@ class OrganizacionController extends Controller
             'success' => true,
             'message' => 'Orden guardado correctamente'
         ]);
+    }
+
+    public function vouchers_por_organizacion($id)
+    {
+        // $organizacion = Organizacion::with('imagenPrincipal', 'logoPrincipal', 'resaltador_organizacion')
+        $organizacion = Organizacion::with('imagenPrincipal', 'logoPrincipal')
+        // $organizacion = Organizacion::
+            ->where('org_publico',1)
+            ->where('org_estado',1)
+            ->findOrFail($id);
+
+        $entidades = EntidadDomicilio::where('org_id', $id)
+            ->where('ed_publico', 1)
+            ->where('ed_estado', 1)
+            ->pluck('ent_id');
+        // dd($entidades);
+
+        if (!$organizacion) {
+            abort(404);
+        }
+
+        $vouchers = Voucher::with('imagenes')
+            ->with([
+                'modalidad.campos',
+                'modalidadValores',
+                'modalidadValores.campo',
+            ])
+            ->withWhereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 3);
+            })
+            ->whereIn('ent_id', $entidades)
+            ->where('vou_estado', 1)
+            ->get();
+
+
+        $entidades = Entidad::whereIn('ent_id', $entidades)
+            ->where('ent_publico', 1)
+            ->where('ent_estado', 1)
+            ->get();
+
+        // $vouchers_fijos = Voucher::with('imagenes')
+        //     ->with([
+        //         'modalidad.campos',
+        //         'modalidadValores',
+        //         'modalidadValores.campo',
+        //     ])
+        //     ->withWhereHas('modalidad', function ($query) {
+        //         $query->where('tipo_mod_id', 1);
+        //     })
+        //     ->where('ent_id', $id)
+        //     ->where('vou_estado', 1)
+        //     ->get();
+
+        // $vouchers_eleccion = Voucher::with('imagenes')
+        //     ->with([
+        //         'modalidad.campos',
+        //         'modalidadValores',
+        //         'modalidadValores.campo',
+        //     ])
+        //     ->withWhereHas('modalidad', function ($query) {
+        //         $query->where('tipo_mod_id', 2);
+        //     })
+        //     ->where('ent_id', $id)
+        //     ->where('vou_estado', 1)
+        //     ->get();
+
+            // dd($vouchers_fijos);
+            // dd($voucher->toArray());
+
+        // return view('entidad', compact('entidad', 'domicilios', 'vouchers', 'vouchers_fijos', 'vouchers_eleccion'));
+        return view('organizacion', compact('organizacion', 'vouchers', 'entidades'));
     }
 }

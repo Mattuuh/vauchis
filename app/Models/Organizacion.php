@@ -36,6 +36,7 @@ class Organizacion extends Model
         'org_img_path',
         'org_img_format',
         'org_img_size',
+        'org_color_fondo',
         'org_publico',
         'org_estado',
         'org_estado2',
@@ -54,5 +55,20 @@ class Organizacion extends Model
     public function domicilios()
     {
         return $this->hasMany(EntidadDomicilio::class, 'org_id', 'org_id');
+    }
+
+    public function imagenes()
+    {
+        return $this->hasMany(OrganizacionImagen::class, 'org_id', 'org_id')->where('of_estado', 1);
+    }
+
+    public function imagenPrincipal()
+    {
+        return $this->hasOne(OrganizacionImagen::class, 'org_id')->where('of_principal', 1)->where('tipo_archivo_id',2);
+    }
+
+    public function logoPrincipal()
+    {
+        return $this->hasOne(OrganizacionImagen::class, 'org_id')->where('of_principal', 1)->where('tipo_archivo_id',1);
     }
 }

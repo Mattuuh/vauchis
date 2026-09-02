@@ -90,6 +90,28 @@
     .entidad-remove-btn:hover {
         opacity: 1;
     }
+
+
+    .color-selector {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-option {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid #000;
+      cursor: pointer;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+        border-color: #ff0000;
+    }
 </style>
 @endpush
 
@@ -171,33 +193,6 @@
                     @error('f_razon_social')
                         <div class="text-required">{{ $message }}</div>
                     @enderror
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label required-label">Logo</label>
-                    <div class="card card-custom p-3 mb-3">
-
-                        {{-- @if($entidad->count()) --}}
-                            <div class="row g-3">
-                                {{-- @foreach($entidad as $logo) --}}
-                                    <div class="col-12 col-md-4">
-                                        <div class="border rounded p-2 h-100">
-                                            <img src="{{ asset('storage/' . $organizacion->org_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $organizacion->org_img_path }}">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="delete_banners[]" value="{{ $organizacion->org_id }}" id="banner-delete-{{ $organizacion->org_id }}">
-                                                <label class="form-check-label" for="banner-delete-{{ $organizacion->org_id }}">
-                                                    Eliminar logo
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{-- @endforeach --}}
-                            </div>
-                        {{-- @else
-                            <div class="text-muted small">No hay entidad cargados.</div>
-                        @endif --}}
-                    </div>
-                    <input type="file" name="logo" class="form-control">
                 </div>
 
                 <div class="row g-3">
@@ -315,6 +310,23 @@
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Color de fondo</label>
+                    <div class="color-selector">
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#0065FA' ? 'selected' : '' }}" data-color="#0065FA" style="background-color: #0065FA"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#07378C' ? 'selected' : '' }}" data-color="#07378C" style="background-color: #07378C"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#3C66AD' ? 'selected' : '' }}" data-color="#3C66AD" style="background-color: #3C66AD"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#49B384' ? 'selected' : '' }}" data-color="#49B384" style="background-color: #49B384"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#E51281' ? 'selected' : '' }}" data-color="#E51281" style="background-color: #E51281"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#FECF44' ? 'selected' : '' }}" data-color="#FECF44" style="background-color: #FECF44"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#A2A2A1' ? 'selected' : '' }}" data-color="#A2A2A1" style="background-color: #A2A2A1"></button>
+                        <button type="button" class="color-option {{ old('f_color_fondo', $organizacion->org_color_fondo)=='#FDFDFE' ? 'selected' : '' }}" data-color="#FDFDFE" style="background-color: #FDFDFE"></button>
+                    </div>
+
+                    <input type="hidden" id="selectedColor" name="f_color_fondo" value="{{ old('f_color_fondo', $organizacion->org_color_fondo) }}">
+                    <br>
+                </div>
+
                 <div class="col-12">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $organizacion->org_publico) ? 'checked' : '' }}>
@@ -340,6 +352,63 @@
 
             </div>
         </div>
+
+        {{-- ARCHIVOS --}}
+        <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Imagenes</h6>
+            <div class="row g-3">
+                @foreach ($organizacion->imagenes as $imagen)
+                    <div class="col-12 col-md-4">
+                        <div class="border rounded p-2 h-100">
+                            <img src="{{ asset('storage/'. $imagen->of_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->of_nombre }}" style="height:160px;border-radius:6px;">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="delete_logos[]" value="{{ $imagen->of_id }}" id="logo-delete-{{ $imagen->of_id }}">
+                                <label class="form-check-label" for="logo-delete-{{ $imagen->of_id }}">Eliminar imagen</label>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="logo_principal" value="{{ $imagen->of_id }}" id="logo-principal-{{ $imagen->of_id }}" {{ $imagen->of_principal == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="logo-principal-{{ $imagen->of_id }}">Imagen principal</label>
+                            </div>
+
+                            <div class="form-check">
+                                <select name="f_tipo_archivo_id_[]" id="f_tipo_archivo_id_" class="form-select field-required" required>
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="col-12">
+                <label class="form-label required-label">Imagen/es</label>
+                <div id="logos-container">
+                    <div class="row logo-item mb-2">
+                        <div class="col-sm-8">
+                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
+                                <option value="">Selecciona el tipo de archivo</option>
+                                @foreach($tipos_archivos as $tipo)
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                        {{ $tipo['tipo_archivo_nombre'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center"></div>
+                    </div>
+
+                </div>
+            </div>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
+        </div>
+
         <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Comercios vinculados</h6>
             <p class="text-muted small mb-3">
@@ -661,6 +730,28 @@ $(document).on('click', '#btn_eliminar', function (e) {
     })({});
 
     initMap();
+</script>
+
+
+<script>
+    const colors = document.querySelectorAll(".color-option");
+    const selectedColor = document.getElementById("selectedColor");
+
+    colors.forEach(color => {
+        color.addEventListener("click", () => {
+
+        // Sacar selección anterior
+        colors.forEach(c => c.classList.remove("selected"));
+
+        // Marcar seleccionado
+        color.classList.add("selected");
+
+        // Guardar el color
+        selectedColor.value = color.dataset.color;
+
+        // console.log("Color seleccionado:", selectedColor.value);
+        });
+    });
 </script>
 @endpush
 @endsection

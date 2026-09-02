@@ -535,3 +535,33 @@ ALTER TABLE `modalidades` ADD `mod_condiciones` TEXT NULL DEFAULT NULL AFTER `mo
 ALTER TABLE `vouchers` ADD `vou_telefono_ed_id` INT NULL DEFAULT NULL AFTER `ed_id`;
 
 ALTER TABLE `vouchers_detalles` ADD `vd_pdf_desktop` TEXT NULL DEFAULT NULL AFTER `vd_estado3`, ADD `vd_pdf_mobile` TEXT NULL DEFAULT NULL AFTER `vd_pdf_desktop`;
+
+
+
+
+CREATE TABLE `organizaciones_files` (
+  `of_id` int NOT NULL AUTO_INCREMENT,
+  `org_id` int DEFAULT NULL,
+  `tipo_archivo_id` int DEFAULT NULL,
+  `of_img_nombre_legible` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_img_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_img_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_img_format` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_img_size` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_principal` int DEFAULT '0',
+  `of_estado` int DEFAULT NULL,
+  `of_estado2` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `of_fecha_alta` datetime DEFAULT NULL,
+  `of_usu_alta` int DEFAULT NULL,
+  `of_fecha_mod` datetime DEFAULT NULL,
+  `of_usu_mod` int DEFAULT NULL,
+  `of_fecha_baja` datetime DEFAULT NULL,
+  `of_usu_baja` int DEFAULT NULL, 
+  PRIMARY KEY (`of_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `organizaciones` ADD `org_color_fondo` VARCHAR(50) NULL DEFAULT NULL AFTER `org_orden`;
+
+ALTER TABLE `influencers_files` ADD `tipo_archivo_id` INT NULL DEFAULT NULL AFTER `inf_id`;
+
+ALTER TABLE `influencers` ADD `inf_color_fondo` VARCHAR(50) NULL DEFAULT NULL AFTER `inf_orden`;

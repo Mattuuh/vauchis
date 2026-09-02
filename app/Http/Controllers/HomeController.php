@@ -137,6 +137,7 @@ class HomeController extends Controller
             ->get()
             ->map(function ($org) {
                 return (object)[
+                    'id' => $org->org_id,
                     'name' => $org->org_nombre,
                     'logo' => $org->org_img_path,
                     // 'brands' => $org->domicilios
@@ -199,6 +200,7 @@ class HomeController extends Controller
             ->get()
             ->map(function ($inf) {
                 return (object)[
+                    'id' => $inf->inf_id,
                     'name' => $inf->inf_nombre_fantasia,
                     'photo' => $inf->imagenPrincipal
                         ? $inf->imagenPrincipal->if_img_path

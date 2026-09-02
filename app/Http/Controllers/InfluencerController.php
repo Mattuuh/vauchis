@@ -7,6 +7,7 @@ use App\Models\InfluencerImagen;
 use App\Models\Pais;
 use App\Models\Provincia;
 use App\Models\TipoDocumento;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 
 class InfluencerController extends Controller
@@ -99,50 +100,50 @@ class InfluencerController extends Controller
         // var_dump($request->all());
 
         try {
-            $request->validate([
-                // 'tipo_resp_id' => ['required'],
-                'tipo_doc_id' => ['required'],
-                'f_documento' => ['required', 'max:150'],
-                'f_nombre_fantasia' => ['required', 'max:150'],
-                'f_apellido' => ['required', 'max:150'],
-                'f_nombre' => ['required', 'max:150'],
-                // 'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-                'f_pais_id' => ['required'],
-                'f_provincia_id' => ['required'],
-                'f_ciudad' => ['required', 'max:100'],
-                'f_instagram' => ['nullable', 'max:150'],
-                'f_facebook' => ['nullable', 'max:150'],
-                'f_tiktok' => ['nullable', 'max:150'],
-                'f_x' => ['nullable', 'max:150'],
-                'f_whatsapp' => ['nullable', 'max:150'],
-                'f_email1' => ['required', 'email', 'max:150'],
-                'f_email2' => ['nullable', 'email', 'max:150'],
-                // 'f_telefono1' => ['required', 'max:30'],
-                // 'f_telefono2' => ['nullable', 'max:30'],
-                'f_descripcion_publica' => ['required', 'max:255'],
-                'f_descripcion_interna' => ['required', 'max:255'],
-            ], [
-                // 'tipo_resp_id.required' => 'Selecciona el tipo de responsabilidad.',
-                'tipo_doc_id.required' => 'Selecciona el tipo de documento.',
-                'f_documento.required' => 'Ingresa el número de documento.',
-                'f_nombre_fantasia.required' => 'Ingresa el nombre de fantasía.',
-                'f_apellido.required' => 'Ingresa el apellido.',
-                'f_nombre.required' => 'Ingresa el nombre.',
-                'f_instagram.required' => 'Ingresa la instagram.',
-                'f_facebook.required' => 'Ingresa el facebook.',
-                'f_tiktok.required' => 'Ingresa el tiktok.',
-                'f_x.required' => 'Ingresa el X.',
-                'f_whatsapp.required' => 'Ingresa el whatsapp.',
-                'f_pais_id.required' => 'Selecciona el país.',
-                'f_provincia_id.required' => 'Selecciona la provincia.',
-                'f_ciudad.required' => 'Ingresa la ciudad.',
-                'f_direccion.required' => 'Ingresa la dirección.',
-                'f_telefono1.required' => 'Ingresa el teléfono principal.',
-                // 'f_longitud.required' => 'Ingresa la ciudad.',
-                // 'f_latitud.required' => 'Ingresa la ciudad.',
-                'f_descripcion_publica.required' => 'Ingresa una descripcion breve y precisa.',
-                'f_descripcion_interna.required' => 'Ingresa una descripcion mas amplia y detallada.',
-            ]);
+            // $request->validate([
+            //     // 'tipo_resp_id' => ['required'],
+            //     'tipo_doc_id' => ['required'],
+            //     'f_documento' => ['required', 'max:150'],
+            //     'f_nombre_fantasia' => ['required', 'max:150'],
+            //     'f_apellido' => ['required', 'max:150'],
+            //     'f_nombre' => ['required', 'max:150'],
+            //     // 'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            //     'f_pais_id' => ['required'],
+            //     'f_provincia_id' => ['required'],
+            //     'f_ciudad' => ['required', 'max:100'],
+            //     'f_instagram' => ['nullable', 'max:150'],
+            //     'f_facebook' => ['nullable', 'max:150'],
+            //     'f_tiktok' => ['nullable', 'max:150'],
+            //     'f_x' => ['nullable', 'max:150'],
+            //     'f_whatsapp' => ['nullable', 'max:150'],
+            //     'f_email1' => ['required', 'email', 'max:150'],
+            //     'f_email2' => ['nullable', 'email', 'max:150'],
+            //     // 'f_telefono1' => ['required', 'max:30'],
+            //     // 'f_telefono2' => ['nullable', 'max:30'],
+            //     'f_descripcion_publica' => ['required', 'max:255'],
+            //     'f_descripcion_interna' => ['required', 'max:255'],
+            // ], [
+            //     // 'tipo_resp_id.required' => 'Selecciona el tipo de responsabilidad.',
+            //     'tipo_doc_id.required' => 'Selecciona el tipo de documento.',
+            //     'f_documento.required' => 'Ingresa el número de documento.',
+            //     'f_nombre_fantasia.required' => 'Ingresa el nombre de fantasía.',
+            //     'f_apellido.required' => 'Ingresa el apellido.',
+            //     'f_nombre.required' => 'Ingresa el nombre.',
+            //     'f_instagram.required' => 'Ingresa la instagram.',
+            //     'f_facebook.required' => 'Ingresa el facebook.',
+            //     'f_tiktok.required' => 'Ingresa el tiktok.',
+            //     'f_x.required' => 'Ingresa el X.',
+            //     'f_whatsapp.required' => 'Ingresa el whatsapp.',
+            //     'f_pais_id.required' => 'Selecciona el país.',
+            //     'f_provincia_id.required' => 'Selecciona la provincia.',
+            //     'f_ciudad.required' => 'Ingresa la ciudad.',
+            //     'f_direccion.required' => 'Ingresa la dirección.',
+            //     'f_telefono1.required' => 'Ingresa el teléfono principal.',
+            //     // 'f_longitud.required' => 'Ingresa la ciudad.',
+            //     // 'f_latitud.required' => 'Ingresa la ciudad.',
+            //     'f_descripcion_publica.required' => 'Ingresa una descripcion breve y precisa.',
+            //     'f_descripcion_interna.required' => 'Ingresa una descripcion mas amplia y detallada.',
+            // ]);
 
             $influencer = Influencer::create([
                 'tipo_doc_id' => $request->tipo_doc_id,
@@ -164,6 +165,7 @@ class InfluencerController extends Controller
                 // 'inf_telefono2' => $request->f_telefono2,
                 'inf_descripcion_publica' => $request->f_descripcion_publica,
                 'inf_descripcion_interna' => $request->f_descripcion_interna,
+                'inf_color_fondo' => $request->f_color_fondo,
                 'inf_publico' => $request->f_publico,
                 'inf_estado' => '1',
                 'inf_estado2' => null,
@@ -241,37 +243,37 @@ class InfluencerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $request->validate([
-                'tipo_doc_id' => ['required'],
-                'f_documento' => ['required', 'max:150'],
-                'f_nombre_fantasia' => ['required', 'max:150'],
-                'f_apellido' => ['required', 'max:150'],
-                'f_nombre' => ['required', 'max:150'],
-                'f_pais_id' => ['required'],
-                'f_provincia_id' => ['required'],
-                'f_ciudad' => ['required', 'max:100'],
-                'f_instagram' => ['nullable', 'max:150'],
-                'f_facebook' => ['nullable', 'max:150'],
-                'f_tiktok' => ['nullable', 'max:150'],
-                'f_x' => ['nullable', 'max:150'],
-                'f_whatsapp' => ['nullable', 'max:150'],
-                'f_email1' => ['required', 'email', 'max:150'],
-                'f_email2' => ['nullable', 'email', 'max:150'],
-                'f_descripcion_publica' => ['required', 'max:255'],
-                'f_descripcion_interna' => ['required', 'max:255'],
-            ], [
-                'tipo_doc_id.required' => 'Selecciona el tipo de documento.',
-                'f_documento.required' => 'Ingresa el número de documento.',
-                'f_nombre_fantasia.required' => 'Ingresa el nombre de fantasía.',
-                'f_apellido.required' => 'Ingresa el apellido.',
-                'f_nombre.required' => 'Ingresa el nombre.',
-                'f_pais_id.required' => 'Selecciona el país.',
-                'f_provincia_id.required' => 'Selecciona la provincia.',
-                'f_ciudad.required' => 'Ingresa la ciudad.',
-                'f_email1.required' => 'Ingresa el email principal.',
-                'f_descripcion_publica.required' => 'Ingresa una descripcion breve y precisa.',
-                'f_descripcion_interna.required' => 'Ingresa una descripcion mas amplia y detallada.',
-            ]);
+            // $request->validate([
+            //     'tipo_doc_id' => ['required'],
+            //     'f_documento' => ['required', 'max:150'],
+            //     'f_nombre_fantasia' => ['required', 'max:150'],
+            //     'f_apellido' => ['required', 'max:150'],
+            //     'f_nombre' => ['required', 'max:150'],
+            //     'f_pais_id' => ['required'],
+            //     'f_provincia_id' => ['required'],
+            //     'f_ciudad' => ['required', 'max:100'],
+            //     'f_instagram' => ['nullable', 'max:150'],
+            //     'f_facebook' => ['nullable', 'max:150'],
+            //     'f_tiktok' => ['nullable', 'max:150'],
+            //     'f_x' => ['nullable', 'max:150'],
+            //     'f_whatsapp' => ['nullable', 'max:150'],
+            //     'f_email1' => ['required', 'email', 'max:150'],
+            //     'f_email2' => ['nullable', 'email', 'max:150'],
+            //     'f_descripcion_publica' => ['required', 'max:255'],
+            //     'f_descripcion_interna' => ['required', 'max:255'],
+            // ], [
+            //     'tipo_doc_id.required' => 'Selecciona el tipo de documento.',
+            //     'f_documento.required' => 'Ingresa el número de documento.',
+            //     'f_nombre_fantasia.required' => 'Ingresa el nombre de fantasía.',
+            //     'f_apellido.required' => 'Ingresa el apellido.',
+            //     'f_nombre.required' => 'Ingresa el nombre.',
+            //     'f_pais_id.required' => 'Selecciona el país.',
+            //     'f_provincia_id.required' => 'Selecciona la provincia.',
+            //     'f_ciudad.required' => 'Ingresa la ciudad.',
+            //     'f_email1.required' => 'Ingresa el email principal.',
+            //     'f_descripcion_publica.required' => 'Ingresa una descripcion breve y precisa.',
+            //     'f_descripcion_interna.required' => 'Ingresa una descripcion mas amplia y detallada.',
+            // ]);
 
             $influencer = Influencer::findOrFail($id);
 
@@ -291,6 +293,7 @@ class InfluencerController extends Controller
                 'inf_whatsapp' => $request->f_whatsapp,
                 'inf_email1' => $request->f_email1,
                 'inf_email2' => $request->f_email2,
+                'inf_color_fondo' => $request->f_color_fondo,
                 'inf_publico' => $request->f_publico,
                 'inf_descripcion_publica' => $request->f_descripcion_publica,
                 'inf_descripcion_interna' => $request->f_descripcion_interna,
@@ -464,5 +467,63 @@ class InfluencerController extends Controller
             'success' => true,
             'message' => 'Orden guardado correctamente'
         ]);
+    }
+
+    public function vouchers_por_influencer($id)
+    {
+        // $influencer = Influencer::with('imagenPrincipal', 'logoPrincipal', 'resaltador_organizacion')
+        $influencer = Influencer::
+            where('inf_publico',1)
+            ->where('inf_estado',1)
+            ->findOrFail($id);
+
+        if (!$influencer) {
+            abort(404);
+        }
+
+        $vouchers = Voucher::with('imagenes')
+            ->with([
+                'modalidad.campos',
+                'modalidadValores',
+                'modalidadValores.campo',
+            ])
+            ->withWhereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 3);
+            })
+            ->where('inf_id', $id)
+            ->where('vou_estado', 1)
+            ->get();
+
+        // $vouchers_fijos = Voucher::with('imagenes')
+        //     ->with([
+        //         'modalidad.campos',
+        //         'modalidadValores',
+        //         'modalidadValores.campo',
+        //     ])
+        //     ->withWhereHas('modalidad', function ($query) {
+        //         $query->where('tipo_mod_id', 1);
+        //     })
+        //     ->where('inf_id', $id)
+        //     ->where('vou_estado', 1)
+        //     ->get();
+
+        // $vouchers_eleccion = Voucher::with('imagenes')
+        //     ->with([
+        //         'modalidad.campos',
+        //         'modalidadValores',
+        //         'modalidadValores.campo',
+        //     ])
+        //     ->withWhereHas('modalidad', function ($query) {
+        //         $query->where('tipo_mod_id', 2);
+        //     })
+        //     ->where('inf_id', $id)
+        //     ->where('vou_estado', 1)
+        //     ->get();
+
+            // dd($vouchers_fijos);
+            // dd($voucher->toArray());
+
+        // return view('entidad', compact('entidad', 'domicilios', 'vouchers', 'vouchers_fijos', 'vouchers_eleccion'));
+        return view('influencer', compact('influencer', 'vouchers'));
     }
 }

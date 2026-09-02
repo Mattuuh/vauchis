@@ -13,6 +13,7 @@ class InfluencerImagen extends Model
 
     protected $fillable = [
         'inf_id',
+        'tipo_archivo_id',
         'if_img_nombre_legible',
         'if_img_name',
         'if_img_path',

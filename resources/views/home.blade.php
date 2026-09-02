@@ -155,7 +155,7 @@
                 <div class="vh-carousel-viewport" data-carousel="organizations">
                     <div class="vh-logo-carousel">
                 @foreach ($organizations as $organization)
-                    <a href="#" class="vh-logo-bubble">
+                    <a href="{{ isset($organization->id) ? route('vouchers.organizacion', $organization->id) : '#' }}" class="vh-logo-bubble">
                         @if (!empty($organization->logo))
                             <img src="{{ asset('storage/' . $organization->logo) }}" alt="{{ $organization->name }}">
                         @else
@@ -190,7 +190,7 @@
                         @php
                             $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : $influencerFallbackImages[$loop->index % count($influencerFallbackImages)];
                         @endphp
-                        <article class="vh-influencer-card">
+                        <article class="vh-influencer-card influencer" data-url="{{ isset($influencer->id) ? route('vouchers.influencer', $influencer->id) : '#' }}">
                             <img class="vh-influencer-card__cover" src="{{ $imgSrc }}" alt="{{ $influencer->name }}">
                             <div class="vh-influencer-card__body">
                                 <img src="{{ $imgSrc }}" alt="" class="vh-avatar">
@@ -2466,6 +2466,13 @@ a{
         });
 
         $('.entidades').on('click', function () {
+            const url = $(this).data('url');
+            if (url && url !== '#') {
+                window.location = url;
+            }
+        });
+
+        $('.influencer').on('click', function () {
             const url = $(this).data('url');
             if (url && url !== '#') {
                 window.location = url;

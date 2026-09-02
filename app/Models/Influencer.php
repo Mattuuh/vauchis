@@ -54,6 +54,12 @@ class Influencer extends Model
 
     public function imagenPrincipal()
     {
+        // return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1)->where('tipo_archivo_id',2);
         return $this->hasOne(InfluencerImagen::class, 'inf_id')->where('if_principal', 1);
+    }
+
+    public function logoPrincipal()
+    {
+        return $this->hasOne(InfluencerImagen::class, 'inf_id')->where('if_principal', 1)->where('tipo_archivo_id',1);
     }
 }
