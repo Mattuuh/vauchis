@@ -67,19 +67,19 @@
                 </div>
             </div>
 
-            <div class="vp-brand-meta">
+            {{-- <div class="vp-brand-meta">
             @foreach ($entidades as $entidad)
                 @if(!empty($entidad->ent_nombre_fantasia))
                     <span>{{ $entidad->ent_nombre_fantasia }}</span>
                 @endif
             @endforeach
-            </div>
+            </div> --}}
 
         </div>
     </section>
 
-    <section class="vp-brand-content">
-        {{-- <div class="vp-brand-shell">
+    {{-- <section class="vp-brand-content">
+        <div class="vp-brand-shell">
             @foreach($vouchers_fijos as $voucher)
             <article class="vp-voucher-box vp-voucher-box--green">
                     @php
@@ -119,14 +119,12 @@
                         </div>
                     </div>
                 </article>
-            @endforeach --}}
+            @endforeach
 
             <section class="vp-products-section">
                 <h2>Vouchers sugeridos</h2>
-                {{-- <p>Regala vouchers de productos específicos seleccionados por el comercio</p> --}}
 
                 <div class="vp-products-wrap">
-                    {{-- <button class="vp-products-arrow vp-products-arrow--left" type="button">‹</button> --}}
                     <img class="vp-products-arrow vp-products-arrow--left" src="{{ asset('images/chevron-left.png') }}" alt="Fecha izquierda">
 
                     <div class="vp-products-grid">
@@ -158,11 +156,16 @@
                         @endforeach
                     </div>
 
-                    {{-- <button class="vp-products-arrow vp-products-arrow--right" type="button">›</button> --}}
                     <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/chevron-right.png') }}" alt="Fecha derecha">
                 </div>
             </section>
 
+        </div>
+    </section> --}}
+
+    <section class="vo-content entidades-section">
+        <div class="vo-shell " id="entidades-container">
+            @include('categorias.partials.entidades', ['entidades' => $entidades])
         </div>
     </section>
 
@@ -1097,6 +1100,214 @@ body.resumen-compra-visible {
     .resumen-compra__continuar {
         min-width: 135px;
         padding: 12px 22px;
+    }
+}
+
+.vo-shell {
+    position: relative;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+}
+
+.vo-content {
+    padding: 24px 0 56px;
+}
+
+@media (max-width: 680px) {
+    .vo-shell {
+        width: min(100% - 28px, 1180px);
+    }
+}
+
+
+.vo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px 28px;
+}
+
+.vo-card {
+    background: #fff;
+    border-radius: 9px;
+    overflow: hidden;
+    box-shadow: 0 2px 7px rgba(0,0,0,.18);
+}
+
+.vo-card-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+
+.vo-card-image {
+    height: 116px;
+    position: relative;
+    background: #eef2f6;
+    overflow: hidden;
+}
+
+.vo-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.vo-card-body {
+    min-height: 62px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.vo-card-body h3 {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #1b2738;
+}
+
+.vo-card-body p {
+    margin: 0;
+    font-size: 11px;
+    color: #4c5665;
+}
+
+.vo-price {
+    align-self: flex-end;
+    white-space: nowrap;
+    font-size: 10px;
+    color: #4c5665;
+}
+
+.vo-empty {
+    grid-column: 1 / -1;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    color: #536070;
+    font-weight: 600;
+}
+
+
+@media (max-width: 767px) {
+
+    .vo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 8px;
+        padding: 10px 15px 20px;
+        background: #eef3ff;
+    }
+
+    .vo-card {
+        width: 100%;
+        min-width: 0;
+        background: #fff;
+        border-radius: 11px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, .20);
+    }
+
+    .vo-card-link {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .vo-card-image {
+        position: relative;
+        width: 100%;
+        height: 96px;
+        background: #eef2f6;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .vo-card-badge {
+        position: absolute;
+        top: 7px;
+        left: 10px;
+        z-index: 2;
+
+        display: inline-flex;
+        align-items: center;
+
+        padding: 3px 7px;
+        border-radius: 4px;
+
+        font-size: 8px;
+        line-height: 1;
+        font-weight: 500;
+
+        white-space: nowrap;
+    }
+
+    .vo-card-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .vo-card-body {
+        min-height: 72px;
+        padding: 15px 11px 9px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0;
+    }
+
+    .vo-card-body > div {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .vo-card-body h3 {
+        margin: 0 0 1px;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.15;
+        font-weight: 600;
+        color: #161616;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vo-card-body p {
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+        line-height: 1.15;
+        font-weight: 400;
+        color: #555;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vo-price {
+        display: block;
+        width: 100%;
+        margin-top: 1px;
+
+        font-size: 9px;
+        line-height: 1.2;
+        font-weight: 400;
+        color: #9a9a9a;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
     </style>
