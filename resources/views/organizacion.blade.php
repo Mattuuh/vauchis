@@ -1126,6 +1126,35 @@ body.resumen-compra-visible {
     gap: 22px 28px;
 }
 
+.vo-card-badge {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    /* top: 8px;
+    left: 10px; */
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 0;
+    height: 20px;
+    /* padding: 0 9px; */
+    /* border-radius: 10px; */
+    font-family: Montserrat, sans-serif;
+    /* font-size: 9px; */
+    /* font-weight: 600; */
+    white-space: nowrap;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}
+
 .vo-card {
     background: #fff;
     border-radius: 9px;
