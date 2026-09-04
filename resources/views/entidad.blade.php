@@ -129,7 +129,7 @@
                         <div class="vp-custom-form">
                         @foreach($voucher->modalidadValores as $campo)
                             <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
-                            <small class="vp-amount-help">Podes ingresar monto superior a <b>${{ number_format($campo->vmv_monto_minimo,2,',','.') }}</b> y menor a <b>${{ number_format($campo->vmv_monto_maximo,2,',','.') }}</b>.</small>
+                            <small class="vp-amount-help">Desde <b>${{ number_format($campo->vmv_monto_minimo,2,',','.') }}</b> hasta <b>${{ number_format($campo->vmv_monto_maximo,2,',','.') }}</b>.</small>
                         @endforeach
                         </div>
                     </div>
@@ -137,7 +137,7 @@
             @endforeach
 
             <section class="vp-products-section">
-                <h2>Vouchers seleccionados por el comercio</h2>
+                <h2>Vouchers sugeridos</h2>
                 {{-- <p>Regala vouchers de productos específicos seleccionados por el comercio</p> --}}
 
                 <div class="vp-products-wrap">
