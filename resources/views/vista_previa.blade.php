@@ -399,114 +399,193 @@
         height: 100%;
         object-fit: cover;
     }
-
+    
     .vp-commerce-row {
-        position: relative;
-        z-index: 2;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 28px;
-        align-items: center;
-        padding: 42px 38px 30px;
-    }
+    position: relative;
+    z-index: 2;
 
-    .vp-commerce {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        color: #fff;
-    }
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "commerce whatsapp"
+        "addresses addresses";
 
-    .vp-commerce-logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex: 0 0 82px;
-        width: 82px;
-        height: 82px;
-        overflow: hidden;
-        border: 3px solid #fff;
-        border-radius: 50%;
-        background: #12723c;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 700;
-        text-align: center;
-    }
+    column-gap: 28px;
+    row-gap: 20px;
 
-    .vp-commerce-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        background: #fff;
-    }
+    align-items: center;
 
-    .vp-commerce-label {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 11px;
-        text-transform: uppercase;
-    }
+    padding: 42px 38px 30px;
+}
 
-    .vp-commerce-name {
-        display: block;
-        font-size: 22px;
-        font-weight: 700;
-    }
 
-    .vp-commerce-description {
-        display: block;
-        margin-top: 2px;
-        font-size: 13px;
-    }
+/* COMERCIO */
+.vp-commerce {
+    grid-area: commerce;
 
-    .vp-whatsapp {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-width: 235px;
-        height: 49px;
-        padding: 0 24px;
-        border-radius: 999px;
-        background: #fff;
-        color: #111;
-        font-size: 13px;
-        font-weight: 700;
-        text-decoration: none;
-        box-shadow: 0 3px 5px rgba(0,0,0,.12);
-    }
+    display: flex;
+    align-items: center;
+    gap: 18px;
 
-    .vp-whatsapp svg {
-        width: 29px;
-        height: 29px;
-        color: #35bd7c;
-    }
+    color: #fff;
+}
 
-    .vp-addresses {
-        position: relative;
-        z-index: 2;
-        width: 60%;
-        margin: 0 auto;
-        padding: 0;
-        list-style: none;
-        color: #fff;
-    }
 
-    .vp-addresses li {
-        display: flex;
-        align-items: flex-start;
-        gap: 9px;
-        margin: 0 0 10px;
-        font-size: 11px;
-        line-height: 1.4;
-    }
+/* LOGO */
+.vp-commerce-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .vp-addresses svg {
-        flex: 0 0 18px;
-        width: 18px;
-        height: 18px;
-    }
+    flex: 0 0 82px;
+    width: 82px;
+    height: 82px;
+
+    overflow: hidden;
+
+    border: 3px solid #fff;
+    border-radius: 50%;
+
+    background: #12723c;
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+
+.vp-commerce-logo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background: #fff;
+}
+
+
+/* DATOS */
+.vp-commerce-info {
+    min-width: 0;
+}
+
+
+.vp-commerce-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+
+.vp-commerce-name {
+    display: block;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+
+.vp-commerce-description {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 13px;
+}
+
+
+/* WHATSAPP */
+.vp-whatsapp {
+    grid-area: whatsapp;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-width: 235px;
+    height: 49px;
+
+    padding: 0 24px;
+
+    border-radius: 999px;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    box-shadow: 0 3px 5px rgba(0,0,0,.12);
+}
+
+
+.vp-whatsapp img {
+    width: 29px;
+    height: 29px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+
+.vp-whatsapp span {
+    white-space: nowrap;
+}
+
+
+/* DIRECCIONES */
+.vp-addresses {
+    grid-area: addresses;
+
+    position: relative;
+    z-index: 2;
+
+    width: 60%;
+
+    margin: 0 auto;
+
+    padding: 0;
+
+    list-style: none;
+
+    color: #fff;
+}
+
+
+.vp-addresses li {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 9px;
+
+    margin: 0 0 10px;
+
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+
+.vp-addresses li:last-child {
+    margin-bottom: 0;
+}
+
+
+.vp-addresses li i {
+    flex: 0 0 auto;
+
+    font-size: 18px;
+    line-height: 1;
+}
 
     .vp-blue-section {
         position: relative;
@@ -921,13 +1000,17 @@
             border-radius: 0 0 15px 15px;
         }
 
+        .vp-hand-label {
+            font-size: clamp(20px, 16vw, 26px);
+        }
+
         .vp-hand-value {
-            font-size: 21px;
+            font-size: clamp(26px, 16vw, 40px);
         }
 
         .vp-hand-message {
             margin-top: 25px;
-            font-size: 15px;
+            font-size: clamp(23px, 15vw, 32px);
         }
 
         .vp-value-panel {
@@ -952,37 +1035,146 @@
 
         .vp-commerce-row {
             display: block;
-            padding: 34px 18px 20px;
+            width: 100%;
+            padding:
+                clamp(20px, 6vw, 32px)
+                clamp(20px, 10vw, 52px)
+                clamp(28px, 8vw, 42px);
+            box-sizing: border-box;
         }
 
+        /* ==========================
+        COMERCIO
+        ========================== */
+
         .vp-commerce {
-            margin-bottom: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(12px, 4vw, 20px);
+            margin-bottom: clamp(28px, 8vw, 42px);
         }
 
         .vp-commerce-logo {
-            flex-basis: 70px;
-            width: 70px;
-            height: 70px;
+            flex: 0 0 clamp(82px, 21vw, 112px);
+            width: clamp(82px, 21vw, 112px);
+            height: clamp(82px, 21vw, 112px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .vp-commerce-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .vp-commerce-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: clamp(2px, 1vw, 6px);
+        }
+
+        .vp-commerce-label {
+            display: block;
+            margin-bottom: clamp(5px, 1.5vw, 8px);
+            font-size: clamp(12px, 3.2vw, 16px);
+            line-height: 1.2;
+            font-weight: 400;
+            text-transform: uppercase;
         }
 
         .vp-commerce-name {
-            font-size: 18px;
+            display: block;
+            font-size: clamp(21px, 6vw, 30px);
+            line-height: 1.1;
+            font-weight: 700;
+            margin-bottom: 2px;
+            overflow-wrap: break-word;
         }
+
+        .vp-commerce-description {
+            display: block;
+            font-size: clamp(15px, 4.2vw, 21px);
+            line-height: 1.25;
+            font-weight: 400;
+            overflow-wrap: break-word;
+        }
+
+
+        /* ==========================
+        DIRECCIONES
+        ========================== */
+
+        .vp-addresses {
+            width: 100%;
+            padding: 0;
+            margin: 0 0 clamp(38px, 11vw, 58px);
+            list-style: none;
+        }
+
+        .vp-addresses li {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(9px, 2.5vw, 13px);
+            margin-bottom: clamp(14px, 4vw, 21px);
+            font-size: clamp(14px, 4vw, 18px);
+            line-height: 1.4;
+        }
+
+        .vp-addresses li:last-child {
+            margin-bottom: 0;
+        }
+
+        .vp-addresses li i {
+            flex-shrink: 0;
+            font-size: clamp(21px, 5.5vw, 28px);
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .vp-addresses li span {
+            flex: 1;
+            min-width: 0;
+            overflow-wrap: break-word;
+        }
+
+
+        /* ==========================
+        WHATSAPP
+        ========================== */
 
         .vp-whatsapp {
             width: 100%;
             min-width: 0;
-            height: 55px;
-            font-size: 14px;
+            height: clamp(72px, 18vw, 96px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(14px, 5vw, 25px);
+            padding: 0 clamp(20px, 6vw, 30px);
+            border-radius: 999px;
+            background: #fff;
+            color: #000;
+            font-size: clamp(16px, 4.3vw, 20px);
+            font-weight: 600;
+            text-decoration: none;
+            box-sizing: border-box;
         }
 
-        .vp-addresses {
-            width: 100%;
-            padding: 0 20px;
+        .vp-whatsapp img {
+            width: clamp(44px, 11vw, 58px);
+            height: clamp(44px, 11vw, 58px);
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
-        .vp-addresses li {
-            font-size: 12px;
+        .vp-whatsapp span {
+            text-align: center;
         }
 
         .vp-blue-section {
@@ -992,15 +1184,19 @@
         }
 
         .vp-how-title {
-            font-size: 25px;
+            /* font-size: 25px; */
+            font-size: clamp(28px, 15vw, 46px);
+            font-weight: 400;
         }
 
         .vp-how-title strong {
-            font-size: 27px;
+            /* font-size: 27px; */
+            font-size: clamp(30px, 15vw, 48px);
+            font-weight: 900;
         }
 
         .vp-steps li {
-            font-size: 12px;
+            font-size: clamp(15px, 15vw, 17px);
             margin-bottom: 9px;
         }
 
@@ -1009,12 +1205,13 @@
         }
 
         .vp-conditions h3 {
-            font-size: 24px;
+            font-size: clamp(28px, 15vw, 46px);
+            font-weight: 900;
             text-transform: none;
         }
 
         .vp-conditions ul {
-            font-size: 11px;
+            font-size: clamp(14px, 15vw, 16px);
             line-height: 1.65;
         }
 
@@ -1052,7 +1249,7 @@
         TARJETA QR
         ========================= */
 
-        .vp-qr-column {
+        /* .vp-qr-column {
             width: 100%;
 
             display: flex;
@@ -1137,7 +1334,7 @@
             font-weight: 400;
 
             text-transform: uppercase;
-        }
+        } */
 
 
         /* =========================
@@ -1362,37 +1559,33 @@
                                     {{ $nombreEntidad }}
                                 @endif
                             </div>
-                            <div>
+
+                            <div class="vp-commerce-info">
                                 <span class="vp-commerce-label">Canjeá tu Vauchis en:</span>
                                 <strong class="vp-commerce-name">{{ $nombreEntidad }}</strong>
-                                <span class="vp-commerce-description">{{ $descripcionEntidad }}</span>
+
                             </div>
                         </div>
 
-                        <a href="{{ $telefono!='' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
+                        <ul class="vp-addresses">
+                            @if ($sucursales->isNotEmpty())
+                                @foreach($sucursales as $sucursal)
+                                    @php
+                                        $direccion = $sucursal->ed_direccion;
+                                    @endphp
+
+                                    @if($direccion)
+                                        <li><i class="bi bi-geo-alt"></i><span>{{ $direccion }}</span></li>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </ul>
+
+                        <a href="{{ $telefono != '' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
                             <img src="{{ asset('images/icono-wpp.png') }}" alt="Whatsapp">
-                            Contacta al vendedor
+                            <span>Contacta al vendedor</span>
                         </a>
                     </div>
-
-                    <ul class="vp-addresses">
-                        @if ($sucursales->isNotEmpty())
-                            @foreach($sucursales as $sucursal)
-                                @php
-                                    $direccion = $sucursal->ed_direccion;
-                                @endphp
-                                @if($direccion)
-                                    <li>
-                                        <i class="bi bi-geo-alt"></i>
-                                        <span>{{ $direccion }}</span>
-                                    </li>
-                                @endif
-                            @endforeach
-                        @else
-                            
-                        @endif
-                        
-                    </ul>
                 </section>
 
                 <section class="vp-blue-section">

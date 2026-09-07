@@ -365,7 +365,7 @@
         .vs-checkout-button {
             width: 100%;
             height: 45px;
-            background: var(--vs-blue);
+            background: #aaa;
             font-size: 16px;
         }
     }
@@ -589,16 +589,24 @@ $(function () {
     $('.c_input').on('blur',function () {
         // 
         if ($('#form').valid()) {
-            // $('#btn_pagar').removeClass('btn-deshabilitado');
             $('#btn_pagar').addClass('btn-habilitado');
             $('#btn_pagar').removeAttr('disabled');
-            // console.log('validado')
         } else {
             $('#btn_pagar').removeClass('btn-habilitado');
-            // $('#btn_pagar').addClass('btn-deshabilitado');
             $('#btn_pagar').attr('disabled', 'disabled');
         }
     });
+
+    if ($('#de').val()!='' || $('#para').val()!='' || $('#mensaje').val()!='') {
+        if ($('#form').valid()) {
+            $('#btn_pagar').addClass('btn-habilitado');
+            $('#btn_pagar').removeAttr('disabled');
+        } else {
+            $('#btn_pagar').removeClass('btn-habilitado');
+            $('#btn_pagar').attr('disabled', 'disabled');
+        }
+    }
 });
+
 </script>
 @endpush

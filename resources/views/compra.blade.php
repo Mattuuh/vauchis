@@ -797,7 +797,7 @@
             <div class="vp-action-inner">
                 <a href="{{ $editarUrl }}" class="vp-action vp-action-secondary">Editar mensaje</a>
                 <div class="vs-checkout-total">TOTAL ${{ number_format($monto, 0, ',', '.') }}ARS</div>
-                <button type="submit" class="vp-action vp-action-primary">Confirmar y pagar</button>
+                <button type="submit" class="vp-action vp-action-primary" id="btn_pagar">Confirmar y pagar</button>
             </div>
         </div>
     </form>
