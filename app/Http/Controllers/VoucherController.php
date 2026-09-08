@@ -1810,6 +1810,8 @@ class VoucherController extends Controller
             'vd_fecha_mod' => now(),
         ]);
 
+        session()->forget('voucher');
+
         return view('postcompra', compact('voucher','entidad','imagenes','valores','detalle'));
     }
 

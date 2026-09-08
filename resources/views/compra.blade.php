@@ -398,6 +398,10 @@
         background: var(--vp-blue);
     }
 
+    .vp-action-primary.btn-habilitado {
+        background: #aaa;
+    }
+
     .vp-error-message {
         display: block;
         color: #d92d20;
@@ -810,6 +814,15 @@ $(function () {
     if (!$.fn.validate) return;
 
     $('#vp-form').validate({
+        submitHandler: function(form){
+
+            $('#btn_pagar').attr('disabled', 'disabled');
+            $('#btn_pagar').text('Procesando...');
+            $('#btn_pagar').addClass('btn-habilitado');
+
+            form.submit();
+
+        },
         rules: {
             nombre: {
                 required: true,

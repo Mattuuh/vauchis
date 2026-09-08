@@ -14,6 +14,9 @@ class EntidadDomicilio extends Model
 
     protected $fillable = [
         'ent_id',
+        'org_id',
+        'ed_fiscal',
+        'ed_canje',
         'ed_nombre_fantasia',
         'ed_nombre',
         'pais_id',

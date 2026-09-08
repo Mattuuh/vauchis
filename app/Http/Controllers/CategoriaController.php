@@ -98,6 +98,8 @@ class CategoriaController extends Controller
 
     public function mostrarCategoria($id)
     {
+        session()->forget('voucher');
+
         $categoria = Categoria::where('cv_id', $id)
             ->where('cv_estado', 1)
             ->select(

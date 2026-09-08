@@ -17,13 +17,9 @@
             ? $heroVoucher->imagenes->first()->vf_img_path
             : null;
 
-        $logo = $entidad->logoPrincipal?->ef_img_path
-            ? asset('storage/' . $entidad->logoPrincipal->ef_img_path)
-            : '#';
+        $logo = $entidad->logoPrincipal?->ef_img_path ? asset('storage/' . $entidad->logoPrincipal->ef_img_path) : '';
 
-        $heroImage = $entidad->imagenPrincipal?->ef_img_path
-            ? asset('storage/' . $entidad->imagenPrincipal->ef_img_path)
-            : '#';
+        $heroImage = $entidad->imagenPrincipal?->ef_img_path ? asset('storage/' . $entidad->imagenPrincipal->ef_img_path) : '';
 
         $resaltador = $entidad->resaltador_entidad;
 
@@ -34,11 +30,13 @@
         $precioDesde = $vouchers->isNotEmpty() ? $vouchers->min('vou_monto_fijo') : null;
     @endphp
 
+    @if ($heroImage)
     <section class="vp-brand-hero">
-        @if (isset($heroImage))
-            <img src="{{ asset($heroImage) }}" alt="{{ $entidad->ent_nombre_fantasia ?? 'Comercio' }}">
-        @endif
+        <img src="{{ asset($heroImage) }}" alt="{{ $entidad->ent_nombre_fantasia ?? 'Comercio' }}">
     </section>
+    @else
+    <section class="vp-brand-hero" style="height: 12vh !important; {{ $entidad->ent_color_fondo!='' ? 'background: '.$entidad->ent_color_fondo.' !important' : '' }}"></section>
+    @endif
 
     <section class="vp-brand-info" style="{{ $entidad->ent_color_fondo!='' ? 'background: '.$entidad->ent_color_fondo.' !important' : '' }}">
         <div class="vp-brand-shell vp-brand-info__inner">

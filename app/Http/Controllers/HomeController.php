@@ -49,6 +49,8 @@ class HomeController extends Controller
     // }
     public function index()
     {
+        session()->forget('voucher');
+
         $categories = collect([
             (object)[
                 'id' => 1,

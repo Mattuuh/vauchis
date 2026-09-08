@@ -232,6 +232,7 @@ class AuthController extends Controller
             ]);
 
         $request->session()->forget('auth');
+        $request->session()->forget('voucher');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
