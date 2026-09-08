@@ -49,8 +49,8 @@
         $fechaVencimiento = '01/01/99';
     }
 
-    $imagenPrincipal = isset($voucher) && isset($imagenes)
-        ? $imagenes->first()
+    $imagenPrincipal = isset($voucher) && isset($imagen_principal)
+        ? $imagen_principal
         : null;
 
     $bannerEntidadRelacion = data_get($entidad ?? null, 'imagenPrincipal');
@@ -58,8 +58,8 @@
         ? asset('storage/' . data_get($bannerEntidadRelacion, 'ef_img_path'))
         : asset('images/default-voucher.png');
 
-    $imagen_voucher_vou = data_get($imagenPrincipal, 'vf_img_path')
-        ? asset('storage/' . data_get($imagenPrincipal, 'vf_img_path'))
+    $imagen_voucher_vou = isset($imagenPrincipal)
+        ? asset('storage/' . $imagenPrincipal->vf_img_path)
         : asset('images/default-voucher.png');
 
     $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');

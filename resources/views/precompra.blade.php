@@ -223,6 +223,110 @@
         border-color: #dc3545;
     }
 
+    
+.vs-image-slider {
+    position: relative;
+    width: 180px;
+    max-width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.vs-image-slider-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform .35s ease;
+}
+
+.vs-image-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vs-summary-image .vs-image-slide img {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+
+/* Flechas */
+
+.vs-slider-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, .85);
+    color: #333;
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+.vs-slider-prev {
+    left: 4px;
+}
+
+.vs-slider-next {
+    right: 4px;
+}
+
+
+/* Indicadores */
+
+.vs-slider-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    z-index: 2;
+
+    display: flex;
+    gap: 5px;
+
+    transform: translateX(-50%);
+}
+
+.vs-slider-dot {
+    width: 6px;
+    height: 6px;
+
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, .25);
+
+    cursor: pointer;
+}
+
+.vs-slider-dot.active {
+    background: rgba(0, 0, 0, .75);
+}
+
     @media (max-width: 991.98px) {
         body {
             background: var(--vs-page-bg);
@@ -368,6 +472,37 @@
             background: #aaa;
             font-size: 16px;
         }
+
+        .vs-image-slider {
+            width: 96px;
+            height: 96px;
+        }
+
+        .vs-summary-image .vs-image-slide img {
+            width: 96px;
+            height: 96px;
+        }
+
+        .vs-slider-btn {
+            display: none;
+        }
+
+        .vs-slider-prev {
+            left: 1px;
+        }
+
+        .vs-slider-next {
+            right: 1px;
+        }
+
+        .vs-slider-dots {
+            bottom: 2px;
+        }
+
+        .vs-slider-dot {
+            width: 5px;
+            height: 5px;
+        }
     }
 
     @media (max-width: 420px) {
@@ -401,6 +536,9 @@
         display: none;
     }
 }
+
+
+
 </style>
 @endpush
 
@@ -472,6 +610,7 @@ $(function () {
 
     // $fechaVencimiento = data_get($voucher, 'vou_fecha_vencimiento');
     $fechaVencimientoRaw = new DateTime();
+    $fecha_actual = $fechaVencimientoRaw->format('d/m/Y');
     $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
     $fechaVencimientoRaw->modify("+$dias_vigencia days");
 
@@ -543,18 +682,47 @@ $(function () {
 
                 <aside class="vs-summary-card">
                     <div class="vs-summary-image">
-                        <img src="{{ $imagenVoucher }}" alt="{{ $voucher->vou_nombre }}">
+                        {{-- <img src="{{ $imagenVoucher }}" alt="{{ $voucher->vou_nombre }}"> --}}
+                         @if($imagenes->count() > 1)
+                            <div class="vs-image-slider">
+                                <div class="vs-image-slider-track">
+                                    @foreach($imagenes as $imagen)
+                                        <div class="vs-image-slide">
+                                            <img src="{{ asset('storage/' . $imagen->vf_img_path) }}" alt="{{ $voucher->vou_nombre }}">
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <button type="button" class="vs-slider-btn vs-slider-prev" aria-label="Imagen anterior">‹</button>
+                                <button type="button" class="vs-slider-btn vs-slider-next" aria-label="Imagen siguiente">›</button>
+
+                                <div class="vs-slider-dots">
+                                    @foreach($imagenes as $index => $imagen)
+                                        <button type="button" class="vs-slider-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @elseif($imagenes->count() === 1)
+                            <img src="{{ asset('storage/' . $imagenes->first()->vf_img_path) }}" alt="{{ $voucher->vou_nombre }}">
+                        @else
+                            <img src="{{ $imagenVoucher }}" alt="{{ $voucher->vou_nombre }}">
+                        @endif
                     </div>
 
                     <div class="vs-summary-info">
                         <h2 class="vs-summary-title" style="color: {{ $color_regalo }};">Resumen de compra</h2>
                         <span class="vs-summary-name" style="color: {{ $color_regalo }};">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
-                        <span class="vs-summary-name" style="color: {{ $color_regalo }};">{{ strtoupper($voucher->vou_nombre) }}</span>
-                        <strong class="vs-summary-price">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
+                        @if ($modalidad->tipo_mod_id==3)
+                            <strong class="vs-summary-price" style="color: {{ $color_regalo }};">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
+                            <span class="vs-summary-name" style="color: {{ $color_regalo }};">Vale por: {{ strtoupper($voucher->vou_nombre) }}</span>
+                            <span class="vs-summary-name">{{ $voucher->vou_descripcion }}</span>
+                        @else
+                            <span class="vs-summary-name" style="color: {{ $color_regalo }};">Vale por:<strong class="vs-summary-price" style="color: {{ $color_regalo }};">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong></span>
+                        @endif
 
                         @if ($fechaVencimientoRaw)
                             <span class="vs-summary-validity">
-                                Válido hasta {{ $fechaVencimientoRaw->format('d/m/y') }}
+                                Válido desde {{ $fecha_actual }} hasta {{ $fechaVencimientoRaw->format('d/m/y') }}
                             </span>
                         @endif
                     </div>
@@ -608,5 +776,88 @@ $(function () {
     }
 });
 
+</script>
+
+<script>
+$('.vs-image-slider').each(function () {
+
+    const slider = $(this);
+    const track = slider.find('.vs-image-slider-track');
+    const slides = slider.find('.vs-image-slide');
+    const dots = slider.find('.vs-slider-dot');
+
+    let current = 0;
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function mostrarSlide(index) {
+
+        if (index < 0) {
+            index = slides.length - 1;
+        }
+
+        if (index >= slides.length) {
+            index = 0;
+        }
+
+        current = index;
+
+        track.css(
+            'transform',
+            'translateX(-' + (current * 100) + '%)'
+        );
+
+        dots.removeClass('active');
+        dots.eq(current).addClass('active');
+    }
+
+    // Desktop: flecha siguiente
+    slider.find('.vs-slider-next').on('click', function () {
+        mostrarSlide(current + 1);
+    });
+
+    // Desktop: flecha anterior
+    slider.find('.vs-slider-prev').on('click', function () {
+        mostrarSlide(current - 1);
+    });
+
+    // Desktop / mobile: puntos
+    dots.on('click', function () {
+        mostrarSlide($(this).data('slide'));
+    });
+
+    // Mobile: inicio del swipe
+    slider.on('touchstart', function (e) {
+        touchStartX = e.originalEvent.touches[0].clientX;
+    });
+
+    // Mobile: fin del swipe
+    slider.on('touchend', function (e) {
+
+        touchEndX = e.originalEvent.changedTouches[0].clientX;
+
+        const distancia = touchStartX - touchEndX;
+
+        // Evita que un toque mínimo cambie de imagen
+        const minimoSwipe = 40;
+
+        if (Math.abs(distancia) < minimoSwipe) {
+            return;
+        }
+
+        // Deslizó hacia la izquierda
+        if (distancia > 0) {
+            mostrarSlide(current + 1);
+        }
+
+        // Deslizó hacia la derecha
+        else {
+            mostrarSlide(current - 1);
+        }
+
+    });
+
+});
 </script>
 @endpush

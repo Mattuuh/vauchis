@@ -235,9 +235,16 @@
 
             <div class="col-12">
                 <label class="form-label">Condiciones:</label>
-                <p id="f_mod_condiciones"></p>
+                @if ($condiciones)
+                    <p id="f_mod_condiciones">{!! $condiciones !!}</p>
+                @else
+                    <p id="f_mod_condiciones">No existen condiciones disponibles.</p>
+                @endif
                 <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
-                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="">{{ old('f_condiciones_adi', $voucher->vou_modalidad_condiciones) }}</textarea>
+                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="Condiciones adicionales"></textarea>
+                <p class="text-muted small mb-3">
+                    Podés escribir varias condiciones y separarlas con un ";;" (doble punto y coma).
+                </p>
             </div>
         </div>
 
@@ -357,12 +364,12 @@
                             <img src="{{ asset('storage/'. $imagen->vf_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->vf_nombre }}" style="height:160px;border-radius:6px;">
 
                             <div class="form-check">
-                                <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
-                                <option value="">Selecciona el tipo de archivo</option>
-                                @foreach($tipos_archivos as $tipo)
-                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
-                                @endforeach
-                            </select>
+                                <input class="form-check-input" type="checkbox" name="delete_imagenes[]" value="{{ $imagen->vf_id }}" id="imagen-delete-{{ $imagen->vf_id }}">
+                                <label class="form-check-label" for="imagen-delete-{{ $imagen->vf_id }}">Eliminar imagen</label>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="imagen_principal" value="{{ $imagen->vf_id }}" id="imagen-principal-{{ $imagen->vf_id }}" {{ $imagen->vf_principal == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="imagen-principal-{{ $imagen->vf_id }}">Imagen principal</label>
                             </div>
                         </div>
                     </div>
@@ -373,10 +380,10 @@
                 <label class="form-label required-label">Imagen/es</label>
                 <div id="logos-container">
                     <div class="row logo-item mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-11">
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
-                        <div class="col-sm-3">
+                        {{-- <div class="col-sm-3">
                             <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
@@ -385,13 +392,13 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-sm-1 d-flex align-items-center"></div>
                     </div>
 
                 </div>
             </div>
-            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
         </div>
 
         <div class="vch-card p-3 mb-3">
@@ -885,18 +892,8 @@
 
             let html = `
                 <div class="row logo-item mb-2">
-                    <div class="col-sm-8">
+                    <div class="col-sm-11">
                         <input type="file" name="imagenes[]" accept="image/*" class="form-control">
-                    </div>
-                    <div class="col-sm-3">
-                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
-                            <option value="">Selecciona el tipo de archivo</option>
-                            @foreach($tipos_archivos as $tipo)
-                                <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
-                                    {{ $tipo['tipo_archivo_nombre'] }}
-                                </option>
-                            @endforeach
-                        </select>
                     </div>
                     <div class="col-sm-1 d-flex align-items-center">
                         <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
@@ -909,6 +906,37 @@
 
         $(document).on('click', '.remove-logo', function () {
             $(this).closest('.logo-item').remove();
+        });
+
+        $(document).on('change', '#f_mod_id', function () {
+            let condiciones = $(this).find('option:selected').data('condiciones') || '';
+            condiciones = $.trim(condiciones);
+
+            if (condiciones !== '') {
+
+                let items = condiciones
+                    .split('#|#')
+                    .map(item => $.trim(item))
+                    .filter(item => item !== '');
+
+                let html = '<ul>';
+
+                $.each(items, function(index, item) {
+                    item = item.replace(/<<FECHA_INICIO>>/g, '<i>FECHA DE INICIO</i>');
+                    item = item.replace(/<<FECHA_FIN>>/g, '<i>FECHA DE VENCIMIENTO</i>');
+                    item = item.replace(/<<SUCURSALES>>/g, '<i>SUCURSALES</i>');
+
+                    html += '<li>' + item + '</li>';
+                });
+
+                html += '</ul>';
+
+                $('#f_mod_condiciones').html(html);
+
+            } else {
+                $('#f_mod_condiciones').html('');
+            }
+
         });
     });
 </script>

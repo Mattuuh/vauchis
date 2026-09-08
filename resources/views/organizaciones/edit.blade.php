@@ -363,12 +363,12 @@
                             <img src="{{ asset('storage/'. $imagen->of_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->of_nombre }}" style="height:160px;border-radius:6px;">
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="delete_logos[]" value="{{ $imagen->of_id }}" id="logo-delete-{{ $imagen->of_id }}">
-                                <label class="form-check-label" for="logo-delete-{{ $imagen->of_id }}">Eliminar imagen</label>
+                                <input class="form-check-input" type="checkbox" name="delete_imagenes[]" value="{{ $imagen->of_id }}" id="imagen-delete-{{ $imagen->of_id }}">
+                                <label class="form-check-label" for="imagen-delete-{{ $imagen->of_id }}">Eliminar imagen</label>
                             </div>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="logo_principal" value="{{ $imagen->of_id }}" id="logo-principal-{{ $imagen->of_id }}" {{ $imagen->of_principal == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="logo-principal-{{ $imagen->of_id }}">Imagen principal</label>
+                                <input class="form-check-input" type="radio" name="imagen_principal_{{ $imagen->tipo_archivo_id }}" value="{{ $imagen->of_id }}" id="imagen-principal-{{ $imagen->of_id }}" {{ $imagen->of_principal == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="imagen-principal-{{ $imagen->of_id }}">Imagen principal</label>
                             </div>
 
                             <div class="form-check">
@@ -752,6 +752,42 @@ $(document).on('click', '#btn_eliminar', function (e) {
         // console.log("Color seleccionado:", selectedColor.value);
         });
     });
+</script>
+
+<script>
+$(document).ready(function () {
+
+    $('#add-logo').on('click', function () {
+
+        let html = `
+            <div class="row logo-item mb-2">
+                <div class="col-sm-8">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                        <option value="">Selecciona el tipo de archivo</option>
+                        @foreach($tipos_archivos as $tipo)
+                            <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
+                                {{ $tipo['tipo_archivo_nombre'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#logos-container').append(html);
+    });
+
+    $(document).on('click', '.remove-logo', function () {
+        $(this).closest('.logo-item').remove();
+    });
+
+});
 </script>
 @endpush
 @endsection

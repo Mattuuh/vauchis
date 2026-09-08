@@ -541,6 +541,12 @@ class VoucherController extends Controller
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->orderBy('ent_id', 'desc')
             ->get(['ed_canje', 'ed_telefono1', 'ed_telefono2', 'ed_direccion', 'ent_id', 'ed_id']);
+            
+
+        $sucursales_selected = EntidadDomicilio::where('ed_estado',1)
+            ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->orderBy('ent_id', 'desc')
+            ->get(['ed_canje', 'ed_telefono1', 'ed_telefono2', 'ed_direccion', 'ent_id', 'ed_id']);
 
         $influencers = DB::table('influencers')
             ->where('inf_estado', 1)
@@ -669,6 +675,55 @@ class VoucherController extends Controller
             ->orderBy('vf_id', 'desc')
             ->get();
 
+        #region Condiciones
+        $fecha_actual_raw = new DateTime();
+        $fecha_actual = $fecha_actual_raw->format('d/m/y');
+        $fechaVencimientoRaw = new DateTime();
+        $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
+        $fechaVencimientoRaw->modify("+$dias_vigencia days");
+        try {
+            $fechaVencimiento = $fechaVencimientoRaw
+                ? $fechaVencimientoRaw->format('d/m/y')
+                : '01/01/99';
+        } catch (\Throwable $e) {
+            $fechaVencimiento = '01/01/99';
+        }
+
+        $direcciones_label='';
+        if ($sucursales_selected->isNotEmpty()) {
+            foreach($sucursales_selected as $sucursal) {
+                $direccion = $sucursal->ed_direccion;
+                $direcciones_label .= strtoupper($direccion)." o ";
+            }
+
+            $direcciones_label=rtrim($direcciones_label,' o ');
+        }
+
+        $condiciones = '';
+        if (trim($voucher->vou_modalidad_condiciones) !== '') {
+            $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
+            $condiciones = '<ul>';
+
+            foreach ($items as $item) {
+                $item = trim($item);
+
+                // Evitar elementos vacíos
+                if ($item === '') {
+                    continue;
+                }
+
+                // Reemplazar variables
+                $item = str_replace('<<FECHA_INICIO>>',"<u>FECHA ACTUAL</u>",$item);
+                $item = str_replace('<<FECHA_FIN>>',"<u>FECHA VENCIMIENTO</u>",$item);
+                $item = str_replace('<<SUCURSALES>>',"<u>SUCURSALES</u>",$item);
+
+                $condiciones .= '<li>' . $item . '</li>';
+            }
+
+            $condiciones .= '</ul>';
+        }
+        #endregion
+
         return view('vouchers.edit', compact(
             'voucher',
             'sucursales_seleccionadas',
@@ -687,7 +742,8 @@ class VoucherController extends Controller
             'plantillasSeleccionadas',
             // 'plantillaPrincipal',
             'tipos_archivos',
-            'imagenes'
+            'imagenes',
+            'condiciones'
         ));
     }
 
@@ -717,6 +773,11 @@ class VoucherController extends Controller
             | Actualizar voucher
             |--------------------------------------------------------------------------
             */
+            $modalidades = Modalidad::findOrFail($request->f_mod_id);
+            // $condiciones = $modalidades->mod_condiciones . $request->f_condiciones_adi .'#|# ';
+            $condiciones = str_replace(';;',"#|# ", $request->f_condiciones_adi) .'#|# ';
+            $condiciones = $modalidades->mod_condiciones . $condiciones;
+
             DB::table('vouchers')
                 ->where('vou_id', $id)
                 ->update([
@@ -741,7 +802,7 @@ class VoucherController extends Controller
 
                     'vou_permite_personalizacion' => $request->f_permite_personalizacion,
                     'vou_terminos_condiciones' => $request->terms,
-                    'vou_modalidad_condiciones' => $request->f_condiciones . $request->f_condiciones_adi,
+                    'vou_modalidad_condiciones' => $condiciones,
                 ]);
             
             if ($request->filled('f_ed_id')) {
@@ -872,30 +933,37 @@ class VoucherController extends Controller
                 DB::table('etiquetas_vouchers')->insert($rowsEtiquetas);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Eliminar banners existentes seleccionados
-            |--------------------------------------------------------------------------
-            */
-            if ($request->filled('delete_banners')) {
-                $bannersEliminar = DB::table('vouchers_files')
-                    ->where('vou_id', $id)
-                    ->whereIn('vf_id', $request->delete_banners)
+            /* Eliminar imagenes marcadas */
+            if ($request->filled('delete_imagenes')) {
+                $imagenes = VoucherFile::where('vou_id', $id)
+                    ->whereIn('vf_id', $request->delete_imagenes)
                     ->get();
 
-                // foreach ($bannersEliminar as $banner) {
-                //     if (!empty($banner->vf_img_path) && Storage::disk('public')->exists($banner->vf_img_path)) {
-                //         Storage::disk('public')->delete($banner->vf_img_path);
-                //     }
-                // }
-
-                DB::table('vouchers_files')
-                    ->where('vou_id', $id)
-                    ->whereIn('vf_id', $request->delete_banners)
-                    ->update([
+                foreach ($imagenes as $imagen) {
+                    $imagen->update([
+                        'vf_principal' => 0,
                         'vf_estado' => 0,
                         'vf_fecha_baja' => now(),
-                        'vf_usu_baja' => 1
+                        'vf_usu_baja' => $usuarioId,
+                    ]);
+                }
+            }
+
+            // LOGO PRINCIPAL
+            if ($request->filled('imagen_principal')) {
+                VoucherFile::where('vou_id', $id)
+                    ->where('vf_estado', 1)
+                    ->update([
+                        'vf_principal' => 0,
+                    ]);
+
+                VoucherFile::where('vou_id', $id)
+                    ->where('vf_id', $request->imagen_principal)
+                    ->where('vf_estado', 1)
+                    ->update([
+                        'vf_principal' => 1,
+                        'vf_fecha_mod' => now(),
+                        'vf_usu_mod' => $usuarioId,
                     ]);
             }
 
@@ -1522,6 +1590,7 @@ class VoucherController extends Controller
         $voucher = Voucher::query()
             ->with([
                 'imagenes',
+                'imagen_principal',
                 'entidad',
                 'modalidad.campos',
                 'modalidad',
@@ -1537,6 +1606,7 @@ class VoucherController extends Controller
         $entidad = $voucher->entidad;
 
         $imagenes = $voucher->imagenes;
+        $imagen_principal = $voucher->imagen_principal->first();
 
         $valores = $voucher->modalidadValores[0];
 
@@ -1582,7 +1652,7 @@ class VoucherController extends Controller
         $qrImagen = QrCode::size(250)
             ->generate('VAUCHIS');
 
-        return view('vista_previa', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','sucursal_telefono','qrImagen'));
+        return view('vista_previa', compact('voucher','entidad','imagenes','imagen_principal','valores','sucursales','modalidad','sucursal_telefono','qrImagen'));
     }
 
     public function compra_voucher($vou_id, $vmv_id, Request $request)

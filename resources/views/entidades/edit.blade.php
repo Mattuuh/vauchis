@@ -420,12 +420,12 @@ $(document).ready(function () {
                             <img src="{{ asset('storage/'. $imagen->ef_img_path) }}" class="img-fluid rounded mb-2" alt="{{ $imagen->ef_nombre }}" style="height:160px;border-radius:6px;">
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="delete_logos[]" value="{{ $imagen->ef_id }}" id="logo-delete-{{ $imagen->ef_id }}">
-                                <label class="form-check-label" for="logo-delete-{{ $imagen->ef_id }}">Eliminar logo</label>
+                                <input class="form-check-input" type="checkbox" name="delete_imagenes[]" value="{{ $imagen->ef_id }}" id="imagen-delete-{{ $imagen->ef_id }}">
+                                <label class="form-check-label" for="imagen-delete-{{ $imagen->ef_id }}">Eliminar imagen</label>
                             </div>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="logo_principal" value="{{ $imagen->ef_id }}" id="logo-principal-{{ $imagen->ef_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label" for="logo-principal-{{ $imagen->ef_id }}">Logo principal</label>
+                                <input class="form-check-input" type="radio" name="imagen_principal_{{ $imagen->tipo_archivo_id }}" value="{{ $imagen->ef_id }}" id="imagen-principal-{{ $imagen->ef_id }}-{{ $imagen->tipo_archivo_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
+                                <label class="form-check-label" for="imagen-principal-{{ $imagen->ef_id }}-{{ $imagen->tipo_archivo_id }}">Imagen principal</label>
                             </div>
 
                             <div class="form-check">

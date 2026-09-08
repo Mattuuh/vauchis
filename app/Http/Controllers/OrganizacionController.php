@@ -229,7 +229,7 @@ class OrganizacionController extends Controller
                         'of_img_path' => $path,
                         'of_img_format' => $format,
                         'of_img_size' => $size,
-                        'of_principal' => 1,
+                        'of_principal' => 0,
                         'of_estado' => 1,
                         'of_fecha_alta' => now(),
                         'of_usu_alta' => $usu,
@@ -393,19 +393,14 @@ class OrganizacionController extends Controller
 
             
             // Eliminar logos marcados
-            if ($request->filled('delete_logos')) {
+            if ($request->filled('delete_imagenes')) {
 
-                $logos = OrganizacionImagen::where('org_id', $id)
-                    ->whereIn('of_id', $request->delete_logos)
+                $imagenes = OrganizacionImagen::where('org_id', $id)
+                    ->whereIn('of_id', $request->delete_imagenes)
                     ->get();
 
-                foreach ($logos as $logo) {
-
-                    if ($logo->imagen && $logo->imagen->of_img_path) {
-                        // Storage::disk('public')->delete($logo->imagen->of_img_path);
-                    }
-
-                    $logo->update([
+                foreach ($imagenes as $imagen) {
+                    $imagen->update([
                         'of_principal' => 0,
                         'of_estado' => 0,
                         'of_fecha_baja' => now(),
@@ -415,16 +410,34 @@ class OrganizacionController extends Controller
             }
 
             // LOGO PRINCIPAL
-            if ($request->filled('logo_principal')) {
+            if ($request->filled('imagen_principal_1')) {
+                OrganizacionImagen::where('org_id', $id)
+                    ->where('tipo_archivo_id', 1)
+                    ->where('of_estado', 1)
+                    ->update([
+                        'of_principal' => 0,
+                    ]);
 
-                OrganizacionImagen::where('ent_id', $id)
+                OrganizacionImagen::where('org_id', $id)
+                    ->where('of_id', $request->imagen_principal_1)
                     ->where('of_estado', 1)
                     ->update([
                         'of_principal' => 1,
+                        'of_fecha_mod' => now(),
+                        'of_usu_mod' => $usu,
+                    ]);
+            }
+            // BANNER PRINCIPAL
+            if ($request->filled('imagen_principal_2')) {
+                OrganizacionImagen::where('org_id', $id)
+                    ->where('tipo_archivo_id', 2)
+                    ->where('of_estado', 1)
+                    ->update([
+                        'of_principal' => 0,
                     ]);
 
-                OrganizacionImagen::where('ent_id', $id)
-                    ->where('of_id', $request->logo_principal)
+                OrganizacionImagen::where('org_id', $id)
+                    ->where('of_id', $request->imagen_principal_2)
                     ->where('of_estado', 1)
                     ->update([
                         'of_principal' => 1,
@@ -457,7 +470,7 @@ class OrganizacionController extends Controller
                         'of_img_path' => $path,
                         'of_img_format' => $format,
                         'of_img_size' => $size,
-                        'of_principal' => 1,
+                        'of_principal' => 0,
                         'of_estado' => 1,
                         'of_fecha_alta' => now(),
                         'of_usu_alta' => $usu,

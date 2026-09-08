@@ -565,3 +565,7 @@ ALTER TABLE `organizaciones` ADD `org_color_fondo` VARCHAR(50) NULL DEFAULT NULL
 ALTER TABLE `influencers_files` ADD `tipo_archivo_id` INT NULL DEFAULT NULL AFTER `inf_id`;
 
 ALTER TABLE `influencers` ADD `inf_color_fondo` VARCHAR(50) NULL DEFAULT NULL AFTER `inf_orden`;
+
+
+
+ALTER TABLE `vouchers_files` ADD `vf_principal` INT NOT NULL DEFAULT '0' AFTER `vf_img_size`;

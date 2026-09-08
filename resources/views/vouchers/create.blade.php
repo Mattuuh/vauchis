@@ -364,6 +364,9 @@ $(document).ready(function () {
                 <div id="f_mod_condiciones"></div>
                 <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
                 <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="Condiciones adiciones"></textarea>
+                <p class="text-muted small mb-3">
+                    Podés escribir varias condiciones y separarlas con un ";;" (doble punto y coma).
+                </p>
             </div>
         </div>
 
@@ -416,10 +419,10 @@ $(document).ready(function () {
                 <label class="form-label required-label">Imagen/es</label>
                 <div id="logos-container">
                     <div class="row logo-item mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-11">
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
-                        <div class="col-sm-3">
+                        {{-- <div class="col-sm-3">
                             <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
@@ -428,13 +431,13 @@ $(document).ready(function () {
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-sm-1 d-flex align-items-center"></div>
                     </div>
 
                 </div>
             </div>
-            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otro logo</button>
+            <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
         </div>
 
         {{-- RUBROS Y SUBRUBROS (tienen que ser variables y uno por sucursal seleccionada) --}}
@@ -862,18 +865,8 @@ $(document).ready(function () {
 
             let html = `
                 <div class="row logo-item mb-2">
-                    <div class="col-sm-8">
+                    <div class="col-sm-11">
                         <input type="file" name="imagenes[]" accept="image/*" class="form-control">
-                    </div>
-                    <div class="col-sm-3">
-                        <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
-                            <option value="">Selecciona el tipo de archivo</option>
-                            @foreach($tipos_archivos as $tipo)
-                                <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
-                                    {{ $tipo['tipo_archivo_nombre'] }}
-                                </option>
-                            @endforeach
-                        </select>
                     </div>
                     <div class="col-sm-1 d-flex align-items-center">
                         <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>

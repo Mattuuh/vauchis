@@ -88,6 +88,15 @@
             @endforeach
             </div>
 
+            <div class="vp-brand-meta">
+                @if(!empty($entidad->ent_instagram))
+                    <a href="https://www.instagram.com/{{ $entidad->ent_instagram }}" title="{{ $entidad->ent_instagram }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                @endif
+                @if(!empty($entidad->ent_tiktok))
+                    <a href="https://www.tiktok.com/{{ '@'.$entidad->ent_tiktok }}" title="{{ $entidad->ent_tiktok }}" target="_blank"><i class="bi bi-tiktok"></i></a>
+                @endif
+            </div>
+
         </div>
     </section>
 
@@ -224,6 +233,7 @@
 .vp-brand-hero img {
     width: 100%;
     height: 100%;
+    /* object-position: left top; */
     object-fit: cover;
 }
 
@@ -335,6 +345,18 @@
     padding: 8px 10px;
     border: 1px solid rgba(255,255,255,.85);
     border-radius: 4px;
+    color: #fff;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.vp-brand-meta a {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 5px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 100%;
     color: #fff;
     line-height: 1;
     white-space: nowrap;
@@ -641,6 +663,18 @@
         white-space: nowrap;
     }
 
+    .vp-brand-meta a {
+        flex: 0 0 auto;
+        padding: 8px 10px;
+        border: 1px solid rgba(255,255,255,.85);
+        border-radius: 100%;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
     .vp-voucher-box {
         grid-template-columns: 1fr;
         text-align: center;
@@ -850,7 +884,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         /* Escapa del padding del padre */
-        width: calc(100% + 20px);
+        width: calc(100% + 150px);
         margin-right: -20px;
         padding: 4px 0 12px 0;
 
@@ -863,111 +897,6 @@
         display: none;
     }
 
-    .vp-product-card {
-        position: relative;
-        flex: 0 0 44%;
-        width: 44%;
-        max-width: 44%;
-        height: 280px;
-        display: block;
-        border-radius: 16px;
-        overflow: hidden;
-        background: #fff;
-        scroll-snap-align: start;
-        box-shadow:
-            0 2px 4px rgba(0, 0, 0, .18),
-            0 4px 8px rgba(0, 0, 0, .14);
-    }
-
-    .vp-product-image {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-        overflow: hidden;
-    }
-
-    .vp-product-image img {
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        max-height: none;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
-
-    .vp-product-card::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 48%;
-        background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, .88) 0%,
-            rgba(0, 0, 0, .60) 35%,
-            rgba(0, 0, 0, .18) 72%,
-            rgba(0, 0, 0, 0) 100%
-        );
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .vp-product-info {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: auto;
-        padding: 0 14px 15px;
-        background: transparent;
-        color: #fff;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .vp-product-title {
-        margin: 0 0 4px !important;
-        font-size: 14px !important;
-        line-height: 16px !important;
-        font-weight: 600 !important;
-        color: #fff !important;
-    }
-
-    .vp-product-footer {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-        margin: 0;
-    }
-
-    .vp-product-price {
-        order: 1;
-        margin: 0;
-        font-size: 13px;
-        line-height: 15px;
-        font-weight: 400;
-        color: #fff;
-        white-space: nowrap;
-    }
-
-    .vp-product-description {
-        order: 2;
-        margin: 0 !important;
-        max-width: 100%;
-        font-size: 9px;
-        line-height: 11px;
-        font-weight: 400;
-        color: rgba(255,255,255,.90);
-    }
 }
 
 .voucher-montos {

@@ -340,7 +340,7 @@ class EntidadController extends Controller
                         'ef_img_path' => $path,
                         'ef_img_format' => $format,
                         'ef_img_size' => $size,
-                        'ef_principal' => 1,
+                        'ef_principal' => 0,
                         'ef_estado' => 1,
                         'ef_fecha_alta' => now(),
                         'ef_usu_alta' => $usu,
@@ -615,19 +615,14 @@ class EntidadController extends Controller
             | Eliminar logos marcados
             |--------------------------------------------------------------------------
             */
-            if ($request->filled('delete_logos')) {
+            if ($request->filled('delete_imagenes')) {
 
-                $logos = EntidadImagen::where('ent_id', $id)
-                    ->whereIn('ef_id', $request->delete_logos)
+                $imagenes = EntidadImagen::where('ent_id', $id)
+                    ->whereIn('ef_id', $request->delete_imagenes)
                     ->get();
 
-                foreach ($logos as $logo) {
-
-                    if ($logo->imagen && $logo->imagen->ef_img_path) {
-                        // Storage::disk('public')->delete($logo->imagen->ef_img_path);
-                    }
-
-                    $logo->update([
+                foreach ($imagenes as $imagenes) {
+                    $imagenes->update([
                         'ef_principal' => 0,
                         'ef_estado' => 0,
                         'ef_fecha_baja' => now(),
@@ -637,16 +632,16 @@ class EntidadController extends Controller
             }
 
             // LOGO PRINCIPAL
-            if ($request->filled('logo_principal')) {
-
+            if ($request->filled('imagen_principal_1')) {
                 EntidadImagen::where('ent_id', $id)
+                    ->where('tipo_archivo_id', 1)
                     ->where('ef_estado', 1)
                     ->update([
-                        'ef_principal' => 1,
+                        'ef_principal' => 0,
                     ]);
 
                 EntidadImagen::where('ent_id', $id)
-                    ->where('ef_id', $request->logo_principal)
+                    ->where('ef_id', $request->imagen_principal_1)
                     ->where('ef_estado', 1)
                     ->update([
                         'ef_principal' => 1,
@@ -654,37 +649,24 @@ class EntidadController extends Controller
                         'ef_usu_mod' => $usu,
                     ]);
             }
+            // BANNER PRINCIPAL
+            if ($request->filled('imagen_principal_2')) {
+                EntidadImagen::where('ent_id', $id)
+                    ->where('tipo_archivo_id', 2)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 0,
+                    ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Agregar nuevos logos
-            |--------------------------------------------------------------------------
-            */
-            // if ($request->hasFile('logos')) {
-
-            //     foreach ($request->file('logos') as $logoFile) {
-
-            //         if (!$logoFile) {
-            //             continue;
-            //         }
-
-            //         $path = $logoFile->store('logos', 'public');
-
-            //         $imagen = EntidadImagen::create([
-            //             'ent_id' => $id,
-            //             'ef_nombre' => $request->nombre,
-            //             'ef_img_nombre_legible' => $logoFile->getClientOriginalName(),
-            //             'ef_img_name' => basename($path),
-            //             'ef_img_path' => $path,
-            //             'ef_img_format' => $logoFile->getClientOriginalExtension(),
-            //             'ef_img_size' => $logoFile->getSize(),
-            //             'ef_principal' => 0,
-            //             'ef_estado' => 1,
-            //             'ef_fecha_alta' => now(),
-            //             'ef_usu_alta' => $usu,
-            //         ]);
-            //     }
-            // }
+                EntidadImagen::where('ent_id', $id)
+                    ->where('ef_id', $request->imagen_principal_2)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 1,
+                        'ef_fecha_mod' => now(),
+                        'ef_usu_mod' => $usu,
+                    ]);
+            }
 
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
