@@ -675,94 +675,74 @@ NAVBAR
 
     .v-mobile-panel__body h3 {
         margin: 0 0 14px;
-
         font-family: Montserrat, sans-serif;
-        font-size: 18px;
+        font-size: clamp(20px, 16vw, 26px);
         line-height: 1.2;
         font-weight: 600;
-
         color: #42465a;
     }
 
 
     /* ITEM */
-
     .v-mobile-menu-item {
         margin-bottom: 14px;
     }
 
 
     /* FILA: categoría + flecha */
-
     .v-mobile-menu-row {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-
         gap: 6px;
-
         min-height: 28px;
     }
 
 
     /* LINK DE LA CATEGORÍA */
-
     .v-mobile-panel__body .v-mobile-category-link {
         display: inline-flex;
         align-items: center;
-
         gap: 6px;
-
         margin: 0;
         padding: 0;
-
         font-family: Montserrat, sans-serif;
-        font-size: 12px;
+        font-size: clamp(14px, 16vw, 24px);
         line-height: 1.2;
         font-weight: 500;
-
         color: #42465a;
         text-decoration: none;
     }
 
 
     .v-mobile-panel__body .v-mobile-category-link img {
-        width: 16px;
-        height: 16px;
-
+        width: clamp(18px, 16vw, 28px);
+        height: clamp(18px, 16vw, 28px);
         object-fit: contain;
         flex-shrink: 0;
     }
 
 
     /* BOTÓN FLECHA */
-
     .v-mobile-menu-toggle {
         display: flex;
         align-items: center;
         justify-content: center;
-
         width: 18px;
         height: 22px;
-
         margin: 0;
         padding: 0;
-
         border: 0;
         background: transparent;
-
         color: #42465a;
-
         cursor: pointer;
     }
 
 
     .v-mobile-menu-toggle i {
         display: block;
-
         font-size: 11px;
         line-height: 1;
-
         transition: transform .2s ease;
     }
 
@@ -783,15 +763,12 @@ NAVBAR
 
     .v-mobile-panel__body .v-mobile-submenu a {
         display: block;
-
         margin: 0;
         padding: 1px 0;
-
         font-family: Montserrat, sans-serif;
-        font-size: 12px;
+        font-size: clamp(8px, 16vw, 18px);
         line-height: 1.28;
         font-weight: 400;
-
         color: #42465a;
         text-decoration: none;
     }
@@ -812,50 +789,79 @@ NAVBAR
     /* ===============================
     USUARIO / AYUDA
     =============================== */
-
     .v-mobile-menu-actions {
         display: flex;
         flex-direction: column;
-
-        gap: 14px;
-
-        /* separación respecto a categorías */
+        gap: 6px;
         margin-top: 24px;
     }
 
-
     .v-mobile-panel__body .v-mobile-action-link {
-        display: inline-flex;
+        display: flex;
         align-items: center;
-
-        width: fit-content;
-
-        gap: 8px;
-
+        width: 100%;
+        min-height: 40px;
+        gap: 10px;
         margin: 0;
-        padding: 0;
-
+        padding: 8px 10px;
+        border: 0;
+        border-radius: 10px;
+        background: transparent;
         font-family: Montserrat, sans-serif;
-        font-size: 12px;
-        line-height: 1.2;
+        font-size: 13px;
+        line-height: 1.25;
         font-weight: 600;
-
         color: #42465a;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+            background-color .2s ease,
+            color .2s ease;
+    }
+
+    .v-mobile-panel__body .v-mobile-action-link:hover,
+    .v-mobile-panel__body .v-mobile-action-link:focus {
+        background: #f4f6fa;
+        color: #06307d;
         text-decoration: none;
     }
 
-
-    .v-mobile-panel__body .v-mobile-action-link img {
+    .v-mobile-action-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 20px;
         width: 20px;
         height: 20px;
-
         object-fit: contain;
-        flex-shrink: 0;
+        font-size: 17px;
+        color: #0d6efd;
     }
 
+    .v-mobile-action-form {
+        width: 100%;
+        margin: 0;
+    }
 
-    .v-mobile-panel__body .v-mobile-action-link:hover {
-        color: #07378c;
+    .v-mobile-action-form button {
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    /* Salir */
+    .v-mobile-panel__body .v-mobile-action-logout {
+        color: #e63946;
+    }
+
+    .v-mobile-panel__body .v-mobile-action-logout .v-mobile-action-icon {
+        color: #e63946;
+    }
+
+    .v-mobile-panel__body .v-mobile-action-logout:hover,
+    .v-mobile-panel__body .v-mobile-action-logout:focus {
+        background: #fff1f2;
+        color: #d62839;
     }
 
     .v-search-panel__top {

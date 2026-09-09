@@ -281,10 +281,11 @@
             <div class="vh-collections-grid">
                 @foreach ($collections as $collection)
                     @php
-                        $imgSrc = !empty($collection->photo) ? asset('images/' . $collection->photo) : '';
+                        // $imgSrc = !empty($collection->photo) ? asset('images/' . $collection->photo) : '';
+                        $imgSrc = !empty($collection->photo) ? asset('storage/' . $collection->photo) : '';
                     @endphp
 
-                    <a href="#" class="vh-collection-card">
+                    <a href="{{ isset($collection->id) ? route('vouchers.coleccion', $collection->id) : '#' }}" class="vh-collection-card">
                         <img src="{{ $imgSrc }}" alt="{{ $collection->name }}">
                         <span class="vh-collection-card__overlay"></span>
                         <strong>{{ $collection->name }}</strong>

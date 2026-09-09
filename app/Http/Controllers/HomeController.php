@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Coleccion;
 use App\Models\Entidad;
 use App\Models\Organization;
 use App\Models\Influencer;
@@ -156,33 +157,46 @@ class HomeController extends Controller
                 ];
             });
 
-        $collections = collect([
-            (object)[
-                'name' => '¡Feliz día ma!',
-                'photo' => 'collections/dia_madre_v2.png',
-                'description' => 'Experiencias únicas'
-            ],
-            (object)[
-                'name' => 'Hora de un café',
-                'photo' => 'collections/cafe.png',
-                'description' => 'Experiencias únicas'
-            ],
-            (object)[
-                'name' => 'Tendencias DECO 26',
-                'photo' => 'collections/deco-2026.png',
-                'description' => 'Experiencias únicas'
-            ],
-            // (object)[
-            //     'name' => 'Cata de vinos',
-            //     'photo' => 'collections/fanaticos-vino.jpg',
-            //     'description' => 'Experiencias únicas'
-            // ],
-            // (object)[
-            //     'name' => 'Peliculeros',
-            //     'photo' => 'collections/peliculeros.jpg',
-            //     'description' => 'Experiencias únicas'
-            // ],
-        ]);
+        // $collections = collect([
+        //     (object)[
+        //         'name' => '¡Feliz día ma!',
+        //         'photo' => 'collections/dia_madre_v2.png',
+        //         'description' => 'Experiencias únicas'
+        //     ],
+        //     (object)[
+        //         'name' => 'Hora de un café',
+        //         'photo' => 'collections/cafe.png',
+        //         'description' => 'Experiencias únicas'
+        //     ],
+        //     (object)[
+        //         'name' => 'Tendencias DECO 26',
+        //         'photo' => 'collections/deco-2026.png',
+        //         'description' => 'Experiencias únicas'
+        //     ],
+        //     // (object)[
+        //     //     'name' => 'Cata de vinos',
+        //     //     'photo' => 'collections/fanaticos-vino.jpg',
+        //     //     'description' => 'Experiencias únicas'
+        //     // ],
+        //     // (object)[
+        //     //     'name' => 'Peliculeros',
+        //     //     'photo' => 'collections/peliculeros.jpg',
+        //     //     'description' => 'Experiencias únicas'
+        //     // ],
+        // ]);
+        $collections = Coleccion::with('logoPrincipal')
+            ->where('colecc_publico', 1)
+            ->get()
+            ->map(function ($coleccion) {
+                return (object)[
+                    'id' => $coleccion->colecc_id,
+                    'name' => $coleccion->colecc_nombre,
+                    'photo' => $coleccion->logoPrincipal
+                        ? $coleccion->logoPrincipal->cf_img_path
+                        : 'default.png',
+                    'description' => $coleccion->colecc_descripcion,
+                ];
+            });
 
         // $influencers = collect([
         //     (object)[

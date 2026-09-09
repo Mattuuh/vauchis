@@ -195,6 +195,27 @@
     });
     </script>
 
+    <script>
+        const colors = document.querySelectorAll(".color-option");
+        const selectedColor = document.getElementById("selectedColor");
+
+        colors.forEach(color => {
+            color.addEventListener("click", () => {
+
+            // Sacar selección anterior
+            colors.forEach(c => c.classList.remove("selected"));
+
+            // Marcar seleccionado
+            color.classList.add("selected");
+
+            // Guardar el color
+            selectedColor.value = color.dataset.color;
+
+            // console.log("Color seleccionado:", selectedColor.value);
+            });
+        });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

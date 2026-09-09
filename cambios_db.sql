@@ -569,3 +569,60 @@ ALTER TABLE `influencers` ADD `inf_color_fondo` VARCHAR(50) NULL DEFAULT NULL AF
 
 
 ALTER TABLE `vouchers_files` ADD `vf_principal` INT NOT NULL DEFAULT '0' AFTER `vf_img_size`;
+
+
+
+DROP TABLE IF EXISTS `colecciones`;
+CREATE TABLE `colecciones` (
+  `colecc_id` int NOT NULL AUTO_INCREMENT,
+  `colecc_nombre_interno` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `colecc_nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `colecc_descripcion` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `colecc_descripcion_interna` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `colecc_fecha_ini` datetime DEFAULT NULL,
+  `colecc_fecha_fin` datetime DEFAULT NULL,
+  `colecc_publico` int DEFAULT '1',
+  `colecc_estado` int DEFAULT NULL,
+  `colecc_estado2` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `colecc_color_fondo` varchar(100) DEFAULT NULL,
+  `colecc_fecha_alta` datetime DEFAULT NULL,
+  `colecc_usu_alta` int DEFAULT NULL,
+  `colecc_fecha_mod` datetime DEFAULT NULL,
+  `colecc_usu_mod` int DEFAULT NULL,
+  `colecc_fecha_baja` datetime DEFAULT NULL,
+  `colecc_usu_baja` int DEFAULT NULL,
+  PRIMARY KEY (`colecc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `colecciones_files` (
+  `cf_id` int NOT NULL AUTO_INCREMENT,
+  `colecc_id` int DEFAULT NULL,
+  `tipo_archivo_id` int DEFAULT NULL,
+  `cf_img_nombre_legible` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_img_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_img_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_img_format` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_img_size` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_principal` int DEFAULT '0',
+  `cf_estado` int DEFAULT NULL,
+  `cf_estado2` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cf_fecha_alta` datetime DEFAULT NULL,
+  `cf_usu_alta` int DEFAULT NULL,
+  `cf_fecha_mod` datetime DEFAULT NULL,
+  `cf_usu_mod` int DEFAULT NULL,
+  `cf_fecha_baja` datetime DEFAULT NULL,
+  `cf_usu_baja` int DEFAULT NULL, 
+  PRIMARY KEY (`cf_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+INSERT INTO `colecciones` (`colecc_id`, `colecc_nombre_interno`, `colecc_nombre`, `colecc_descripcion`, `colecc_descripcion_interna`, `colecc_fecha_ini`, `colecc_fecha_fin`, `colecc_publico`, `colecc_estado`, `colecc_estado2`, `colecc_color_fondo`, `colecc_fecha_alta`, `colecc_usu_alta`, `colecc_fecha_mod`, `colecc_usu_mod`, `colecc_fecha_baja`, `colecc_usu_baja`) VALUES
+(1, 'dia de la madre', '¡Feliz día ma!', 'Coleccion para el dia de la madre', NULL, NULL, NULL, 1, 1, NULL, '#E51281', '2026-09-09 19:59:04', 1, NULL, NULL, NULL, NULL),
+(2, 'hora del cafe', 'Hora de un café', 'la hora de la merienda esta para un cafe', NULL, NULL, NULL, 1, 1, NULL, '#FECF44', '2026-09-09 19:58:18', 1, NULL, NULL, NULL, NULL),
+(3, 'decoracion', 'Tendencias DECO 2026', 'decoracion', NULL, NULL, NULL, 1, 1, NULL, '#49B384', '2026-09-09 19:58:56', 1, NULL, NULL, NULL, NULL);
+
+INSERT INTO `colecciones_files` (`cf_id`, `colecc_id`, `tipo_archivo_id`, `cf_img_nombre_legible`, `cf_img_name`, `cf_img_path`, `cf_img_format`, `cf_img_size`, `cf_principal`, `cf_estado`, `cf_estado2`, `cf_fecha_alta`, `cf_usu_alta`, `cf_fecha_mod`, `cf_usu_mod`, `cf_fecha_baja`, `cf_usu_baja`) VALUES
+(1, 1, 1, 'dia_madre_v2.png', 'dia_madre_v2.png', 'colecciones/nkXoaHBGlpbrlhQ2GOCJn29Dh6fMF1iZL8tz7xC7.png', 'png', '1147297', 1, 1, NULL, '2026-09-09 19:55:53', 1, '2026-09-09 19:59:04', 1, NULL, NULL),
+(2, 2, 1, 'cafe.png', 'cafe.png', 'colecciones/GCaTxxdiJTclbS4IFyvZ3lBazHvD4q4xqzFlN7XN.png', 'png', '620454', 1, 1, NULL, '2026-09-09 19:58:10', 1, '2026-09-09 19:58:18', 1, NULL, NULL),
+(3, 3, 1, 'deco-2026.png', 'deco-2026.png', 'colecciones/sHvqFV8wnTHLXD3ahktCWOTj2sMmwzgFxJMl7Kb8.png', 'png', '1802645', 1, 1, NULL, '2026-09-09 19:58:56', 1, NULL, NULL, NULL, NULL);
+

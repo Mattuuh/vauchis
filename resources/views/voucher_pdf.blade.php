@@ -890,21 +890,36 @@
    ========================================================= */
 
 @page {
-    size: 8in 10.6666667in;
+    /*
+     * 8in = 768px
+     * 55in ≈ 5280px
+     *
+     * Luego podemos ajustar esta altura según el contenido real.
+     */
+    size: 8in 55in;
     margin: 0;
 }
 
 html,
 body {
     width: 768px !important;
-    height: 1024px !important;
+
+    /*
+     * IMPORTANTE:
+     * ya no fijamos 1024px de alto
+     */
+    height: auto !important;
+    min-height: 0 !important;
 
     margin: 0 !important;
     padding: 0 !important;
 
     background: #ffffff !important;
 
-    overflow: hidden !important;
+    /*
+     * No ocultar el contenido vertical
+     */
+    overflow: visible !important;
 
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -912,13 +927,16 @@ body {
 
 
 /*
- * Hoja física del PDF.
- *
- * No modifica absolutamente nada del voucher.
+ * Hoja física del PDF
  */
 .pdf-sheet {
     width: 768px;
-    height: 1024px;
+
+    /*
+     * Ya no usamos 1024px.
+     */
+    height: auto;
+    min-height: 0;
 
     display: flex;
 
@@ -927,16 +945,18 @@ body {
 
     padding-top: 15px;
 
-    overflow: hidden;
+    /*
+     * Fundamental para que no corte el voucher
+     */
+    overflow: visible;
 
     background: #ffffff;
 }
 
 
 /*
- * Reducimos el voucher completo.
- *
- * Todas sus proporciones internas permanecen iguales.
+ * Mantenemos exactamente la misma escala
+ * que ya utilizabas.
  */
 .pdf-scale {
     width: 720px;
@@ -946,7 +966,7 @@ body {
 
 
 /*
- * Sólo anulamos comportamientos propios de la vista web.
+ * Anulamos comportamientos propios de la vista web.
  */
 .pdf-scale .vp-stage {
     margin: 0 auto;
@@ -962,7 +982,7 @@ body {
 
 
 /*
- * Para PDF queremos conservar el borde redondeado.
+ * Conservamos el borde redondeado del voucher.
  */
 .pdf-scale .vp-voucher {
     overflow: hidden;

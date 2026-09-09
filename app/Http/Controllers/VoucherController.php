@@ -1387,6 +1387,13 @@ class VoucherController extends Controller
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();
+        
+        // $detalle = VoucherDetalle::where('vou_id', $vou_id)
+        //     ->where('mca_id', $valores->mca_id)
+        //     ->where('vd_estado', 1)
+        //     ->whereNull('cli_id') // suponiendo que NULL significa disponible
+        //     ->where('vd_estado2', 'PE') // opcional: estado "Disponible"
+        //     ->first();
 
         $vouchers_fijos = Voucher::with('imagenes')
             ->with([
@@ -1594,7 +1601,7 @@ class VoucherController extends Controller
                 'entidad',
                 'modalidad.campos',
                 'modalidad',
-                'sucursales',
+                // 'sucursales',
             ])
             ->withWhereHas('modalidadValores', function ($query) use ($vmv_id) {
                 $query->where('vmv_id', $vmv_id);
@@ -1613,6 +1620,18 @@ class VoucherController extends Controller
         $modalidad = $voucher->modalidad;
 
         $sucursales = $voucher->sucursales;
+
+        $sucursales_seleccionadas = DB::table('vouchers_sucursales')
+            ->where('vou_id', $vou_id)
+            ->where('vou_suc_estado', 1)
+            ->orderBy('vou_suc_id')
+            ->pluck('ed_id')
+            ->toArray();
+
+        $sucursales = EntidadDomicilio::where('ed_estado',1)
+            ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->orderBy('ent_id', 'desc')
+            ->get();
 
         if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
             $valores->vmv_monto_fijo=$request->monto;
@@ -1839,18 +1858,29 @@ class VoucherController extends Controller
             mkdir(dirname($rutaCompleta), 0775, true);
         }
 
-        Browsershot::html($html)
-            ->setChromePath('/var/www/.cache/puppeteer/chrome-headless-shell/linux-148.0.7778.97/chrome-headless-shell-linux64/chrome-headless-shell')
-            ->setOption('args', [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-            ])
-            ->showBackground()
-            ->paperSize(8, 10.6666667, 'in')
-            ->margins(0, 0, 0, 0)
-            ->deviceScaleFactor(1)
-            ->timeout(120)
-            ->savePdf($rutaCompleta);
+        if (env('APP_ENV')=='production') {
+            Browsershot::html($html)
+                ->setChromePath('/var/www/.cache/puppeteer/chrome-headless-shell/linux-148.0.7778.97/chrome-headless-shell-linux64/chrome-headless-shell')
+                ->setOption('args', [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                ])
+                ->showBackground()
+                ->paperSize(8, 10.6666667, 'in')
+                ->margins(0, 0, 0, 0)
+                ->deviceScaleFactor(1)
+                ->timeout(120)
+                ->savePdf($rutaCompleta);
+        } else {
+            Browsershot::html($html)
+                ->showBackground()
+                // ->paperSize(8, 10.6666667, 'in')
+                ->paperSize(60, 413, 'mm')
+                ->margins(0, 0, 0, 0)
+                ->deviceScaleFactor(1)
+                ->timeout(120)
+                ->savePdf($rutaCompleta);
+        }
 
 
         $detalle->update([

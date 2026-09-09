@@ -108,6 +108,7 @@ use App\Http\Controllers\RubroController;
 use App\Http\Controllers\ModalidadController;
 use App\Http\Controllers\ResaltadorController;
 use App\Http\Controllers\EtiquetaController;
+use App\Http\Controllers\ColeccionController;
 
 
 // use App\Http\Controllers\VoucherEmisionController;
@@ -145,6 +146,7 @@ Route::get('/categorias/{categoria}/rubros/{rubro}/subrubros/{subrubro}/entidade
 Route::get('/entidad/{id}', [VoucherController::class, 'vouchersPorEntidad'])->name('vouchers.entidad');
 Route::get('/organizacion/{id}', [OrganizacionController::class, 'vouchers_por_organizacion'])->name('vouchers.organizacion');
 Route::get('/influencer/{id}', [InfluencerController::class, 'vouchers_por_influencer'])->name('vouchers.influencer');
+Route::get('/coleccion/{id}', [ColeccionController::class, 'vouchers_por_coleccion'])->name('vouchers.coleccion');
 Route::get('/buscar', [VoucherController::class, 'buscar_voucher'])->name('vouchers.buscar');
 Route::get('/precompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'precompra_voucher'])->name('vouchers.precompra');
 Route::get('/vista_previa/{voucher}/{modalidadCampo}', [VoucherController::class, 'vista_previa_voucher'])->name('vouchers.vista_previa');
@@ -241,5 +243,10 @@ Route::middleware(['administrador'])
 
         Route::resource('biblioteca_fondos', BibliotecaFondoController::class);
         Route::post('/biblioteca_fondos/{id}/delete', [BibliotecaFondoController::class, 'delete'])->name('biblioteca_fondos.delete');
+
+
+        Route::get('/colecciones/listado', [ColeccionController::class, 'listado'])->name('colecciones.listado');
+        Route::resource('colecciones', ColeccionController::class);
+        Route::post('/colecciones/{id}/delete', [ColeccionController::class, 'delete'])->name('colecciones.delete');
 
     });

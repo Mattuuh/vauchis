@@ -36,6 +36,7 @@
                         <li><a class="dropdown-item" href="{{ route('admin.modalidades.index') }}">Modalidades</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.tipos_modalidades.index') }}">Tipos de Modalidades</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.etiquetas.index') }}">Etiquetas</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.colecciones.index') }}">Colecciones</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('voucher_emisiones.index') }}">Emision</a></li> --}}
                         {{-- <li><a class="dropdown-item" href="{{ route('admin.voucher_plantillas.index') }}">Plantillas</a></li> --}}
                         {{-- <li><a class="dropdown-item" href="{{ route('admin.biblioteca_fondos.create') }}">Fondos</a></li> --}}
@@ -301,6 +302,8 @@
 
             <a href="{{ route('admin.etiquetas.index') }}"><i class="bi bi-bookmark"></i>Etiquetas</a>
 
+            <a href="{{ route('admin.colecciones.index') }}"><i class="bi bi-bookmark"></i>Colecciones</a>
+
             {{-- <a href="{{ route('admin.voucher_plantillas.index') }}"><i class="bi bi-file-earmark-richtext"></i>Plantillas</a> --}}
 
             {{-- <a href="{{ route('admin.biblioteca_fondos.create') }}"><i class="bi bi-image"></i>Fondos</a> --}}
@@ -334,7 +337,7 @@
     </div>
 
     <div class="v-mobile-panel__body">
-        <h3>Menú</h3>
+        <h3>Menú <a href="{{ route('home') }}"><i class="bi bi-house-fill"></i></a></h3>
 
         {{-- OBJETOS --}}
         <div class="v-mobile-menu-item">
@@ -397,23 +400,20 @@
         {{-- ACCIONES DEL MENÚ --}}
         <div class="v-mobile-menu-actions">
             <a href="#" class="v-mobile-action-link">
-                <img src="{{ asset('images/icono-Perfil.png') }}" alt="">
+                <img src="{{ asset('images/icono-Perfil.png') }}" alt="" class="v-mobile-action-icon">
                 <span>{{ session('auth.nombre') }} - {{ session('auth.email') }}</span>
             </a>
             <a href="{{ route('usuarios.vouchers', session('auth.usuario_id')) }}" class="v-mobile-action-link">
-                <span><i class="bi bi-pencil-square me-2"></i> Mis vouchers</span>
+                <i class="bi bi-pencil-square v-mobile-action-icon"></i><span>Mis vouchers</span>
             </a>
+            <form method="POST" action="{{ route('logout') }}" class="v-mobile-action-form">
+                @csrf
+                <button type="submit" class="v-mobile-action-link v-mobile-action-logout">
+                    <i class="bi bi-box-arrow-right v-mobile-action-icon"></i><span>Salir</span>
+                </button>
+            </form>
             <a href="#" class="v-mobile-action-link">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <button type="submit" class="btn btn-danger w-100 rounded-pill">
-                        <i class="bi bi-box-arrow-right me-2"></i>Salir
-                    </button>
-                </form>
-            </a>
-            <a href="#" class="v-mobile-action-link">
-                <img src="{{ asset('images/icono-Ayuda.png') }}" alt="">
+                <img src="{{ asset('images/icono-Ayuda.png') }}" alt="" class="v-mobile-action-icon">
                 <span>Ayuda</span>
             </a>
         </div>
