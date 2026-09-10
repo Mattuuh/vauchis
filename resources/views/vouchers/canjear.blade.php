@@ -152,21 +152,65 @@
 </style>
 @endpush
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Confirmás el canje de este voucher?',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {},
+        messages: {},
+        errorElement: 'small',
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
 
 <div class="vc-page">
-
     <div class="vc-card">
-
         <div class="vc-icon"><i class="bi bi-gift"></i></div>
-
         <h1 class="vc-title">Canjear voucher</h1>
-
-        <p class="vc-subtitle">
-            Verificá los datos antes de confirmar el canje.
-        </p>
+        <p class="vc-subtitle">Verificá los datos antes de confirmar el canje.</p>
 
         @if(session('success'))
             <div class="vc-status success">
@@ -181,65 +225,40 @@
         @endif
 
         <div class="vc-info">
-
             <div class="vc-row">
                 <span class="vc-label">Voucher</span>
-
-                <span class="vc-value">
-                    {{ $voucher->vou_nombre }}
-                </span>
+                <span class="vc-value">{{ $voucher->vou_nombre }}</span>
             </div>
-
             <div class="vc-row">
                 <span class="vc-label">Comercio</span>
-
-                <span class="vc-value">
-                    {{ $voucher->ent_nombre_fantasia }}
-                </span>
+                <span class="vc-value">{{ $voucher->ent_nombre_fantasia }}</span>
             </div>
-
             <div class="vc-row">
                 <span class="vc-label">Beneficiario</span>
-
-                <span class="vc-value">
-                    {{ $voucher->vd_variante_nombre_para }}
-                </span>
+                <span class="vc-value">{{ $voucher->vd_variante_nombre_para }}</span>
             </div>
-
             <div class="vc-row">
                 <span class="vc-label">Código</span>
-
-                <span class="vc-value">
-                    {{ str_pad($voucher->vd_codigo, 8, '0', STR_PAD_LEFT) }}
-                </span>
+                <span class="vc-value">{{ str_pad($voucher->vd_codigo, 8, '0', STR_PAD_LEFT) }}</span>
             </div>
-
             @if(!empty($voucher->vd_monto_total))
                 <div class="vc-row">
                     <span class="vc-label">Valor</span>
-
-                    <span class="vc-value">
-                        $ {{ number_format($voucher->vd_monto_total, 2, ',', '.') }}
-                    </span>
+                    <span class="vc-value">$ {{ number_format($voucher->vd_monto_total, 2, ',', '.') }}</span>
                 </div>
             @endif
-
         </div>
 
-        @if($voucher->vd_estado2 !== 'CA')
-            <form method="POST" action="{{ route('voucher.canjear.confirmar', $voucher->vd_id) }}">
+        @if($voucher->vd_estado3 !== 'CA')
+            <form method="POST" action="{{ route('voucher.canjear.confirmar', $voucher->vd_id) }}" id="form_main">
                 @csrf
 
-                <button type="submit" class="vc-btn" onclick="return confirm('¿Confirmás el canje de este voucher?')">
-                    Confirmar canje
-                </button>
+                <button type="submit" class="vc-btn" id="btn_confirmar">Confirmar canje</button>
             </form>
         @else
             <div class="vc-status success"><i class="bi bi-check-circle-fill"></i>Voucher ya canjeado</div>
         @endif
-
     </div>
-
 </div>
 
 @endsection

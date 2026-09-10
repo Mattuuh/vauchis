@@ -86,12 +86,6 @@
                     <span>{{ $domicilio->ed_direccion }}</span>
                 @endif
             @endforeach
-            @foreach ($domicilios as $domicilio)
-                @if(!empty($domicilio->ed_direccion))
-                    {{-- <span>{{ $domicilio->ed_direccion }} | {{ $domicilio->ed_horario_atencion }}</span> --}}
-                    <span>{{ $domicilio->ed_direccion }}</span>
-                @endif
-            @endforeach
             </div>
 
             <div class="vp-brand-meta">

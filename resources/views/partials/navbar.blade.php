@@ -329,75 +329,7 @@
 @endif
 
 
-@if (session('auth.tu_id') == 1)
-
-    {{-- NAVBAR ADMIN MOBILE --}}
-    <nav class="v-mobile-navbar">
-        <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileAdminMenu">
-            <i class="bi bi-list"></i>
-        </button>
-
-        <a href="{{ route('home') }}" class="v-mobile-navbar__logo">
-            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
-        </a>
-
-        {{-- <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="v-mobile-navbar__btn">
-                <i class="bi bi-box-arrow-right"></i>
-            </button>
-        </form> --}}
-        <button type="button" class="v-mobile-navbar__btn"></button>
-    </nav>
-
-    <div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileAdminMenu">
-        <div class="v-mobile-panel__header">
-            <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
-            <button type="button" data-bs-dismiss="offcanvas">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-
-        <div class="v-mobile-panel__body">
-            <h3>Administrador</h3>
-
-            <a href="{{ route('home') }}"><i class="bi bi-house-door"></i>Inicio</a>
-
-            <a href="{{ route('admin.entidades.index') }}"><i class="bi bi-shop"></i>Entidades</a>
-
-            <a href="{{ route('admin.tipos-entidad.index') }}"><i class="bi bi-tags"></i>Tipos de Entidad</a>
-
-            <a href="{{ route('admin.rubros.index') }}"><i class="bi bi-grid"></i>Rubros</a>
-
-            <a href="{{ route('admin.vouchers.index') }}"><i class="bi bi-ticket-perforated"></i>Vouchers</a>
-
-            <a href="{{ route('admin.modalidades.index') }}"><i class="bi bi-sliders"></i>Modalidades</a>
-
-            <a href="{{ route('admin.tipos_modalidades.index') }}"><i class="bi bi-sliders"></i>Tipos de Modalidades</a>
-
-            <a href="{{ route('admin.etiquetas.index') }}"><i class="bi bi-bookmark"></i>Etiquetas</a>
-
-            <a href="{{ route('admin.colecciones.index') }}"><i class="bi bi-bookmark"></i>Colecciones</a>
-
-            {{-- <a href="{{ route('admin.voucher_plantillas.index') }}"><i class="bi bi-file-earmark-richtext"></i>Plantillas</a> --}}
-
-            {{-- <a href="{{ route('admin.biblioteca_fondos.create') }}"><i class="bi bi-image"></i>Fondos</a> --}}
-
-            <a href="{{ route('admin.organizacion.index') }}"><i class="bi bi-people"></i>Organizaciones</a>
-
-            <a href="{{ route('admin.influencers.index') }}"><i class="bi bi-person-video3"></i>Influencers</a>
-
-            <form method="POST" action="{{ route('logout') }}" class="mt-4">
-                @csrf
-                <button type="submit" class="btn btn-danger w-100 rounded-pill">
-                    <i class="bi bi-box-arrow-right me-2"></i>
-                    Salir
-                </button>
-            </form>
-        </div>
-    </div>
-
-@elseif (session('auth.tu_id')==2)
+@if (session('auth.tu_id')==1 || session('auth.tu_id')==2)
 <nav class="v-mobile-navbar">
     <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu"><i class="bi bi-list"></i></button>
     <a href="{{ route('home') }}" class="v-mobile-navbar__logo"><img src="{{ asset('images/logo-1.png') }}" alt="Vauchis"></a>
@@ -471,6 +403,77 @@
                 @endforeach
             </div>
         </div>
+
+        @if (session('auth.tu_id') == 1)
+
+        <div class="v-mobile-admin-section">
+
+            <h4 class="v-mobile-admin-title">
+                Administración
+            </h4>
+
+            <div class="v-mobile-menu-item">
+                <div class="v-mobile-menu-row">
+
+                    <a href="{{ route('admin.entidades.index') }}"
+                    class="v-mobile-category-link">
+
+                        <i class="bi bi-shop"></i>
+                        <span>Entidades</span>
+
+                    </a>
+
+                </div>
+            </div>
+
+
+            <div class="v-mobile-menu-item">
+                <div class="v-mobile-menu-row">
+
+                    <a href="{{ route('admin.vouchers.index') }}"
+                    class="v-mobile-category-link">
+
+                        <i class="bi bi-ticket-perforated"></i>
+                        <span>Vouchers</span>
+
+                    </a>
+
+                </div>
+            </div>
+
+
+            <div class="v-mobile-menu-item">
+                <div class="v-mobile-menu-row">
+
+                    <a href="{{ route('admin.organizacion.index') }}"
+                    class="v-mobile-category-link">
+
+                        <i class="bi bi-people"></i>
+                        <span>Organizaciones</span>
+
+                    </a>
+
+                </div>
+            </div>
+
+
+            <div class="v-mobile-menu-item">
+                <div class="v-mobile-menu-row">
+
+                    <a href="{{ route('admin.influencers.index') }}"
+                    class="v-mobile-category-link">
+
+                        <i class="bi bi-person-video3"></i>
+                        <span>Influencers</span>
+
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    @endif
 
         {{-- ACCIONES DEL MENÚ --}}
         <div class="v-mobile-menu-actions">

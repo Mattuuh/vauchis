@@ -131,7 +131,7 @@
     }
 
     @page {
-        size: 60mm 310mm;
+        size: 60mm 340mm;
         margin: 0;
     }
 

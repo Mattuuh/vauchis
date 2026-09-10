@@ -968,3 +968,21 @@ NAVBAR
     min-width:250px;
     border-radius:18px;
 }
+
+
+@media (max-width: 768px) {
+
+    .v-mobile-admin-section {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e1e4ec;
+    }
+
+    .v-mobile-admin-section .v-mobile-category-link i {
+        width: 28px;
+        font-size: 22px;
+        color: #0065FA;
+        text-align: center;
+    }
+
+}

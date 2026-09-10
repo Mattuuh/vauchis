@@ -75,6 +75,15 @@
             @endforeach
             </div> --}}
 
+            <div class="vp-brand-meta">
+                @if(!empty($influencer->inf_instagram))
+                    <a href="https://www.instagram.com/{{ $influencer->inf_instagram }}" title="{{ $influencer->inf_instagram }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                @endif
+                @if(!empty($influencer->inf_tiktok))
+                    <a href="https://www.tiktok.com/{{ '@'.$influencer->inf_tiktok }}" title="{{ $influencer->inf_tiktok }}" target="_blank"><i class="bi bi-tiktok"></i></a>
+                @endif
+            </div>
+
         </div>
     </section>
 
@@ -114,7 +123,7 @@
                         <div class="vp-custom-form">
                         @foreach($voucher->modalidadValores as $campo)
                             <input type="text" name="amount" class="voucher-monto-input" min="{{ $campo->vmv_monto_minimo }}" max="{{ $campo->vmv_monto_maximo }}" placeholder="Ingresa el monto que quieras regalar" data-url="{{ route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $campo->vmv_id]) }}">
-                            <small class="vp-amount-help">Podes ingresar monto superior a <b>${{ number_format($campo->vmv_monto_minimo,2,',','.') }}</b> y menor a <b>${{ number_format($campo->vmv_monto_maximo,2,',','.') }}</b>.</small>
+                            <small class="vp-amount-help">Desde <b>${{ number_format($campo->vmv_monto_minimo,2,',','.') }}</b> hasta <b>${{ number_format($campo->vmv_monto_maximo,2,',','.') }}</b>.</small>
                         @endforeach
                         </div>
                     </div>
@@ -327,6 +336,18 @@
     white-space: nowrap;
 }
 
+.vp-brand-meta a {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 5px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 100%;
+    color: #fff;
+    line-height: 1;
+    white-space: nowrap;
+}
+
 .vp-brand-content {
     padding: 28px 0 70px;
 }
@@ -424,6 +445,7 @@
 .vp-products-section {
     max-width: 880px;
     margin: 60px auto 0;
+    padding: 0 24px;
 }
 
 .vp-products-section h2 {
@@ -605,6 +627,7 @@
         overflow-y: hidden;
 
         margin-top: 18px;
+        margin-left: 0;
         padding-bottom: 4px;
 
         -webkit-overflow-scrolling: touch;
@@ -621,6 +644,18 @@
         padding: 8px 10px;
         border: 1px solid rgba(255,255,255,.85);
         border-radius: 4px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .vp-brand-meta a {
+        flex: 0 0 auto;
+        padding: 8px 10px;
+        border: 1px solid rgba(255,255,255,.85);
+        border-radius: 100%;
         color: #fff;
         font-size: 16px;
         font-weight: 400;
@@ -829,20 +864,31 @@
 
 
 
+    
+    .vp-products-wrap {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
     .vp-products-grid {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 8px;
-        /* width: 100%; */
+        grid-template-columns: none;
+
+        gap: 12px;
+
+        width: 100%;
+
         overflow-x: auto;
         overflow-y: hidden;
-        /* Escapa del padding del padre */
-        width: calc(100% + 20px);
-        margin-right: -20px;
-        padding: 4px 0 12px 0;
+
+        padding: 4px 16px 14px;
 
         scroll-snap-type: x proximity;
+        scroll-behavior: smooth;
+
         -webkit-overflow-scrolling: touch;
+
         scrollbar-width: none;
     }
 
@@ -851,110 +897,70 @@
     }
 
     .vp-product-card {
-        position: relative;
-        flex: 0 0 44%;
-        width: 44%;
-        max-width: 44%;
-        height: 280px;
-        display: block;
-        border-radius: 16px;
-        overflow: hidden;
-        background: #fff;
+        /*
+         * 2 cards completas + aproximadamente 15% de la tercera.
+         *
+         * El viewport útil queda dividido aproximadamente
+         * en 2.15 cards.
+         */
+        flex: 0 0 calc((100vw - 56px) / 2.15);
+
+        width: calc((100vw - 56px) / 2.15);
+        height: 290px;
+
+        border-radius: 14px;
+
         scroll-snap-align: start;
-        box-shadow:
-            0 2px 4px rgba(0, 0, 0, .18),
-            0 4px 8px rgba(0, 0, 0, .14);
     }
 
     .vp-product-image {
-        position: absolute;
-        inset: 0;
         width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-        overflow: hidden;
-    }
-
-    .vp-product-image img {
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        max-height: none;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
-
-    .vp-product-card::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 48%;
-        background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, .88) 0%,
-            rgba(0, 0, 0, .60) 35%,
-            rgba(0, 0, 0, .18) 72%,
-            rgba(0, 0, 0, 0) 100%
-        );
-        pointer-events: none;
-        z-index: 1;
+        height: 210px;
     }
 
     .vp-product-info {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: auto;
-        padding: 0 14px 15px;
-        background: transparent;
-        color: #fff;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
+        height: 80px;
+
+        padding: 11px 10px 10px;
     }
 
     .vp-product-title {
-        margin: 0 0 4px !important;
-        font-size: 14px !important;
-        line-height: 16px !important;
-        font-weight: 600 !important;
-        color: #fff !important;
+        font-size: 13px !important;
+        line-height: 15px !important;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
     }
 
     .vp-product-footer {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-        margin: 0;
-    }
-
-    .vp-product-price {
-        order: 1;
-        margin: 0;
-        font-size: 13px;
-        line-height: 15px;
-        font-weight: 400;
-        color: #fff;
-        white-space: nowrap;
+        gap: 6px;
     }
 
     .vp-product-description {
-        order: 2;
-        margin: 0 !important;
-        max-width: 100%;
-        font-size: 9px;
-        line-height: 11px;
-        font-weight: 400;
-        color: rgba(255,255,255,.90);
+        max-width: 65%;
+
+        font-size: 11px;
+        line-height: 13px;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+
+        overflow: hidden;
     }
+
+    .vp-product-price {
+        font-size: 11px;
+        line-height: 13px;
+    }
+
+    .vp-products-arrow {
+        display: none !important;
+    }
+
 }
 
 .voucher-montos {
