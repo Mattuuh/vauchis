@@ -1860,7 +1860,7 @@ class VoucherController extends Controller
             mkdir(dirname($rutaCompleta), 0775, true);
         }
 
-        if (env('APP_ENV')=='production') {
+        // if (env('APP_ENV')=='production') {
             Browsershot::html($html)
                 ->setChromePath('/var/www/.cache/puppeteer/chrome-headless-shell/linux-148.0.7778.97/chrome-headless-shell-linux64/chrome-headless-shell')
                 ->setOption('args', [
@@ -1868,37 +1868,38 @@ class VoucherController extends Controller
                     '--disable-setuid-sandbox',
                 ])
                 ->showBackground()
-                ->paperSize(8, 10.6666667, 'in')
-                ->margins(0, 0, 0, 0)
-                ->deviceScaleFactor(1)
-                ->timeout(120)
-                ->savePdf($rutaCompleta);
-        } else {
-            Browsershot::html($html)
-                ->showBackground()
                 // ->paperSize(8, 10.6666667, 'in')
-                // ->paperSize(60, 413, 'mm')
                 ->paperSize(60, 310, 'mm')
                 ->margins(0, 0, 0, 0)
                 ->deviceScaleFactor(1)
                 ->timeout(120)
                 ->savePdf($rutaCompleta);
+        // } else {
+        //     Browsershot::html($html)
+        //         ->showBackground()
+        //         // ->paperSize(8, 10.6666667, 'in')
+        //         // ->paperSize(60, 413, 'mm')
+        //         ->paperSize(60, 310, 'mm')
+        //         ->margins(0, 0, 0, 0)
+        //         ->deviceScaleFactor(1)
+        //         ->timeout(120)
+        //         ->savePdf($rutaCompleta);
 
-            // $pdf = Browsershot::html($html)
-            //     ->showBackground()
-            //     ->paperSize(99.22, 600, 'mm')
-            //     ->margins(0, 0, 0, 0)
-            //     ->deviceScaleFactor(1)
-            //     ->timeout(120)
-            //     ->pdf();
+        //     // $pdf = Browsershot::html($html)
+        //     //     ->showBackground()
+        //     //     ->paperSize(99.22, 600, 'mm')
+        //     //     ->margins(0, 0, 0, 0)
+        //     //     ->deviceScaleFactor(1)
+        //     //     ->timeout(120)
+        //     //     ->pdf();
 
-            // return response($pdf)
-            //     ->header('Content-Type', 'application/pdf')
-            //     ->header(
-            //         'Content-Disposition',
-            //         'inline; filename="voucher-' . $vou_id . '.pdf"'
-            //     );
-        }
+        //     // return response($pdf)
+        //     //     ->header('Content-Type', 'application/pdf')
+        //     //     ->header(
+        //     //         'Content-Disposition',
+        //     //         'inline; filename="voucher-' . $vou_id . '.pdf"'
+        //     //     );
+        // }
 
         
 
