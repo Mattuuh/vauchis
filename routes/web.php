@@ -154,6 +154,7 @@ Route::get('/compra/{voucher}/{modalidadCampo}', [VoucherController::class, 'com
 Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class, 'postcompra_voucher'])->name('vouchers.postcompra');
 // Route::get('/voucher/{id}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
 Route::get('/voucher/{voucher}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
+Route::get('/voucher_mobile/{voucher}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_mobile_pdf');
 
 
 use App\Http\Controllers\VoucherCanjeController;
@@ -169,6 +170,7 @@ Route::get('/usuarios/vouchers/{id}', [UsuarioController::class, 'vouchers'])->n
 use App\Http\Controllers\ClienteController;
 // Route::resource('clientes', ClienteController::class);
 Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+Route::get('/clientes/{ent_id}/vouchers/exportar', [ClienteController::class, 'exportar_reporte_vouchers'])->name('clientes.exportar');
 
 
 Route::middleware(['administrador'])

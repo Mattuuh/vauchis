@@ -1847,7 +1847,9 @@ class VoucherController extends Controller
             "qr" => $qrImagen,
         ];
 
-        $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
+        // $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
+        $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
+        // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
 
         $nombreArchivo = 'voucher-' . $token . '.pdf';
         $rutaRelativa = 'vouchers/pdf/' . $nombreArchivo;
@@ -1875,12 +1877,30 @@ class VoucherController extends Controller
             Browsershot::html($html)
                 ->showBackground()
                 // ->paperSize(8, 10.6666667, 'in')
-                ->paperSize(60, 413, 'mm')
+                // ->paperSize(60, 413, 'mm')
+                ->paperSize(60, 310, 'mm')
                 ->margins(0, 0, 0, 0)
                 ->deviceScaleFactor(1)
                 ->timeout(120)
                 ->savePdf($rutaCompleta);
+
+            // $pdf = Browsershot::html($html)
+            //     ->showBackground()
+            //     ->paperSize(99.22, 600, 'mm')
+            //     ->margins(0, 0, 0, 0)
+            //     ->deviceScaleFactor(1)
+            //     ->timeout(120)
+            //     ->pdf();
+
+            // return response($pdf)
+            //     ->header('Content-Type', 'application/pdf')
+            //     ->header(
+            //         'Content-Disposition',
+            //         'inline; filename="voucher-' . $vou_id . '.pdf"'
+            //     );
         }
+
+        
 
 
         $detalle->update([
@@ -1910,9 +1930,15 @@ class VoucherController extends Controller
             'vd_fecha_mod' => now(),
         ]);
 
+        $datos = [
+            'de' => session('voucher.de'),
+            'para' => session('voucher.para'),
+            'mensaje' => session('voucher.mensaje'),
+        ];
+
         session()->forget('voucher');
 
-        return view('postcompra', compact('voucher','entidad','imagenes','valores','detalle'));
+        return view('postcompra', compact('voucher','entidad','imagenes','valores','detalle','usuario','datos'));
     }
 
     public function ordenar()

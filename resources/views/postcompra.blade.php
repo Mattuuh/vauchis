@@ -592,16 +592,18 @@
                 </button>
             </div>
 
-            <a href="{{ $loginUrl }}" class="pc-login">
-                <span class="pc-login-icon">
-                    <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
-                </span>
-                <span class="pc-login-copy">
-                    <strong>Inicia sesión</strong>
-                    <span>Iniciá sesión y comprá más rápido</span>
-                </span>
-                <span class="pc-login-button">Iniciar sesión</span>
-            </a>
+            @if (empty($usuario))
+                <a href="{{ $loginUrl }}" class="pc-login">
+                    <span class="pc-login-icon">
+                        <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
+                    </span>
+                    <span class="pc-login-copy">
+                        <strong>Inicia sesión</strong>
+                        <span>Iniciá sesión y comprá más rápido</span>
+                    </span>
+                    <span class="pc-login-button">Iniciar sesión</span>
+                </a>
+            @endif
 
             <div class="pc-notice">
                 Te enviamos el voucher a tu correo.

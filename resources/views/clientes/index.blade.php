@@ -219,6 +219,9 @@ $(document).ready(function () {
                         <div class="mv-loading" id="box-espere" style="display: none;">
                             <span class="spinner-border spinner-border-sm"></span>
                         </div>
+                        <a href="{{ route('clientes.exportar', ['ent_id' => $entidad->ent_id]) }}" class="btn btn-primary">
+                            <i class="bi bi-download me-2"></i> Exportar CSV
+                        </a>
                         <button type="button" id="btn_filtro" class="mv-btn-search">Buscar</button>
                     </div>
                 </div>

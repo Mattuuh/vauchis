@@ -116,123 +116,658 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Voucher {{ $entidad->ent_nombre_fantasia ?? '' }} - {{-- {{ str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) }} --}}</title>
+<meta charset="UTF-8">
+<title>Voucher {{ $entidad->ent_nombre_fantasia ?? '' }} - {{-- {{ str_pad((string) $codigoVoucher, 8, '0', STR_PAD_LEFT) }} --}}</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
+<style>
+    :root {
+        --vp-green: #49b889;
+        --vp-blue: #416fb6;
+        --vp-action: #0968f7;
+        --vp-cream: #f8f4e9;
+    }
 
-        /* =========================================================
-   AJUSTES EXCLUSIVOS PARA GENERAR EL PDF
-   ========================================================= */
+    @page {
+        size: 60mm 310mm;
+        margin: 0;
+    }
 
-@page {
-    /*
-     * 8in = 768px
-     * 55in ≈ 5280px
-     *
-     * Luego podemos ajustar esta altura según el contenido real.
-     */
-    size: 8in 55in;
-    margin: 0;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-html,
-body {
-    width: 768px !important;
+    html,
+    body {
+        /* width: 375px; */
+        width: 100% !important;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        font-family: 'Montserrat', Arial, sans-serif;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 
-    /*
-     * IMPORTANTE:
-     * ya no fijamos 1024px de alto
-     */
-    height: auto !important;
-    min-height: 0 !important;
+    body {
+        overflow: visible;
+    }
 
-    margin: 0 !important;
-    padding: 0 !important;
+    /* 375px -> 60mm. Mantiene una referencia mobile comoda para maquetar. */
+    .pdf-sheet {
+        width: 355px;
+        /* margin: 0; */
+        margin: 10px auto;
+        overflow: hidden;
+        border: 5px solid rgba(0, 0, 0, 0.12);
+        border-radius: 18px;
+        /* padding: 0; */
+        zoom: .6047;
+        background: #fff;
+    }
 
-    background: #ffffff !important;
+    /* .vp-stage,
+    .vp-voucher {
+        width: 375px;
+        margin: 0;
+        padding: 0;
+    } */
 
-    /*
-     * No ocultar el contenido vertical
-     */
-    overflow: visible !important;
+    .vp-stage {
+        /* overflow: visible;
+        box-shadow: none;
+        border-radius: 0; */
 
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-}
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+        border-radius: 18px;
+    }
 
+    .vp-voucher {
+        /* overflow: hidden;
+        background: #fff;
+        border-radius: 0; */
 
-/*
- * Hoja física del PDF
- */
-.pdf-sheet {
-    width: 768px;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 18px;
+        background: #fff;
+    }
 
-    /*
-     * Ya no usamos 1024px.
-     */
-    height: auto;
-    min-height: 0;
-
-    display: flex;
-
-    justify-content: center;
-    align-items: flex-start;
-
-    padding-top: 15px;
-
-    /*
-     * Fundamental para que no corte el voucher
-     */
-    overflow: visible;
-
-    background: #ffffff;
-}
-
-
-/*
- * Mantenemos exactamente la misma escala
- * que ya utilizabas.
- */
-.pdf-scale {
-    width: 720px;
-
-    zoom: 0.63;
-}
-
-
-/*
- * Anulamos comportamientos propios de la vista web.
- */
-.pdf-scale .vp-stage {
-    margin: 0 auto;
-
-    overflow: visible;
-
-    scrollbar-width: none;
-}
-
-.pdf-scale .vp-stage::-webkit-scrollbar {
-    display: none;
-}
-
-
-/*
- * Conservamos el borde redondeado del voucher.
- */
-.pdf-scale .vp-voucher {
+    /* =========================================================
+       BLOQUE PRINCIPAL / COLOR DEL COMERCIO
+       ========================================================= */
+.vp-green-section {
+    position: relative;
+    width: 100%;
+        padding: 38px 14px 32px;
     overflow: hidden;
 }
-    </style>
+
+.vp-green-section::before,
+.vp-green-section::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+        border: 8px solid rgba(255,255,255,.12);
+    border-radius: 48% 52% 50% 50%;
+    transform: rotate(25deg);
+        pointer-events: none;
+}
+
+.vp-green-section::before {
+        top: -92px;
+        left: 14px;
+}
+
+.vp-green-section::after {
+        right: -95px;
+    bottom: 20px;
+}
+
+.vp-voucher-topline {
+    position: relative;
+    z-index: 2;
+        height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+        padding: 0 18px;
+    color: #fff;
+    border-radius: 13px 13px 0 0;
+}
+
+.vp-code {
+        font-size: 10px;
+        font-weight: 500;
+}
+
+.vp-brand {
+        display: flex;
+    align-items: center;
+        justify-content: flex-end;
+}
+
+.vp-brand img {
+    display: block;
+        width: 118px;
+        height: auto;
+        max-height: 34px;
+        object-fit: contain;
+}
+
+    /* =========================================================
+       REGALO: MENSAJE + VALOR + IMAGEN
+       ========================================================= */
+.vp-gift-card {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+        width: 100%;
+    overflow: hidden;
+}
+
+.vp-message-panel {
+        min-height: 205px;
+        padding: 22px 28px 20px;
+    background: #f8f5eb;
+        border-bottom: 3px dashed #222;
+        border-radius: 0 0 14px 14px;
+}
+
+.vp-hand-label {
+    display: block;
+        margin: 0 0 2px;
+        color: #555;
+    font-family: 'Grape Nuts', cursive;
+        font-size: 19px;
+        line-height: 1;
+        letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.vp-hand-value {
+        margin: 0 0 8px;
+        padding: 0 5px 4px;
+    border-bottom: 1px solid #777;
+    font-family: 'Grape Nuts', cursive;
+        font-size: 29px;
+    font-weight: 500;
+    font-style: italic;
+        line-height: 1.05;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.vp-hand-message {
+        margin: 18px 0 0;
+    font-family: 'Grape Nuts', cursive;
+        font-size: 22px;
+    font-style: italic;
+        line-height: 1.18;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.vp-value-panel {
+        width: 100%;
+    overflow: hidden;
+    background: #fff;
+        border-radius: 14px;
+}
+
+.vp-value-copy {
+    position: relative;
+        min-height: 132px;
+        padding: 26px 28px 18px;
+        background: var(--vp-cream);
+}
+
+.vp-value-eyebrow {
+    margin: 0;
+        font-size: 10px;
+    line-height: 1.2;
+    text-transform: uppercase;
+        font-weight: 400;
+}
+
+.vp-value-eyebrow span {
+    font-weight: 800;
+}
+
+.vp-value-amount {
+        margin: 18px 0 0;
+        font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+        letter-spacing: -.035em;
+    text-align: center;
+}
+
+.vp-title {
+        margin: 17px 0 0;
+        font-size: 23px;
+    font-weight: 700;
+        line-height: 1.1;
+    text-align: center;
+}
+
+.vp-subtitle {
+        margin: 8px auto 0;
+        max-width: 290px;
+        font-size: 13px;
+    font-weight: 400;
+        line-height: 1.25;
+    text-align: center;
+}
+
+.vp-recommendation {
+    position: absolute;
+        top: 25px;
+    right: 14px;
+        min-width: 100px;
+        padding: 8px;
+    border-radius: 5px;
+    background: #fff1c9;
+    color: #b77717;
+    font-size: 7px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.vp-value-image {
+    width: 100%;
+    height: 185px;
+    overflow: hidden;
+}
+
+.vp-value-image img {
+        display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+    /* =========================================================
+       COMERCIO / SUCURSALES / WHATSAPP
+       ========================================================= */
+.vp-commerce-row {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+        padding: 26px 24px 28px;
+}
+
+.vp-commerce {
+    display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+    color: #fff;
+}
+
+.vp-commerce-logo {
+        flex: 0 0 70px;
+        width: 70px;
+        height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+        font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.vp-commerce-logo img {
+        display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+}
+
+.vp-commerce-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.vp-commerce-label {
+    display: block;
+        margin-bottom: 3px;
+        font-size: 10px;
+        line-height: 1.15;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.vp-commerce-name {
+    display: block;
+        font-size: 21px;
+        line-height: 1.05;
+    font-weight: 700;
+        overflow-wrap: anywhere;
+}
+
+.vp-addresses {
+    width: 100%;
+        margin: 0 0 24px;
+        padding: 0 6px;
+    list-style: none;
+    color: #fff;
+}
+
+.vp-addresses li {
+    display: flex;
+    align-items: flex-start;
+        gap: 9px;
+        margin: 0 0 10px;
+        font-size: 11px;
+        line-height: 1.35;
+}
+
+.vp-addresses li:last-child {
+    margin-bottom: 0;
+}
+
+.vp-addresses li i {
+    flex: 0 0 auto;
+        font-size: 15px;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.vp-addresses li span {
+    flex: 1;
+    min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .vp-whatsapp {
+        width: 100%;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 0 18px;
+        border-radius: 999px;
+        background: #fff;
+        color: #111;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .vp-whatsapp img {
+        flex: 0 0 auto;
+        width: 31px;
+        height: 31px;
+        object-fit: contain;
+}
+
+    /* =========================================================
+       COMO CANJEAR / CONDICIONES
+       ========================================================= */
+.vp-blue-section {
+    position: relative;
+        width: 100%;
+    min-height: 0;
+        padding: 38px 34px 0;
+    overflow: hidden;
+    background: var(--vp-blue);
+    color: #fff;
+}
+
+.vp-blue-section::before {
+        content: '';
+    position: absolute;
+        left: 20%;
+        bottom: 35px;
+        width: 85%;
+        height: 55%;
+        background-image: url('/images/ilustración-estrella-voucher.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+        opacity: .22;
+    pointer-events: none;
+}
+
+.vp-how,
+.vp-conditions {
+    position: relative;
+    z-index: 2;
+}
+
+.vp-how-title {
+        margin: 0 0 25px;
+        font-size: 31px;
+        font-weight: 300;
+        line-height: .92;
+        letter-spacing: -.02em;
+}
+
+.vp-how-title strong {
+    display: block;
+        font-size: 32px;
+        font-weight: 800;
+}
+
+.vp-steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.vp-steps li {
+    display: flex;
+    align-items: center;
+        gap: 9px;
+        margin-bottom: 8px;
+        font-size: 11px;
+        line-height: 1.25;
+}
+
+    .vp-steps li img {
+        flex: 0 0 23px;
+        width: 23px;
+        height: 23px;
+        object-fit: contain;
+}
+
+    .vp-conditions {
+    display: flex;
+        flex-direction: column;
+        margin-top: 38px;
+}
+
+.vp-conditions h3 {
+        order: 1;
+        margin: 0 0 13px;
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+        text-transform: none;
+}
+
+.vp-conditions ul {
+        order: 2;
+    margin: 0;
+        padding-left: 14px;
+        font-size: 10.5px;
+        line-height: 1.42;
+}
+
+    .vp-conditions li {
+        margin-bottom: 3px;
+        overflow-wrap: anywhere;
+}
+
+.vp-validity {
+    order: 3;
+    position: relative;
+    left: -34px;
+    width: calc(100% + 68px);
+        min-height: 42px;
+        margin: 28px 0 0;
+        padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+        background: var(--vp-action);
+        font-size: 9px;
+        font-weight: 600;
+        line-height: 1.25;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+    /* =========================================================
+       QR + COMUNIDAD
+       ========================================================= */
+.vp-white-section {
+    width: 100%;
+        min-height: 430px;
+        padding: 22px 16px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+}
+
+.vp-qr {
+    width: 145px;
+    /* height: 145px; */
+    min-height: 180px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vp-qr svg,
+.vp-qr img {
+    display: block;
+    width: 145px !important;
+    height: 145px !important;
+    object-fit: contain;
+}
+
+
+/* Información */
+
+.vp-qr-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: Montserrat, Arial, sans-serif;
+    color: #111;
+    line-height: 1.05;
+}
+
+.vp-qr-info span,
+.vp-qr-info strong {
+    display: block;
+}
+
+.vp-voucher-code {
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vp-qr-info strong {
+    margin-bottom: 2px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.vp-qr-info > span:last-child {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.08;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+
+.vp-community {
+    width: 100%;
+        margin-top: 34px;
+    display: grid;
+        grid-template-columns: 1fr 96px;
+    grid-template-areas:
+            'text gifts'
+            'link link';
+    align-items: center;
+    column-gap: 10px;
+        row-gap: 30px;
+}
+
+.vp-community-text {
+    grid-area: text;
+    font-size: 27px;
+        line-height: .98;
+    color: #0768f7;
+}
+
+.vp-community-text span,
+.vp-community-text strong {
+    display: block;
+}
+
+.vp-community-text strong {
+    font-weight: 700;
+    font-style: italic;
+}
+
+.vp-gifts-mark {
+    grid-area: gifts;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vp-gifts-mark img {
+    display: block;
+        width: 94px;
+    height: auto;
+}
+
+.vp-community-link {
+    grid-area: link;
+    justify-self: center;
+        width: 126px;
+        height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1670ff;
+    border-radius: 999px;
+    color: #1670ff;
+    font-size: 10px;
+        font-weight: 500;
+    text-decoration: none;
+}
+</style>
+
 </head>
 
 <body>
 
 <div class="pdf-sheet">
-<div class="pdf-scale">
 <div class="vp-stage">
     <article class="vp-voucher">
         <section class="vp-green-section" style="background: {{ $entidad->ent_color_fondo ?? '#49b889' }};">
@@ -254,6 +789,7 @@ body {
                 </div>
 
                 <div class="vp-value-panel">
+                    @if ($modalidad->tipo_mod_id==1 || $modalidad->tipo_mod_id==2)
                     <div class="vp-value-copy">
                         <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}<br><span>Vale por:</span></p>
 
@@ -266,6 +802,24 @@ body {
                     <div class="vp-value-image">
                         <img src="{{ $imagenVoucher }}" alt="{{ $nombreVoucher }}">
                     </div>
+
+                    @else
+
+                    <div class="vp-value-copy">
+                        <p class="vp-value-eyebrow">Voucher {{ $entidad->ent_nombre_fantasia }}</p>
+
+                        {{-- @if ($influencer>0)
+                            <div class="vp-recommendation">★ Recomendado por<br>@visitsalta_</div>
+                        @endif --}}
+
+                        <p class="vp-title">{{ $nombreVoucher }}</p>
+                        <p class="vp-subtitle">{{ $voucher->vou_descripcion }}</p>
+                    </div>
+                    <div class="vp-value-image">
+                        <img src="{{ $imagen_voucher_vou }}" alt="{{ $nombreVoucher }}">
+                    </div>
+                    @endif
+                    
                 </div>
             </div>
 
@@ -278,37 +832,32 @@ body {
                             {{ $nombreEntidad }}
                         @endif
                     </div>
-                    <div>
+
+                    <div class="vp-commerce-info">
                         <span class="vp-commerce-label">Canjeá tu Vauchis en:</span>
                         <strong class="vp-commerce-name">{{ $nombreEntidad }}</strong>
-                        <span class="vp-commerce-description">{{ $descripcionEntidad }}</span>
                     </div>
                 </div>
 
-                <a href="{{ $telefono!='' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
-                    <img src="{{ $wpplogo }}" alt="Whatsapp">Contacta al vendedor
+                <ul class="vp-addresses">
+                    @if ($sucursales->isNotEmpty())
+                        @foreach($sucursales as $sucursal)
+                            @php
+                                $direccion = $sucursal->ed_direccion;
+                            @endphp
+
+                            @if($direccion)
+                                <li><i class="bi bi-geo-alt"></i><span>{{ $direccion }}</span></li>
+                            @endif
+                        @endforeach
+                    @endif
+                </ul>
+
+                <a href="{{ $telefono != '' ? 'https://wa.me/549' . preg_replace('/\D+/', '', $telefono) : '#' }}" class="vp-whatsapp" target="_blank" rel="noopener">
+                    <img src="{{ $wpplogo }}" alt="Whatsapp">
+                    <span>Contacta al vendedor</span>
                 </a>
             </div>
-
-            <ul class="vp-addresses">
-                @php
-                    $direcciones_label='';
-                @endphp
-                @if ($sucursales->isNotEmpty())
-                    @foreach($sucursales as $sucursal)
-                        @php
-                            $direccion = $sucursal->ed_direccion;
-                        @endphp
-                        @if($direccion)
-                            <li>
-                                <i class="bi bi-geo-alt"></i>
-                                <span>{{ $direccion }}</span>
-                            </li>
-                        @endif
-                    @endforeach
-                @endif
-                
-            </ul>
         </section>
 
         <section class="vp-blue-section">
@@ -401,7 +950,6 @@ body {
 
         </section>
     </article>
-</div>
 </div>
 </div>
 

@@ -189,6 +189,81 @@
     </div>
 </nav>
 
+@elseif (session('auth.tu_id')==3)
+
+<nav class="v-navbar is-scrolled" id="vNavbar">
+    <div class="v-navbar__shell">
+
+        <div class="v-navbar__top">
+            <a href="{{ route('home') }}" class="v-navbar__logo">
+                <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+            </a>
+
+            {{-- Acciones --}}
+            <div class="v-navbar__actions">
+
+                {{-- Usuario --}}
+                <div class="dropdown">
+                    <a href="#" class="v-navbar__icon dropdown-toggle" id="mobileUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('images/icono-Perfil.png') }}" alt="Usuario">
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 commerce-user-dropdown">
+                        <li class="px-3 py-2 border-bottom">
+                            <div class="fw-semibold">{{ session('auth.nombre') }}</div>
+                            <small class="text-muted">{{ session('auth.email') }}</small>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('clientes.index') }}">
+                                <i class="bi bi-pencil-square me-2"></i>Resumen
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li class="px-2 pb-2">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <button type="submit" class="btn btn-danger w-100 rounded-pill">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Salir
+                                </button>
+                            </form>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <a href="#" class="v-navbar__icon">
+                    <img src="{{ asset('images/icono-Ayuda.png') }}" alt="Ayuda">
+                </a>
+            </div>
+        </div>
+
+        <div class="v-navbar__search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Buscá tu vauchis...">
+        </div>
+
+        <ul class="v-navbar__menu">
+            <li>
+                <a href="{{ route('categorias', 1) }}" class="v-menu-item item-objetos {{ isset($categoria->id) ? (1 == $categoria->id ? 'active' : '') : '' }}"><span class="icono"></span>Objetos</a>
+            </li>
+            <li>
+                <a href="{{ route('categorias', 2) }}" class="v-menu-item item-experiencias {{ isset($categoria->id) ? (2 == $categoria->id ? 'active' : '') : '' }}"><span class="icono"></span>Experiencias</a>
+            </li>
+            <li>
+                <a href="{{ route('categorias', 3) }}" class="v-menu-item item-concausa {{ isset($categoria->id) ? (3 == $categoria->id ? 'active' : '') : '' }}"><span class="icono"></span>Con causa</a>
+            </li>
+        </ul>
+
+        <div class="v-navbar__note">
+            ¡Elegí que regalar!
+            <img src="{{ asset('images/decoracion-flecha.svg') }}" alt="" class="" width="55" height="53">
+        </div>
+
+    </div>
+</nav>
+
 @else
 
 <nav class="v-navbar is-scrolled" id="vNavbar">
@@ -405,6 +480,119 @@
             </a>
             <a href="{{ route('usuarios.vouchers', session('auth.usuario_id')) }}" class="v-mobile-action-link">
                 <i class="bi bi-pencil-square v-mobile-action-icon"></i><span>Mis vouchers</span>
+            </a>
+            <form method="POST" action="{{ route('logout') }}" class="v-mobile-action-form">
+                @csrf
+                <button type="submit" class="v-mobile-action-link v-mobile-action-logout">
+                    <i class="bi bi-box-arrow-right v-mobile-action-icon"></i><span>Salir</span>
+                </button>
+            </form>
+            <a href="#" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Ayuda.png') }}" alt="" class="v-mobile-action-icon">
+                <span>Ayuda</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end v-search-panel" tabindex="-1" id="vMobileSearch">
+    <div class="v-search-panel__top">
+        <div class="v-search-panel__input">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Buscar..." autofocus>
+        </div>
+
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="v-search-panel__results">
+        <a href="#">Hoyts Salta</a>
+        <a href="#">Hotelería</a>
+        <a href="#">Hotel Salta</a>
+    </div>
+</div>
+@elseif (session('auth.tu_id')==3)
+<nav class="v-mobile-navbar">
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileMenu"><i class="bi bi-list"></i></button>
+    <a href="{{ route('home') }}" class="v-mobile-navbar__logo"><img src="{{ asset('images/logo-1.png') }}" alt="Vauchis"></a>
+    <button type="button" class="v-mobile-navbar__btn" data-bs-toggle="offcanvas" data-bs-target="#vMobileSearch"><i class="bi bi-search"></i></button>
+</nav>
+<div class="offcanvas offcanvas-start v-mobile-panel" tabindex="-1" id="vMobileMenu">
+    <div class="v-mobile-panel__header">
+        <img src="{{ asset('images/logo-1.png') }}" alt="Vauchis">
+        <button type="button" data-bs-dismiss="offcanvas">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <div class="v-mobile-panel__body">
+        <h3>Menú <a href="{{ route('home') }}"><i class="bi bi-house-fill"></i></a></h3>
+
+        {{-- OBJETOS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 1) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-objetos-1.png') }}" alt="">
+                    <span>Objetos</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuObjetos" aria-expanded="false" aria-controls="menuObjetos">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuObjetos">
+                @foreach($rubros->where('cv_id', 1)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        {{-- EXPERIENCIAS --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 2) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-experiencias-1.png') }}" alt="">
+                    <span>Experiencias</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuExperiencias" aria-expanded="false" aria-controls="menuExperiencias">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuExperiencias">
+                @foreach($rubros->where('cv_id', 2)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        {{-- CON CAUSA --}}
+        <div class="v-mobile-menu-item">
+            <div class="v-mobile-menu-row">
+                <a href="{{ route('categorias', 3) }}" class="v-mobile-category-link">
+                    <img src="{{ asset('images/bt-concausa-1.png') }}" alt="">
+                    <span>Con causa</span>
+                </a>
+                <button type="button" class="v-mobile-menu-toggle" data-bs-toggle="collapse" data-bs-target="#menuConCausa" aria-expanded="false" aria-controls="menuConCausa">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="collapse v-mobile-submenu" id="menuConCausa">
+                @foreach($rubros->where('cv_id', 3)->sortBy('rub_orden') as $rubro)
+                    <a href="#" class="v-mobile-submenu-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-categoria="{{ $rubro->cv_id }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => 1, 'rubro' => $rubro->rub_id ]) }}">
+                        {{ $rubro->rub_nombre }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ACCIONES DEL MENÚ --}}
+        <div class="v-mobile-menu-actions">
+            <a href="{{ route('clientes.index') }}" class="v-mobile-action-link">
+                <img src="{{ asset('images/icono-Perfil.png') }}" alt="" class="v-mobile-action-icon">
+                <span>Resumen</span>
             </a>
             <form method="POST" action="{{ route('logout') }}" class="v-mobile-action-form">
                 @csrf

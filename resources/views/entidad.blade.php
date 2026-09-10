@@ -31,7 +31,7 @@
     @endphp
 
     @if ($heroImage)
-    <section class="vp-brand-hero">
+    <section class="vp-brand-hero" style="{{ $entidad->ent_color_fondo!='' ? 'background: '.$entidad->ent_color_fondo.' !important' : '' }}">
         <img src="{{ asset($heroImage) }}" alt="{{ $entidad->ent_nombre_fantasia ?? 'Comercio' }}">
     </section>
     @else

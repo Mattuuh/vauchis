@@ -398,7 +398,7 @@
         background: var(--vp-blue);
     }
 
-    .vp-action-primary.btn-habilitado {
+    .btn-deshabilitado {
         background: #aaa;
     }
 
@@ -799,7 +799,7 @@
 
         <div class="vp-action-bar">
             <div class="vp-action-inner">
-                <a href="{{ $editarUrl }}" class="vp-action vp-action-secondary">Editar mensaje</a>
+                <a href="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</a>
                 <div class="vs-checkout-total">TOTAL ${{ number_format($monto, 0, ',', '.') }}ARS</div>
                 <button type="submit" class="vp-action vp-action-primary" id="btn_pagar">Confirmar y pagar</button>
             </div>
@@ -818,7 +818,10 @@ $(function () {
 
             $('#btn_pagar').attr('disabled', 'disabled');
             $('#btn_pagar').text('Procesando...');
-            $('#btn_pagar').addClass('btn-habilitado');
+            $('#btn_pagar').addClass('btn-deshabilitado');
+
+            $('#btn_editar').attr('disabled', 'disabled');
+            $('#btn_editar').addClass('btn-deshabilitado');
 
             form.submit();
 
