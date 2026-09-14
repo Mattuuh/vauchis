@@ -87,8 +87,8 @@ $(document).ready(function () {
 
 @push('styles')
 <style>
-    .entidades-selected-box,
-    .entidades-available-box {
+    .vouchers-selected-box,
+    .vouchers-available-box {
         border: 1px solid #d9e1ec;
         border-radius: 12px;
         background: #fff;
@@ -100,17 +100,17 @@ $(document).ready(function () {
         align-items: flex-start;
     }
 
-    .entidades-selected-box {
+    .vouchers-selected-box {
         background: #fbfcff;
     }
 
-    .entidades-empty-text {
+    .vouchers-empty-text {
         color: #8a94a6;
         font-size: 0.95rem;
     }
 
-    .entidad-option,
-    .entidad-selected {
+    .voucher-option,
+    .voucher-selected {
         border-radius: 14px;
         font-size: 0.92rem;
         padding: 10px 12px;
@@ -119,7 +119,7 @@ $(document).ready(function () {
         text-align: left;
     }
 
-    .entidad-option {
+    .voucher-option {
         border: 1px solid #d7e4ff;
         background: #eef4ff;
         color: #2f6fed;
@@ -127,18 +127,18 @@ $(document).ready(function () {
         min-width: 220px;
     }
 
-    .entidad-option:hover {
+    .voucher-option:hover {
         background: #e3edff;
         border-color: #bdd3ff;
     }
 
-    .entidad-option.is-disabled {
+    .voucher-option.is-disabled {
         opacity: 0.45;
         cursor: not-allowed;
         pointer-events: none;
     }
 
-    .entidad-selected {
+    .voucher-selected {
         display: inline-flex;
         align-items: flex-start;
         gap: 10px;
@@ -149,17 +149,17 @@ $(document).ready(function () {
         justify-content: space-between;
     }
 
-    .entidad-selected__content {
+    .voucher-selected__content {
         display: flex;
         flex-direction: column;
         gap: 2px;
     }
 
-    .entidad-selected__content small {
+    .voucher-selected__content small {
         opacity: 0.9;
     }
 
-    .entidad-remove-btn {
+    .voucher-remove-btn {
         border: none;
         background: transparent;
         color: #fff;
@@ -170,7 +170,7 @@ $(document).ready(function () {
         opacity: 0.9;
     }
 
-    .entidad-remove-btn:hover {
+    .voucher-remove-btn:hover {
         opacity: 1;
     }
 </style>
@@ -299,28 +299,28 @@ $(document).ready(function () {
             <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
         </div>
         
-        {{-- <div class="vch-card p-3 mb-3">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Vouchers vinculados</h6>
             <p class="text-muted small mb-3">Seleccioná los vouchers que querés vincular a este resaltador.</p>
 
             <div class="mb-3">
                 <label class="form-label fw-semibold">Vouchers seleccionadas</label>
-                <div id="selected-entidades" class="entidades-selected-box">
-                    <span class="entidades-empty-text">No hay vouchers seleccionadas.</span>
+                <div id="selected-vouchers" class="vouchers-selected-box">
+                    <span class="vouchers-empty-text">No hay vouchers seleccionadas.</span>
                 </div>
-                <div id="entidades-hidden-inputs"></div>
+                <div id="vouchers-hidden-inputs"></div>
             </div>
             <div>
                 <label class="form-label fw-semibold">Vouchers disponibles</label>
-                <div class="entidades-available-box">
-                    @foreach($entidadesDisponibles as $entidad)
-                        <button type="button" class="entidad-option" data-id="{{ $entidad['id'] }}" data-nombre="{{ $entidad['nombre'] }}" onclick="addEntidadExistente(this)">
-                            <strong>{{ $entidad['nombre'] }}</strong>
+                <div class="vouchers-available-box">
+                    @foreach($vouchersDisponibles as $voucher)
+                        <button type="button" class="voucher-option" data-id="{{ $voucher['id'] }}" data-nombre="{{ $voucher['nombre'] }}" onclick="addVoucherExistente(this)">
+                            <strong>{{ $voucher['nombre'] }}</strong>
                         </button>
                     @endforeach
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
@@ -336,70 +336,88 @@ $(document).ready(function () {
 @endsection
 
 @push('scripts')
-{{-- <script>
+<script>
 
-    let entidadesSeleccionados = @json(old('entidades_data', $entidadesSeleccionados ?? []));
+let vouchersSeleccionados = @json(old('vouchers_data', $vouchersSeleccionados ?? []));
 
-    function renderEntidadesSeleccionados() {
-        const box = document.getElementById('selected-entidades');
-        const hiddenInputs = document.getElementById('entidades-hidden-inputs');
+function renderVouchersSeleccionados() {
+    const $box = $('#selected-vouchers');
+    const $hiddenInputs = $('#vouchers-hidden-inputs');
 
-        box.innerHTML = '';
-        hiddenInputs.innerHTML = '';
+    $box.empty();
+    $hiddenInputs.empty();
 
-        if (entidadesSeleccionados.length === 0) {
-            box.innerHTML = '<span class="entidades-empty-text">No hay entidades seleccionadas.</span>';
-            updateEntidadesDisponiblesState();
-            return;
-        }
+    if (vouchersSeleccionados.length === 0) {
+        $box.html('<span class="vouchers-empty-text">No hay vouchers seleccionados.</span>');
+        updateVouchersDisponiblesState();
+        return;
+    }
 
-        entidadesSeleccionados.forEach(item => {
-            const chip = document.createElement('div');
-            chip.className = 'entidad-selected';
-            chip.innerHTML = `
-                <div class="entidad-selected__content">
+    $.each(vouchersSeleccionados, function(index, item) {
+
+        const $chip = $(`
+            <div class="voucher-selected">
+                <div class="voucher-selected__content">
                     <strong>${item.nombre}</strong>
                 </div>
-                <button type="button" class="entidad-remove-btn" onclick="removeEntidad(${item.id})" aria-label="Quitar comercio">&times;</button>
-            `;
-            box.appendChild(chip);
+                <button type="button" class="voucher-remove-btn" data-id="${item.id}" aria-label="Quitar voucher">&times;</button>
+            </div>
+        `);
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'entidades[]';
-            input.value = item.id;
-            hiddenInputs.appendChild(input);
+        $box.append($chip);
+
+        const $input = $('<input>', {
+            type: 'hidden',
+            name: 'vouchers[]',
+            value: item.id
         });
 
-        updateEntidadesDisponiblesState();
+        $hiddenInputs.append($input);
+    });
+
+    updateVouchersDisponiblesState();
+}
+
+
+function addVoucherExistente(button) {
+    const id = Number($(button).data('id'));
+    const nombre = $(button).data('nombre');
+
+    const exists = vouchersSeleccionados.some(function(item) {
+        return item.id === id;
+    });
+
+    if (exists) {
+        return;
     }
 
-    function addEntidadExistente(button) {
-        const id = Number(button.dataset.id);
-        const nombre = button.dataset.nombre;
+    vouchersSeleccionados.push({id: id,nombre: nombre});
 
-        const exists = entidadesSeleccionados.some(item => item.id === id);
-        if (exists) return;
+    renderVouchersSeleccionados();
+}
 
-        entidadesSeleccionados.push({ id, nombre });
-        renderEntidadesSeleccionados();
-    }
 
-    function removeEntidad(id) {
-        entidadesSeleccionados = entidadesSeleccionados.filter(item => item.id !== id);
-        renderEntidadesSeleccionados();
-    }
+function removeVoucher(id) {
+    vouchersSeleccionados = vouchersSeleccionados.filter(function(item) {
+        return item.id !== id;
+    });
 
-    function updateEntidadesDisponiblesState() {
-        const buttons = document.querySelectorAll('.entidad-option');
+    renderVouchersSeleccionados();
+}
 
-        buttons.forEach(button => {
-            const id = Number(button.dataset.id);
-            const isSelected = entidadesSeleccionados.some(item => item.id === id);
 
-            button.classList.toggle('is-disabled', isSelected);
+function updateVouchersDisponiblesState() {
+    $('.voucher-option').each(function() {
+        const $button = $(this);
+        const id = Number($button.data('id'));
+
+        const isSelected = vouchersSeleccionados.some(function(item) {
+            return item.id === id;
         });
-    }
+
+        $button.toggleClass('is-disabled', isSelected);
+    });
+}
 
 $(document).ready(function () {
     let fpFechaFin = $("#f_fecha_fin_lab").flatpickr({
@@ -459,9 +477,9 @@ $(document).ready(function () {
         }
     });
 
-    renderEntidadesSeleccionados();
+    renderVouchersSeleccionados();
 });
-</script> --}}
+</script>
 <script>
 $(document).on('click', '#btn_eliminar', function (e) {
     e.preventDefault();

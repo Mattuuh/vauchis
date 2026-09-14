@@ -69,6 +69,9 @@ $(document).ready(function () {
             com_dom_fiscal: {
                 required: true,
             },
+            com_email: {
+                required: true,
+            },
             com_instagram: {
                 required: false,
             },
@@ -221,89 +224,67 @@ $(document).ready(function () {
 
                 <div class="col-12">
                     <label class="form-label required-label">Tipo de entidad</label>
-                    <select name="tipo_entidad_id" class="form-select form-control-custom" required>
+                    <select name="tipo_entidad_id" class="form-select form-control-custom">
                         <option value="">Selecciona el tipo de entidad</option>
                         @foreach($tiposEntidad as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
                         @endforeach
                     </select>
-                    @error('tipo_entidad_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Condición ante IVA</label>
-                    <select name="tipo_resp_id" class="form-select form-control-custom" required>
+                    <select name="tipo_resp_id" class="form-select form-control-custom">
                         <option value="">Selecciona una opcion</option>
                         @foreach($tiposResponsabilidad as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
                         @endforeach
                     </select>
-                    @error('tipo_resp_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Tipo de documento</label>
-                    <select name="tipo_doc_id" class="form-select form-control-custom" required>
+                    <select name="tipo_doc_id" class="form-select form-control-custom">
                         <option value="">Selecciona el tipo de documento</option>
                         @foreach($tiposDocumento as $id => $nombre)
                             <option value="{{ $id }}">{{ $nombre }}</option>
                         @endforeach
                     </select>
-                    @error('tipo_doc_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">N° de documento</label>
-                    <input type="text" name="com_documento" class="form-control form-control-custom" required>
-                    @error('com_documento')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_documento" class="form-control form-control-custom">
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre de fantasía</label>
-                    <input type="text" name="com_nombre_fantasia" class="form-control form-control-custom" required>
-                    @error('com_nombre_fantasia')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_nombre_fantasia" class="form-control form-control-custom">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label required-label">Razón social</label>
-                    <input type="text" name="com_razon_social" class="form-control form-control-custom" required>
-                    @error('com_razon_social')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_razon_social" class="form-control form-control-custom">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label required-label">Domicilio fiscal</label>
-                    <input type="text" name="com_dom_fiscal" class="form-control form-control-custom" required>
-                    @error('com_dom_fiscal')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_dom_fiscal" class="form-control form-control-custom">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Email (para usuario)</label>
+                    <input type="text" name="com_email" class="form-control">
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Instagram</label>
+                    <label class="form-label">Instagram</label>
                     <input type="text" name="com_instagram" class="form-control">
-                    @error('com_instagram')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Tiktok</label>
+                    <label class="form-label">Tiktok</label>
                     <input type="text" name="com_tiktok" class="form-control">
-                    @error('com_tiktok')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12">
@@ -371,7 +352,7 @@ $(document).ready(function () {
                             <input type="file" name="imagenes[]" accept="image/*" class="form-control">
                         </div>
                         <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -421,45 +402,33 @@ $(document).ready(function () {
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Utilizado para Canje</label>
-                            <select name="sucursales[0][cd_canje]" class="form-select form-control-custom" required>
+                            <select name="sucursales[0][cd_canje]" class="form-select form-control-custom">
                                 <option value="">Selecciona una opci&oacute;n</option>
                                 <option value="0">NO</option>
                                 <option value="1">S&iacute;</option>
                             </select>
-                            @error('sucursales.0.cd_canje')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">País</label>
-                            <select name="sucursales[0][pais_id]" class="form-select pais form-control-custom" required>
+                            <select name="sucursales[0][pais_id]" class="form-select pais form-control-custom">
                                 <option value="">Selecciona el país</option>
                                 @foreach($paises as $id => $nombre)
-                                    <option value="{{ $id }}" {{ $id == 5 ? 'selected' : '' }}>{{ $nombre }}</option>
+                                    <option value="{{ $id }}" {{ $id == 5 ? 'selected' : 'hidden' }}>{{ $nombre }}</option>
                                 @endforeach
                             </select>
-                            @error('sucursales.0.pais_id')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Provincia</label>
-                            <select name="sucursales[0][provincia_id]" class="form-select provincia form-control-custom" required>
+                            <select name="sucursales[0][provincia_id]" class="form-select provincia form-control-custom">
                                 <option value="">Selecciona la provincia</option>
                             </select>
-                            @error('sucursales.0.provincia_id')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Ciudad</label>
-                            <input type="text" name="sucursales[0][cd_ciudad]" class="form-control form-control-custom" placeholder="Selecciona la ciudad" required>
-                            @error('sucursales.0.cd_ciudad')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
+                            <input type="text" name="sucursales[0][cd_ciudad]" class="form-control form-control-custom" placeholder="Selecciona la ciudad">
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -469,10 +438,7 @@ $(document).ready(function () {
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Dirección</label>
-                            <input type="text" name="sucursales[0][cd_direccion]" class="form-control form-control-custom" placeholder="Introduce la dirección" required>
-                            @error('sucursales.0.cd_direccion')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
+                            <input type="text" name="sucursales[0][cd_direccion]" class="form-control form-control-custom" placeholder="Introduce la dirección">
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -482,10 +448,7 @@ $(document).ready(function () {
 
                         <div class="col-12 col-md-6">
                             <label class="form-label required-label">Teléfono 1</label>
-                            <input type="text" name="sucursales[0][cd_telefono1]" class="form-control form-control-custom" placeholder="+54 11 1234-5678" required>
-                            @error('sucursales.0.cd_telefono1')
-                                <div class="text-required">{{ $message }}</div>
-                            @enderror
+                            <input type="text" name="sucursales[0][cd_telefono1]" class="form-control form-control-custom" placeholder="+54 11 1234-5678">
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -576,19 +539,6 @@ $(document).ready(function () {
                             </div>
                             <div class="subrubros-hidden-inputs"></div>
                         </div>
-
-                        @error('sucursales.0.rubros')
-                            <div class="text-required mt-2">{{ $message }}</div>
-                        @enderror
-                        @error('sucursales.0.rubros.*')
-                            <div class="text-required mt-2">{{ $message }}</div>
-                        @enderror
-                        @error('sucursales.0.subrubros')
-                            <div class="text-required mt-2">{{ $message }}</div>
-                        @enderror
-                        @error('sucursales.0.subrubros.*')
-                            <div class="text-required mt-2">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
             </div>
@@ -934,6 +884,14 @@ $(document).ready(function () {
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.sucursal').forEach(sucursal => {
             initSucursalState(sucursal);
+
+            // Cargar provincias del país seleccionado al iniciar
+            const paisSelect = sucursal.querySelector('.pais');
+            const provinciaSelect = sucursal.querySelector('.provincia');
+
+            if (paisSelect && provinciaSelect && paisSelect.value) {
+                renderProvincias(paisSelect, provinciaSelect);
+            }
         });
     });
 </script>

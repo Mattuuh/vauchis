@@ -626,3 +626,15 @@ INSERT INTO `colecciones_files` (`cf_id`, `colecc_id`, `tipo_archivo_id`, `cf_im
 (2, 2, 1, 'cafe.png', 'cafe.png', 'colecciones/GCaTxxdiJTclbS4IFyvZ3lBazHvD4q4xqzFlN7XN.png', 'png', '620454', 1, 1, NULL, '2026-09-09 19:58:10', 1, '2026-09-09 19:58:18', 1, NULL, NULL),
 (3, 3, 1, 'deco-2026.png', 'deco-2026.png', 'colecciones/sHvqFV8wnTHLXD3ahktCWOTj2sMmwzgFxJMl7Kb8.png', 'png', '1802645', 1, 1, NULL, '2026-09-09 19:58:56', 1, NULL, NULL, NULL, NULL);
 
+
+
+ALTER TABLE `entidades` 
+  CHANGE `mp_user_id` `mp_user_id` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, 
+  CHANGE `mp_access_token` `mp_access_token` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, 
+  CHANGE `mp_refresh_token` `mp_refresh_token` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, 
+  CHANGE `mp_public_key` `mp_public_key` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+ALTER TABLE `entidades` ADD `ent_email` VARCHAR(150) NULL DEFAULT NULL AFTER `ent_portada_url`;
+
+ALTER TABLE `vouchers` ADD `colecc_id` INT NULL DEFAULT NULL AFTER `cv_id`;

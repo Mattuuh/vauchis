@@ -191,9 +191,6 @@ $(document).ready(function () {
 @include('partials.navbar')
 
 <div class="container">
-
-    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
-    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -221,7 +218,7 @@ $(document).ready(function () {
 
                 <div class="col-12">
                     <label class="form-label required-label">Tipo de entidad</label>
-                    <select name="tipo_entidad_id" class="form-select field-required" required>
+                    <select name="tipo_entidad_id" class="form-select field-required">
                         <option value="">Selecciona el tipo de entidad</option>
                         @foreach($tiposEntidad as $id => $nombre)
                             <option value="{{ $id }}" {{ old('tipo_entidad_id', $entidad->tipo_ent_id) == $id ? 'selected' : '' }}>
@@ -229,14 +226,11 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('tipo_entidad_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Condición ante IVA</label>
-                    <select name="tipo_resp_id" class="form-select field-required" required>
+                    <select name="tipo_resp_id" class="form-select field-required">
                         <option value="">Selecciona una opcion</option>
                         @foreach($tiposResponsabilidad as $id => $nombre)
                             <option value="{{ $id }}" {{ old('tipo_resp_id', $entidad->tipo_resp_id) == $id ? 'selected' : '' }}>
@@ -244,14 +238,11 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('tipo_resp_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Tipo de documento</label>
-                    <select name="tipo_doc_id" class="form-select field-required" required>
+                    <select name="tipo_doc_id" class="form-select field-required">
                         <option value="">Selecciona el tipo de documento</option>
                         @foreach($tiposDocumento as $id => $nombre)
                             <option value="{{ $id }}" {{ old('tipo_doc_id', $entidad->tipo_doc_id) == $id ? 'selected' : '' }}>
@@ -259,57 +250,41 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('tipo_doc_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">N° de documento</label>
-                    <input type="text" name="com_documento" class="form-control field-required" value="{{ old('com_documento', $entidad->ent_documento) }}" required>
-                    @error('com_documento')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_documento" class="form-control field-required" value="{{ old('com_documento', $entidad->ent_documento) }}">
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Nombre de fantasía</label>
-                    <input type="text" name="com_nombre_fantasia" class="form-control field-required" value="{{ old('com_nombre_fantasia', $entidad->ent_nombre_fantasia) }}" required>
-                    @error('com_nombre_fantasia')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_nombre_fantasia" class="form-control field-required" value="{{ old('com_nombre_fantasia', $entidad->ent_nombre_fantasia) }}">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label required-label">Razón social</label>
-                    <input type="text" name="com_razon_social" class="form-control field-required" value="{{ old('com_razon_social', $entidad->ent_razon_social) }}" required>
-                    @error('com_razon_social')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_razon_social" class="form-control field-required" value="{{ old('com_razon_social', $entidad->ent_razon_social) }}">
                 </div>
 
                 <div class="col-12">
                     <label class="form-label required-label">Domicilio fiscal</label>
-                    <input type="text" name="com_dom_fiscal" class="form-control field-required" value="{{ old('com_dom_fiscal', $entidad->ent_domicilio_fiscal) }}" required>
-                    @error('com_dom_fiscal')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="com_dom_fiscal" class="form-control field-required" value="{{ old('com_dom_fiscal', $entidad->ent_domicilio_fiscal) }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Email (para usuario)</label>
+                    <input type="text" name="com_email" class="form-control field-required" value="{{ old('com_email', $entidad->ent_email) }}">
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Instagram</label>
+                    <label class="form-label">Instagram</label>
                     <input type="text" name="com_instagram" class="form-control" value="{{ old('com_instagram', $entidad->ent_instagram) }}">
-                    @error('com_instagram')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Tiktok</label>
+                    <label class="form-label">Tiktok</label>
                     <input type="text" name="com_tiktok" class="form-control" value="{{ old('com_tiktok', $entidad->ent_tiktok) }}">
-                    @error('com_tiktok')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12">
@@ -402,7 +377,7 @@ $(document).ready(function () {
                     <div class="row g-3">
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
-                            <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Conectar Mercado Pago</a>
+                            {{-- <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Conectar Mercado Pago</a> --}}
                         </div>
                     </div>
                 @endif
@@ -503,19 +478,16 @@ $(document).ready(function () {
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label required-label">Utilizado para Canje</label>
-                                <select name="sucursales[{{ $index }}][cd_canje]" class="form-select field-required" required>
+                                <select name="sucursales[{{ $index }}][cd_canje]" class="form-select field-required">
                                     <option value="">Selecciona una opci&oacute;n</option>
                                     <option value="0" {{ old("sucursales.$index.cd_canje", $sucursal->ed_canje) == 0 ? 'selected' : '' }}>NO</option>
                                     <option value="1" {{ old("sucursales.$index.cd_canje", $sucursal->ed_canje) == 1 ? 'selected' : '' }}>S&iacute;</option>
                                 </select>
-                                @error('sucursales.0.cd_canje')
-                                    <div class="text-required">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label required-label">País</label>
-                                <select name="sucursales[{{ $index }}][pais_id]" class="form-select pais field-required" required>
+                                <select name="sucursales[{{ $index }}][pais_id]" class="form-select pais field-required">
                                     <option value="">Selecciona el país</option>
                                     @foreach($paises as $id => $nombre)
                                         <option value="{{ $id }}" {{ old("sucursales.$index.pais_id", $sucursal->pais_id) == $id ? 'selected' : '' }}>
@@ -527,7 +499,7 @@ $(document).ready(function () {
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label required-label">Provincia</label>
-                                <select name="sucursales[{{ $index }}][provincia_id]" class="form-select provincia field-required" required data-selected="{{ old("sucursales.$index.provincia_id", $sucursal->provincia_id ?? '') }}">
+                                <select name="sucursales[{{ $index }}][provincia_id]" class="form-select provincia field-required" data-selected="{{ old("sucursales.$index.provincia_id", $sucursal->provincia_id ?? '') }}">
                                     <option value="">Selecciona la provincia</option>
                                 </select>
                             </div>

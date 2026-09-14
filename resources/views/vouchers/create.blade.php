@@ -240,6 +240,19 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Colecci&oacute;n:</label>
+                    <select name="f_colecc_id" class="form-select field-required">
+                        <option value="">Selecciona la colecci&oacute;n</option>
+                        <option value="0" {{ old('f_colecc_id') == 0 ? 'selected' : '' }}>Sin colecci&oacute;n vinculado</option>
+                        @foreach($colecciones as $id => $nombre)
+                            <option value="{{ $id }}" {{ old('f_colecc_id') == $id ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label required-label">Fecha de inicio:</label>

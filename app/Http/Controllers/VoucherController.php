@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Coleccion;
 use App\Models\Entidad;
 use App\Models\EntidadDomicilio;
 use App\Models\Etiqueta;
@@ -167,6 +168,10 @@ class VoucherController extends Controller
             ->orderBy('mod_id', 'desc')
             ->get(['mod_id', 'mod_nombre', 'mod_codigo', 'mod_condiciones']);
 
+        $colecciones = Coleccion::where('colecc_estado', 1)
+            ->orderBy('colecc_id', 'desc')
+            ->pluck('colecc_nombre_interno', 'colecc_id');
+
         $categorias = Categoria::where('cv_estado', 1)
             ->orderBy('cv_id', 'desc')
             ->pluck('cv_nombre', 'cv_id');
@@ -221,6 +226,7 @@ class VoucherController extends Controller
             'sucursales',
             'influencers',
             'modalidades',
+            'colecciones',
             'categorias',
             'etiquetasDisponibles',
             'modalidadesCamposJson',
@@ -257,6 +263,7 @@ class VoucherController extends Controller
                 'vou_telefono_ed_id' => $request->f_telefono,
                 'tv_id' => null,
                 'cv_id' => $request->f_cv_id,
+                'colecc_id' => $request->f_colecc_id,
                 'inf_id' => $request->f_inf_id,
                 'mod_id' => $request->f_mod_id,
 
@@ -562,6 +569,10 @@ class VoucherController extends Controller
             ->orderBy('mod_nombre')
             ->get(['mod_id', 'mod_nombre', 'mod_codigo', 'mod_condiciones']);
 
+        $colecciones = Coleccion::where('colecc_estado', 1)
+            ->orderBy('colecc_id', 'desc')
+            ->pluck('colecc_nombre_interno', 'colecc_id');
+
         $categorias = DB::table('categorias_vouchers')
             ->where('cv_estado', 1)
             ->orderBy('cv_nombre')
@@ -732,6 +743,7 @@ class VoucherController extends Controller
             'sucursales',
             'influencers',
             'modalidades',
+            'colecciones',
             'categorias',
             'etiquetasDisponibles',
             'etiquetasSeleccionadas',
@@ -785,6 +797,7 @@ class VoucherController extends Controller
                     'vou_telefono_ed_id' => $request->f_telefono,
                     'tv_id' => null,
                     'cv_id' => $request->f_cv_id,
+                    'colecc_id' => $request->f_colecc_id,
                     'inf_id' => $request->f_inf_id,
                     'mod_id' => $request->f_mod_id,
 

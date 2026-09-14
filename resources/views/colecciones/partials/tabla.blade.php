@@ -7,6 +7,11 @@
         </td>
 
         <td class="commerce-col" data-label="Nombre">
+            <span class="commerce-mobile-label">Nombre interno</span>
+            <span>{{ $coleccion->colecc_nombre_interno }}</span>
+        </td>
+
+        <td class="commerce-col" data-label="Nombre">
             <span class="commerce-mobile-label">Nombre</span>
             <span>{{ $coleccion['colecc_nombre'] }}</span>
         </td>

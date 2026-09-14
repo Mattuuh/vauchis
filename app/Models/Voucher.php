@@ -18,6 +18,7 @@ class Voucher extends Model
         'vou_telefono_ed_id',
         'tv_id',
         'cv_id',
+        'colecc_id',
         'inf_id',
         'mod_id',
         'vou_nombre',

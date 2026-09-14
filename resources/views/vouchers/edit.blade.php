@@ -127,6 +127,19 @@
                 </div>
 
                 <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Colecci&oacute;n:</label>
+                    <select name="f_colecc_id" class="form-select field-required">
+                        <option value="">Selecciona la colecci&oacute;n</option>
+                        <option value="0" {{ old('f_colecc_id', $voucher->colecc_id) == 0 ? 'selected' : '' }}>Sin colecci&oacute;n vinculado</option>
+                        @foreach($colecciones as $id => $nombre)
+                            <option value="{{ $id }}" {{ old('f_colecc_id', $voucher->colecc_id) == $id ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-6">
                     <label class="form-label required-label">Fecha de inicio:</label>
                     <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab', \Carbon\Carbon::parse($voucher->vou_fecha_inicio)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
                     <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini', $voucher->vou_fecha_inicio) }}">

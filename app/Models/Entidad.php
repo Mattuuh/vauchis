@@ -23,6 +23,7 @@ class Entidad extends Model
         'ent_logo_url',
         'ent_portada_url',
         'ent_domicilio_fiscal',
+        'ent_email',
         'ent_instagram',
         'ent_tiktok',
         'ent_color_fondo',

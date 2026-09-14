@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TipoDocumento;
 use App\Models\TipoEntidad;
 use App\Models\TipoResponsabilidad;
+use App\Models\Usuario;
 use App\Models\Voucher;
+use Illuminate\Support\Facades\Hash;
 
 class EntidadController extends Controller
 {
@@ -249,6 +251,7 @@ class EntidadController extends Controller
                 'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                 'ent_razon_social' => $request->com_razon_social,
                 'ent_domicilio_fiscal' => $request->com_dom_fiscal,
+                'ent_email' => $request->com_email,
                 'ent_instagram' => $request->com_instagram,
                 'ent_tiktok' => $request->com_tiktok,
                 'ent_color_fondo' => $request->com_color_fondo,
@@ -260,6 +263,8 @@ class EntidadController extends Controller
                 'ent_fecha_alta' => now(),
             ]);
 
+            $usu_email=$request->com_email;
+            $usu_celular='';
             foreach ($request->sucursales as $sucursal) {
                 $domicilioId = DB::table('entidades_domicilios')->insertGetId([
                     'ent_id' => $entId,
@@ -283,6 +288,12 @@ class EntidadController extends Controller
                     'ed_estado' => 1,
                     'ed_fecha_alta' => now(),
                 ]);
+
+                if ($usu_celular!='') {
+                    $usu_pais=$sucursal['pais_id'];
+                    $usu_provincia=$sucursal['provincia_id'];
+                    $usu_celular=$sucursal['cd_telefono1'];
+                }
 
                 if (!empty($sucursal['rubros']) && is_array($sucursal['rubros'])) {
                     foreach ($sucursal['rubros'] as $rubId) {
@@ -347,6 +358,32 @@ class EntidadController extends Controller
                     ]);
                 }
             }
+
+            $usuario = Usuario::create([
+                'tu_id' => 3,
+                'ref_id' => $entId,
+                'tipo_doc_id' => $request->tipo_doc_id ?? null,
+                'usu_documento' => $request->com_documento ?? null,
+                'usu_apellido' => $request->com_nombre_fantasia,
+                'usu_nombre' => $request->com_nombre_fantasia,
+                'usu_nick' => $request->com_nombre_fantasia,
+                'usu_clave' => Hash::make('12345678'),
+                // 'usu_codigo_autorizacion' => $request->usu_codigo_autorizacion ?? null,
+                'usu_codigo_autorizacion' => '12345678' ?? null,
+                'usu_caux' => null,
+                'usu_email1' => $usu_email,
+                'usu_email2' => null,
+                'usu_celular1' => $usu_celular ?? null,
+                'usu_celular2' => null,
+                'usu_telefono1' => null,
+                'usu_telefono2' => null,
+                'pais_id' => $usu_pais ?? null,
+                'provincia_id' => $usu_provincia ?? null,
+                'ciudad_id' => null,
+                'usu_estado' => 1,
+                'usu_fecha_alta' => now(),
+                'usu_usu_alta' => 0,
+            ]);
 
 
             DB::commit();

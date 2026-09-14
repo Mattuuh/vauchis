@@ -102,10 +102,11 @@ $(document).ready(function () {
                         <thead>
                             <tr class="commerce-table-head">
                                 <th style="width: 50px">ID</th>
-                                <th style="width: 160px">NOMBRE</th>
-                                <th style="width: 70px">FECHA DE ALTA</th>
-                                <th style="width: 60px">ESTADO</th>
-                                <th style="width: 60px">ACCIONES</th>
+                                <th style="width: 100px">NOMBRE INTERNO</th>
+                                <th style="width: 160px">NOMBRE PUBLICO</th>
+                                <th style="width: 60px">FECHA DE ALTA</th>
+                                <th style="width: 50px">ESTADO</th>
+                                <th style="width: 50px">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody id="box_body">
@@ -115,6 +116,11 @@ $(document).ready(function () {
                                     <td class="commerce-col" data-label="ID">
                                         <span class="commerce-mobile-label">ID</span>
                                         <span>{{ $coleccion->colecc_id }}</span>
+                                    </td>
+
+                                    <td class="commerce-col" data-label="Nombre">
+                                        <span class="commerce-mobile-label">Nombre interno</span>
+                                        <span>{{ $coleccion->colecc_nombre_interno }}</span>
                                     </td>
 
                                     <td class="commerce-col" data-label="Nombre">

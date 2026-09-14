@@ -7,6 +7,7 @@ use App\Models\ColeccionFile;
 use App\Models\TipoArchivo;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ColeccionController extends Controller
 {
@@ -100,9 +101,44 @@ class ColeccionController extends Controller
             ->orderBy('tipo_archivo_id', 'desc')
             ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
 
+        $vouchersDisponibles = DB::table('vouchers as v')
+            ->where('v.vou_estado', 1)
+            ->where(function ($q) use ($id) {
+                $q->whereNull('colecc_id')
+                ->orWhere('colecc_id', $id);
+            })
+            ->select(
+                'v.vou_id as id',
+                'v.vou_nombre as nombre'
+            )
+            ->orderBy('v.vou_nombre')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'nombre' => $item->nombre,
+            ])
+            ->toArray();
+
+        $vouchersSeleccionados = DB::table('vouchers as v')
+            ->where('v.vou_estado', 1)
+            ->where('colecc_id', $id)
+            ->select(
+                'v.vou_id as id',
+                'v.vou_nombre as nombre'
+            )
+            ->orderBy('v.vou_nombre')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'nombre' => $item->nombre,
+            ])
+            ->toArray();
+
         return view('colecciones.edit', compact(
             'coleccion',
             'tipos_archivos',
+            'vouchersDisponibles',
+            'vouchersSeleccionados'
         ));
     }
 
@@ -208,6 +244,20 @@ class ColeccionController extends Controller
                         'cf_usu_alta' => $usuario_id,
                     ]);
                 }
+            }
+
+            $vouchers_ids = $request->input('vouchers', []);
+
+            // Desvincular de este resaltador las entiades que ya no están seleccionados
+            DB::table('vouchers')
+                ->where('colecc_id', $id)
+                ->update(['colecc_id' => null]);
+
+            // Volver a vincular los seleccionados
+            if (!empty($vouchers_ids)) {
+                DB::table('vouchers')
+                    ->whereIn('vou_id', $vouchers_ids)
+                    ->update(['colecc_id' => $id]);
             }
 
             return redirect()
