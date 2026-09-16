@@ -330,10 +330,22 @@ class EntidadController extends Controller
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
+                $principalBanner = $request->input('f_principal_BANNER');
+                $principalLogo = $request->input('f_principal_LOGO');
+
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
                     // $path = $imagen->storeAs('logos', $filename, 'public');
                     $tipo_archivo_id = $tiposArchivos[$index] ?? null;
+
+                    $es_principal = 0;
+
+                    if (
+                        $principalBanner === $index ||
+                        $principalLogo === $index
+                    ) {
+                        $es_principal = 1;
+                    }
 
                     $name = sanear_string($imagen->getClientOriginalName());
                     $name_legible = $imagen->getClientOriginalName();
@@ -351,7 +363,7 @@ class EntidadController extends Controller
                         'ef_img_path' => $path,
                         'ef_img_format' => $format,
                         'ef_img_size' => $size,
-                        'ef_principal' => 0,
+                        'ef_principal' => $es_principal,
                         'ef_estado' => 1,
                         'ef_fecha_alta' => now(),
                         'ef_usu_alta' => $usu,

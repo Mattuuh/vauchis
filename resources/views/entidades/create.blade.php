@@ -348,18 +348,25 @@ $(document).ready(function () {
                 <label class="form-label required-label">Imagen/es</label>
                 <div id="logos-container">
                     <div class="row logo-item mb-2">
+                        <input type="hidden" name="f_num_imagenes" id="f_num_imagenes" value="0">
                         <div class="col-sm-8">
-                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                            <input type="file" name="imagenes[]" id="f_imagen-0" accept="image/*" class="form-control">
                         </div>
-                        <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
-                                <option value="">Selecciona el tipo de archivo</option>
+                        <div class="col-sm-2">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-0" class="form-select field-required f_tipo_archivo">
+                                <option value="">Selecciona el tipo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
                                         {{ $tipo['tipo_archivo_nombre'] }}
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="f_principal[]" id="f_principal-0" value="0">
+                                <label class="form-check-label" for="f_principal-0">Principal</label>
+                            </div>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center"></div>
                     </div>
@@ -899,14 +906,16 @@ $(document).ready(function () {
 $(document).ready(function () {
 
     $('#add-logo').on('click', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())+1;
+
         let html = `
             <div class="row logo-item mb-2">
-                <div class="col-sm-8">
-                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                <div class="col-sm-7">
+                    <input type="file" name="imagenes[]" id="f_imagen-${f_num_imagenes}" accept="image/*" class="form-control">
                 </div>
-                <div class="col-sm-3">
-                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
-                        <option value="">Selecciona el tipo de archivo</option>
+                <div class="col-sm-2">
+                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-${f_num_imagenes}" class="form-select field-required f_tipo_archivo">
+                        <option value="">Selecciona el tipo</option>
                         @foreach($tipos_archivos as $tipo)
                             <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
                                 {{ $tipo['tipo_archivo_nombre'] }}
@@ -914,17 +923,43 @@ $(document).ready(function () {
                         @endforeach
                     </select>
                 </div>
+                <div class="col-sm-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="f_principal[]" id="f_principal-${f_num_imagenes}" value="0">
+                        <label class="form-check-label" for="f_principal-${f_num_imagenes}">Principal</label>
+                    </div>
+                </div>
                 <div class="col-sm-1 d-flex align-items-center">
                     <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
                 </div>
             </div>
         `;
 
+        $('#f_num_imagenes').val(f_num_imagenes);
         $('#logos-container').append(html);
     });
 
     $(document).on('click', '.remove-logo', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())-1;
+        $('#f_num_imagenes').val(f_num_imagenes);
+
         $(this).closest('.logo-item').remove();
+    });
+
+    $(document).on('change', '.f_tipo_archivo', function () {
+        const f_id=$(this).attr('id').split('-')[1];
+        const tipo = $(this).val();
+
+        const $principal = $('#f_principal-' + f_id);
+
+        $principal.prop('checked', false);
+
+        if (tipo) {
+            $principal.attr('name', 'f_principal_' + tipo);
+        } else {
+            $principal.removeAttr('name');
+        }
+
     });
 
 });

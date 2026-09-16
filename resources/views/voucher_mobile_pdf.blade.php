@@ -45,6 +45,10 @@
         : asset('images/default-voucher.png');
     $imagenVoucher_raw = data_get($bannerEntidadRelacion, 'ef_img_path');
 
+    $imagen_voucher_vou = isset($imagenPrincipal)
+        ? asset('storage/' . $imagenPrincipal->vf_img_path)
+        : asset('images/default-voucher.png');
+
     $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');
     $logoEntidad = data_get($logoEntidadRelacion, 'ef_img_path')
         ? asset('storage/' . data_get($logoEntidadRelacion, 'ef_img_path'))
