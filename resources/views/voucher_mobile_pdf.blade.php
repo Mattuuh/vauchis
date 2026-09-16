@@ -165,7 +165,7 @@
         /* margin: 0; */
         margin: 10px auto;
         overflow: hidden;
-        border: 5px solid rgba(0, 0, 0, 0.12);
+        border: 2px solid rgba(0, 0, 0, 0.12);
         border-radius: 18px;
         /* padding: 0; */
         zoom: .6047;

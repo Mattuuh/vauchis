@@ -4,6 +4,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VoucherComprado;
 use App\Models\Categoria;
 use App\Models\Coleccion;
 use App\Models\Entidad;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Spatie\Browsershot\Browsershot;
@@ -1955,6 +1957,13 @@ class VoucherController extends Controller
             'vd_usu_mod' => session('auth.usuario_id') ?? null,
             'vd_fecha_mod' => now(),
         ]);
+
+        Mail::to($usuario->usu_email1 ?? $request->email)->send(
+            new VoucherComprado(
+                $voucher,
+                $detalle->vd_id
+            )
+        );
 
         $datos = [
             'de' => session('voucher.de'),
