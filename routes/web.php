@@ -155,6 +155,7 @@ Route::post('/postcompra/{voucher}/{modalidadCampo}', [VoucherController::class,
 // Route::get('/voucher/{id}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
 Route::get('/voucher/{voucher}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_pdf');
 Route::get('/voucher_mobile/{voucher}/pdf', [VoucherController::class, 'descargar_pdf'])->name('vouchers.voucher_mobile_pdf');
+Route::post('/vouchers/{voucherDetalle}/enviar-mail',[VoucherController::class, 'enviarMail'])->name('vouchers.enviar-mail');
 
 
 use App\Http\Controllers\VoucherCanjeController;

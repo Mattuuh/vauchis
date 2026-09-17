@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VoucherComprado extends Mailable
+class VoucherRegaloMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,8 +31,10 @@ class VoucherComprado extends Mailable
      */
     public function envelope(): Envelope
     {
+        $nombreRemitente = $this->voucherDetalle->vd_variante_nombre_de;
+
         return new Envelope(
-            subject: 'Tu voucher de Vauchis',
+            subject: "{$nombreRemitente} te envió un regalo 🎁",
         );
     }
 
@@ -42,7 +44,7 @@ class VoucherComprado extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.voucher-comprado',
+            view: 'emails.voucher-regalo',
         );
     }
 

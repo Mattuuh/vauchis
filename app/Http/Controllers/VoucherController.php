@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VoucherComprado;
+use App\Mail\VoucherRegaloMail;
 use App\Models\Categoria;
 use App\Models\Coleccion;
 use App\Models\Entidad;
@@ -1961,7 +1962,8 @@ class VoucherController extends Controller
         Mail::to($usuario->usu_email1 ?? $request->email)->send(
             new VoucherComprado(
                 $voucher,
-                $detalle->vd_id
+                $detalle,
+                $rutaRelativa
             )
         );
 
@@ -2042,5 +2044,47 @@ class VoucherController extends Controller
             'voucher-' . $vd_id . '.pdf'
         );
 
+    }
+
+    public function enviarMail(Request $request, $vd_id)
+    {
+
+        $voucherDetalle = VoucherDetalle::findOrFail($vd_id);
+        $voucher = Voucher::findOrFail($voucherDetalle->vou_id);
+        $nombreArchivo = 'voucher-' . $voucherDetalle->vd_id . '.pdf';
+        $rutaRelativa = 'vouchers/pdf/' . $nombreArchivo;
+
+        // Mail::to($request->email)
+        //     ->send(
+        //         new VoucherComprado(
+        //             $voucher,
+        //             $voucherDetalle,
+        //             $rutaRelativa
+        //         )
+        //     );
+
+        if ($request->tipo_envio === 'regalo') {
+            Mail::to($request->email)->send(
+                new VoucherRegaloMail(
+                    $voucher,
+                    $voucherDetalle,
+                    $rutaRelativa
+                )
+            );
+        } else {
+            Mail::to($request->email)->send(
+                new VoucherComprado(
+                    $voucher,
+                    $voucherDetalle,
+                    $rutaRelativa
+                )
+            );
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher enviado correctamente.'
+        ]);
     }
 }

@@ -577,14 +577,20 @@
                     <span class="pc-action-label">Descargar</span>
                 </a>
 
-                <a class="pc-action" href="{{ $emailUrl }}">
+                {{-- <a class="pc-action" href="{{ $emailUrl }}">
                     <span class="pc-action-circle">
                         <img src="{{ asset('images/mail_voucher.png') }}" alt="Enviar">
                     </span>
                     <span class="pc-action-label">Enviar por mail</span>
-                </a>
+                </a> --}}
+                <button type="button" class="pc-action" data-bs-toggle="modal" data-bs-target="#modalEnviarMail">
+                    <span class="pc-action-circle">
+                        <img src="{{ asset('images/mail_voucher.png') }}" alt="Enviar">
+                    </span>
+                    <span class="pc-action-label">Enviar por mail</span>
+                </button>
 
-                <button type="button" class="pc-action" id="pc-share-button" data-share-title="{{ $voucherNombre }}" data-share-text="Tu voucher para {{ $destinatario }} ya está listo" data-share-url="{{ $descargaUrl }}">
+                <button type="button" class="pc-action" id="btn_compartir" data-share-title="{{ $voucherNombre }}" data-share-text="Tu voucher para {{ $destinatario }} ya está listo" data-share-url="{{ $descargaUrl }}">
                     <span class="pc-action-circle">
                         <img src="{{ asset('images/compartir_voucher.png') }}" alt="Compartir">
                     </span>
@@ -614,40 +620,146 @@
         </section>
     </main>
 </div>
+
+<div class="modal fade" id="modalEnviarMail" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar voucher por mail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label d-block">¿A quién querés enviarlo?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tipo_envio" id="tipoEnvioComprador" value="comprador" checked>
+                        <label class="form-check-label" for="tipoEnvioComprador">A mi correo</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tipo_envio" id="tipoEnvioRegalo" value="regalo">
+                        <label class="form-check-label" for="tipoEnvioRegalo">A quien recibe el regalo</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" id="emailVoucher" class="form-control" value="{{ $detalle->vd_cliente_email }}">
+                </div>
+                <div id="mensajeMail"></div>
+            </div>
+
+            {{-- <div class="modal-body">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" id="emailVoucher" class="form-control" value="{{ $detalle->vd_cliente_email }}">
+                <div id="mensajeMail" class="mt-3"></div>
+            </div> --}}
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnEnviarVoucherMail">
+                    Enviar voucher
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const shareButton = document.getElementById('pc-share-button');
-
-    if (!shareButton) return;
-
-    shareButton.addEventListener('click', async function () {
-        const shareData = {
-            title: shareButton.dataset.shareTitle || document.title,
-            text: shareButton.dataset.shareText || '',
-            url: shareButton.dataset.shareUrl || window.location.href
-        };
-
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-                return;
-            } catch (error) {
-                if (error.name === 'AbortError') return;
-            }
-        }
+$(document).ready(function () {
+    // 
+    $('#btn_compartir').on('click', async function () {
+        const pdfUrl = $(this).data('share-url');
 
         try {
-            await navigator.clipboard.writeText(shareData.url);
-            const original = shareButton.querySelector('.pc-action-label').textContent;
-            shareButton.querySelector('.pc-action-label').textContent = 'Copiado';
-            setTimeout(function () {
-                shareButton.querySelector('.pc-action-label').textContent = original;
-            }, 1600);
+            const response = await fetch(pdfUrl);
+            const blob = await response.blob();
+
+            const file = new File(
+                [blob],
+                'voucher-vauchis.pdf',
+                { type: 'application/pdf' }
+            );
+
+            if (
+                navigator.share &&
+                navigator.canShare &&
+                navigator.canShare({ files: [file] })
+            ) {
+                await navigator.share({
+                    title: 'Voucher Vauchis',
+                    text: '¡Te comparto mi voucher!',
+                    files: [file]
+                });
+            } else {
+                // Fallback para PC/navegadores no compatibles
+                await navigator.share({
+                    title: 'Voucher Vauchis',
+                    text: '¡Te comparto mi voucher!',
+                    url: pdfUrl
+                });
+            }
         } catch (error) {
-            window.prompt('Copiá este enlace:', shareData.url);
+            console.log('No se pudo compartir:', error);
+        }
+    });
+
+    $('#btnEnviarVoucherMail').on('click', function () {
+        const btn = $(this);
+
+        btn.prop('disabled', true);
+        btn.html('Enviando...');
+
+        $.ajax({
+            url: "{{ route('vouchers.enviar-mail', $detalle->vd_id) }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                email: $('#emailVoucher').val(),
+                tipo_envio: $('input[name="tipo_envio"]:checked').val()
+            },
+
+            success: function (response) {
+                $('#mensajeMail').html(`
+                    <div class="alert alert-success">
+                        Voucher enviado correctamente.
+                    </div>
+                `);
+
+                btn.prop('disabled', false);
+                btn.html('Enviar voucher');
+            },
+
+            error: function (xhr) {
+
+                let mensaje = 'No se pudo enviar el voucher.';
+
+                if (xhr.responseJSON?.message) {
+                    mensaje = xhr.responseJSON.message;
+                }
+
+                $('#mensajeMail').html(`
+                    <div class="alert alert-danger">
+                        ${mensaje}
+                    </div>
+                `);
+
+                btn.prop('disabled', false);
+                btn.html('Enviar voucher');
+            }
+        });
+
+    });
+
+    $('input[name="tipo_envio"]').on('change', function () {
+        const tipo = $(this).val();
+
+        if (tipo === 'comprador') {
+            $('#emailVoucher').val('{{ $detalle->vd_cliente_email }}');
+        } else {
+            $('#emailVoucher').val('');
         }
     });
 });
