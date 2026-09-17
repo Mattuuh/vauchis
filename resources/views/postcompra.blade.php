@@ -670,39 +670,62 @@
 <script>
 $(document).ready(function () {
     // 
-    $('#btn_compartir').on('click', async function () {
-        const pdfUrl = $(this).data('share-url');
+    // $('#btn_compartir').on('click', async function () {
+    //     const pdfUrl = $(this).data('share-url');
+
+    //     try {
+    //         const response = await fetch(pdfUrl);
+    //         const blob = await response.blob();
+
+    //         const file = new File(
+    //             [blob],
+    //             'voucher-vauchis.pdf',
+    //             { type: 'application/pdf' }
+    //         );
+
+    //         if (
+    //             navigator.share &&
+    //             navigator.canShare &&
+    //             navigator.canShare({ files: [file] })
+    //         ) {
+    //             await navigator.share({
+    //                 title: 'Voucher Vauchis',
+    //                 text: '¡Te comparto mi voucher!',
+    //                 files: [file]
+    //             });
+    //         } else {
+    //             // Fallback para PC/navegadores no compatibles
+    //             await navigator.share({
+    //                 title: 'Voucher Vauchis',
+    //                 text: '¡Te comparto mi voucher!',
+    //                 url: pdfUrl
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.log('No se pudo compartir:', error);
+    //     }
+    // });
+
+    $('#btnCompartir').on('click', async function () {
+        console.log('Click compartir');
+        console.log('navigator.share:', typeof navigator.share);
+        console.log('secureContext:', window.isSecureContext);
+
+        if (typeof navigator.share !== 'function') {
+            alert('Este navegador no soporta compartir');
+            return;
+        }
 
         try {
-            const response = await fetch(pdfUrl);
-            const blob = await response.blob();
+            await navigator.share({
+                title: 'Voucher Vauchis',
+                text: 'Te comparto mi voucher',
+                url: window.location.href
+            });
 
-            const file = new File(
-                [blob],
-                'voucher-vauchis.pdf',
-                { type: 'application/pdf' }
-            );
-
-            if (
-                navigator.share &&
-                navigator.canShare &&
-                navigator.canShare({ files: [file] })
-            ) {
-                await navigator.share({
-                    title: 'Voucher Vauchis',
-                    text: '¡Te comparto mi voucher!',
-                    files: [file]
-                });
-            } else {
-                // Fallback para PC/navegadores no compatibles
-                await navigator.share({
-                    title: 'Voucher Vauchis',
-                    text: '¡Te comparto mi voucher!',
-                    url: pdfUrl
-                });
-            }
         } catch (error) {
-            console.log('No se pudo compartir:', error);
+            alert(error.name + ': ' + error.message);
+            console.error(error);
         }
     });
 
