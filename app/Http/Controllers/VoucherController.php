@@ -1377,7 +1377,7 @@ class VoucherController extends Controller
             ->findOrFail($id);
         // dd($entidad);
 
-        $domicilios = EntidadDomicilio::with('organizacion')
+        $domicilios = EntidadDomicilio::with('organizacion','provincia')
             ->where('ent_id', $id)
             ->where('ed_estado', 1)
             ->get();

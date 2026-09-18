@@ -83,7 +83,10 @@
             @foreach ($domicilios as $domicilio)
                 @if(!empty($domicilio->ed_direccion))
                     {{-- <span>{{ $domicilio->ed_direccion }} | {{ $domicilio->ed_horario_atencion }}</span> --}}
-                    <span>{{ $domicilio->ed_direccion }}</span>
+                    {{-- <span>{{ $domicilio->ed_direccion }} - {{ $domicilio->ed_ciudad }}, {{ $domicilio->provincia->provincia_nombre }}</span> --}}
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#modal_sucursal" class="btn_sucursal" data-horario_atencion="{{ $domicilio->ed_horario_atencion }}" data-direccion="{{ $domicilio->ed_direccion }}" data-ciudad="{{ $domicilio->ed_ciudad }}" data-provincia="{{ $domicilio->provincia->provincia_nombre }}">
+                        {{ $domicilio->ed_direccion }} - {{ $domicilio->ed_ciudad }}, {{ $domicilio->provincia->provincia_nombre }}
+                    </button>
                 @endif
             @endforeach
             </div>
@@ -202,7 +205,39 @@
         </div>
     </div>
 
-    {{-- Tu footer ya va en el layout o partial --}}
+    <div class="modal fade" id="modal_sucursal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sucursal</h5>
+                    <button type="button" class="btn-close btn_cerrar_modal" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- <div class="mb-3">
+                    </div> --}}
+                    <div class="form-group">
+                        <label for="" class="text-black fw-bold">Direccion:</label>
+                        <span id="d_direccion"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="text-black fw-bold">Ciudad:</label>
+                        <span id="d_ciudad"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="text-black fw-bold">Provincia:</label>
+                        <span id="d_provincia"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="text-black fw-bold">Horario de atenci&oacute;n:</label>
+                        <span id="d_horario_atencion"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn_cerrar_modal" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </main>
 
@@ -338,16 +373,31 @@
     margin-left: 14%;
 }
 
-.vp-brand-meta span {
+.vp-brand-meta button {
     display: inline-flex;
     align-items: center;
     margin-right: 5px;
     padding: 8px 10px;
-    border: 1px solid rgba(255,255,255,.85);
+    border: 1px solid rgba(255, 255, 255, .85);
     border-radius: 4px;
+    background: transparent;
     color: #fff;
+    font: inherit;
     line-height: 1;
     white-space: nowrap;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.vp-brand-meta button:hover,
+.vp-brand-meta button:focus,
+.vp-brand-meta button:active {
+    background: #d2d2d2;
+    color: #fff;
+    border-color: rgba(255, 255, 255, .85);
+    outline: none;
+    box-shadow: none;
 }
 
 .vp-brand-meta a {
@@ -652,7 +702,7 @@
         display: none;
     }
 
-    .vp-brand-meta span {
+    .vp-brand-meta button {
         flex: 0 0 auto;
         padding: 8px 10px;
         border: 1px solid rgba(255,255,255,.85);
@@ -662,6 +712,8 @@
         font-weight: 400;
         line-height: 1;
         white-space: nowrap;
+        background: transparent;
+        font: inherit;
     }
 
     .vp-brand-meta a {
@@ -1247,6 +1299,26 @@ $(document).ready(function () {
 
         formPrecompra.trigger('submit');
     });
+
+    $('.btn_sucursal').click(function () {
+        const direccion = $(this).data('direccion');
+        const ciudad = $(this).data('ciudad');
+        const provincia = $(this).data('provincia');
+        const horario_atencion = $(this).data('horario_atencion');
+
+        $('#d_direccion').html(direccion);
+        $('#d_ciudad').html(ciudad);
+        $('#d_provincia').html(provincia);
+        $('#d_horario_atencion').html(horario_atencion);
+    });
+
+    $('.btn_cerrar_modal').click(function () {
+        $('#d_direccion').html('');
+        $('#d_ciudad').html('');
+        $('#d_provincia').html('');
+        $('#d_horario_atencion').html('');
+    });
+
 });
 </script>
 @endpush

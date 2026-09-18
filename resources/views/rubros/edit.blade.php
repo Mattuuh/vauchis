@@ -63,7 +63,7 @@
         color: #fff;
     }
 
-    .subrubro-remove-btn {
+    .subrubro-remove-btn, .subrubro-nuevo-remove-btn {
         border: none;
         background: transparent;
         color: #fff;
@@ -74,10 +74,93 @@
         opacity: 0.9;
     }
 
-    .subrubro-remove-btn:hover {
+    .subrubro-remove-btn:hover, .subrubro-nuevo-remove-btn:hover {
         opacity: 1;
     }
 </style>
+@endpush
+
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
+
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a actualizar el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            f_nombre: {
+                required: true,
+            },
+            f_categoria: {
+                required: true,
+            },
+            f_descripcion_corta: {
+                required: false,
+            },
+            f_descripcion: {
+                required: false,
+            },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
 @endpush
 
 @section('content')
@@ -111,31 +194,14 @@
             <h6 class="fw-bold mb-3">Datos del rubro</h6>
 
             <div class="row g-3">
-
                 {{-- <div class="col-12">
                     <label class="form-label required-label">Codigo:</label>
-                    <input
-                        type="text"
-                        name="f_codigo"
-                        class="form-control field-required"
-                        value="{{ old('f_codigo', $rubro->rub_codigo) }}"
-                        required
-                    >
-
-                    @error('f_codigo')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="f_codigo" class="form-control field-required" value="{{ old('f_codigo', $rubro->rub_codigo) }}">
                 </div> --}}
-
                 <div class="col-12">
                     <label class="form-label required-label">Nombre publico:</label>
-                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre', $rubro->rub_nombre) }}" required>
-
-                    @error('f_nombre')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre', $rubro->rub_nombre) }}">
                 </div>
-
                 <div class="col-12">
                     <label class="form-label required-label">Categoría:</label>
                     <select name="f_categoria" class="form-select">
@@ -144,28 +210,20 @@
                             <option value="{{ $id }}" {{ $rubro->cv_id==$id ? 'selected' : '' }}>{{ $nombre }}</option>
                         @endforeach
                     </select>
-
-                    @error('f_categoria')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
-
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label required-label">Descripcion corta:</label>
                     <input type="text" name="f_descripcion_corta" class="form-control field-required" value="{{ old('f_descripcion_corta', $rubro->rub_descripcion_corta) }}" placeholder="Descripcion para el publico">
-
-                    @error('f_descripcion_corta')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
-
+                </div> --}}
                 <div class="col-12">
                     <label class="form-label required-label">Descripcion interna:</label>
                     <input type="text" name="f_descripcion" class="form-control field-required" value="{{ old('f_descripcion', $rubro->rub_descripcion) }}" placeholder="Descripcion precisa que no verá el publico pero servirá para la busqueda">
-
-                    @error('f_descripcion')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', $rubro->rub_publico) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
                 </div>
 
             </div>
@@ -182,9 +240,7 @@
                 <label class="form-label fw-semibold">Nuevo subrubro</label>
                 <div class="d-flex gap-2">
                     <input type="text" id="nuevo-subrubro-input" class="form-control" placeholder="Ej: Café de especialidad">
-                    <button type="button" class="btn btn-primary" onclick="agregarNuevoSubrubro()">
-                        Agregar
-                    </button>
+                    <button type="button" class="btn btn-primary" onclick="agregarNuevoSubrubro()">Agregar</button>
                 </div>
             </div>
 
@@ -194,12 +250,12 @@
                 <div id="selected-subrubros" class="subrubros-selected-box">
                     <span class="subrubros-empty-text">No hay subrubros seleccionados.</span>
                 </div>
-
                 {{-- EXISTENTES --}}
                 <div id="subrubros-hidden-inputs"></div>
-
                 {{-- NUEVOS --}}
                 <div id="subrubros-nuevos-hidden-inputs"></div>
+                {{-- ORDEN --}}
+                <div id="subrubros-orden-hidden-inputs"></div>
             </div>
 
             {{-- DISPONIBLES --}}
@@ -207,47 +263,21 @@
                 <label class="form-label fw-semibold">Subrubros disponibles</label>
                 <div class="subrubros-available-box">
                     @foreach($subrubrosDisponibles as $subrubro)
-                        <button
-                            type="button"
-                            class="subrubro-option"
-                            data-id="{{ $subrubro->sub_id }}"
-                            data-name="{{ $subrubro->sub_nombre }}"
-                            onclick="addSubrubroExistente(this)"
-                        >
+                        <button type="button" class="subrubro-option" data-id="{{ $subrubro->sub_id }}" data-name="{{ $subrubro->sub_nombre }}" onclick="addSubrubroExistente(this)">
                             {{ $subrubro->sub_nombre }}
                         </button>
                     @endforeach
                 </div>
             </div>
-
-            @error('subrubros')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
-
-            @error('subrubros_nuevos')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
         </div>
-
-        
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-
-            <button type="button" class="btn btn-danger" data-id="{{ $rubro->rub_id }}" data-url="{{ route('admin.rubros.delete', $rubro->rub_id) }}" id="btn_eliminar">
-                Eliminar
-            </button>
-
+            <button type="button" class="btn btn-danger" data-id="{{ $rubro->rub_id }}" data-url="{{ route('admin.rubros.delete', $rubro->rub_id) }}" id="btn_eliminar">Bloquear</button>
             <div>
-                <a href="{{ route('admin.rubros.index') }}" class="btn btn-outline-secondary">
-                    Cancelar
-                </a>
-
-                <button type="submit" class="btn btn-success" id="btn_actualizar">
-                    Actualizar
-                </button>
+                <a href="{{ route('admin.rubros.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
-
         </div>
     </form>
 </main>
@@ -257,102 +287,186 @@
     let subrubrosNuevos = @json(old('subrubros_nuevos', []));
 
     function renderSubrubros() {
-        const box = document.getElementById('selected-subrubros');
-        const hiddenExistentes = document.getElementById('subrubros-hidden-inputs');
-        const hiddenNuevos = document.getElementById('subrubros-nuevos-hidden-inputs');
+        const $box = $('#selected-subrubros');
+        const $hiddenExistentes = $('#subrubros-hidden-inputs');
+        const $hiddenNuevos = $('#subrubros-nuevos-hidden-inputs');
 
-        box.innerHTML = '';
-        hiddenExistentes.innerHTML = '';
-        hiddenNuevos.innerHTML = '';
+        $box.empty();
+        $hiddenExistentes.empty();
+        $hiddenNuevos.empty();
 
         if (subrubrosExistentes.length === 0 && subrubrosNuevos.length === 0) {
-            box.innerHTML = '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>';
+            $box.html(
+                '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>'
+            );
+
+            return;
         }
 
         // EXISTENTES
-        subrubrosExistentes.forEach(item => {
-            const chip = document.createElement('span');
-            chip.className = 'subrubro-selected';
-            chip.innerHTML = `
-                ${item.name}
-                <button type="button" class="subrubro-remove-btn" onclick="removeExistente(${item.id})">&times;</button>
-            `;
-            box.appendChild(chip);
+        $.each(subrubrosExistentes, function(index, item) {
+            const $chip = $(`
+                <span class="subrubro-selected" data-tipo="existente" data-id="${item.id}">
+                    <span class="subrubro-order"></span>
+                    <span class="subrubro-name">${item.name}</span>
+                    <button type="button" class="subrubro-remove-btn" data-id="${item.id}">&times;</button>
+                </span>
+            `);
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'subrubros[]';
-            input.value = item.id;
-            hiddenExistentes.appendChild(input);
+            $box.append($chip);
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros[]',
+                value: item.id
+            }).appendTo($hiddenExistentes);
         });
 
         // NUEVOS
-        subrubrosNuevos.forEach((nombre, index) => {
-            const chip = document.createElement('span');
-            chip.className = 'subrubro-selected';
-            chip.innerHTML = `
-                ${nombre}
-                <button type="button" class="subrubro-remove-btn" onclick="removeNuevo(${index})">&times;</button>
-            `;
-            box.appendChild(chip);
+        $.each(subrubrosNuevos, function(index, nombre) {
+            const $chip = $(`
+                <span class="subrubro-selected" data-tipo="nuevo" data-index="${index}">
+                    <span class="subrubro-order"></span>
+                    <span class="subrubro-name">${nombre}</span>
+                    <button type="button" class="subrubro-nuevo-remove-btn" data-index="${index}">&times;</button>
+                </span>
+            `);
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'subrubros_nuevos[]';
-            input.value = nombre;
-            hiddenNuevos.appendChild(input);
+            $box.append($chip);
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros_nuevos[]',
+                value: nombre
+            }).appendTo($hiddenNuevos);
         });
 
         actualizarDisponibles();
+        activarSortable();
+        actualizarOrden();
     }
 
-    function addSubrubroExistente(button) {
-        const id = Number(button.dataset.id);
-        const name = button.dataset.name;
 
-        if (subrubrosExistentes.some(s => s.id === id)) return;
+    // AGREGAR SUBRUBRO EXISTENTE
+    $(document).on('click', '.subrubro-option', function() {
+        const id = Number($(this).data('id'));
+        const name = $(this).data('name');
 
-        subrubrosExistentes.push({ id, name });
+        const existe = subrubrosExistentes.some(function(item) {
+            return item.id === id;
+        });
+
+        if (existe) {
+            return;
+        }
+
+        subrubrosExistentes.push({
+            id: id,
+            name: name
+        });
+
         renderSubrubros();
-    }
+    });
 
-    function removeExistente(id) {
-        subrubrosExistentes = subrubrosExistentes.filter(s => s.id !== id);
+
+    // ELIMINAR SUBRUBRO EXISTENTE
+    $(document).on('click', '.subrubro-remove-btn', function() {
+        const id = Number($(this).data('id'));
+
+        subrubrosExistentes = subrubrosExistentes.filter(function(item) {
+            return item.id !== id;
+        });
+
         renderSubrubros();
-    }
+    });
 
+
+    // AGREGAR NUEVO SUBRUBRO
     function agregarNuevoSubrubro() {
-        const input = document.getElementById('nuevo-subrubro-input');
-        const nombre = input.value.trim();
+        const $input = $('#nuevo-subrubro-input');
+        const nombre = $input.val().trim();
 
-        if (!nombre) return;
+        if (!nombre) {
+            return;
+        }
 
-        if (subrubrosNuevos.includes(nombre)) return;
+        if (subrubrosNuevos.includes(nombre)) {
+            return;
+        }
 
         subrubrosNuevos.push(nombre);
-        input.value = '';
+        $input.val('');
 
         renderSubrubros();
     }
 
-    function removeNuevo(index) {
+
+    // ELIMINAR NUEVO SUBRUBRO
+    $(document).on('click', '.subrubro-nuevo-remove-btn', function() {
+        const index = Number($(this).data('index'));
         subrubrosNuevos.splice(index, 1);
+
         renderSubrubros();
-    }
+    });
 
+
+    // ACTUALIZAR BOTONES DISPONIBLES
     function actualizarDisponibles() {
-        const botones = document.querySelectorAll('.subrubro-option');
+        $('.subrubro-option').each(function() {
+            const $btn = $(this);
+            const id = Number($btn.data('id'));
 
-        botones.forEach(btn => {
-            const id = Number(btn.dataset.id);
+            const seleccionado = subrubrosExistentes.some(function(item) {
+                return item.id === id;
+            });
 
-            const seleccionado = subrubrosExistentes.some(s => s.id === id);
-
-            btn.classList.toggle('is-disabled', seleccionado);
+            $btn.toggleClass('is-disabled', seleccionado);
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    // ACTIVAR ORDEN
+    function activarSortable() {
+        $('#selected-subrubros').sortable({
+            items: '.subrubro-selected',
+            cursor: 'move',
+            tolerance: 'pointer',
+            placeholder: 'subrubro-placeholder',
+            update: function() {
+                actualizarOrden();
+            }
+        });
+    }
+
+    // ACTUALIZAR ORDEN
+    function actualizarOrden() {
+        const $boxOrden = $('#subrubros-orden-hidden-inputs');
+        $boxOrden.empty();
+
+        $('#selected-subrubros .subrubro-selected').each(function(index) {
+            const $item = $(this);
+            const tipo = $item.data('tipo');
+
+            // Mostrar número visual
+            $item.find('.subrubro-order').text(index + 1);
+
+            let valor = '';
+            if (tipo === 'existente') {
+                valor = 'existente:' + $item.data('id');
+            } else {
+                const nombre = $item.find('.subrubro-name').text().trim();
+                valor = 'nuevo:' + nombre;
+            }
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros_orden[]',
+                value: valor
+            }).appendTo($boxOrden);
+        });
+    }
+
+    // AL CARGAR LA PÁGINA
+    $(function() {
         renderSubrubros();
     });
 </script>
@@ -364,11 +478,13 @@ $(document).on('click', '#btn_eliminar', function (e) {
     let url = $(this).data('url');
 
     Swal.fire({
-        title: '¿Eliminar rubro?',
+        title: 'Bloquear rubro?',
         text: "Esta acción lo desactivará",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
+        confirmButtonColor: '#5cb85c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {

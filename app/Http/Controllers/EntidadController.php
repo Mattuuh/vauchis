@@ -284,7 +284,7 @@ class EntidadController extends Controller
                     'ed_horario_atencion' => $sucursal['cd_horario_atencion'] ?? null,
                     'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
                     'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
-                    'ed_publico' => $sucursal['cd_publico'] ?? null,
+                    'ed_publico' => $sucursal['cd_publico'] ?? 0,
                     'ed_estado' => 1,
                     'ed_fecha_alta' => now(),
                 ]);
@@ -585,7 +585,7 @@ class EntidadController extends Controller
                             'ed_horario_atencion' => $sucursal['cd_horario_atencion'] ?? null,
                             'ed_descripcion_publica' => $sucursal['cd_descripcion_publica'] ?? null,
                             'ed_descripcion_interna' => $sucursal['cd_descripcion_interna'] ?? null,
-                            'ed_publico' => $sucursal['cd_publico'] ?? null,
+                            'ed_publico' => $sucursal['cd_publico'] ?? 0,
                             'ed_estado' => 1,
                             'ed_fecha_mod' => now(),
                         ]);
@@ -842,18 +842,92 @@ class EntidadController extends Controller
 
     public function guardar_orden(Request $request)
     {
-        foreach ($request->orden as $index => $id) {
-            Entidad::where('ent_id', $id)
-                ->update([
-                    'ent_orden' => $index + 1,
-                    'ent_fecha_mod' => now(),
-                    'ent_usu_mod' => $usu ?? 0
-                ]);
+        // foreach ($request->orden as $index => $id) {
+        //     Entidad::where('ent_id', $id)
+        //         ->update([
+        //             'ent_orden' => $index + 1,
+        //             'ent_fecha_mod' => now(),
+        //             'ent_usu_mod' => $usu ?? 0
+        //         ]);
+        // }
+
+        $destacado = $request->destacado;
+        $orden = $request->input('orden', []);
+
+        if ($destacado==1) {
+            foreach ($orden as $index => $ent_id) {
+                Entidad::where('ent_id', $ent_id)
+                    ->where('ent_destacado', $destacado)
+                    ->update([
+                        'ent_destacado_orden' => $index + 1,
+                        'ent_fecha_mod' => now(),
+                        'ent_usu_mod' => $usu ?? 0
+                    ]);
+
+            }
+        } else {
+            foreach ($orden as $index => $ent_id) {
+                Entidad::where('ent_id', $ent_id)
+                    ->where('ent_destacado', $destacado)
+                    ->update([
+                        'ent_orden' => $index + 1,
+                        'ent_fecha_mod' => now(),
+                        'ent_usu_mod' => $usu ?? 0
+                    ]);
+
+            }
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Orden guardado correctamente'
+        ]);
+    }
+
+    public function por_destacado(Request $request)
+    {
+        $destacado = $request->destacado;
+
+        $entidades = Entidad::with('tipo_entidad','tipo_responsabilidad')
+            ->withCount('domicilios')
+            ->withCount('vouchersActivos')
+            ->when($destacado == 1, function ($query) use ($destacado) {
+                $query->where('ent_destacado', $destacado);
+            })
+            ->where('ent_publico',1)
+            ->where('ent_estado',1)
+            ->orderByRaw('CASE WHEN ent_orden IS NULL OR ent_orden = 0 THEN 1 ELSE 0 END')
+            // ->orderBy('ent_orden')
+            ->when(
+                $destacado == 1, 
+                function ($query) { // IF
+                    $query->orderBy('ent_destacado_orden');
+                },
+                function ($query) { // ELSE
+                    $query->orderBy('ent_orden');
+                }
+            )
+            ->orderBy('ent_id')
+            ->get()
+            ->map(function ($entidad) {
+                $estado = estado($entidad->ent_estado);
+
+                return [
+                    'ent_id' => $entidad->ent_id,
+                    'ent_nombre_fantasia' => $entidad->ent_nombre_fantasia,
+                    'tipo_ent_nombre' => $entidad->tipo_entidad->tipo_ent_nombre,
+                    'domicilios_count' => $entidad->domicilios_count,
+                    'vouchers_activos_count' => $entidad->vouchers_activos_count,
+                    'ent_fecha_alta' => optional($entidad->ent_fecha_alta)->format('d/m/Y'),
+                    'ent_class' => $estado['class'],
+                    'ent_text' => $estado['text'],
+                    'ent_estado' => $estado['icon'],
+                ];
+
+            });
+
+        return response()->json([
+            'entidades' => $entidades
         ]);
     }
 }

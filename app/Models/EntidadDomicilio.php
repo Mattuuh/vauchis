@@ -31,8 +31,10 @@ class EntidadDomicilio extends Model
         'ed_telefono2',
         'ed_latitud',
         'ed_longitud',
+        'ed_horario_atencion',
         'ed_descripcion_publica',
         'ed_descripcion_interna',
+        'ed_publico',
         'ed_estado',
         'ed_estado2',
         'ed_fecha_alta',
@@ -56,5 +58,10 @@ class EntidadDomicilio extends Model
     public function vouchers(): BelongsToMany
     {
         return $this->belongsToMany(Voucher::class,'vouchers_sucursales','ed_id','vou_id');
+    }
+
+    public function provincia()
+    {
+        return $this->belongsTo(Provincia::class, 'provincia_id', 'provincia_id');
     }
 }

@@ -8,17 +8,17 @@ $(document).ready(function () {
     $('#form_main').validate({
         submitHandler: function(form){
 
-            if ($('[name="subrubros_nuevos[]"]').length == 0) {
-                Swal.fire({
-                    title: 'Error',
-                    text: "Debe ingresar al menos 1 (uno) subrubro",
-                    icon: 'error',
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Entendido'
-                });
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
 
-                return false;
-            }
+            //     return false;
+            // }
 
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -27,7 +27,7 @@ $(document).ready(function () {
                 showCancelButton: true,
                 confirmButtonColor: '#5cb85c',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, crear',
+                confirmButtonText: 'Confirmar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -49,11 +49,14 @@ $(document).ready(function () {
             f_nombre: {
                 required: true,
             },
-            f_descripcion_corta: {
+            f_categoria: {
                 required: true,
             },
+            f_descripcion_corta: {
+                required: false,
+            },
             f_descripcion: {
-                required: true,
+                required: false,
             },
         },
         messages: {
@@ -131,7 +134,7 @@ $(document).ready(function () {
     align-items: center;
 }
 
-.subrubro-remove-btn {
+.subrubro-remove-btn, .subrubro-nuevo-remove-btn {
     background: none;
     border: none;
     color: #fff;
@@ -145,8 +148,6 @@ $(document).ready(function () {
 @include('partials.navbar')
 
 <main class="container">
-
-    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
     
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
@@ -165,31 +166,18 @@ $(document).ready(function () {
 
     <form method="POST" action="{{ route('admin.rubros.store') }}" id="form_main">
         @csrf
-
-        <!-- CARD -->
         <div class="vch-card p-3 mb-3">
-
             <h6 class="fw-bold mb-3">Datos del rubro</h6>
-
             <div class="row g-3">
-
                 <!-- NOMBRE -->
                 {{-- <div class="col-12">
                     <label class="form-label required-label">Codigo:</label>
                     <input type="text" name="f_codigo" class="form-control field-required" value="{{ old('f_codigo') }}" placeholder="" required>
-
-                    @error('f_codigo')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div> --}}
 
                 <div class="col-12">
                     <label class="form-label required-label">Nombre publico:</label>
-                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="" required>
-
-                    @error('f_nombre')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="">
                 </div>
 
                 <div class="col-12">
@@ -200,28 +188,23 @@ $(document).ready(function () {
                             <option value="{{ $id }}">{{ $nombre }}</option>
                         @endforeach
                     </select>
-
-                    @error('f_categoria')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label required-label">Descripcion corta:</label>
                     <input type="text" name="f_descripcion_corta" class="form-control field-required" value="{{ old('f_descripcion_corta') }}" placeholder="Descripcion para el publico">
-
-                    @error('f_descripcion_corta')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12">
                     <label class="form-label required-label">Descripcion interna:</label>
                     <input type="text" name="f_descripcion" class="form-control field-required" value="{{ old('f_descripcion') }}" placeholder="Descripcion precisa que no verá el publico pero servirá para la busqueda">
+                </div>
 
-                    @error('f_descripcion')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico', 1) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
                 </div>
 
             </div>
@@ -238,9 +221,7 @@ $(document).ready(function () {
                 <label class="form-label fw-semibold">Nuevo subrubro</label>
                 <div class="d-flex gap-2">
                     <input type="text" id="nuevo-subrubro-input" class="form-control" placeholder="Ej: Café de especialidad">
-                    <button type="button" class="btn btn-primary" onclick="agregarNuevoSubrubro()">
-                        Agregar
-                    </button>
+                    <button type="button" class="btn btn-primary" onclick="agregarNuevoSubrubro()">Agregar</button>
                 </div>
             </div>
 
@@ -253,51 +234,31 @@ $(document).ready(function () {
 
                 {{-- EXISTENTES --}}
                 <div id="subrubros-hidden-inputs"></div>
-
                 {{-- NUEVOS --}}
                 <div id="subrubros-nuevos-hidden-inputs"></div>
+                {{-- ORDEN --}}
+                <div id="subrubros-orden-hidden-inputs"></div>
             </div>
 
             {{-- DISPONIBLES --}}
-            {{-- <div>
+            <div>
                 <label class="form-label fw-semibold">Subrubros disponibles</label>
                 <div class="subrubros-available-box">
                     @foreach($subrubrosDisponibles as $subrubro)
-                        <button
-                            type="button"
-                            class="subrubro-option"
-                            data-id="{{ $subrubro->sub_id }}"
-                            data-name="{{ $subrubro->sub_nombre }}"
-                            onclick="addSubrubroExistente(this)"
-                        >
+                        <button type="button" class="subrubro-option" data-id="{{ $subrubro->sub_id }}" data-name="{{ $subrubro->sub_nombre }}" onclick="addSubrubroExistente(this)">
                             {{ $subrubro->sub_nombre }}
                         </button>
                     @endforeach
                 </div>
-            </div> --}}
-
-            @error('subrubros')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
-
-            @error('subrubros_nuevos')
-                <div class="text-required mt-2">{{ $message }}</div>
-            @enderror
+            </div>
         </div>
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('admin.rubros.index') }}" class="btn btn-outline-secondary">
-                Cancelar
-            </a>
-
-            <button type="submit" class="btn btn-success" id="btn_guardar">
-                Guardar
-            </button>
+            <a href="{{ route('admin.rubros.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success" id="btn_guardar">Guardar</button>
         </div>
-
     </form>
-
 </main>
 
 <script>
@@ -305,102 +266,186 @@ $(document).ready(function () {
     let subrubrosNuevos = @json(old('subrubros_nuevos', []));
 
     function renderSubrubros() {
-        const box = document.getElementById('selected-subrubros');
-        const hiddenExistentes = document.getElementById('subrubros-hidden-inputs');
-        const hiddenNuevos = document.getElementById('subrubros-nuevos-hidden-inputs');
+        const $box = $('#selected-subrubros');
+        const $hiddenExistentes = $('#subrubros-hidden-inputs');
+        const $hiddenNuevos = $('#subrubros-nuevos-hidden-inputs');
 
-        box.innerHTML = '';
-        hiddenExistentes.innerHTML = '';
-        hiddenNuevos.innerHTML = '';
+        $box.empty();
+        $hiddenExistentes.empty();
+        $hiddenNuevos.empty();
 
         if (subrubrosExistentes.length === 0 && subrubrosNuevos.length === 0) {
-            box.innerHTML = '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>';
+            $box.html(
+                '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>'
+            );
+
+            return;
         }
 
         // EXISTENTES
-        subrubrosExistentes.forEach(item => {
-            const chip = document.createElement('span');
-            chip.className = 'subrubro-selected';
-            chip.innerHTML = `
-                ${item.name}
-                <button type="button" class="subrubro-remove-btn" onclick="removeExistente(${item.id})">&times;</button>
-            `;
-            box.appendChild(chip);
+        $.each(subrubrosExistentes, function(index, item) {
+            const $chip = $(`
+                <span class="subrubro-selected" data-tipo="existente" data-id="${item.id}">
+                    <span class="subrubro-order"></span>
+                    <span class="subrubro-name">${item.name}</span>
+                    <button type="button" class="subrubro-remove-btn" data-id="${item.id}">&times;</button>
+                </span>
+            `);
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'subrubros[]';
-            input.value = item.id;
-            hiddenExistentes.appendChild(input);
+            $box.append($chip);
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros[]',
+                value: item.id
+            }).appendTo($hiddenExistentes);
         });
 
         // NUEVOS
-        subrubrosNuevos.forEach((nombre, index) => {
-            const chip = document.createElement('span');
-            chip.className = 'subrubro-selected';
-            chip.innerHTML = `
-                ${nombre}
-                <button type="button" class="subrubro-remove-btn" onclick="removeNuevo(${index})">&times;</button>
-            `;
-            box.appendChild(chip);
+        $.each(subrubrosNuevos, function(index, nombre) {
+            const $chip = $(`
+                <span class="subrubro-selected" data-tipo="nuevo" data-index="${index}">
+                    <span class="subrubro-order"></span>
+                    <span class="subrubro-name">${nombre}</span>
+                    <button type="button" class="subrubro-nuevo-remove-btn" data-index="${index}">&times;</button>
+                </span>
+            `);
 
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'subrubros_nuevos[]';
-            input.value = nombre;
-            hiddenNuevos.appendChild(input);
+            $box.append($chip);
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros_nuevos[]',
+                value: nombre
+            }).appendTo($hiddenNuevos);
         });
 
         actualizarDisponibles();
+        activarSortable();
+        actualizarOrden();
     }
 
-    function addSubrubroExistente(button) {
-        const id = Number(button.dataset.id);
-        const name = button.dataset.name;
 
-        if (subrubrosExistentes.some(s => s.id === id)) return;
+    // AGREGAR SUBRUBRO EXISTENTE
+    $(document).on('click', '.subrubro-option', function() {
+        const id = Number($(this).data('id'));
+        const name = $(this).data('name');
 
-        subrubrosExistentes.push({ id, name });
+        const existe = subrubrosExistentes.some(function(item) {
+            return item.id === id;
+        });
+
+        if (existe) {
+            return;
+        }
+
+        subrubrosExistentes.push({
+            id: id,
+            name: name
+        });
+
         renderSubrubros();
-    }
+    });
 
-    function removeExistente(id) {
-        subrubrosExistentes = subrubrosExistentes.filter(s => s.id !== id);
+
+    // ELIMINAR SUBRUBRO EXISTENTE
+    $(document).on('click', '.subrubro-remove-btn', function() {
+        const id = Number($(this).data('id'));
+
+        subrubrosExistentes = subrubrosExistentes.filter(function(item) {
+            return item.id !== id;
+        });
+
         renderSubrubros();
-    }
+    });
 
+
+    // AGREGAR NUEVO SUBRUBRO
     function agregarNuevoSubrubro() {
-        const input = document.getElementById('nuevo-subrubro-input');
-        const nombre = input.value.trim();
+        const $input = $('#nuevo-subrubro-input');
+        const nombre = $input.val().trim();
 
-        if (!nombre) return;
+        if (!nombre) {
+            return;
+        }
 
-        if (subrubrosNuevos.includes(nombre)) return;
+        if (subrubrosNuevos.includes(nombre)) {
+            return;
+        }
 
         subrubrosNuevos.push(nombre);
-        input.value = '';
+        $input.val('');
 
         renderSubrubros();
     }
 
-    function removeNuevo(index) {
+
+    // ELIMINAR NUEVO SUBRUBRO
+    $(document).on('click', '.subrubro-nuevo-remove-btn', function() {
+        const index = Number($(this).data('index'));
         subrubrosNuevos.splice(index, 1);
+
         renderSubrubros();
-    }
+    });
 
+
+    // ACTUALIZAR BOTONES DISPONIBLES
     function actualizarDisponibles() {
-        const botones = document.querySelectorAll('.subrubro-option');
+        $('.subrubro-option').each(function() {
+            const $btn = $(this);
+            const id = Number($btn.data('id'));
 
-        botones.forEach(btn => {
-            const id = Number(btn.dataset.id);
+            const seleccionado = subrubrosExistentes.some(function(item) {
+                return item.id === id;
+            });
 
-            const seleccionado = subrubrosExistentes.some(s => s.id === id);
-
-            btn.classList.toggle('is-disabled', seleccionado);
+            $btn.toggleClass('is-disabled', seleccionado);
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    // ACTIVAR ORDEN
+    function activarSortable() {
+        $('#selected-subrubros').sortable({
+            items: '.subrubro-selected',
+            cursor: 'move',
+            tolerance: 'pointer',
+            placeholder: 'subrubro-placeholder',
+            update: function() {
+                actualizarOrden();
+            }
+        });
+    }
+
+    // ACTUALIZAR ORDEN
+    function actualizarOrden() {
+        const $boxOrden = $('#subrubros-orden-hidden-inputs');
+        $boxOrden.empty();
+
+        $('#selected-subrubros .subrubro-selected').each(function(index) {
+            const $item = $(this);
+            const tipo = $item.data('tipo');
+
+            // Mostrar número visual
+            $item.find('.subrubro-order').text(index + 1);
+
+            let valor = '';
+            if (tipo === 'existente') {
+                valor = 'existente:' + $item.data('id');
+            } else {
+                const nombre = $item.find('.subrubro-name').text().trim();
+                valor = 'nuevo:' + nombre;
+            }
+
+            $('<input>', {
+                type: 'hidden',
+                name: 'subrubros_orden[]',
+                value: valor
+            }).appendTo($boxOrden);
+        });
+    }
+
+    // AL CARGAR LA PÁGINA
+    $(function() {
         renderSubrubros();
     });
 </script>

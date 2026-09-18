@@ -15,7 +15,7 @@ class CategoriaController extends Controller
             'entidades' => function ($query) {
                 $query->where('ent_estado', 1)
                     ->where('ent_publico', 1)
-                    ->orderBy('ent_nombre');
+                    ->orderBy('ent_orden');
             }
         ])
         // ->where('cat_id', $categoriaId)
@@ -42,7 +42,7 @@ class CategoriaController extends Controller
             //     'imagenPrincipal',
             //     'logoPrincipal',
             // ])
-            ->orderBy('ent_nombre')
+            ->orderBy('ent_orden')
             ->get();
 
             // dd($entidades->toRawSql());
@@ -61,7 +61,7 @@ class CategoriaController extends Controller
                 $query->where('subrubros.sub_id', $subrubroId)
                     ->where('entidades_subrubros.rub_id', $rubroId);
             })
-            ->orderBy('ent_nombre')
+            ->orderBy('ent_orden')
             ->get();
         // dd($entidades->toRawSql());
 
@@ -132,7 +132,7 @@ class CategoriaController extends Controller
                 'imagenPrincipal',
                 'logoPrincipal',
             ])
-            ->orderBy('ent_nombre')
+            ->orderBy('ent_orden')
             ->get();
 
         return view('categoria', compact('categoria', 'rubros','entidades'));

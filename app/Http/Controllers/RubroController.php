@@ -25,7 +25,14 @@ class RubroController extends Controller
             ->orderBy('cv_nombre')
             ->pluck('cv_nombre', 'cv_id');
 
-        return view('rubros.create', compact('categorias'));
+        $subrubrosDisponibles = Subrubro::where('sub_estado', 1)
+            ->where(function ($q) {
+                $q->whereNull('rub_id');
+            })
+            ->orderBy('sub_nombre')
+            ->get(['sub_id', 'sub_nombre', 'rub_id']);
+
+        return view('rubros.create', compact('categorias', 'subrubrosDisponibles'));
     }
 
     private function validarRubro(Request $request)
@@ -46,46 +53,83 @@ class RubroController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
-                'f_codigo' => 'nullable|string|max:255',
-                'f_nombre' => 'required|string|max:255',
-                'f_descripcion' => 'nullable|string|max:255',
-                'f_descripcion_corta' => 'nullable|string|max:255',
-            ]);
+            // $request->validate([
+            //     'f_codigo' => 'nullable|string|max:255',
+            //     'f_nombre' => 'required|string|max:255',
+            //     'f_descripcion' => 'nullable|string|max:255',
+            //     'f_descripcion_corta' => 'nullable|string|max:255',
+            // ]);
+            $usuario_id=1;
 
             $rubro = Rubro::create([
                 'cv_id' => $request->f_categoria,
-                'rub_codigo' => $request->f_codigo,
+                'rub_codigo' => $request->f_codigo ?? null,
                 'rub_nombre' => $request->f_nombre,
-                'rub_descripcion' => $request->f_descripcion,
-                'rub_descripcion_corta' => $request->f_descripcion_corta,
+                'rub_descripcion' => $request->f_descripcion ?? null,
+                'rub_descripcion_corta' => $request->f_descripcion_corta ?? null,
+                'rub_publico' => $request->f_publico,
                 'rub_estado' => '1',
                 'rub_fecha_alta' => now(),
-                'rub_usu_alta' => '1',
+                'rub_usu_alta' => $usuario_id,
             ]);
 
-            $subrubrosIds = $request->input('subrubros', []);
-            $subrubrosNuevos = $request->input('subrubros_nuevos', []);
+            $subrubrosOrden = $request->input('subrubros_orden', []);
+            $subrubrosIds = [];
 
-            // EXISTENTES
-            if (!empty($subrubrosIds)) {
-                Subrubro::whereIn('sub_id', $subrubrosIds)
-                    ->update(['rub_id' => $rubro->rub_id]);
+            // OBTENER IDs EXISTENTES
+            foreach ($subrubrosOrden as $item) {
+                [$tipo, $valor] = explode(':', $item, 2);
+
+                if ($tipo === 'existente') {
+                    $subrubrosIds[] = (int) $valor;
+                }
             }
 
-            // NUEVOS
-            foreach ($subrubrosNuevos as $nombre) {
-                $nombre = trim($nombre);
+            // DESVINCULAR LOS QUE YA NO ESTÁN
+            $query = Subrubro::where('rub_id', $rubro->rub_id);
 
-                if ($nombre === '') continue;
+            if (!empty($subrubrosIds)) {
+                $query->whereNotIn('sub_id', $subrubrosIds);
+            }
 
-                Subrubro::create([
-                    'rub_id' => $rubro->rub_id,
-                    'sub_nombre' => $nombre,
-                    'sub_estado' => 1,
-                    'sub_fecha_alta' => now(),
-                    'sub_usu_alta' => 1,
-                ]);
+            $query->update([
+                'rub_id' => null,
+                'sub_orden' => null,
+                'sub_fecha_mod' => now(),
+                'sub_usu_mod' => $usuario_id,
+            ]);
+
+
+            // VINCULAR / CREAR RESPETANDO EL ORDEN
+            foreach ($subrubrosOrden as $index => $item) {
+                [$tipo, $valor] = explode(':', $item, 2);
+
+                $orden = $index + 1;
+                if ($tipo === 'existente') {
+                    Subrubro::where('sub_id', (int) $valor)
+                        ->update([
+                            'rub_id' => $rubro->rub_id,
+                            'sub_orden' => $orden,
+                            'sub_fecha_mod' => now(),
+                            'sub_usu_mod' => $usuario_id,
+                        ]);
+
+                } elseif ($tipo === 'nuevo') {
+                    $nombre = trim($valor);
+
+                    if ($nombre === '') {
+                        continue;
+                    }
+
+                    Subrubro::create([
+                        'rub_id' => $rubro->rub_id,
+                        'sub_nombre' => $nombre,
+                        'sub_orden' => $orden,
+                        'sub_estado' => 1,
+                        'sub_fecha_alta' => now(),
+                        'sub_usu_alta' => $usuario_id,
+                    ]);
+                }
             }
 
             return redirect()
@@ -115,7 +159,7 @@ class RubroController extends Controller
 
         $subrubrosSeleccionados = Subrubro::where('rub_id', $id)
             ->where('sub_estado', 1)
-            ->orderBy('sub_nombre')
+            ->orderBy('sub_orden')
             ->get(['sub_id', 'sub_nombre'])
             ->map(fn ($item) => [
                 'id' => $item->sub_id,
@@ -135,9 +179,10 @@ class RubroController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->validarRubro($request);
+            // $this->validarRubro($request);
 
             $rubro = Rubro::findOrFail($id);
+            $usuario_id=1;
 
             $rubro->update([
                 'cv_id' => $request->f_categoria,
@@ -145,35 +190,68 @@ class RubroController extends Controller
                 'rub_nombre' => $request->f_nombre,
                 'rub_descripcion' => $request->f_descripcion,
                 'rub_descripcion_corta' => $request->f_descripcion_corta,
+                'rub_publico' => $request->f_publico,
+                'rub_fecha_mod' => now(),
+                'rub_usu_mod' => $usuario_id,
             ]);
 
-            $subrubrosIds = $request->input('subrubros', []);
-            $subrubrosNuevos = $request->input('subrubros_nuevos', []);
+            $subrubrosOrden = $request->input('subrubros_orden', []);
+            $subrubrosIds = [];
 
-            // DESVINCULAR LOS QUE YA NO ESTÁN
-            Subrubro::where('rub_id', $id)
-                ->whereNotIn('sub_id', $subrubrosIds)
-                ->update(['rub_id' => null]);
+            // OBTENER IDs EXISTENTES
+            foreach ($subrubrosOrden as $item) {
+                [$tipo, $valor] = explode(':', $item, 2);
 
-            // VINCULAR EXISTENTES
-            if (!empty($subrubrosIds)) {
-                Subrubro::whereIn('sub_id', $subrubrosIds)
-                    ->update(['rub_id' => $id]);
+                if ($tipo === 'existente') {
+                    $subrubrosIds[] = (int) $valor;
+                }
             }
 
-            // CREAR NUEVOS
-            foreach ($subrubrosNuevos as $nombre) {
-                $nombre = trim($nombre);
+            // DESVINCULAR LOS QUE YA NO ESTÁN
+            $query = Subrubro::where('rub_id', $id);
 
-                if ($nombre === '') continue;
+            if (!empty($subrubrosIds)) {
+                $query->whereNotIn('sub_id', $subrubrosIds);
+            }
 
-                Subrubro::create([
-                    'rub_id' => $id,
-                    'sub_nombre' => $nombre,
-                    'sub_estado' => 1,
-                    'sub_fecha_alta' => now(),
-                    'sub_usu_alta' => 1,
-                ]);
+            $query->update([
+                'rub_id' => null,
+                'sub_orden' => null,
+                'sub_fecha_mod' => now(),
+                'sub_usu_mod' => $usuario_id,
+            ]);
+
+
+            // VINCULAR / CREAR RESPETANDO EL ORDEN
+            foreach ($subrubrosOrden as $index => $item) {
+                [$tipo, $valor] = explode(':', $item, 2);
+
+                $orden = $index + 1;
+                if ($tipo === 'existente') {
+                    Subrubro::where('sub_id', (int) $valor)
+                        ->update([
+                            'rub_id' => $id,
+                            'sub_orden' => $orden,
+                            'sub_fecha_mod' => now(),
+                            'sub_usu_mod' => $usuario_id,
+                        ]);
+
+                } elseif ($tipo === 'nuevo') {
+                    $nombre = trim($valor);
+
+                    if ($nombre === '') {
+                        continue;
+                    }
+
+                    Subrubro::create([
+                        'rub_id' => $id,
+                        'sub_nombre' => $nombre,
+                        'sub_orden' => $orden,
+                        'sub_estado' => 1,
+                        'sub_fecha_alta' => now(),
+                        'sub_usu_alta' => $usuario_id,
+                    ]);
+                }
             }
 
             return redirect()
@@ -250,30 +328,72 @@ class RubroController extends Controller
             ->orderBy('rub_id')
             ->get();
 
-        return view('rubros.orden', compact('rubros'));
+        $categorias = Categoria::where('cv_estado', 1)
+            ->orderBy('cv_nombre')
+            ->get();
+
+        return view('rubros.orden', compact('rubros','categorias'));
     }
 
     public function guardar_orden(Request $request)
     {
         // dd($request);
-        // $request->validate([
-        //     'orden' => ['required', 'array'],
-        //     'orden.*' => ['required', 'integer'],
-        // ]);
+        // foreach ($request->orden as $index => $rub_id) {
+        //     Rubro::where('rub_id', $rub_id)
+        //         ->update([
+        //             'rub_orden' => $index + 1,
+        //             'rub_fecha_mod' => now(),
+        //             'rub_usu_mod' => $usu ?? 0
+        //         ]);
+        // }
 
-        foreach ($request->orden as $index => $rub_id) {
+        $categoria_id = $request->categoria_id;
+        $orden = $request->input('orden', []);
 
+        foreach ($orden as $index => $rub_id) {
             Rubro::where('rub_id', $rub_id)
+                ->where('cv_id', $categoria_id)
                 ->update([
                     'rub_orden' => $index + 1,
                     'rub_fecha_mod' => now(),
                     'rub_usu_mod' => $usu ?? 0
                 ]);
+
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Orden guardado correctamente'
+        ]);
+    }
+
+    public function por_categoria(Request $request)
+    {
+        $categoriaId = $request->categoria_id;
+
+        $rubros = Rubro::with('categoria')
+            ->where('cv_id', $categoriaId)
+            ->where('rub_publico',1)
+            ->where('rub_estado',1)
+            ->orderBy('rub_orden')
+            ->get()
+            ->map(function ($rubro) {
+                $estado = estado($rubro->rub_estado);
+
+                return [
+                    'rub_id' => $rubro->rub_id,
+                    'rub_nombre' => $rubro->rub_nombre,
+                    'categoria' => $rubro->categoria->cv_nombre ?? '',
+                    'fecha_alta' => optional($rubro->rub_fecha_alta)->format('d/m/Y'),
+                    'estado_class' => $estado['class'],
+                    'estado_text' => $estado['text'],
+                    'estado_icon' => $estado['icon'],
+                ];
+
+            });
+
+        return response()->json([
+            'rubros' => $rubros
         ]);
     }
 }

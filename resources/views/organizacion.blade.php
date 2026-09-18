@@ -1193,7 +1193,7 @@ body.resumen-compra-visible {
 .vo-card-body h3 {
     margin: 0 0 4px;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 1000;
     color: #1b2738;
 }
 
@@ -1304,7 +1304,7 @@ body.resumen-compra-visible {
         padding: 0;
         font-size: 12px;
         line-height: 1.15;
-        font-weight: 600;
+        font-weight: 1000;
         color: #161616;
         white-space: nowrap;
         overflow: hidden;

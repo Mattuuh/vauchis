@@ -99,6 +99,7 @@ class HomeController extends Controller
             ->with('imagenPrincipal')
             ->with('logoPrincipal')
             ->with('resaltador_entidad')
+            ->orderBy('ent_destacado_orden')
             ->get()
             ->map(function ($ent) {
                 return (object)[
@@ -137,6 +138,7 @@ class HomeController extends Controller
             ])
             ->where('org_estado', 1)
             ->where('org_publico', 1)
+            ->orderBy('org_orden')
             ->get()
             ->map(function ($org) {
                 return (object)[
@@ -186,6 +188,7 @@ class HomeController extends Controller
         // ]);
         $collections = Coleccion::with('logoPrincipal')
             ->where('colecc_publico', 1)
+            ->orderBy('colecc_orden')
             ->get()
             ->map(function ($coleccion) {
                 return (object)[
@@ -213,6 +216,7 @@ class HomeController extends Controller
 
         $influencers = Influencer::with('imagenPrincipal')
             ->where('inf_publico', 1)
+            ->orderBy('inf_orden')
             ->get()
             ->map(function ($inf) {
                 return (object)[

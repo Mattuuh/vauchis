@@ -789,7 +789,7 @@
                             <img src="{{ $medioPagoImagen ?? asset('images/MercadoPago.png') }}" alt="Mercado Pago">
                             <div>
                                 <strong>Medios de pago</strong>
-                                <span>Se te redireccionará a la plataforma de Mercado Pago para completar el pago</span>
+                                <span>Se te redireccionará a la plataforma de Mercado Pago para completar el pago a <b class="fw-bold">{{ $entidad->ent_nombre_fantasia }} - {{ $entidad->ent_razon_social }}</b>.</span>
                             </div>
                         </div>
                     </div>
@@ -799,7 +799,7 @@
 
         <div class="vp-action-bar">
             <div class="vp-action-inner">
-                <a href="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</a>
+                <button href="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</button>
                 <div class="vs-checkout-total">TOTAL ${{ number_format($monto, 0, ',', '.') }}ARS</div>
                 <button type="submit" class="vp-action vp-action-primary" id="btn_pagar">Confirmar y pagar</button>
             </div>

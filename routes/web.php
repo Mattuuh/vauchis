@@ -182,12 +182,14 @@ Route::middleware(['administrador'])
         Route::get('/entidades/listado', [EntidadController::class, 'listado'])->name('entidades.listado');
         Route::post('/entidades/guardar-orden', [EntidadController::class, 'guardar_orden'])->name('entidades.guardar_orden');
         Route::get('/entidades/ordenar', [EntidadController::class, 'ordenar'])->name('entidades.ordenar');
+        Route::get('/entidades/por_destacado',[EntidadController::class, 'por_destacado'])->name('entidades.por_destacado');
         Route::resource('entidades', EntidadController::class);
         Route::post('/entidades/{id}/delete', [EntidadController::class, 'delete'])->name('entidades.delete');
 
         Route::get('/rubros/listado', [RubroController::class, 'listado'])->name('rubros.listado');
         Route::post('/rubros/guardar-orden', [RubroController::class, 'guardar_orden'])->name('rubros.guardar_orden');
         Route::get('/rubros/ordenar', [RubroController::class, 'ordenar'])->name('rubros.ordenar');
+        Route::get('/rubros/por-categoria',[RubroController::class, 'por_categoria'])->name('rubros.por_categoria');
         Route::resource('rubros', RubroController::class);
         Route::post('/rubros/{id}/delete', [RubroController::class, 'delete'])->name('rubros.delete');
 

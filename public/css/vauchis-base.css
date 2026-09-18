@@ -507,6 +507,7 @@ select.form-select option:not(:checked) {
 .form-actions {
     position: relative;
     z-index: 5;
+    margin-bottom: 3vh;
 }
 
 .status {

@@ -19,6 +19,7 @@ class Rubro extends Model
         'rub_nombre',
         'rub_descripcion',
         'rub_descripcion_corta',
+        'rub_publico',
         'rub_estado',
         'rub_estado2',
         'rub_fecha_alta',
@@ -31,11 +32,13 @@ class Rubro extends Model
 
     protected $casts = [
         'rub_fecha_alta' => 'datetime',
+        'rub_fecha_mod' => 'datetime',
+        'rub_fecha_baja' => 'datetime',
     ];
 
     public function subrubros()
     {
-        return $this->hasMany(Subrubro::class, 'rub_id', 'rub_id')->where('sub_estado', 1)->orderBy('sub_nombre');
+        return $this->hasMany(Subrubro::class, 'rub_id', 'rub_id')->where('sub_estado', 1)->orderBy('sub_orden');
     }
 
     public function categoria()

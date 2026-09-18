@@ -234,7 +234,7 @@
 
         {{-- BOTONES --}}
         <div class="d-flex justify-content-between form-actions">
-            <button type="button" class="btn btn-danger" data-id="{{ $modalidad->mod_id }}" data-url="{{ route('admin.modalidades.delete', $modalidad->mod_id) }}" id="btn_eliminar">Eliminar</button>
+            <button type="button" class="btn btn-danger" data-id="{{ $modalidad->mod_id }}" data-url="{{ route('admin.modalidades.delete', $modalidad->mod_id) }}" id="btn_eliminar">Bloquear</button>
 
             <div>
                 <a href="{{ route('admin.modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>

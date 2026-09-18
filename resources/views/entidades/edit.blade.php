@@ -642,7 +642,7 @@ $(document).ready(function () {
                                 <strong>Sucursal 1</strong>
                                 <span class="badge text-bg-success ms-2">Principal</span>
                             </div>
-                            <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">Eliminar</button>
+                            <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">Bloquear</button>
                         </div>
                     </div>
                 @endforelse
@@ -711,19 +711,10 @@ $(document).ready(function () {
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-
-            <button type="button" class="btn btn-danger" data-id="{{ $entidad->ent_id }}" data-url="{{ route('admin.entidades.delete', $entidad->ent_id) }}" id="btn_eliminar">
-                Eliminar
-            </button>
-
+            <button type="button" class="btn btn-danger" data-id="{{ $entidad->ent_id }}" data-url="{{ route('admin.entidades.delete', $entidad->ent_id) }}" id="btn_eliminar">Bloquear</button>
             <div>
-                <a href="{{ route('admin.entidades.index') }}" class="btn btn-outline-secondary">
-                    Cancelar
-                </a>
-
-                <button type="submit" class="btn btn-success" id="btn_actualizar">
-                    Actualizar
-                </button>
+                <a href="{{ route('admin.entidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
 
         </div>
@@ -1197,11 +1188,13 @@ $(document).on('click', '#btn_eliminar', function (e) {
     let url = $(this).data('url');
 
     Swal.fire({
-        title: '¿Eliminar entidad?',
+        title: '¿Bloquear entidad?',
         text: "Esta acción lo desactivará",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
+        confirmButtonColor: '#5cb85c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {

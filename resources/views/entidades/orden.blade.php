@@ -59,8 +59,13 @@ $(document).ready(function () {
 
     $('#lista-items').disableSelection();
 
-    $('#btn-guardar-orden').on('click', function () {
+    // CAMBIO DE CATEGORÍA
+    $('#f_destacado').on('change', function () {
+        let destacado = $(this).val();
+        cargar_entidades(destacado);
+    });
 
+    $('#btn-guardar-orden').on('click', function () {
         let orden = [];
 
         $('#lista-items .item').each(function () {
@@ -72,6 +77,7 @@ $(document).ready(function () {
             type: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
+                destacado: $('#f_destacado').val(),
                 orden: orden
             },
             beforeSend: function () {
@@ -102,6 +108,98 @@ $(document).ready(function () {
         });
 
     });
+
+    
+    function cargar_entidades(destacado) {
+        if (!destacado) {
+            $('#lista-items').html('');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('admin.entidades.por_destacado') }}",
+            type: "GET",
+            data: {
+                destacado: destacado
+            },
+            beforeSend: function () {
+                $('#lista-items').html(`
+                    <tr>
+                        <td colspan="8" class="text-center py-4">Cargando...</td>
+                    </tr>
+                `);
+            },
+            success: function (response) {
+                let html = '';
+                if (response.entidades.length === 0) {
+                    html = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4">No hay entidades.</td>
+                    </tr>
+                    `;
+
+                } else {
+                    $.each(response.entidades, function (index, entidad) {
+                        html += `
+                        <tr class="commerce-row item" data-id="${entidad.ent_id}">
+                            <td class="commerce-col" data-label="ID">
+                                <span class="commerce-mobile-label">ID</span>
+                                <span>${entidad.ent_id}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Nombre">
+                                <span class="commerce-mobile-label">Nombre</span>
+                                <span>${entidad.ent_nombre_fantasia}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Tipo">
+                                <span class="commerce-mobile-label">Tipo</span>
+                                <span>${entidad.tipo_ent_nombre}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Domicilios">
+                                <span class="commerce-mobile-label">Domicilios</span>
+                                <span class="commerce-badge-count">${entidad.domicilios_count}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Vouchers">
+                                <span class="commerce-mobile-label">Vouchers</span>
+                                <span class="commerce-badge-count">${entidad.vouchers_activos_count}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Fecha de alta">
+                                <span class="commerce-mobile-label">Fecha de alta</span>
+                                <span>${entidad.ent_fecha_alta}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Estado">
+                                <span class="commerce-mobile-label">Estado</span>
+                                <span class="commerce-status ${entidad.estado_class}" title="${entidad.estado_text}">
+                                    <i class="bi bi-${entidad.estado_icon}"></i>
+                                </span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Ordenar">
+                                <span class="commerce-mobile-label">Ordenar</span>
+                                <span class="btn-drag" title="Arrastrar para ordenar">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        `;
+                    });
+
+                }
+
+                $('#lista-items').html(html);
+
+                // Como cambió el contenido del tbody,
+                // refrescamos sortable
+                $('#lista-items').sortable('refresh');
+            },
+            error: function () {
+                $('#lista-items').html(`
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-danger">Error al cargar los entidades.</td>
+                </tr>
+                `);
+            }
+        });
+    }
+
 });
 </script>
 @endpush
@@ -133,6 +231,16 @@ $(document).ready(function () {
     <section class="commerce-list-section">
         <div class="container">
             <div class="commerce-card">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="f_destacado" class="form-label">Categoría</label>
+                        <select id="f_destacado" class="form-select">
+                            <option value="" selected>Selecciona una categoria</option>
+                            <option value="0">Normal</option>
+                            <option value="1">Destacado</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="commerce-table-wrap">
                     <table class="commerce-table">
                         <thead>
@@ -149,58 +257,9 @@ $(document).ready(function () {
                         </thead>
 
                         <tbody id="lista-items">
-                            @foreach($entidades as $entidad)
-                                <tr class="commerce-row item" data-id="{{ $entidad->ent_id }}">
-                                    <td class="commerce-col" data-label="ID">
-                                        <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $entidad->ent_id }}</span>
-                                    </td>
-
-                                    <td class="commerce-col commerce-col--brand" data-label="Marca">
-                                        <span class="commerce-mobile-label">Marca</span>
-
-                                        <div class="commerce-brand">
-                                            <div class="commerce-brand__text">
-                                                <h3>{{ $entidad->ent_nombre_fantasia }}</h3>
-                                                <p>{{ $entidad->category }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Tipo">
-                                        <span class="commerce-mobile-label">Tipo</span>
-                                        <span>{{ $entidad->tipo_entidad->tipo_ent_nombre }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Domicilios">
-                                        <span class="commerce-mobile-label">Domicilios</span>
-                                        <span class="commerce-badge-count">{{ $entidad->domicilios_count }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Vouchers">
-                                        <span class="commerce-mobile-label">Vouchers</span>
-                                        <span class="commerce-badge-count">{{ $entidad->vouchers_activos_count }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Fecha de alta">
-                                        <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $entidad->ent_fecha_alta->format('d/m/Y') }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Estado">
-                                        <span class="commerce-mobile-label">Estado</span>
-                                        @php
-                                            $estado = estado($entidad->ent_estado);
-                                        @endphp
-                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}"><i class="bi bi-{{ $estado['icon'] }}"></i></span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Ordenar">
-                                        <span class="commerce-mobile-label">Ordenar</span>
-                                        <span class="btn-drag" title="Arrastrar para ordenar"><i class="bi bi-grip-vertical"></i></span>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td colspan="8" class="text-center py-4">No hay entidades.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

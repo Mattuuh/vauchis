@@ -38,7 +38,7 @@ class TipoModalidadController extends Controller
             TipoModalidad::create([
                 'tipo_mod_nombre' => $request->nombre,
                 'tipo_mod_descripcion' => $request->descripcion,
-                'tipo_mod_condiciones' => $request->condiciones,
+                'tipo_mod_condiciones' => $request->condiciones ?? null,
                 'tipo_mod_fecha_alta' => now(),
                 'tipo_mod_usu_alta' => '1',
             ]);

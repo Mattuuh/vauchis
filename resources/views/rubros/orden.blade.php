@@ -56,6 +56,10 @@
     justify-content: flex-end;
     padding: 20px;
 }
+
+.commerce-table-wrap {
+    overflow-x: hidden;
+}
 </style>
 @endpush
 
@@ -71,6 +75,12 @@ $(document).ready(function () {
 
     $('#lista-rubros').disableSelection();
 
+    // CAMBIO DE CATEGORÍA
+    $('#f_categoria').on('change', function () {
+        let categoriaId = $(this).val();
+        cargarRubros(categoriaId);
+    });
+
     $('#btn-guardar-orden').on('click', function () {
 
         let orden = [];
@@ -84,6 +94,7 @@ $(document).ready(function () {
             type: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
+                categoria_id: $('#f_categoria').val(),
                 orden: orden
             },
             beforeSend: function () {
@@ -114,6 +125,91 @@ $(document).ready(function () {
         });
 
     });
+
+    function cargarRubros(categoriaId) {
+        if (!categoriaId) {
+            $('#lista-rubros').html('');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('admin.rubros.por_categoria') }}",
+            type: "GET",
+            data: {
+                categoria_id: categoriaId
+            },
+            beforeSend: function () {
+                $('#lista-rubros').html(`
+                    <tr>
+                        <td colspan="6" class="text-center py-4">Cargando...</td>
+                    </tr>
+                `);
+            },
+            success: function (response) {
+                let html = '';
+
+                if (response.rubros.length === 0) {
+                    html = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">No hay rubros para esta categoría.</td>
+                    </tr>
+                    `;
+
+                } else {
+                    $.each(response.rubros, function (index, rubro) {
+                        html += `
+                        <tr class="commerce-row rubro-item" data-id="${rubro.rub_id}">
+                            <td class="commerce-col" data-label="ID">
+                                <span class="commerce-mobile-label">ID</span>
+                                <span>${rubro.rub_id}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Nombre">
+                                <span class="commerce-mobile-label">Nombre</span>
+                                <span>${rubro.rub_nombre}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Categoria">
+                                <span class="commerce-mobile-label">Categoria</span>
+                                <span>${rubro.categoria ?? ''}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Fecha de alta">
+                                <span class="commerce-mobile-label">Fecha de alta</span>
+                                <span>${rubro.fecha_alta}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Estado">
+                                <span class="commerce-mobile-label">Estado</span>
+                                <span class="commerce-status ${rubro.estado_class}" title="${rubro.estado_text}">
+                                    <i class="bi bi-${rubro.estado_icon}"></i>
+                                </span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Ordenar">
+                                <span class="commerce-mobile-label">Ordenar</span>
+                                <span class="btn-drag" title="Arrastrar para ordenar">
+                                    <i class="bi bi-grip-vertical"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        `;
+                    });
+
+                }
+
+                $('#lista-rubros').html(html);
+
+                // Como cambió el contenido del tbody,
+                // refrescamos sortable
+                $('#lista-rubros').sortable('refresh');
+            },
+            error: function () {
+                $('#lista-rubros').html(`
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-danger">
+                        Error al cargar los rubros.
+                    </td>
+                </tr>
+                `);
+            }
+        });
+    }
 });
 </script>
 @endpush
@@ -145,6 +241,17 @@ $(document).ready(function () {
     <section class="commerce-list-section">
         <div class="container">
             <div class="commerce-card">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="f_categoria" class="form-label">Categoría</label>
+                        <select id="f_categoria" class="form-select">
+                            <option value="" selected>Selecciona una categoria</option>
+                            @foreach($categorias as $categoria)
+                                <option value="{{ $categoria->cv_id }}">{{ $categoria->cv_nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="commerce-table-wrap">
                     <table class="commerce-table">
                         <thead>
@@ -159,46 +266,9 @@ $(document).ready(function () {
                         </thead>
 
                         <tbody id="lista-rubros">
-                            @foreach($rubros as $rubro)
-                                <tr class="commerce-row rubro-item" data-id="{{ $rubro->rub_id }}">
-                                    <td class="commerce-col" data-label="ID">
-                                        <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $rubro->rub_id }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Nombre">
-                                        <span class="commerce-mobile-label">Nombre</span>
-                                        <span>{{ $rubro->rub_nombre }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Categoria">
-                                        <span class="commerce-mobile-label">Categoria</span>
-                                        <span>{{ $rubro->categoria->cv_nombre ?? '' }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Fecha de alta">
-                                        <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $rubro->rub_fecha_alta->format('d/m/Y') }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Estado">
-                                        <span class="commerce-mobile-label">Estado</span>
-
-                                        @php
-                                            $estado = estado($rubro->rub_estado);
-                                        @endphp
-
-                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
-                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
-                                        </span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Ordenar">
-                                        <span class="commerce-mobile-label">Ordenar</span>
-                                        <span class="btn-drag" title="Arrastrar para ordenar"><i class="bi bi-grip-vertical"></i></span>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td colspan="6" class="text-center py-4">No hay rubros para esta categoría.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

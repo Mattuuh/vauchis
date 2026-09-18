@@ -262,23 +262,12 @@
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-
-            <button type="button" class="btn btn-danger" data-id="{{ $influencer->inf_id }}" data-url="{{ route('admin.influencers.delete', $influencer->inf_id) }}" id="btn_eliminar">
-                Eliminar
-            </button>
-
+            <button type="button" class="btn btn-danger" data-id="{{ $influencer->inf_id }}" data-url="{{ route('admin.influencers.delete', $influencer->inf_id) }}" id="btn_eliminar">Bloquear</button>
             <div>
-                <a href="{{ route('admin.influencers.index') }}" class="btn btn-outline-secondary">
-                    Cancelar
-                </a>
-
-                <button type="submit" class="btn btn-success" id="btn_actualizar">
-                    Actualizar
-                </button>
+                <a href="{{ route('admin.influencers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
             </div>
-
         </div>
-
     </form>
 </div>
 
@@ -324,11 +313,13 @@ $(document).on('click', '#btn_eliminar', function (e) {
     let url = $(this).data('url');
 
     Swal.fire({
-        title: '¿Eliminar influencer?',
+        title: '¿Bloquear influencer?',
         text: "Esta acción lo desactivará",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
+        confirmButtonColor: '#5cb85c',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {

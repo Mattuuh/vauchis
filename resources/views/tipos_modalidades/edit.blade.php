@@ -15,7 +15,7 @@ $(document).ready(function () {
                 showCancelButton: true,
                 confirmButtonColor: '#5cb85c',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí',
+                confirmButtonText: 'Confirmar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -40,9 +40,9 @@ $(document).ready(function () {
             descripcion: {
                 required: false,
             },
-            condiciones: {
-                required: true,
-            },
+            // condiciones: {
+            //     required: false,
+            // },
         },
         messages: {
         },
@@ -96,39 +96,26 @@ $(document).ready(function () {
         @method('PUT')
 
         <div class="vch-card p-3 mb-3">
-
             <h6 class="fw-bold mb-3">Datos del tipo de modalidad</h6>
-
             <div class="row g-3">
-
                 <div class="col-12">
                     <label class="form-label required-label">Nombre</label>
                     <input type="text" name="nombre" class="form-control field-required" value="{{ old('nombre', $tipo->tipo_mod_nombre) }}" placeholder="Ej: Empresa, Persona, ONG..." required>
-
-                    @error('nombre')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
-
                 <div class="col-12">
                     <label class="form-label">Descripci&oacute;n</label>
                     <textarea name="descripcion" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('descripcion', $tipo->tipo_mod_descripcion) }}</textarea>
-
-                    @error('descripcion')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
-
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label">Condiciones</label>
                     <textarea name="condiciones" class="form-control" rows="3" placeholder="Condiciones preestablecidas para el voucher...">{{ old('condiciones', $tipo->tipo_mod_condiciones) }}</textarea>
-                </div>
+                </div> --}}
             </div>
         </div>
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_mod_id }}" data-url="{{ route('admin.tipos_modalidades.delete', $tipo->tipo_mod_id) }}" id="btn_eliminar">Eliminar</button>
+            <button type="button" class="btn btn-danger" data-id="{{ $tipo->tipo_mod_id }}" data-url="{{ route('admin.tipos_modalidades.delete', $tipo->tipo_mod_id) }}" id="btn_eliminar">Bloquear</button>
 
             <div>
                 <a href="{{ route('admin.tipos_modalidades.index') }}" class="btn btn-outline-secondary">Cancelar</a>

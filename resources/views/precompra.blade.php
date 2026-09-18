@@ -386,23 +386,39 @@
         .vs-summary-card {
             order: 1;
             width: 100%;
-            min-height: 154px;
-            grid-template-columns: 106px 1fr;
-            padding: 18px 20px;
+            min-height: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: 0;
             border-radius: 16px;
+            overflow: hidden;
+        }
+
+        /* IMAGEN ARRIBA */
+        .vs-summary-image {
+            width: 100%;
+            height: 14em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
         }
 
         .vs-summary-image img {
-            width: 96px;
-            height: 96px;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
+        /* INFORMACIÓN ABAJO */
         .vs-summary-info {
-            padding-left: 14px;
+            width: 100%;
+            padding: 16px 20px 22px;
         }
 
         .vs-summary-title {
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             font-size: 14px;
             letter-spacing: .03em;
         }
@@ -474,13 +490,13 @@
         }
 
         .vs-image-slider {
-            width: 96px;
-            height: 96px;
+            width: 13em;
+            height: 13em;
         }
 
         .vs-summary-image .vs-image-slide img {
-            width: 96px;
-            height: 96px;
+            width: 13em;
+            height: 13em;
         }
 
         .vs-slider-btn {
@@ -710,14 +726,14 @@ $(function () {
                     </div>
 
                     <div class="vs-summary-info">
-                        <h2 class="vs-summary-title" style="color: {{ $color_regalo }};">Resumen de compra</h2>
-                        <span class="vs-summary-name" style="color: {{ $color_regalo }};">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
+                        <h2 class="vs-summary-title" style="">Resumen de compra</h2>
+                        <span class="vs-summary-name" style="">Voucher {{ $entidad->ent_nombre_fantasia }}</span>
                         @if ($modalidad->tipo_mod_id==3)
-                            <strong class="vs-summary-price" style="color: {{ $color_regalo }};">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
-                            <span class="vs-summary-name" style="color: {{ $color_regalo }};">Vale por: {{ strtoupper($voucher->vou_nombre) }}</span>
+                            <strong class="vs-summary-price" style="">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
+                            <span class="vs-summary-name" style="">Vale por: {{ strtoupper($voucher->vou_nombre) }}</span>
                             <span class="vs-summary-name">{{ $voucher->vou_descripcion }}</span>
                         @else
-                            <span class="vs-summary-name" style="color: {{ $color_regalo }};">Vale por:<strong class="vs-summary-price" style="color: {{ $color_regalo }};">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong></span>
+                            <span class="vs-summary-name" style="">Vale por:<strong class="vs-summary-price" style="">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong></span>
                         @endif
 
                         @if ($fechaVencimientoRaw)

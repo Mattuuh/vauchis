@@ -93,7 +93,7 @@
         //             showCancelButton: true,
         //             confirmButtonColor: '#5cb85c',
         //             cancelButtonColor: '#d33',
-        //             confirmButtonText: 'Sí, crear',
+        //             confirmButtonText: 'Confirmar',
         //             cancelButtonText: 'Cancelar'
         //         }).then((result) => {
         //             if (result.isConfirmed) {

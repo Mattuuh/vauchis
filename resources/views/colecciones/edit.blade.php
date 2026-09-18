@@ -27,7 +27,7 @@ $(document).ready(function () {
             //     showCancelButton: true,
             //     confirmButtonColor: '#5cb85c',
             //     cancelButtonColor: '#d33',
-            //     confirmButtonText: 'Sí, crear',
+            //     confirmButtonText: 'Confirmar',
             //     cancelButtonText: 'Cancelar'
             // }).then((result) => {
             //     if (result.isConfirmed) {
@@ -324,7 +324,7 @@ $(document).ready(function () {
 
         <!-- BOTONES -->
         <div class="d-flex justify-content-between form-actions">
-            <button type="button" class="btn btn-danger" data-id="{{ $coleccion->colecc_id }}" data-url="{{ route('admin.colecciones.delete', $coleccion->colecc_id) }}" id="btn_eliminar">Eliminar</button>
+            <button type="button" class="btn btn-danger" data-id="{{ $coleccion->colecc_id }}" data-url="{{ route('admin.colecciones.delete', $coleccion->colecc_id) }}" id="btn_eliminar">Bloquear</button>
             <div>
                 <a href="{{ route('admin.colecciones.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
@@ -487,7 +487,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
     let url = $(this).data('url');
 
     Swal.fire({
-        title: '¿Eliminar coleccion?',
+        title: '¿Bloquear coleccion?',
         text: "Esta acción la desactivará",
         icon: 'warning',
         showCancelButton: true,

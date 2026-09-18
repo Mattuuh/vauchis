@@ -89,6 +89,7 @@
         </div>
     </section>
 
+    @if ($featuredBrands->isNotEmpty())
     <section class="vh-featured" id="negocios">
         <div class="vh-shell">
             <div class="vh-section-title vh-section-title--light">
@@ -137,7 +138,9 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if ($organizations->isNotEmpty())
     <section class="vh-organizations">
         <div class="vh-shell">
             <div class="row">
@@ -169,7 +172,9 @@
             </div>
         </div>
     </section>
+    @endif
 
+    @if ($influencers->isNotEmpty())
     <section class="vh-inspiration" id="experiencias">
         <div class="vh-shell">
             <div class="row">
@@ -208,62 +213,7 @@
             </div>
         </div>
     </section>
-
-    <section class="vh-explore" id="causa" hidden>
-        <div class="vh-shell">
-            <div class="vh-section-heading">
-                <span class="vh-section-heading__line"></span>
-                <h2>Sigue explorando</h2>
-            </div>
-
-            <div class="vh-slider-wrap">
-                <img class="vh-slider-btn vh-slider-btn--left" src="{{ asset('images/icono-bt-izquierda.png') }}" alt="Fecha izquierda">
-
-                <div class="vh-carousel-viewport" data-carousel="explore">
-                    <div class="vh-explore-grid">
-                    @foreach ($featuredBrands as $brand)
-                        @php
-                            $brandImage = $brand->image ?? $brand->logo ?? null;
-                            $imgSrc = $brandImage
-                                ? asset('storage/' . $brandImage)
-                                : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
-
-                            $badge = $loop->first ? 'Destacado' : ($loop->iteration === 2 ? 'Con causa' : '');
-                        @endphp
-
-                        <article
-                            class="vh-business-card entidades"
-                            data-url="{{ isset($brand->id) ? route('vouchers.entidad', $brand->id) : '#' }}"
-                        >
-                            <div class="vh-business-card__image">
-                                <img src="{{ $imgSrc }}" alt="{{ $brand->name }}">
-
-                                @if($badge)
-                                    <span class="vh-card-badge {{ $loop->first ? 'vh-card-badge--pink' : 'vh-card-badge--green' }}">
-                                        {{ $badge }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="vh-business-card__caption">
-                                <div>
-                                    <h3>{{ $brand->name }}</h3>
-                                    <p>{{ $brand->description ?? 'Una experiencia para regalar y disfrutar' }}</p>
-                                </div>
-
-                                <small>
-                                    desde ${{ $brand->min_amount ?? $brand->min_price ?? '10.000' }}
-                                </small>
-                            </div>
-                        </article>
-                    @endforeach
-                    </div>
-                </div>
-
-                <img class="vh-slider-btn vh-slider-btn--right" src="{{ asset('images/icono-bt-derecha.png') }}" alt="Fecha derecha">
-            </div>
-        </div>
-    </section>
+    @endif
 
     <section class="vh-collections">
         <div class="vh-shell">

@@ -181,7 +181,7 @@ $(document).on('click', '#btn_eliminar', function (e) {
     let url = $(this).data('url');
 
     Swal.fire({
-        title: '¿Eliminar etiqueta?',
+        title: '¿Bloquear etiqueta?',
         text: "Esta acción la desactivará",
         icon: 'warning',
         showCancelButton: true,

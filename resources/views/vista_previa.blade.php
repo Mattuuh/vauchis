@@ -1184,19 +1184,20 @@
         }
 
         .vp-how-title {
-            /* font-size: 25px; */
-            font-size: clamp(28px, 15vw, 46px);
-            font-weight: 400;
+            font-size: 31px;
+            /* font-size: clamp(28px, 15vw, 46px); */
+            font-weight: 300;
         }
 
         .vp-how-title strong {
-            /* font-size: 27px; */
-            font-size: clamp(30px, 15vw, 48px);
+            font-size: 32px;
+            /* font-size: clamp(30px, 15vw, 48px); */
             font-weight: 900;
         }
 
         .vp-steps li {
-            font-size: clamp(15px, 15vw, 17px);
+            font-size: 15px;
+            /* font-size: clamp(15px, 15vw, 17px); */
             margin-bottom: 9px;
         }
 
@@ -1205,13 +1206,15 @@
         }
 
         .vp-conditions h3 {
-            font-size: clamp(28px, 15vw, 46px);
-            font-weight: 900;
+            font-size: 30px;
+            /* font-size: clamp(28px, 15vw, 46px); */
+            font-weight: 800;
             text-transform: none;
         }
 
         .vp-conditions ul {
-            font-size: clamp(14px, 15vw, 16px);
+            font-size: 13.5px;
+            /* font-size: clamp(14px, 15vw, 16px); */
             line-height: 1.65;
         }
 
