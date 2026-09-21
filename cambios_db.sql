@@ -642,3 +642,7 @@ ALTER TABLE `vouchers` ADD `colecc_id` INT NULL DEFAULT NULL AFTER `cv_id`;
 
 
 ALTER TABLE `subrubros` ADD `sub_orden` INT NULL DEFAULT NULL AFTER `sub_nombre`;
+
+
+
+ALTER TABLE `entidades` ADD `ent_telefono` VARCHAR(50) NULL DEFAULT NULL AFTER `ent_portada_url`;

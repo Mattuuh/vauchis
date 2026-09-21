@@ -72,6 +72,12 @@ $(document).ready(function () {
             com_email: {
                 required: true,
             },
+            com_telefono: {
+                required: true,
+                number: true,
+                minlength: 8,
+                maxlength: 10
+            },
             com_instagram: {
                 required: false,
             },
@@ -193,10 +199,7 @@ $(document).ready(function () {
 
 @include('partials.navbar')
 
-<div class="container">
-
-    {{-- <div class="vch-hero-wave vch-hero-wave--one"></div> --}}
-    
+<div class="container">    
     <span class="vch-dot vch-dot--pink-left"></span>
     <span class="vch-dot vch-dot--blue-left"></span>
     <span class="vch-dot vch-dot--yellow"></span>
@@ -275,6 +278,11 @@ $(document).ready(function () {
                 <div class="col-12">
                     <label class="form-label required-label">Email (para usuario)</label>
                     <input type="text" name="com_email" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Telefono de contacto</label>
+                    <input type="text" name="com_telefono" class="form-control">
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -390,9 +398,7 @@ $(document).ready(function () {
                             <strong>Sucursal 1</strong>
                             <span class="badge text-bg-success ms-2">Principal</span>
                         </div>
-                        <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">
-                            Eliminar sucursal
-                        </button>
+                        <button type="button" class="btn-delete-sucursal d-none" onclick="removeSucursal(this)">Eliminar sucursal</button>
                     </div>
 
                     <div class="row g-2">
@@ -963,26 +969,5 @@ $(document).ready(function () {
     });
 
 });
-</script>
-
-<script>
-    const colors = document.querySelectorAll(".color-option");
-    const selectedColor = document.getElementById("selectedColor");
-
-    colors.forEach(color => {
-        color.addEventListener("click", () => {
-
-        // Sacar selección anterior
-        colors.forEach(c => c.classList.remove("selected"));
-
-        // Marcar seleccionado
-        color.classList.add("selected");
-
-        // Guardar el color
-        selectedColor.value = color.dataset.color;
-
-        console.log("Color seleccionado:", selectedColor.value);
-        });
-    });
 </script>
 @endsection

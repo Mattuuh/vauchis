@@ -63,9 +63,9 @@
                         {{ $entidad->ent_descripcion_publica ?? 'Comercio' }}
                     </p>
 
-                    @if(!empty($precioDesde))
+                    @if(!empty($montos_vouchers))
                         <p class="vp-brand-price">
-                            Desde ${{ number_format($precioDesde, 0, ',', '.') }}
+                            Desde ${{ number_format($montos_vouchers['monto_minimo'], 0, ',', '.') }}
                         </p>
                     @endif
                 </div>
@@ -79,6 +79,7 @@
                 @endif
             @endforeach
 
+            @if ($domicilios->isNotEmpty())
             <div class="vp-brand-meta">
             @foreach ($domicilios as $domicilio)
                 @if(!empty($domicilio->ed_direccion))
@@ -90,7 +91,9 @@
                 @endif
             @endforeach
             </div>
+            @endif
 
+            @if(!empty($entidad->ent_instagram) || !empty($entidad->ent_tiktok))
             <div class="vp-brand-meta">
                 @if(!empty($entidad->ent_instagram))
                     <a href="https://www.instagram.com/{{ $entidad->ent_instagram }}" title="{{ $entidad->ent_instagram }}" target="_blank"><i class="bi bi-instagram"></i></a>
@@ -99,6 +102,7 @@
                     <a href="https://www.tiktok.com/{{ '@'.$entidad->ent_tiktok }}" title="{{ $entidad->ent_tiktok }}" target="_blank"><i class="bi bi-tiktok"></i></a>
                 @endif
             </div>
+            @endif
 
         </div>
     </section>
@@ -171,7 +175,7 @@
 
                                         <div class="vp-product-footer">
                                             <p class="vp-product-description">
-                                                {{ $voucher->vou_descripcion ?? 'Voucher válido por cualquier producto de un precio similar' }}
+                                                {!! $voucher->vou_descripcion ?? 'Voucher válido por cualquier producto de un precio similar'  !!}
                                             </p>
                                             <span class="vp-product-price">
                                                 ${{ number_format($campo->vmv_monto_fijo ?? 0, 0, ',', '.') }}
@@ -342,6 +346,7 @@
     line-height: 24px;
     letter-spacing: 0%;
     font-family: Montserrat, sans-serif;
+    white-space: pre-line;
 }
 
 .vp-brand-shopping {
@@ -539,7 +544,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 430px;
+    /* height: 430px; */
+    height: auto;
     background: #fff;
     color: #000;
     text-decoration: none;
@@ -582,7 +588,8 @@
 }
 
 .vp-product-info {
-    height: 90px;
+    /* height: 90px; */
+    height: auto;
     display: flex;
     flex-direction: column;
     padding: 15px 16px 13px;
@@ -614,6 +621,7 @@
     font-weight: 400;
     color: #333;
     max-width: 70%;
+    white-space: pre-line;
 }
 
 .vp-product-price {

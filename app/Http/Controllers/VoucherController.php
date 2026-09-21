@@ -244,7 +244,7 @@ class VoucherController extends Controller
     {
         // dd('Entró al store', $request->all());
 
-        $this->validarVoucher($request);
+        // $this->validarVoucher($request);
 
         DB::beginTransaction();
 
@@ -254,7 +254,7 @@ class VoucherController extends Controller
             $condiciones = $modalidades->mod_condiciones . $condiciones;
 
         try {
-            $usuarioId = Auth::id() ?? 1;
+            $usuario_id = Auth::id() ?? 1;
 
             // $entidad = DB::table('entidades_domicilios')
             //     ->where('ed_id', $request->f_ent_id)
@@ -286,7 +286,7 @@ class VoucherController extends Controller
                 'vou_fecha_inicio' => $request->f_fecha_ini,
                 'vou_fecha_fin' => $request->f_fecha_fin,
                 'vou_vigencia_dias' => $request->f_vigencia,
-                'vou_stock' => $request->stock,
+                'vou_stock' => $request->stock ?? 0,
                 'vou_destacado' => 0,
                 'vou_porcentaje_comision' => $request->f_comision,
 
@@ -298,7 +298,7 @@ class VoucherController extends Controller
                 'vou_estado3' => null,
 
                 'vou_fecha_alta' => now(),
-                'vou_usu_alta' => $usuarioId,
+                'vou_usu_alta' => $usuario_id,
             ]);
 
             if ($request->filled('f_ed_id')) {
@@ -309,7 +309,7 @@ class VoucherController extends Controller
                         'ed_id' => $sucursal,
                         'vou_suc_estado' => 1,
                         'vou_suc_fecha_alta' => now(),
-                        'vou_suc_usu_alta' => $usuarioId,
+                        'vou_suc_usu_alta' => $usuario_id,
                     ]);
                 }
             }
@@ -333,7 +333,7 @@ class VoucherController extends Controller
             //         'vd_estado2' => 'PE',
             //         'vd_estado3' => 'PE',
             //         'vd_fecha_alta' => now(),
-            //         'vd_usu_alta' => $usuarioId,
+            //         'vd_usu_alta' => $usuario_id,
             //     ];
             // }
 
@@ -346,6 +346,7 @@ class VoucherController extends Controller
                 ->get();
 
             $f_mod_id = $request->f_mod_id;
+            $stock_total=0;
             foreach ($camposModalidad as $campo) {
                 $valor = $request->input('modalidad_valores.' . $campo->mca_id);
 
@@ -359,11 +360,12 @@ class VoucherController extends Controller
                     'vmv_stock' => $valor['stock'] ?? 0,
                     'vmv_estado' => 1,
                     'vmv_fecha_alta' => now(),
-                    'vmv_usu_alta' => $usuarioId,
+                    'vmv_usu_alta' => $usuario_id,
                 ]);
 
                 $detalles = [];
                 $voucher_stock = $valor['stock'] ?? $request->stock;
+                $stock_total += $voucher_stock;
                 for ($i = 1; $i <= (int) $voucher_stock; $i++) {
                     $codigoInterno = 'VOU-' . $vouId . '-' .$campo->mca_id. '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
                     $codigoPublico = strtoupper(Str::random(10));
@@ -385,12 +387,20 @@ class VoucherController extends Controller
                         'vd_estado2' => 'PE',
                         'vd_estado3' => 'PE',
                         'vd_fecha_alta' => now(),
-                        'vd_usu_alta' => $usuarioId,
+                        'vd_usu_alta' => $usuario_id,
                     ];
                 }
 
                 DB::table('vouchers_detalles')->insert($detalles);
             }
+
+            DB::table('vouchers')
+                ->where('vou_id', $vouId)
+                ->update([
+                'vou_stock' => $stock_total,
+                'vou_fecha_mod' => now(),
+                'vou_usu_mod' => $usuario_id,
+            ]);
 
             // ETIQUETAS
             $etiquetasIds = collect($request->etiquetas ?? [])
@@ -424,7 +434,7 @@ class VoucherController extends Controller
                         'eti_estado' => 1,
                         'eti_estado2' => 1,
                         'eti_fecha_alta' => now(),
-                        'eti_usu_alta' => $usuarioId,
+                        'eti_usu_alta' => $usuario_id,
                     ]);
 
                     $etiquetasIds->push((int) $etiId);
@@ -442,7 +452,7 @@ class VoucherController extends Controller
                         'eti_id' => $etiId,
                         'ev_estado' => 1,
                         'ev_fecha_alta' => now(),
-                        'ev_usu_alta' => $usuarioId,
+                        'ev_usu_alta' => $usuario_id,
                     ];
                 }
 
@@ -466,7 +476,7 @@ class VoucherController extends Controller
             //             'vp_principal' => 0,
             //             'vp_estado' => 1,
             //             'vp_fecha_alta' => now(),
-            //             'vp_usu_alta' => $usuarioId,
+            //             'vp_usu_alta' => $usuario_id,
             //         ];
             //     }
 
@@ -497,7 +507,7 @@ class VoucherController extends Controller
                         'vf_estado' => 1,
                         'vf_estado2' => null,
                         'vf_fecha_alta' => now(),
-                        'vf_usu_alta' => $usuarioId,
+                        'vf_usu_alta' => $usuario_id,
                     ]);
                 }
             }
@@ -714,6 +724,7 @@ class VoucherController extends Controller
         }
 
         $condiciones = '';
+        $condiciones_raw = '';
         if (trim($voucher->vou_modalidad_condiciones) !== '') {
             $items = explode('#|# ', $voucher->vou_modalidad_condiciones);
             $condiciones = '<ul>';
@@ -727,15 +738,21 @@ class VoucherController extends Controller
                 }
 
                 // Reemplazar variables
-                $item = str_replace('<<FECHA_INICIO>>',"<u>FECHA ACTUAL</u>",$item);
-                $item = str_replace('<<FECHA_FIN>>',"<u>FECHA VENCIMIENTO</u>",$item);
-                $item = str_replace('<<SUCURSALES>>',"<u>SUCURSALES</u>",$item);
+                // $item = str_replace('<<FECHA_INICIO>>',"<u>FECHA ACTUAL</u>",$item);
+                // $item = str_replace('<<FECHA_FIN>>',"<u>FECHA VENCIMIENTO</u>",$item);
+                // $item = str_replace('<<SUCURSALES>>',"<u>SUCURSALES</u>",$item);
+
+                $item = str_replace('<<FECHA_INICIO>>',"FECHA ACTUAL",$item);
+                $item = str_replace('<<FECHA_FIN>>',"FECHA VENCIMIENTO",$item);
+                $item = str_replace('<<SUCURSALES>>',"SUCURSALES",$item);
 
                 $condiciones .= '<li>' . $item . '</li>';
+                $condiciones_raw .= $item . ';;';
             }
 
             $condiciones .= '</ul>';
         }
+
         #endregion
 
         return view('vouchers.edit', compact(
@@ -758,7 +775,8 @@ class VoucherController extends Controller
             // 'plantillaPrincipal',
             'tipos_archivos',
             'imagenes',
-            'condiciones'
+            'condiciones',
+            'condiciones_raw'
         ));
     }
 
@@ -781,7 +799,7 @@ class VoucherController extends Controller
         try {
             $fechaInicio = $request->f_fecha_ini;
             $fechaFin = $request->f_fecha_fin;
-            $usuarioId = Auth::id() ?? 1;
+            $usuario_id = Auth::id() ?? 1;
 
             /*
             |--------------------------------------------------------------------------
@@ -826,7 +844,7 @@ class VoucherController extends Controller
                     ->update([
                         'vou_suc_estado' => 0,
                         'vou_suc_fecha_baja' => now(),
-                        'vou_suc_usu_baja' => $usuarioId,
+                        'vou_suc_usu_baja' => $usuario_id,
                     ]);
 
                 foreach ($request->f_ed_id as $sucursal) {
@@ -836,7 +854,7 @@ class VoucherController extends Controller
                         'ed_id' => $sucursal,
                         'vou_suc_estado' => 1,
                         'vou_suc_fecha_alta' => now(),
-                        'vou_suc_usu_alta' => $usuarioId,
+                        'vou_suc_usu_alta' => $usuario_id,
                     ]);
                 }
             }
@@ -869,7 +887,7 @@ class VoucherController extends Controller
                         'vd_estado2' => 1,
                         'vd_estado3' => 1,
                         'vd_fecha_alta' => now(),
-                        'vd_usu_alta' => $usuarioId,
+                        'vd_usu_alta' => $usuario_id,
                     ];
                 }
 
@@ -942,7 +960,7 @@ class VoucherController extends Controller
                         'eti_id' => $etiId,
                         'ev_estado' => 1,
                         'ev_fecha_alta' => now(),
-                        'ev_usu_alta' => $usuarioId,
+                        'ev_usu_alta' => $usuario_id,
                     ];
                 }
 
@@ -960,7 +978,7 @@ class VoucherController extends Controller
                         'vf_principal' => 0,
                         'vf_estado' => 0,
                         'vf_fecha_baja' => now(),
-                        'vf_usu_baja' => $usuarioId,
+                        'vf_usu_baja' => $usuario_id,
                     ]);
                 }
             }
@@ -979,7 +997,7 @@ class VoucherController extends Controller
                     ->update([
                         'vf_principal' => 1,
                         'vf_fecha_mod' => now(),
-                        'vf_usu_mod' => $usuarioId,
+                        'vf_usu_mod' => $usuario_id,
                     ]);
             }
 
@@ -1011,7 +1029,7 @@ class VoucherController extends Controller
                         'vf_estado' => 1,
                         'vf_estado2' => null,
                         'vf_fecha_alta' => now(),
-                        'vf_usu_alta' => $usuarioId,
+                        'vf_usu_alta' => $usuario_id,
                     ]);
                 }
             }
@@ -1066,7 +1084,7 @@ class VoucherController extends Controller
             //         'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
             //         'vmv_estado' => 1,
             //         'vmv_fecha_alta' => now(),
-            //         'vmv_usu_alta' => $usuarioId,
+            //         'vmv_usu_alta' => $usuario_id,
             //     ]);
             // }
 
@@ -1091,7 +1109,7 @@ class VoucherController extends Controller
                         'vp_principal' => 0,
                         'vp_estado' => 1,
                         'vp_fecha_alta' => now(),
-                        'vp_usu_alta' => $usuarioId,
+                        'vp_usu_alta' => $usuario_id,
                     ];
                 }
 
@@ -1122,7 +1140,7 @@ class VoucherController extends Controller
                         'vf_estado' => 1,
                         'vf_estado2' => null,
                         'vf_fecha_alta' => now(),
-                        'vf_usu_alta' => $usuarioId,
+                        'vf_usu_alta' => $usuario_id,
                     ]);
                 }
             }
@@ -1318,7 +1336,7 @@ class VoucherController extends Controller
                     ->with('error', 'No se encontró un detalle base para generar stock.');
             }
 
-            $usuarioId=1;
+            $usuario_id=1;
 
             $detalles = [];
             $secuencia = $detalle->vd_secuencia+1;
@@ -1340,7 +1358,7 @@ class VoucherController extends Controller
                     'vd_estado2' => 'PE',
                     'vd_estado3' => 'PE',
                     'vd_fecha_alta' => now(),
-                    'vd_usu_alta' => $usuarioId,
+                    'vd_usu_alta' => $usuario_id,
                 ];
                 $secuencia++;
             }
@@ -1440,7 +1458,35 @@ class VoucherController extends Controller
             // dd($vouchers_fijos);
             // dd($voucher->toArray());
 
-        return view('entidad', compact('entidad', 'domicilios', 'vouchers', 'vouchers_fijos', 'vouchers_eleccion'));
+        $vouchers_montos = Voucher::with('modalidadValores')
+            ->where('ent_id', $entidad->ent_id)
+            ->where('vou_estado', 1)
+            ->get();
+
+        $montosMinimos = [];
+        $montosMaximos = [];
+        foreach ($vouchers_montos as $voucher) {
+            foreach ($voucher->modalidadValores as $valor) {
+                // MONTO A ELECCIÓN
+                if (($valor->vmv_monto_minimo>0) && ($valor->vmv_monto_maximo>0)) {
+                    $montosMinimos[] = $valor->vmv_monto_minimo;
+                    $montosMaximos[] = $valor->vmv_monto_maximo;
+                }
+                // MONTO FIJO / BOTÓN
+                elseif ($valor->vmv_monto_fijo>0) {
+                    $montosMinimos[] = $valor->vmv_monto_fijo;
+                    $montosMaximos[] = $valor->vmv_monto_fijo;
+                }
+            }
+        }
+
+        $monto_minimo = !empty($montosMinimos) ? min($montosMinimos) : 0;
+        $monto_maximo = !empty($montosMaximos) ? max($montosMaximos) : 0;
+        $montos_vouchers['monto_minimo']=$monto_minimo;
+        $montos_vouchers['monto_maximo']=$monto_maximo;
+
+
+        return view('entidad', compact('entidad', 'domicilios', 'vouchers', 'vouchers_fijos', 'vouchers_eleccion', 'montos_vouchers'));
     }
 
     public function vouchersPorCategoria(int $id)

@@ -69,6 +69,15 @@ $(document).ready(function () {
             com_dom_fiscal: {
                 required: true,
             },
+            com_email: {
+                required: true,
+            },
+            com_telefono: {
+                required: true,
+                number: true,
+                minlength: 8,
+                maxlength: 10
+            },
             com_instagram: {
                 required: false,
             },
@@ -275,6 +284,11 @@ $(document).ready(function () {
                 <div class="col-12">
                     <label class="form-label required-label">Email (para usuario)</label>
                     <input type="text" name="com_email" class="form-control field-required" value="{{ old('com_email', $entidad->ent_email) }}">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label required-label">Telefono de contacto</label>
+                    <input type="text" name="com_telefono" class="form-control" value="{{ old('com_telefono', $entidad->ent_telefono) }}">
                 </div>
 
                 <div class="col-12 col-md-6">

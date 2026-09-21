@@ -41,6 +41,8 @@
     <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
+    <script src="{{ asset('js/commtool.js') }}?r={{ time() }}"></script>
+
     @stack('libs')
 
     @stack('styles')

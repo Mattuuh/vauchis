@@ -293,14 +293,10 @@ $(document).ready(function () {
                     @enderror
                 </div>
 
-                <div class="col-12 col-md-6">
+                {{-- <div class="col-12 col-md-6">
                     <label class="form-label required-label">Stock:</label>
                     <input type="text" name="stock" class="form-control field-required" value="{{ old('stock') }}" placeholder="0">
-
-                    @error('stock')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
@@ -380,6 +376,14 @@ $(document).ready(function () {
                 <p class="text-muted small mb-3">
                     Podés escribir varias condiciones y separarlas con un ";;" (doble punto y coma).
                 </p>
+
+                {{-- <textarea id="vou_modalidad_condiciones" name="vou_modalidad_condiciones" class="form-control" rows="8" placeholder="Condición 1;; Condición 2;; Condición 3"></textarea>
+
+                <p class="text-muted small mb-3">
+                    Separá cada condición utilizando <strong>;;</strong> (doble punto y coma).
+                </p>
+
+                <div id="preview-condiciones" class="mt-3"></div> --}}
             </div>
         </div>
 
@@ -816,115 +820,159 @@ $(document).ready(function () {
 </script>
 
 <script>
-    $(document).ready(function () {
-        let fpFechaFin = $("#f_fecha_fin_lab").flatpickr({
-            dateFormat: "d/m/Y",
-            altInput: false,
-            locale: "es",
-            onChange: function (selectedDates) {
-                let fecha = selectedDates[0];
+$(document).ready(function () {
+    let fpFechaFin = $("#f_fecha_fin_lab").flatpickr({
+        dateFormat: "d/m/Y",
+        altInput: false,
+        locale: "es",
+        onChange: function (selectedDates) {
+            let fecha = selectedDates[0];
 
-                if (fecha) {
-                    let yyyy = fecha.getFullYear();
-                    let mm = String(fecha.getMonth() + 1).padStart(2, '0');
-                    let dd = String(fecha.getDate()).padStart(2, '0');
+            if (fecha) {
+                let yyyy = fecha.getFullYear();
+                let mm = String(fecha.getMonth() + 1).padStart(2, '0');
+                let dd = String(fecha.getDate()).padStart(2, '0');
 
-                    $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
+                $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
 
-                    fpFechaIni[0].set("maxDate", fecha);
+                fpFechaIni[0].set("maxDate", fecha);
 
-                    let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
-                    if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
-                        fpFechaIni[0].clear();
-                        $("#f_fecha_ini").val("");
-                    }
-                } else {
+                let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
+                if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
+                    fpFechaIni[0].clear();
+                    $("#f_fecha_ini").val("");
+                }
+            } else {
+                $("#f_fecha_fin").val("");
+            }
+        }
+    });
+
+    let fpFechaIni = $("#f_fecha_ini_lab").flatpickr({
+        dateFormat: "d/m/Y",
+        altInput: false,
+        locale: "es",
+        onChange: function (selectedDates) {
+            let fecha = selectedDates[0];
+
+            if (fecha) {
+                let yyyy = fecha.getFullYear();
+                let mm = String(fecha.getMonth() + 1).padStart(2, '0');
+                let dd = String(fecha.getDate()).padStart(2, '0');
+
+                $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
+
+                // La fecha fin no puede ser menor a la fecha inicio
+                fpFechaFin[0].set("minDate", fecha);
+
+                // Si la fecha fin actual quedó inválida, la limpiamos
+                let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
+                if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
+                    fpFechaFin[0].clear();
                     $("#f_fecha_fin").val("");
                 }
-            }
-        });
-
-        let fpFechaIni = $("#f_fecha_ini_lab").flatpickr({
-            dateFormat: "d/m/Y",
-            altInput: false,
-            locale: "es",
-            onChange: function (selectedDates) {
-                let fecha = selectedDates[0];
-
-                if (fecha) {
-                    let yyyy = fecha.getFullYear();
-                    let mm = String(fecha.getMonth() + 1).padStart(2, '0');
-                    let dd = String(fecha.getDate()).padStart(2, '0');
-
-                    $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
-
-                    // La fecha fin no puede ser menor a la fecha inicio
-                    fpFechaFin[0].set("minDate", fecha);
-
-                    // Si la fecha fin actual quedó inválida, la limpiamos
-                    let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
-                    if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
-                        fpFechaFin[0].clear();
-                        $("#f_fecha_fin").val("");
-                    }
-                } else {
-                    $("#f_fecha_ini").val("");
-                    fpFechaFin[0].set("minDate", null);
-                }
-            }
-        });
-
-        $('#add-logo').on('click', function () {
-
-            let html = `
-                <div class="row logo-item mb-2">
-                    <div class="col-sm-11">
-                        <input type="file" name="imagenes[]" accept="image/*" class="form-control">
-                    </div>
-                    <div class="col-sm-1 d-flex align-items-center">
-                        <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
-                    </div>
-                </div>
-            `;
-
-            $('#logos-container').append(html);
-        });
-
-        $(document).on('click', '.remove-logo', function () {
-            $(this).closest('.logo-item').remove();
-        });
-
-        $(document).on('change', '#f_mod_id', function () {
-            let condiciones = $(this).find('option:selected').data('condiciones') || '';
-            condiciones = $.trim(condiciones);
-
-            if (condiciones !== '') {
-
-                let items = condiciones
-                    .split('#|#')
-                    .map(item => $.trim(item))
-                    .filter(item => item !== '');
-
-                let html = '<ul>';
-
-                $.each(items, function(index, item) {
-                    item = item.replace(/<<FECHA_INICIO>>/g, '<i>FECHA DE INICIO</i>');
-                    item = item.replace(/<<FECHA_FIN>>/g, '<i>FECHA DE VENCIMIENTO</i>');
-                    item = item.replace(/<<SUCURSALES>>/g, '<i>SUCURSALES</i>');
-
-                    html += '<li>' + item + '</li>';
-                });
-
-                html += '</ul>';
-
-                $('#f_mod_condiciones').html(html);
-
             } else {
-                $('#f_mod_condiciones').html('');
+                $("#f_fecha_ini").val("");
+                fpFechaFin[0].set("minDate", null);
             }
-
-        });
+        }
     });
+
+    $('#add-logo').on('click', function () {
+
+        let html = `
+            <div class="row logo-item mb-2">
+                <div class="col-sm-11">
+                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
+                </div>
+            </div>
+        `;
+
+        $('#logos-container').append(html);
+    });
+
+    $(document).on('click', '.remove-logo', function () {
+        $(this).closest('.logo-item').remove();
+    });
+
+    $(document).on('change', '#f_mod_id', function () {
+        let condiciones = $(this).find('option:selected').data('condiciones') || '';
+        condiciones = $.trim(condiciones);
+
+        if (condiciones !== '') {
+
+            let items = condiciones
+                .split('#|#')
+                .map(item => $.trim(item))
+                .filter(item => item !== '');
+
+            let html = '<ul>';
+
+            $.each(items, function(index, item) {
+                item = item.replace(/<<FECHA_INICIO>>/g, '<i>FECHA DE INICIO</i>');
+                item = item.replace(/<<FECHA_FIN>>/g, '<i>FECHA DE VENCIMIENTO</i>');
+                item = item.replace(/<<SUCURSALES>>/g, '<i>SUCURSALES</i>');
+
+                html += '<li>' + item + '</li>';
+            });
+
+            html += '</ul>';
+
+            $('#f_mod_condiciones').html(html);
+
+        } else {
+            $('#f_mod_condiciones').html('');
+        }
+
+    });
+
+    // $('#vou_modalidad_condiciones').on('input', function () {
+    //     let texto = $(this).val();
+
+    //     // Escapar HTML introducido por el usuario
+    //     texto = $('<div>').text(texto).html();
+
+    //     // Resaltar variables
+    //     texto = texto.replace(
+    //         /(&lt;&lt;FECHA_INICIO&gt;&gt;)/g,
+    //         '<span class="variable-condicion">$1</span>'
+    //     );
+
+    //     texto = texto.replace(
+    //         /(&lt;&lt;FECHA_FIN&gt;&gt;)/g,
+    //         '<span class="variable-condicion">$1</span>'
+    //     );
+
+    //     texto = texto.replace(
+    //         /(&lt;&lt;SUCURSALES&gt;&gt;)/g,
+    //         '<span class="variable-condicion">$1</span>'
+    //     );
+
+    //     // Separar condiciones
+    //     let condiciones = texto.split(';;');
+
+    //     let html = '<ul>';
+
+    //     condiciones.forEach(function (condicion) {
+
+    //         condicion = condicion.trim();
+
+    //         if (condicion !== '') {
+    //             html += '<li>' + condicion + '</li>';
+    //         }
+
+    //     });
+
+    //     html += '</ul>';
+
+    //     $('#preview-condiciones').html(html);
+
+    // });
+
+});
 </script>
 
 {{-- <script>

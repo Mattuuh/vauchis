@@ -12,7 +12,8 @@
 
             $commerceName = $entidad->ent_nombre_fantasia ?? 'Comercio';
 
-            $price = $entidad->vou_monto_fijo ?? 10000;
+            $price = $montos_vouchers[$entidad->ent_id]['monto_minimo'] ?? 0;
+
         @endphp
 
         <article class="vo-card">

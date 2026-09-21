@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Models\Entidad;
 use App\Models\Rubro;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -135,6 +136,36 @@ class CategoriaController extends Controller
             ->orderBy('ent_orden')
             ->get();
 
-        return view('categoria', compact('categoria', 'rubros','entidades'));
+        $montos_vouchers=[];
+        foreach ($entidades as $entidad) {
+            $vouchers_montos = Voucher::with('modalidadValores')
+                ->where('ent_id', $entidad->ent_id)
+                ->where('vou_estado', 1)
+                ->get();
+
+            $montosMinimos = [];
+            $montosMaximos = [];
+            foreach ($vouchers_montos as $voucher) {
+                foreach ($voucher->modalidadValores as $valor) {
+                    // MONTO A ELECCIÓN
+                    if (($valor->vmv_monto_minimo>0) && ($valor->vmv_monto_maximo>0)) {
+                        $montosMinimos[] = $valor->vmv_monto_minimo;
+                        $montosMaximos[] = $valor->vmv_monto_maximo;
+                    }
+                    // MONTO FIJO / BOTÓN
+                    elseif ($valor->vmv_monto_fijo>0) {
+                        $montosMinimos[] = $valor->vmv_monto_fijo;
+                        $montosMaximos[] = $valor->vmv_monto_fijo;
+                    }
+                }
+            }
+
+            $monto_minimo = !empty($montosMinimos) ? min($montosMinimos) : 0;
+            $monto_maximo = !empty($montosMaximos) ? max($montosMaximos) : 0;
+            $montos_vouchers[$entidad->ent_id]['monto_minimo']=$monto_minimo;
+            $montos_vouchers[$entidad->ent_id]['monto_maximo']=$monto_maximo;
+        }
+
+        return view('categoria', compact('categoria', 'rubros','entidades','montos_vouchers'));
     }
 }
