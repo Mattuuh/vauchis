@@ -216,13 +216,13 @@ class VoucherController extends Controller
             ->orderBy('tipo_archivo_id', 'desc')
             ->get(['tipo_archivo_nombre', 'tipo_archivo_id']);
 
-        // $rubros = Rubro::where('rub_estado', 1)
-        //     ->orderBy('rub_nombre')
-        //     ->pluck('rub_nombre', 'rub_id');
+        $rubros = Rubro::where('rub_estado', 1)
+            ->orderBy('rub_nombre')
+            ->pluck('rub_nombre', 'rub_id');
 
-        // $subrubros = Subrubro::where('sub_estado', 1)
-        //     ->orderBy('sub_nombre')
-        //     ->get(['rub_id', 'sub_nombre', 'sub_id']);
+        $subrubros = Subrubro::where('sub_estado', 1)
+            ->orderBy('sub_nombre')
+            ->get(['rub_id', 'sub_nombre', 'sub_id']);
 
         return view('vouchers.create', compact(
             'entidades',
@@ -235,8 +235,8 @@ class VoucherController extends Controller
             'modalidadesCamposJson',
             'plantillas',
             'tipos_archivos',
-            // 'rubros',
-            // 'subrubros'
+            'rubros',
+            'subrubros'
         ));
     }
 
@@ -248,10 +248,14 @@ class VoucherController extends Controller
 
         DB::beginTransaction();
 
-            $modalidades = Modalidad::findOrFail($request->f_mod_id);
+            // $modalidades = Modalidad::findOrFail($request->f_mod_id);
             // $condiciones = $modalidades->mod_condiciones . $request->f_condiciones_adi .'#|# ';
-            $condiciones = $request->f_condiciones_adi .'#|# ';
-            $condiciones = $modalidades->mod_condiciones . $condiciones;
+            // $condiciones = $request->f_condiciones_adi .'#|# ';
+            // $condiciones = $modalidades->mod_condiciones . $condiciones;
+
+            $condiciones = str_replace(';;',"#|# ", $request->vou_modalidad_condiciones) .'#|# ';
+            $condiciones = str_replace('<<FECHA_ACTUAL>>',"<<FECHA_INICIO>>", $condiciones);
+            $condiciones = str_replace('<<FECHA_VENCIMIENTO>>',"<<FECHA_FIN>>", $condiciones);
 
         try {
             $usuario_id = Auth::id() ?? 1;
@@ -290,7 +294,7 @@ class VoucherController extends Controller
                 'vou_destacado' => 0,
                 'vou_porcentaje_comision' => $request->f_comision,
 
-                'vou_terminos_condiciones' => $request->terms,
+                'vou_terminos_condiciones' => $request->terms ?? null,
                 'vou_modalidad_condiciones' => $condiciones,
 
                 'vou_estado' => 1,
@@ -313,31 +317,6 @@ class VoucherController extends Controller
                     ]);
                 }
             }
-
-            // for ($i = 1; $i <= (int) $request->stock; $i++) {
-            //     $codigoInterno = 'VOU-' . $vouId . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
-            //     $codigoPublico = strtoupper(Str::random(10));
-
-            //     $detalles[] = [
-            //         'vou_id' => $vouId,
-            //         'ent_id' => $request->f_ent_id,
-            //         'cli_id' => null,
-            //         'vd_codigo_interno' => $codigoInterno,
-            //         'vd_codigo' => $codigoPublico,
-            //         'vd_secuencia' => $i,
-            //         'vd_variante_nombre_de' => null,
-            //         'vd_variante_mensaje' => null,
-            //         // 'vd_monto_total' => $request->f_monto_total,
-            //         'vd_monto_total' => 0,
-            //         'vd_estado' => 1,
-            //         'vd_estado2' => 'PE',
-            //         'vd_estado3' => 'PE',
-            //         'vd_fecha_alta' => now(),
-            //         'vd_usu_alta' => $usuario_id,
-            //     ];
-            // }
-
-            // DB::table('vouchers_detalles')->insert($detalles);
 
             // MODALIDADES
             $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
@@ -511,6 +490,66 @@ class VoucherController extends Controller
                     ]);
                 }
             }
+
+            #region SUCURSALES - RUBROS / SUBRUBROS
+            $entId = $request->f_ent_id;
+            $sucursales = $request->input('sucursales', []);
+
+            foreach ($sucursales as $domicilioId => $sucursal) {
+                $rubrosSeleccionados = $sucursal['rubros'] ?? [];
+                $subrubrosSeleccionados = $sucursal['subrubros'] ?? [];
+
+                // DESACTIVAR ASOCIACIONES ACTUALES
+                DB::table('entidades_rubros')
+                    ->where('ent_id', $entId)
+                    ->where('ed_id', $domicilioId)
+                    ->update([
+                        'er_estado' => 0,
+                    ]);
+
+                DB::table('entidades_subrubros')
+                    ->where('ent_id', $entId)
+                    ->where('ed_id', $domicilioId)
+                    ->update([
+                        'es_estado' => 0,
+                    ]);
+
+
+                // RUBROS
+                foreach ($rubrosSeleccionados as $rubId) {
+                    DB::table('entidades_rubros')->insert([
+                        'ent_id' => $entId,
+                        'ed_id' => $domicilioId,
+                        'rub_id' => $rubId,
+                        'er_estado' => 1,
+                        'er_usu_alta' => 1,
+                        'er_fecha_alta' => now(),
+                    ]);
+                }
+
+
+                // SUBRUBROS
+                if (!empty($subrubrosSeleccionados)) {
+                    $subrubros = Subrubro::whereIn('sub_id', $subrubrosSeleccionados)
+                        ->get([
+                            'sub_id',
+                            'rub_id'
+                        ]);
+
+                    foreach ($subrubros as $subrubro) {
+                        DB::table('entidades_subrubros')->insert([
+                            'ent_id' => $entId,
+                            'ed_id' => $domicilioId,
+                            'sub_id' => $subrubro->sub_id,
+                            'rub_id' => $subrubro->rub_id,
+                            'es_estado' => 1,
+                            'es_usu_alta' => 1,
+                            'es_fecha_alta' => now(),
+                        ]);
+                    }
+                }
+            }
+            #endregion
 
             DB::commit();
 
@@ -742,9 +781,9 @@ class VoucherController extends Controller
                 // $item = str_replace('<<FECHA_FIN>>',"<u>FECHA VENCIMIENTO</u>",$item);
                 // $item = str_replace('<<SUCURSALES>>',"<u>SUCURSALES</u>",$item);
 
-                $item = str_replace('<<FECHA_INICIO>>',"FECHA ACTUAL",$item);
-                $item = str_replace('<<FECHA_FIN>>',"FECHA VENCIMIENTO",$item);
-                $item = str_replace('<<SUCURSALES>>',"SUCURSALES",$item);
+                $item = str_replace('<<FECHA_INICIO>>',"<<FECHA_ACTUAL>>",$item);
+                $item = str_replace('<<FECHA_FIN>>',"<<FECHA_VENCIMIENTO>>",$item);
+                $item = str_replace('<<SUCURSALES>>',"<<SUCURSALES>>",$item);
 
                 $condiciones .= '<li>' . $item . '</li>';
                 $condiciones_raw .= $item . ';;';
@@ -752,8 +791,17 @@ class VoucherController extends Controller
 
             $condiciones .= '</ul>';
         }
+        $condiciones = trim($condiciones);
 
         #endregion
+
+        $rubros = Rubro::where('rub_estado', 1)
+            ->orderBy('rub_nombre')
+            ->pluck('rub_nombre', 'rub_id');
+
+        $subrubros = Subrubro::where('sub_estado', 1)
+            ->orderBy('sub_nombre')
+            ->get(['rub_id', 'sub_nombre', 'sub_id']);
 
         return view('vouchers.edit', compact(
             'voucher',
@@ -776,7 +824,9 @@ class VoucherController extends Controller
             'tipos_archivos',
             'imagenes',
             'condiciones',
-            'condiciones_raw'
+            'condiciones_raw',
+            'rubros',
+            'subrubros'
         ));
     }
 
@@ -792,7 +842,7 @@ class VoucherController extends Controller
                 ->with('error', 'El voucher no existe.');
         }
 
-        $this->validarVoucher($request);
+        // $this->validarVoucher($request);
 
         DB::beginTransaction();
 
@@ -806,10 +856,15 @@ class VoucherController extends Controller
             | Actualizar voucher
             |--------------------------------------------------------------------------
             */
-            $modalidades = Modalidad::findOrFail($request->f_mod_id);
+            // $modalidades = Modalidad::findOrFail($request->f_mod_id);
             // $condiciones = $modalidades->mod_condiciones . $request->f_condiciones_adi .'#|# ';
-            $condiciones = str_replace(';;',"#|# ", $request->f_condiciones_adi) .'#|# ';
-            $condiciones = $modalidades->mod_condiciones . $condiciones;
+            // $condiciones = str_replace(';;',"#|# ", $request->f_condiciones_adi) .'#|# ';
+            // $condiciones = $modalidades->mod_condiciones . $condiciones;
+
+            $condiciones = str_replace(';;',"#|# ", $request->vou_modalidad_condiciones) .'#|# ';
+            $condiciones = str_replace('<<FECHA_ACTUAL>>',"<<FECHA_INICIO>>", $condiciones);
+            $condiciones = str_replace('<<FECHA_VENCIMIENTO>>',"<<FECHA_FIN>>", $condiciones);
+            // $condiciones = str_replace('<<SUCURSALES>>',"<<SUCURSALES>>", $condiciones);
 
             DB::table('vouchers')
                 ->where('vou_id', $id)
@@ -831,11 +886,11 @@ class VoucherController extends Controller
                     'vou_fecha_inicio' => $fechaInicio,
                     'vou_fecha_fin' => $fechaFin,
                     'vou_vigencia_dias' => $request->f_vigencia,
-                    'vou_stock' => $request->stock,
+                    // 'vou_stock' => $request->stock ?? 0,
                     'vou_porcentaje_comision' => $request->f_comision,
 
                     'vou_permite_personalizacion' => $request->f_permite_personalizacion,
-                    'vou_terminos_condiciones' => $request->terms,
+                    'vou_terminos_condiciones' => $request->terms ?? null,
                     'vou_modalidad_condiciones' => $condiciones,
                 ]);
             
@@ -859,90 +914,82 @@ class VoucherController extends Controller
                 }
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Sincronizar stock con vouchers_detalles
-            |--------------------------------------------------------------------------
-            */
-            $stockAnterior = (int) $voucher->vou_stock;
-            $stockNuevo = (int) $request->stock;
 
-            if ($stockNuevo > $stockAnterior) {
-                $detallesNuevos = [];
+            if ($request->mod_bandera == 1) {
+                // RECUPERAR SECUENCIA
+                $detalle = VoucherDetalle::where('vou_id', $id)
+                    ->orderBy('vd_secuencia','desc')
+                    ->first();
 
-                for ($i = $stockAnterior + 1; $i <= $stockNuevo; $i++) {
-                    $codigoInterno = 'VOU-' . $id . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
-                    $codigoPublico = strtoupper(Str::random(10));
+                $secuencia = $detalle->vd_secuencia+1;
 
-                    $detallesNuevos[] = [
-                        'vou_id' => $id,
-                        'ent_id' => $request->f_ent_id,
-                        'cli_id' => null,
-                        'vd_codigo_interno' => $codigoInterno,
-                        'vd_codigo' => $codigoPublico,
-                        'vd_variante_nombre_de' => null,
-                        'vd_variante_mensaje' => null,
-                        'vd_monto_total' => $request->f_monto_total,
-                        'vd_estado' => 1,
-                        'vd_estado2' => 1,
-                        'vd_estado3' => 1,
-                        'vd_fecha_alta' => now(),
-                        'vd_usu_alta' => $usuario_id,
-                    ];
-                }
-
-                if (!empty($detallesNuevos)) {
-                    DB::table('vouchers_detalles')->insert($detallesNuevos);
-                }
-            }
-
-            if ($stockNuevo < $stockAnterior) {
-                $cantidadAEliminar = $stockAnterior - $stockNuevo;
-
-                $detallesLibres = DB::table('vouchers_detalles')
-                    ->where('vou_id', $id)
-                    ->whereNull('cli_id')
-                    ->orderByDesc('vd_id')
-                    ->limit($cantidadAEliminar)
+                // MODALIDADES
+                $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
+                    ->where('mca_estado', 1)
+                    ->orderBy('mca_orden')
                     ->get();
 
-                if ($detallesLibres->count() < $cantidadAEliminar) {
-                    DB::rollBack();
+                $f_mod_id = $request->f_mod_id;
+                $stock_total = $request->f_stock;
+                foreach ($camposModalidad as $campo) {
+                    $valor = $request->input('modalidad_valores.' . $campo->mca_id);
 
-                    return redirect()
-                        ->back()
-                        ->withInput()
-                        ->with('error', 'No se puede reducir el stock porque hay vouchers ya asignados o utilizados.');
+                    // if ($valor['stock'] > $valor['old_stock']) {
+                    if ($valor['stock'] > 0) {
+                        DB::table('vouchers_modalidad_valores')->insert([
+                            'vou_id' => $id,
+                            'mca_id' => $campo->mca_id,
+                            'vmv_valor' => null,
+                            'vmv_monto_minimo' => $valor['monto_minimo'] ?? 0,
+                            'vmv_monto_maximo' => $valor['monto_maximo'] ?? 0,
+                            'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
+                            'vmv_stock' => $valor['stock'] ?? 0,
+                            'vmv_estado' => 1,
+                            'vmv_fecha_alta' => now(),
+                            'vmv_usu_alta' => $usuario_id,
+                        ]);
+
+                        $detalles = [];
+                        $voucher_stock = $valor['stock'] ?? $request->stock;
+                        $stock_total += $voucher_stock;
+                        for ($i = 1; $i <= (int) $voucher_stock; $i++) {
+                            $codigoInterno = 'VOU-' . $id . '-' .$campo->mca_id. '-' . str_pad($secuencia, 4, '0', STR_PAD_LEFT);
+                            $codigoPublico = strtoupper(Str::random(10));
+
+                            $detalles[] = [
+                                'vou_id' => $id,
+                                'mod_id' => $f_mod_id,
+                                'mca_id' => $campo->mca_id,
+                                'ent_id' => $request->f_ent_id,
+                                'cli_id' => null,
+                                'vd_codigo_interno' => $codigoInterno,
+                                'vd_codigo' => $codigoPublico,
+                                'vd_secuencia' => $i,
+                                'vd_variante_nombre_de' => null,
+                                'vd_variante_mensaje' => null,
+                                'vd_monto_total' => $valor['monto_total'] ?? 0,
+                                'vd_estado' => 1,
+                                'vd_estado2' => 'PE',
+                                'vd_estado3' => 'PE',
+                                'vd_fecha_alta' => now(),
+                                'vd_usu_alta' => $usuario_id,
+                            ];
+                        }
+
+                        DB::table('vouchers_detalles')->insert($detalles);
+                    }
                 }
 
-                $idsEliminar = $detallesLibres->pluck('vd_id')->toArray();
-
-                DB::table('vouchers_detalles')
-                    ->whereIn('vd_id', $idsEliminar)
+                DB::table('vouchers')
+                    ->where('vou_id', $id)
                     ->update([
-                        'vd_estado' => 0,
-                        'vd_fecha_baja' => now(),
-                        'vd_usu_baja' => 1
-                    ]);
+                    'vou_stock' => $stock_total,
+                    'vou_fecha_mod' => now(),
+                    'vou_usu_mod' => $usuario_id,
+                ]);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Actualizar monto y entidad en detalles existentes
-            |--------------------------------------------------------------------------
-            */
-            // DB::table('vouchers_detalles')
-            //     ->where('vou_id', $id)
-            //     ->update([
-            //         'ent_id' => $request->f_ent_id,
-            //         'vd_monto_total' => $request->f_monto_total,
-            //     ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | Actualizar etiquetas existentes
-            |--------------------------------------------------------------------------
-            */
+            // Actualizar etiquetas existentes
             DB::table('etiquetas_vouchers')
                 ->where('vou_id', $id)
                 ->update([
@@ -1003,57 +1050,6 @@ class VoucherController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | Agregar nuevos banners
-            |--------------------------------------------------------------------------
-            */
-            if ($request->hasFile('banners')) {
-                foreach ($request->file('banners') as $archivo) {
-                    if (!$archivo) {
-                        continue;
-                    }
-
-                    $nombreOriginal = $archivo->getClientOriginalName();
-                    $extension = $archivo->getClientOriginalExtension();
-                    $size = $archivo->getSize();
-                    $nombreArchivo = uniqid('voucher_') . '.' . $extension;
-
-                    $path = $archivo->storeAs('vouchers/banners', $nombreArchivo, 'public');
-
-                    DB::table('vouchers_files')->insert([
-                        'vou_id' => $id,
-                        'vf_img_nombre_legible' => $nombreOriginal,
-                        'vf_img_name' => $nombreArchivo,
-                        'vf_img_path' => $path,
-                        'vf_img_format' => $extension,
-                        'vf_img_size' => $size,
-                        'vf_estado' => 1,
-                        'vf_estado2' => null,
-                        'vf_fecha_alta' => now(),
-                        'vf_usu_alta' => $usuario_id,
-                    ]);
-                }
-            }
-
-            // /*
-            // |--------------------------------------------------------------------------
-            // | Garantizar al menos 1 banner
-            // |--------------------------------------------------------------------------
-            // */
-            // $totalBanners = DB::table('vouchers_files')
-            //     ->where('vou_id', $id)
-            //     ->count();
-
-            // if ($totalBanners < 1) {
-            //     DB::rollBack();
-
-            //     return redirect()
-            //         ->back()
-            //         ->withInput()
-            //         ->with('error', 'El voucher debe tener al menos un banner.');
-            // }
-
-            /*
-            |--------------------------------------------------------------------------
             | Actualizar valores dinámicos de modalidad
             |--------------------------------------------------------------------------
             */
@@ -1062,59 +1058,6 @@ class VoucherController extends Controller
                 ->where('mca_estado', 1)
                 ->orderBy('mca_orden')
                 ->get();
-
-            // DB::table('vouchers_modalidad_valores')
-            //     ->where('vou_id', $id)
-            //     ->update([
-            //         'vmv_estado' => 0,
-            //         'vmv_fecha_baja' => now(),
-            //         'vmv_usu_baja' => 1
-            //     ]);
-
-            // foreach ($camposModalidad as $campo) {
-            //     $valor = $request->input('modalidad_valores.' . $campo->mca_codigo);
-
-            //     if ($campo->mca_tipo === 'boolean') {
-            //         $valor = $request->has('modalidad_valores.' . $campo->mca_codigo) ? 1 : 0;
-            //     }
-
-            //     DB::table('vouchers_modalidad_valores')->insert([
-            //         'vou_id' => $id,
-            //         'mca_id' => $campo->mca_id,
-            //         'vmv_valor' => is_array($valor) ? json_encode($valor) : $valor,
-            //         'vmv_estado' => 1,
-            //         'vmv_fecha_alta' => now(),
-            //         'vmv_usu_alta' => $usuario_id,
-            //     ]);
-            // }
-
-            $plantillas = $request->input('plantillas', []);
-
-            $plantillas = collect($plantillas)
-                ->map(fn ($id) => (int) $id)
-                ->unique()
-                ->values();
-
-            DB::table('vouchers_plantillas')
-                ->where('vou_id', $id)
-                ->delete();
-
-            if ($plantillas->isNotEmpty()) {
-                $rowsPlantillas = [];
-
-                foreach ($plantillas as $vplId) {
-                    $rowsPlantillas[] = [
-                        'vou_id' => $id,
-                        'vpl_id' => $vplId,
-                        'vp_principal' => 0,
-                        'vp_estado' => 1,
-                        'vp_fecha_alta' => now(),
-                        'vp_usu_alta' => $usuario_id,
-                    ];
-                }
-
-                DB::table('vouchers_plantillas')->insert($rowsPlantillas);
-            }
 
             if ($request->hasFile('imagenes')) {
 
@@ -1144,6 +1087,66 @@ class VoucherController extends Controller
                     ]);
                 }
             }
+
+            #region SUCURSALES - RUBROS / SUBRUBROS
+            $entId = $request->f_ent_id;
+            $sucursales = $request->input('sucursales', []);
+
+            foreach ($sucursales as $domicilioId => $sucursal) {
+                $rubrosSeleccionados = $sucursal['rubros'] ?? [];
+                $subrubrosSeleccionados = $sucursal['subrubros'] ?? [];
+
+                // DESACTIVAR ASOCIACIONES ACTUALES
+                DB::table('entidades_rubros')
+                    ->where('ent_id', $entId)
+                    ->where('ed_id', $domicilioId)
+                    ->update([
+                        'er_estado' => 0,
+                    ]);
+
+                DB::table('entidades_subrubros')
+                    ->where('ent_id', $entId)
+                    ->where('ed_id', $domicilioId)
+                    ->update([
+                        'es_estado' => 0,
+                    ]);
+
+
+                // RUBROS
+                foreach ($rubrosSeleccionados as $rubId) {
+                    DB::table('entidades_rubros')->insert([
+                        'ent_id' => $entId,
+                        'ed_id' => $domicilioId,
+                        'rub_id' => $rubId,
+                        'er_estado' => 1,
+                        'er_usu_alta' => 1,
+                        'er_fecha_alta' => now(),
+                    ]);
+                }
+
+
+                // SUBRUBROS
+                if (!empty($subrubrosSeleccionados)) {
+                    $subrubros = Subrubro::whereIn('sub_id', $subrubrosSeleccionados)
+                        ->get([
+                            'sub_id',
+                            'rub_id'
+                        ]);
+
+                    foreach ($subrubros as $subrubro) {
+                        DB::table('entidades_subrubros')->insert([
+                            'ent_id' => $entId,
+                            'ed_id' => $domicilioId,
+                            'sub_id' => $subrubro->sub_id,
+                            'rub_id' => $subrubro->rub_id,
+                            'es_estado' => 1,
+                            'es_usu_alta' => 1,
+                            'es_fecha_alta' => now(),
+                        ]);
+                    }
+                }
+            }
+            #endregion
 
             DB::commit();
 
@@ -1378,6 +1381,7 @@ class VoucherController extends Controller
             //     ->with('error', 'Ocurrió un error al actualizar el voucher: ' . $e->getMessage());
         }
     }
+
     public function vouchersPorEntidad($id)
     {
         // $entidad = DB::table('entidades')

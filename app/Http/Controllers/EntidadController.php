@@ -239,7 +239,7 @@ class EntidadController extends Controller
         // dd('Entró al store', $request->all());
 
         try {
-            $this->validarEntidad($request);
+            // $this->validarEntidad($request);
 
             DB::beginTransaction();
 
@@ -520,7 +520,7 @@ class EntidadController extends Controller
         // dd('Entró al store', $request->all());
 
         try {
-            $this->validarEntidad($request);
+            // $this->validarEntidad($request);
 
 
             DB::beginTransaction();
@@ -637,6 +637,8 @@ class EntidadController extends Controller
                             'ed_id' => $domicilioId,
                             'rub_id' => $rubId,
                             'er_estado' => 1,
+                            'er_usu_alta' => 1,
+                            'er_fecha_alta' => now(),
                         ]);
                     }
                 }
@@ -656,6 +658,8 @@ class EntidadController extends Controller
                             'sub_id' => $subrubro->sub_id,
                             'rub_id' => $subrubro->rub_id,
                             'es_estado' => 1,
+                            'es_usu_alta' => 1,
+                            'es_fecha_alta' => now(),
                         ]);
                     }
                 }
@@ -931,6 +935,40 @@ class EntidadController extends Controller
 
         return response()->json([
             'entidades' => $entidades
+        ]);
+    }
+
+    public function rubros_sucursales($id)
+    {
+        $rubrosIds = DB::table('entidades_rubros')
+            ->where('ed_id', $id)
+            ->where('er_estado', 1)
+            ->pluck('rub_id');
+
+        $subrubrosIds = DB::table('entidades_subrubros')
+            ->where('ed_id', $id)
+            ->where('es_estado', 1)
+            ->pluck('sub_id');
+
+
+        $rubros = Rubro::whereIn('rub_id',$rubrosIds)
+            ->get([
+                'rub_id',
+                'rub_nombre'
+            ]);
+
+
+        $subrubros = Subrubro::whereIn('sub_id',$subrubrosIds)
+            ->get([
+                'sub_id',
+                'rub_id',
+                'sub_nombre'
+            ]);
+
+
+        return response()->json([
+            'rubros' => $rubros,
+            'subrubros' => $subrubros
         ]);
     }
 }

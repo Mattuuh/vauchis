@@ -659,6 +659,7 @@
 @media (max-width: 768px) {
     .vp-brand-hero {
         height: 190px;
+        margin-top: 80px;
     }
 
     .vp-brand-info__inner {

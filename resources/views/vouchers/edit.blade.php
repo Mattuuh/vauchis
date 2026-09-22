@@ -16,6 +16,140 @@
 </style>
 @endpush
 
+@push('validation')
+<script>
+$(document).ready(function () {
+    $('#form_main').validate({
+        submitHandler: function(form){
+
+            // if ($('[name="subrubros_nuevos[]"]').length == 0) {
+            //     Swal.fire({
+            //         title: 'Error',
+            //         text: "Debe ingresar al menos 1 (uno) subrubro",
+            //         icon: 'error',
+            //         confirmButtonColor: '#d33',
+            //         confirmButtonText: 'Entendido'
+            //     });
+
+            //     return false;
+            // }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Se va a editar el registro",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5cb85c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Loader opcional
+                    Swal.fire({
+                        title: 'Procesando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.submit();
+                }
+            });
+        },
+        rules: {
+            f_nombre: {
+                required: true,
+            },
+            f_ent_id: {
+                required: true,
+            },
+            f_ed_id: {
+                required: true,
+            },
+            com_documento: {
+                required: true,
+                number: true,
+                digits: true,
+                minlength: 6
+            },
+            f_inf_id: {
+                required: true,
+            },
+            f_cv_id: {
+                required: true,
+            },
+            f_colecc_id: {
+                required: true,
+            },
+            f_fecha_ini_lab: {
+                required: true,
+            },
+            f_fecha_fin_lab: {
+                required: true,
+            },
+            f_vigencia: {
+                required: true,
+            },
+            f_comision: {
+                required: true,
+            },
+            description: {
+                required: false,
+            },
+            observaciones: {
+                required: false,
+            },
+            f_mod_id: {
+                required: true,
+            },
+            vou_modalidad_condiciones: {
+                required: true,
+                // maxlength: 500
+            },
+            "imagenes[]": {
+                required: false,
+            },
+            "f_tipo_archivo_id[]": {
+                required: false,
+            },
+            // "sucursales[][cd_ciudad]": {
+            //     required: true,
+            // },
+            // "sucursales[][cd_descripcion_publica]": {
+            //     required: true,
+            // },
+            // "sucursales[][cd_descripcion_interna]": {
+            //     required: true,
+            // },
+        },
+        messages: {
+        },
+
+        errorElement: 'small',
+
+        errorPlacement: function(error, element) {
+            error.addClass('vs-error-message');
+            error.insertAfter(element);
+        },
+
+        highlight: function(element) {
+            $(element)
+                .addClass('is-invalid')
+                .removeClass('is-valid');
+        },
+
+        unhighlight: function(element) {
+            $(element)
+                .removeClass('is-invalid')
+                .addClass('is-valid');
+        }
+    });
+});
+</script>
+@endpush
+
 @section('content')
 
 @include('partials.navbar')
@@ -48,9 +182,6 @@
                 <div class="col-12">
                     <label class="form-label required-label">Nombre público:</label>
                     <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre', $voucher->vou_nombre) }}" required>
-                    @error('f_nombre')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -58,37 +189,22 @@
                     <select name="f_ent_id" id="f_ent_id" class="form-select field-required" required>
                         <option value="">Selecciona la entidad</option>
                         @foreach($entidades as $entidad)
-                            <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id', $voucher->ent_id) == $entidad['ent_id'] ? 'selected' : '' }}>
+                            <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id', $voucher->ent_id) == $entidad['ent_id'] ? 'selected' : 'hidden' }}>
                                 {{ $entidad['ent_nombre_fantasia'] }}
                             </option>
                         @endforeach
                     </select>
-                    @error('f_ent_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    {{-- <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" required multiple size="2">
-                        @foreach($sucursales as $sucursal)
-                            @if ($sucursal['ent_id']==$voucher->ent_id)
-                                <option value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'selected' : '' }}>
-                                    {{ $sucursal['ed_direccion'] }} {{ $sucursal['ed_canje']==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE' }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select> --}}
                     <div id="f_domicilios">
                         @foreach($sucursales as $sucursal)
                             @if ($sucursal['ent_id']==$voucher->ent_id)
-                                <input type="checkbox" name="f_ed_id[]" id="f_ed_id-{{ $sucursal['ed_id'] }}" value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'checked' : '' }}> <label for="f_ed_id-{{ $sucursal['ed_id'] }}">{{ $sucursal['ed_direccion'] }} {{ $sucursal['ed_canje']==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE' }}</label><br>
+                                <input type="checkbox" class="f_ed_id" name="f_ed_id[]" id="f_ed_id-{{ $sucursal['ed_id'] }}" value="{{ $sucursal['ed_id'] }}" {{ in_array($sucursal['ed_id'], $sucursales_seleccionadas) ? 'checked' : '' }}> <label for="f_ed_id-{{ $sucursal['ed_id'] }}">{{ $sucursal['ed_direccion'] }} {{ $sucursal['ed_canje']==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE' }}</label><br>
                             @endif
                         @endforeach
                     </div>
-                    @error('f_ed_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-12">
@@ -116,9 +232,6 @@
                             </option>
                         @endforeach
                     </select>
-                    @error('f_inf_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -131,9 +244,6 @@
                             </option>
                         @endforeach
                     </select>
-                    @error('f_cv_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -153,51 +263,32 @@
                     <label class="form-label required-label">Fecha de inicio:</label>
                     <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab', \Carbon\Carbon::parse($voucher->vou_fecha_inicio)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
                     <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini', $voucher->vou_fecha_inicio) }}">
-                    @error('f_fecha_ini')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Fecha de fin:</label>
                     <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab', \Carbon\Carbon::parse($voucher->vou_fecha_fin)->format('d/m/Y')) }}" placeholder="dd/mm/yyyy" required>
                     <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin', $voucher->vou_fecha_fin) }}">
-                    @error('f_fecha_fin')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6" hidden>
                     <label class="form-label required-label">Monto total:</label>
                     <input type="text" name="f_monto_total" class="form-control field-required" value="{{ old('f_monto_total', $voucher->vou_monto_fijo) }}" required>
-                    @error('f_monto_total')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Vigencia post compra (d&iacute;as):</label>
                     <input type="text" name="f_vigencia" class="form-control field-required" value="{{ old('f_vigencia', $voucher->vou_vigencia_dias) }}" readonly>
-                    @error('f_vigencia')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <div class="col-12 col-md-6" id="div_stock">
+                {{-- <div class="col-12 col-md-6" id="div_stock">
                     <label class="form-label required-label">Stock:</label>
                     <input type="text" name="stock" class="form-control field-required" value="{{ old('stock', $voucher->vou_stock) }}" readonly>
-                    @error('stock')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
-                </div>
+                </div> --}}
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
                     <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision', number_format($voucher->vou_porcentaje_comision,2,'.','')) }}" placeholder="0" required>
-
-                    @error('f_comision')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 {{-- <div class="col-12 col-md-6">
@@ -206,24 +297,21 @@
                         <option value="0" {{ old('f_permite_personalizacion', (string) $voucher->vou_permite_personalizacion) === '0' ? 'selected' : '' }}>NO</option>
                         <option value="1" {{ old('f_permite_personalizacion', (string) $voucher->vou_permite_personalizacion) === '1' ? 'selected' : '' }}>SI</option>
                     </select>
-                    @error('f_permite_personalizacion')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div> --}}
 
                 <div class="col-12">
                     <label class="form-label required-label">Descripción:</label>
-                    <textarea name="description" rows="4" class="form-control voucher-textarea">{{ old('description', $voucher->vou_descripcion) }}</textarea>
+                    <textarea name="description" rows="2" class="form-control voucher-textarea">{{ old('description', $voucher->vou_descripcion) }}</textarea>
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label">Términos y condiciones:</label>
                     <textarea name="terms" rows="4" class="form-control voucher-textarea">{{ old('terms', $voucher->vou_terminos_condiciones) }}</textarea>
-                </div>
+                </div> --}}
 
                 <div class="col-12">
                     <label class="form-label">Observaciones internas</label>
-                    <textarea name="observaciones" class="form-control" rows="3">{{ old('observaciones', $voucher->vou_mensaje_predeterminado) }}</textarea>
+                    <textarea name="observaciones" class="form-control" rows="2">{{ old('observaciones', $voucher->vou_mensaje_predeterminado) }}</textarea>
                 </div>
             </div>
         </div>
@@ -234,9 +322,9 @@
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Modalidad:</label>
                 <select name="f_mod_id" id="f_mod_id" class="form-select field-required" required>
-                    <option value="">Selecciona la modalidad</option>
+                    <option value="" hidden>Selecciona la modalidad</option>
                     @foreach($modalidades as $modalidad)
-                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : '' }}>
+                        <option value="{{ $modalidad->mod_id }}" {{ old('f_mod_id', $voucher->mod_id) == $modalidad->mod_id ? 'selected' : 'hidden' }}>
                             {{ $modalidad->mod_nombre }}
                         </option>
                     @endforeach
@@ -252,28 +340,24 @@
                     Seleccioná una modalidad para completar su configuración específica.
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-7"></div>
+                <div class="col-sm-2"><button type="button" class="btn btn-danger btn-block" id="btn_cancelar_valores" hidden>Cancelar</button></div>
+                <div class="col-sm-3">
+                    <input type="hidden" name="mod_bandera" id="mod_bandera" value="0">
+                    <input type="hidden" name="f_stock" id="f_stock" value="{{ $voucher->vou_stock }}">
+                    <button type="button" class="btn btn-success btn-block" id="btn_modificar_valores">Modificar valores</button>
+                </div>
+            </div>
 
             <div class="col-12">
                 <label class="form-label">Condiciones:</label>
-                @if ($condiciones)
-                    <p id="f_mod_condiciones">{!! $condiciones !!}</p>
-                @else
-                    <p id="f_mod_condiciones">No existen condiciones disponibles.</p>
-                @endif
-                <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
-                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="Condiciones adicionales"></textarea>
-                <p class="text-muted small mb-3">
-                    Podés escribir varias condiciones y separarlas con un ";;" (doble punto y coma).
-                </p>
-
-                {{-- <textarea id="vou_modalidad_condiciones" name="vou_modalidad_condiciones" class="form-control" rows="8"
-                        placeholder="Condición 1;; Condición 2;; Condición 3">{{ old('vou_modalidad_condiciones', $condiciones_raw) }}</textarea>
-
+                <textarea id="vou_modalidad_condiciones" name="vou_modalidad_condiciones" class="form-control" rows="4" 
+                    placeholder="Condición 1;; Condición 2;; Condición 3">{{ old('vou_modalidad_condiciones', trim($condiciones_raw)) }}</textarea>
                 <p class="text-muted small mb-3">
                     Separá cada condición utilizando <strong>;;</strong> (doble punto y coma).
                 </p>
-
-                <div id="preview-condiciones" class="mt-3"></div> --}}
+                <div id="preview-condiciones" class="mt-3"></div>
             </div>
         </div>
 
@@ -349,39 +433,6 @@
                 <div class="text-muted small">No hay banners cargados.</div>
             @endif
         </div> --}}
-        {{-- <div class="vch-card p-3 mb-3">
-            <h6 class="fw-bold mb-2">Plantillas vinculadas</h6>
-
-            <p class="text-muted small mb-3">
-                Seleccioná una o más plantillas para este voucher y marcá cuál será la principal.
-            </p>
-
-            @if($plantillas->isEmpty())
-                <div class="text-muted small">No hay plantillas disponibles.</div>
-            @else
-                <div class="row g-3">
-                    @foreach ($plantillas as $plantilla)
-                        <div class="col-12 col-md-4">
-                            <div class="border rounded p-2 h-100">
-                                <img src="{{ asset($plantilla->vpl_fondo_path) }}" class="img-fluid rounded mb-2" alt="{{ $plantilla->vpl_nombre }}" style="height:160px;border-radius:6px;">
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="plantillas[]" value="{{ $plantilla->vpl_id }}" id="selected-plantilla-{{ $plantilla->vpl_id }}" @checked(in_array($plantilla->vpl_id, $plantillasSeleccionadas))>
-
-                                    <label class="form-check-label" for="selected-plantilla-{{ $plantilla->vpl_id }}">Seleccionar plantilla</label>
-                                    <a href="{{ route('admin.vouchers.plantillas.preview', [
-                                            'voucher' => $voucher->vou_id,
-                                            'plantilla' => $plantilla->vpl_id
-                                        ]) }}" class="btn btn-outline-primary btn-sm" target="_blank">
-                                        <i class="fas fa-eye"></i> Vista previa
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div> --}}
 
         {{-- ARCHIVOS --}}
         <div class="vch-card p-3 mb-3">
@@ -431,6 +482,13 @@
         </div>
 
         <div class="vch-card p-3 mb-3">
+            <h6 class="fw-bold mb-2">Rubros y subrubros</h6>
+            <div class="col-12">
+                <div id="sucursales-rubros-container" class="mt-4"></div>
+            </div>
+        </div>
+
+        <div class="vch-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="fw-bold mb-1">Vouchers generados</h6>
@@ -438,7 +496,7 @@
                         Detalles creados automáticamente a partir del stock del voucher.
                     </p>
                 </div>
-                <div class="btn btn-success" id="btn_agregar_detalles">Agregar stock</div>
+                {{-- <div class="btn btn-success" id="btn_agregar_detalles">Agregar stock</div> --}}
                 <span class="badge bg-primary">{{ $voucherDetalles->count() }} registros</span>
             </div>
 
@@ -545,6 +603,12 @@
 <script id="modalidades-campos-json" type="application/json">
 {!! $modalidadesCamposJson !!}
 </script>
+<script>
+    const rubros = @json($rubros);
+    const subrubros = @json($subrubros);
+
+    const URL_SUCURSAL_RUBROS = "{{ route('admin.entidades.rubros_sucursales', ':id') }}";
+</script>
 @endsection
 
 @push('scripts')
@@ -646,16 +710,22 @@
 
             if (campo.mca_tipo_numero=='VAR') {
                 html = `
-                    <div class="col-12 col-md-6">
-                        <label class="form-label">Monto minimo</label>
-                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control" value="${formatear_numero_input(value.vmv_monto_minimo)}" readonly>
-                        <div class="form-text">Monto minimo a introducir por el cliente</div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label">Monto maximo</label>
-                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control" value="${formatear_numero_input(value.vmv_monto_maximo)}" readonly>
-                        <div class="form-text">Monto maximo a introducir por el cliente</div>
-                    </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Monto minimo</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_minimo)}" disabled>
+                    <div class="form-text">Monto minimo a introducir por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Monto maximo</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_maximo)}" disabled>
+                    <div class="form-text">Monto maximo a introducir por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Stock</label>
+                    <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
+                    <div class="form-text">Stock de vouchers</div>
+                </div>
                 `;
             } else if (campo.mca_tipo_numero=='FIJ') {
                 campo.mca_nombre = 'Monto total';
@@ -664,8 +734,14 @@
                 html = `
                 <div class="col-12 col-md-6">
                     <label class="form-label">Monto total</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" value="${formatear_numero_input(value.vmv_monto_fijo)}" readonly>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
                     <div class="form-text">Monto total a pagar por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label">Stock</label>
+                    <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
+                    <div class="form-text">Stock de vouchers</div>
                 </div>
                 `;
             }
@@ -676,16 +752,17 @@
             $('#div_stock').attr('hidden','hidden');
 
             html = `
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="${formatear_numero_input(value.vmv_monto_fijo)}">
-                    <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control" placeholder="1.01" min="1" value="${value.vmv_stock}">
-                    <div class="form-text">Stock de vouchers para este boton</div>
-                </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
+                <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" placeholder="1000" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
+                <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
+                <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
+                <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
+                <div class="form-text">Stock de vouchers para este boton</div>
+            </div>
             `;
         } else {
             html = ``;
@@ -795,11 +872,11 @@ $(document).ready(function () {
 
                 $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
 
-                fpFechaIni[0].set("maxDate", fecha);
+                fpFechaIni.set("maxDate", fecha);
 
-                let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
+                let fechaIniSeleccionada = fpFechaIni.selectedDates[0];
                 if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
-                    fpFechaIni[0].clear();
+                    fpFechaIni.clear();
                     $("#f_fecha_ini").val("");
                 }
             } else {
@@ -823,17 +900,17 @@ $(document).ready(function () {
                 $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
 
                 // La fecha fin no puede ser menor a la fecha inicio
-                fpFechaFin[0].set("minDate", fecha);
+                fpFechaFin.set("minDate", fecha);
 
                 // Si la fecha fin actual quedó inválida, la limpiamos
-                let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
+                let fechaFinSeleccionada = fpFechaFin.selectedDates[0];
                 if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
-                    fpFechaFin[0].clear();
+                    fpFechaFin.clear();
                     $("#f_fecha_fin").val("");
                 }
             } else {
                 $("#f_fecha_ini").val("");
-                fpFechaFin[0].set("minDate", null);
+                fpFechaFin.set("minDate", null);
             }
         }
     });
@@ -843,7 +920,7 @@ $(document).ready(function () {
 
         Swal.fire({
             icon: 'warning',
-            title: '¿Confirmar eliminación del detalle?',
+            title: '¿Confirmar bloquear el voucher detalle?',
             showCancelButton: true,
             cancelButtonColor: '#d9534f',
             cancelButtonText: 'CANCELAR',
@@ -969,48 +1046,672 @@ $(document).ready(function () {
     });
 
 
-    // $('#vou_modalidad_condiciones').on('input', function () {
-    //     let texto = $(this).val();
+    function actualizar_preview_condiciones() {
+        let texto = $('#vou_modalidad_condiciones').val();
 
-    //     // Escapar HTML introducido por el usuario
-    //     texto = $('<div>').text(texto).html();
+        // Escapar HTML
+        texto = $('<div>').text(texto).html();
 
-    //     // Resaltar variables
-    //     texto = texto.replace(
-    //         /(&lt;&lt;FECHA_INICIO&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        // Resaltar variables
+        texto = texto.replace(/&lt;&lt;FECHA_ACTUAL&gt;&gt;/g, '<span class="variable-condicion">FECHA ACTUAL</span>');
+        texto = texto.replace(/&lt;&lt;FECHA_VENCIMIENTO&gt;&gt;/g, '<span class="variable-condicion">FECHA VENCIMIENTO</span>');
+        texto = texto.replace(/&lt;&lt;SUCURSALES&gt;&gt;/g, '<span class="variable-condicion">SUCURSALES</span>');
 
-    //     texto = texto.replace(
-    //         /(&lt;&lt;FECHA_FIN&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        // Separar condiciones
+        let condiciones = texto.split(';;');
 
-    //     texto = texto.replace(
-    //         /(&lt;&lt;SUCURSALES&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        let html = '<ul>';
+        condiciones.forEach(function (condicion) {
+            condicion = condicion.trim();
 
-    //     // Separar condiciones
-    //     let condiciones = texto.split(';;');
+            if (condicion !== '') {
+                html += '<li>' + condicion + '</li>';
+            }
+        });
+        html += '</ul>';
 
-    //     let html = '<ul>';
+        $('#preview-condiciones').html(html);
+    }
 
-    //     condiciones.forEach(function (condicion) {
+    $('#vou_modalidad_condiciones').on('input', function () {
+        actualizar_preview_condiciones();
+    });
 
-    //         condicion = condicion.trim();
+    if ($('#vou_modalidad_condiciones').val()!='') {
+        actualizar_preview_condiciones();
+    }
 
-    //         if (condicion !== '') {
-    //             html += '<li>' + condicion + '</li>';
-    //         }
+    $('#btn_modificar_valores').on('click', function () {
+        $('#mod_bandera').val(1);
+        $('.mod_montos').prop('disabled', false);
+        $('.mod_stock').prop('disabled', false);
+        $('#btn_cancelar_valores').prop('hidden', false);
 
-    //     });
+        $('.mod_montos').each(function () {
+            $(this).rules('add', {
+                required: true,
+                digits: true,
+                min: 1,
+                messages: {
+                    required: 'Este campo es obligatorio.',
+                    digits: 'Ingrese únicamente números enteros.'
+                }
+            });
+        });
 
-    //     html += '</ul>';
+        $('.mod_stock').each(function () {
+            $(this).rules('add', {
+                required: true,
+                digits: true,
+                // min: Number($(this).val()),
+                min: 0,
+                messages: {
+                    required: 'Este campo es obligatorio.',
+                    digits: 'Ingrese únicamente números enteros.'
+                }
+            });
+        });
+    });
 
-    //     $('#preview-condiciones').html(html);
+    $('#btn_cancelar_valores').on('click', function () {
+        $('#mod_bandera').val(0);
+        $('.mod_montos').prop('disabled', true);
+        $('.mod_stock').prop('disabled', true);
+        $('#btn_cancelar_valores').prop('hidden', true);
 
-    // });
+        $('.mod_montos').each(function () {
+            $(this).rules('remove');
+        });
+
+        $('.mod_stock').each(function () {
+            $(this).rules('remove');
+        });
+    });
 });
+</script>
+
+
+<script>
+
+function actualizarSucursal($checkbox) {
+
+    const edId = Number($checkbox.val());
+
+    if ($checkbox.is(':checked')) {
+        cargarRubrosSucursal(edId);
+    } else {
+        eliminarBloqueSucursal(edId);
+    }
+}
+
+$('.f_ed_id:checked').each(function () {
+    actualizarSucursal($(this));
+});
+
+$(document).on('change', '.f_ed_id', function () {
+    actualizarSucursal($(this));
+});
+
+function cargarRubrosSucursal(edId) {
+
+    // Si ya existe, no volver a cargar
+    if ($(`.sucursal[data-ed-id="${edId}"]`).length) {
+        return;
+    }
+
+    let url = `{{ route('admin.entidades.rubros_sucursales', ':edId') }}`;
+    url = url.replace(':edId', edId);
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function () {},
+        success: function (response) {
+            agregarBloqueSucursal(edId, response.rubros, response.subrubros);
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $(`#f_ed_id-${edId}`).prop('checked', false);
+        }
+    });
+}
+
+function agregarBloqueSucursal(edId, rubrosSeleccionados = [], subrubrosSeleccionados = []) {
+
+    if ($(`.sucursal[data-ed-id="${edId}"]`).length) {
+        return;
+    }
+
+    const sucursal = sucursales.find(
+        item => Number(item.ed_id) === Number(edId)
+    );
+
+    if (!sucursal) {
+        return;
+    }
+
+    rubrosSeleccionados = normalizarRubros(rubrosSeleccionados);
+
+    subrubrosSeleccionados = normalizarSubrubros(subrubrosSeleccionados);
+
+    const html = `
+    <div class="sucursal mb-4" data-ed-id="${sucursal.ed_id}" data-selected-rubros='${jsonToAttribute(rubrosSeleccionados)}' data-selected-subrubros='${jsonToAttribute(subrubrosSeleccionados)}'>
+
+        <input type="hidden" name="sucursales[${sucursal.ed_id}][ed_id]" value="${sucursal.ed_id}">
+        <div class="card card-custom p-3 mb-3 rubros-card">
+
+            <h6 class="fw-bold mb-2">${escapeHtml(sucursal.ed_direccion)}</h6>
+            <p class="text-muted small mb-3">
+                Seleccioná los rubros y subrubros asociados a esta sucursal.
+            </p>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Rubros disponibles</label>
+                <div class="rubros-available-box">
+                    ${generarRubrosDisponibles()}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Rubros seleccionados</label>
+                <div class="rubros-selected-box selected-rubros"></div>
+                <div class="rubros-hidden-inputs"></div>
+            </div>
+            <div>
+                <label class="form-label fw-semibold">Subrubros disponibles</label>
+                <div class="subrubros-available-box">
+                    ${generarSubrubrosDisponibles()}
+                </div>
+            </div>
+            <div class="mt-3">
+                <label class="form-label fw-semibold">Subrubros seleccionados</label>
+                <div class="subrubros-selected-box selected-subrubros"></div>
+                <div class="subrubros-hidden-inputs"></div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    $('#sucursales-rubros-container').append(html);
+
+    const $sucursal =$(`.sucursal[data-ed-id="${edId}"]`);
+
+    renderSucursal($sucursal);
+}
+
+function generarRubrosDisponibles() {
+
+    let html = '';
+
+    $.each(rubros, function (id, nombre) {
+
+        html += `
+            <button
+                type="button"
+                class="rubro-option"
+                data-id="${id}"
+                data-name="${escapeHtml(nombre)}"
+            >
+                ${escapeHtml(nombre)}
+            </button>
+        `;
+    });
+
+    return html;
+}
+
+function generarSubrubrosDisponibles() {
+
+    let html = '';
+
+    $.each(subrubros, function (_, subrubro) {
+
+        html += `
+            <button
+                type="button"
+                class="subrubro-option"
+                data-id="${subrubro.sub_id}"
+                data-rub-id="${subrubro.rub_id}"
+                data-name="${escapeHtml(subrubro.sub_nombre)}"
+            >
+                ${escapeHtml(subrubro.sub_nombre)}
+            </button>
+        `;
+    });
+
+    return html;
+}
+
+function getSelectedRubros($sucursal) {
+
+    let data = $sucursal.attr('data-selected-rubros');
+
+    if (!data) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
+}
+
+function setSelectedRubros($sucursal, data) {
+
+    $sucursal.attr(
+        'data-selected-rubros',
+        JSON.stringify(data)
+    );
+}
+
+function getSelectedSubrubros($sucursal) {
+
+    let data = $sucursal.attr('data-selected-subrubros');
+
+    if (!data) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
+}
+
+function setSelectedSubrubros($sucursal, data) {
+
+    $sucursal.attr(
+        'data-selected-subrubros',
+        JSON.stringify(data)
+    );
+}
+
+function jsonToAttribute(data) {
+
+    return escapeHtml(JSON.stringify(data));
+}
+
+$(document).on('click', '.rubro-option', function () {
+
+    const $button = $(this);
+
+    if ($button.hasClass('is-disabled')) {
+        return;
+    }
+
+    const $sucursal = $button.closest('.sucursal');
+
+    const id = Number($button.data('id'));
+    const name = $button.data('name');
+
+    let seleccionados = getSelectedRubros($sucursal);
+
+    if (
+        seleccionados.some(
+            rubro => Number(rubro.id) === id
+        )
+    ) {
+        return;
+    }
+
+    seleccionados.push({
+        id: id,
+        name: name
+    });
+
+    setSelectedRubros(
+        $sucursal,
+        seleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+$(document).on('click', '.rubro-remove-btn', function () {
+
+    const $sucursal = $(this).closest('.sucursal');
+
+    const rubroId = Number(
+        $(this).data('id')
+    );
+
+    let rubrosSeleccionados =
+        getSelectedRubros($sucursal);
+
+    rubrosSeleccionados =
+        rubrosSeleccionados.filter(
+            rubro => Number(rubro.id) !== rubroId
+        );
+
+    setSelectedRubros(
+        $sucursal,
+        rubrosSeleccionados
+    );
+
+    /*
+     * Si eliminamos un rubro también eliminamos
+     * automáticamente sus subrubros.
+     */
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    subrubrosSeleccionados =
+        subrubrosSeleccionados.filter(
+            sub => Number(sub.rub_id) !== rubroId
+        );
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+$(document).on('click', '.subrubro-option', function () {
+
+    const $button = $(this);
+
+    if ($button.hasClass('is-disabled')) {
+        return;
+    }
+
+    const $sucursal = $button.closest('.sucursal');
+
+    const id = Number($button.data('id'));
+    const rubId = Number($button.data('rub-id'));
+    const name = $button.data('name');
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal);
+
+    /*
+     * El subrubro solamente se puede seleccionar
+     * si su rubro está seleccionado.
+     */
+    const existeRubro =
+        rubrosSeleccionados.some(
+            rubro => Number(rubro.id) === rubId
+        );
+
+    if (!existeRubro) {
+        return;
+    }
+
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    if (
+        subrubrosSeleccionados.some(
+            sub => Number(sub.id) === id
+        )
+    ) {
+        return;
+    }
+
+    subrubrosSeleccionados.push({
+        id: id,
+        name: name,
+        rub_id: rubId
+    });
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+$(document).on('click', '.subrubro-remove-btn', function () {
+
+    const $sucursal = $(this).closest('.sucursal');
+
+    const subrubroId = Number(
+        $(this).data('id')
+    );
+
+    let seleccionados =
+        getSelectedSubrubros($sucursal);
+
+    seleccionados =
+        seleccionados.filter(
+            sub => Number(sub.id) !== subrubroId
+        );
+
+    setSelectedSubrubros(
+        $sucursal,
+        seleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+function renderSelectedRubros($sucursal) {
+
+    const edId = $sucursal.data('ed-id');
+
+    const $selectedBox =
+        $sucursal.find('.selected-rubros');
+
+    const $hiddenInputs =
+        $sucursal.find('.rubros-hidden-inputs');
+
+    const seleccionados =
+        getSelectedRubros($sucursal);
+
+    $selectedBox.empty();
+    $hiddenInputs.empty();
+
+    if (!seleccionados.length) {
+
+        $selectedBox.html(`
+            <span class="rubros-empty-text">
+                No hay rubros seleccionados.
+            </span>
+        `);
+
+        return;
+    }
+
+    $.each(seleccionados, function (_, rubro) {
+
+        $selectedBox.append(`
+            <span class="rubro-selected">
+
+                <span>
+                    ${escapeHtml(rubro.name)}
+                </span>
+
+                <button
+                    type="button"
+                    class="rubro-remove-btn"
+                    data-id="${rubro.id}"
+                >
+                    &times;
+                </button>
+
+            </span>
+        `);
+
+        $hiddenInputs.append(`
+            <input
+                type="hidden"
+                name="sucursales[${edId}][rubros][]"
+                value="${rubro.id}"
+            >
+        `);
+    });
+}
+
+function renderSelectedSubrubros($sucursal) {
+
+    const edId = $sucursal.data('ed-id');
+
+    const $selectedBox =
+        $sucursal.find('.selected-subrubros');
+
+    const $hiddenInputs =
+        $sucursal.find('.subrubros-hidden-inputs');
+
+    const seleccionados =
+        getSelectedSubrubros($sucursal);
+
+    $selectedBox.empty();
+    $hiddenInputs.empty();
+
+    if (!seleccionados.length) {
+
+        $selectedBox.html(`
+            <span class="subrubros-empty-text">
+                No hay subrubros seleccionados.
+            </span>
+        `);
+
+        return;
+    }
+
+    $.each(seleccionados, function (_, subrubro) {
+
+        $selectedBox.append(`
+            <span class="subrubro-selected">
+
+                <span>
+                    ${escapeHtml(subrubro.name)}
+                </span>
+
+                <button
+                    type="button"
+                    class="subrubro-remove-btn"
+                    data-id="${subrubro.id}"
+                >
+                    &times;
+                </button>
+
+            </span>
+        `);
+
+        $hiddenInputs.append(`
+            <input
+                type="hidden"
+                name="sucursales[${edId}][subrubros][]"
+                value="${subrubro.id}"
+            >
+        `);
+    });
+}
+
+function updateAvailableRubrosState($sucursal) {
+
+    const seleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    $sucursal.find('.rubro-option').each(function () {
+
+        const id = Number($(this).data('id'));
+
+        $(this).toggleClass(
+            'is-disabled',
+            seleccionados.includes(id)
+        );
+    });
+}
+
+function updateAvailableSubrubrosState($sucursal) {
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    const subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal)
+            .map(sub => Number(sub.id));
+
+    $sucursal.find('.subrubro-option').each(function () {
+
+        const $button = $(this);
+
+        const subId =
+            Number($button.data('id'));
+
+        const rubId =
+            Number($button.data('rub-id'));
+
+        const seleccionado =
+            subrubrosSeleccionados.includes(subId);
+
+        const rubroHabilitado =
+            rubrosSeleccionados.includes(rubId);
+
+        $button.toggleClass(
+            'is-disabled',
+            seleccionado || !rubroHabilitado
+        );
+    });
+}
+
+function renderSucursal($sucursal) {
+
+    sanitizarSubrubros($sucursal);
+
+    renderSelectedRubros($sucursal);
+
+    renderSelectedSubrubros($sucursal);
+
+    updateAvailableRubrosState($sucursal);
+
+    updateAvailableSubrubrosState($sucursal);
+}
+
+function sanitizarSubrubros($sucursal) {
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    subrubrosSeleccionados =
+        subrubrosSeleccionados.filter(function (sub) {
+
+            return rubrosSeleccionados.includes(
+                Number(sub.rub_id)
+            );
+        });
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+}
+
+function eliminarBloqueSucursal(edId) {
+
+    $(`.sucursal[data-ed-id="${edId}"]`).remove();
+}
+
+function normalizarRubros(items) {
+    return $.map(items, function (item) {
+
+        return {
+            id: Number(item.rub_id),
+            name: item.rub_nombre
+        };
+    });
+}
+
+function normalizarSubrubros(items) {
+    return $.map(items, function (item) {
+
+        return {
+            id: Number(item.sub_id),
+            rub_id: Number(item.rub_id),
+            name: item.sub_nombre
+        };
+    });
+}
 </script>
 @endpush

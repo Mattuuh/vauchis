@@ -183,6 +183,7 @@ Route::middleware(['administrador'])
         Route::post('/entidades/guardar-orden', [EntidadController::class, 'guardar_orden'])->name('entidades.guardar_orden');
         Route::get('/entidades/ordenar', [EntidadController::class, 'ordenar'])->name('entidades.ordenar');
         Route::get('/entidades/por_destacado',[EntidadController::class, 'por_destacado'])->name('entidades.por_destacado');
+        Route::get('/entidades/rubros_sucursales/{id}', [EntidadController::class, 'rubros_sucursales'])->name('entidades.rubros_sucursales');
         Route::resource('entidades', EntidadController::class);
         Route::post('/entidades/{id}/delete', [EntidadController::class, 'delete'])->name('entidades.delete');
 

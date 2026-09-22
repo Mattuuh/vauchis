@@ -124,11 +124,11 @@
 
                     $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
 
-                    fpFechaIni[0].set("maxDate", fecha);
+                    fpFechaIni.set("maxDate", fecha);
 
-                    let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
+                    let fechaIniSeleccionada = fpFechaIni.selectedDates[0];
                     if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
-                        fpFechaIni[0].clear();
+                        fpFechaIni.clear();
                         $("#f_fecha_ini").val("");
                     }
                 } else {
@@ -152,17 +152,17 @@
                     $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
 
                     // La fecha fin no puede ser menor a la fecha inicio
-                    fpFechaFin[0].set("minDate", fecha);
+                    fpFechaFin.set("minDate", fecha);
 
                     // Si la fecha fin actual quedó inválida, la limpiamos
-                    let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
+                    let fechaFinSeleccionada = fpFechaFin.selectedDates[0];
                     if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
-                        fpFechaFin[0].clear();
+                        fpFechaFin.clear();
                         $("#f_fecha_fin").val("");
                     }
                 } else {
                     $("#f_fecha_ini").val("");
-                    fpFechaFin[0].set("minDate", null);
+                    fpFechaFin.set("minDate", null);
                 }
             }
         });

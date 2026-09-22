@@ -58,6 +58,7 @@ $(document).ready(function () {
             com_documento: {
                 required: true,
                 number: true,
+                digits: true,
                 minlength: 6
             },
             f_inf_id: {
@@ -76,7 +77,7 @@ $(document).ready(function () {
                 required: true,
             },
             stock: {
-                required: true,
+                required: false,
             },
             f_comision: {
                 required: true,
@@ -137,6 +138,54 @@ $(document).ready(function () {
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/vouchers/vouchers.css') }}">
+
+<style>
+.voucher-rubro {
+    border: 1px solid #dee2e6;
+    border-radius: 7px;
+    padding: 10px 12px;
+}
+
+.voucher-rubro-header {
+    margin-bottom: 8px;
+}
+
+.voucher-rubro-check {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.voucher-subrubros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 14px;
+    padding-left: 25px;
+}
+
+.voucher-subrubro {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity .2s ease;
+}
+
+.voucher-subrubro.disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.variable-condicion {
+    color: #0867ed;
+    font-weight: 700;
+    background: rgba(8, 103, 237, .10);
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+</style>
 @endpush
 
 @section('content')
@@ -172,10 +221,6 @@ $(document).ready(function () {
                 <div class="col-12">
                     <label class="form-label required-label">Nombre público:</label>
                     <input type="text" name="f_nombre" class="form-control field-required" value="{{ old('f_nombre') }}" placeholder="Nombre público">
-
-                    @error('f_nombre')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -188,20 +233,11 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('f_ent_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Sucursal:</label>
-                    {{-- <select name="f_ed_id[]" id="f_ed_id" class="form-select field-required" multiple size="2">
-                        <option value="">Selecciona la sucursal</option>
-                    </select> --}}
                     <div id="f_domicilios"></div>
-                    @error('f_ed_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-12">
@@ -220,9 +256,6 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('f_inf_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -235,9 +268,6 @@ $(document).ready(function () {
                             </option>
                         @endforeach
                     </select>
-                    @error('f_cv_id')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="col-12 col-md-6">
@@ -258,20 +288,12 @@ $(document).ready(function () {
                         <label class="form-label required-label">Fecha de inicio:</label>
                         <input type="text" name="f_fecha_ini_lab" id="f_fecha_ini_lab" class="form-control field-required" value="{{ old('f_fecha_ini_lab') }}" placeholder="dd/mm/yyyy">
                         <input type="hidden" name="f_fecha_ini" id="f_fecha_ini" value="{{ old('f_fecha_ini') }}">
-
-                        @error('f_fecha_ini')
-                            <div class="text-required">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="col-12 col-md-6">
                         <label class="form-label required-label">Fecha de fin:</label>
                         <input type="text" name="f_fecha_fin_lab" id="f_fecha_fin_lab" class="form-control field-required" value="{{ old('f_fecha_fin_lab') }}" placeholder="dd/mm/yyyy">
                         <input type="hidden" name="f_fecha_fin" id="f_fecha_fin" value="{{ old('f_fecha_fin') }}">
-
-                        @error('f_fecha_fin')
-                            <div class="text-required">{{ $message }}</div>
-                        @enderror
                     </div>
                 </div>
 
@@ -287,10 +309,6 @@ $(document).ready(function () {
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Vigencia post compra (d&iacute;as):</label>
                     <input type="text" name="f_vigencia" class="form-control field-required" value="{{ old('f_vigencia') }}" placeholder="0">
-
-                    @error('f_vigencia')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 {{-- <div class="col-12 col-md-6">
@@ -301,10 +319,6 @@ $(document).ready(function () {
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Porcentaje comisi&oacute;n:</label>
                     <input type="text" name="f_comision" class="form-control field-required" value="{{ old('f_comision') }}" placeholder="0">
-
-                    @error('f_comision')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 {{-- <div class="col-12 col-md-6">
@@ -320,21 +334,17 @@ $(document).ready(function () {
 
                 <div class="col-12">
                     <label class="form-label required-label">Descripción:</label>
-                    <textarea id="description" name="description" rows="4" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher.">{{ old('description') }}</textarea>
+                    <textarea id="description" name="description" rows="2" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher.">{{ old('description') }}</textarea>
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <label class="form-label">Términos y condiciones:</label>
                     <textarea id="terms" name="terms" rows="4" class="form-control voucher-textarea" placeholder="Términos y condiciones&#10;Incluye aquí los términos y condiciones para este voucher (opcional).">{{ old('terms') }}</textarea>
-                </div>
+                </div> --}}
 
                 <div class="col-12">
                     <label class="form-label">Observaciones internas</label>
-                    <textarea name="observaciones" class="form-control" rows="3" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
-
-                    @error('observaciones')
-                        <div class="text-required">{{ $message }}</div>
-                    @enderror
+                    <textarea name="observaciones" class="form-control" rows="2" placeholder="Notas internas o descripción opcional...">{{ old('observaciones') }}</textarea>
                 </div>
             </div>
         </div>
@@ -370,20 +380,11 @@ $(document).ready(function () {
 
             <div class="col-12">
                 <label class="form-label">Condiciones:</label>
-                <div id="f_mod_condiciones"></div>
-                <input type="hidden" name="f_condiciones" name="f_condiciones" value="">
-                <textarea id="f_condiciones_adi" name="f_condiciones_adi" class="form-control voucher-textarea" placeholder="Condiciones adiciones"></textarea>
-                <p class="text-muted small mb-3">
-                    Podés escribir varias condiciones y separarlas con un ";;" (doble punto y coma).
-                </p>
-
-                {{-- <textarea id="vou_modalidad_condiciones" name="vou_modalidad_condiciones" class="form-control" rows="8" placeholder="Condición 1;; Condición 2;; Condición 3"></textarea>
-
+                <textarea id="vou_modalidad_condiciones" name="vou_modalidad_condiciones" class="form-control" rows="4" placeholder="Condición 1;; Condición 2;; Condición 3"></textarea>
                 <p class="text-muted small mb-3">
                     Separá cada condición utilizando <strong>;;</strong> (doble punto y coma).
                 </p>
-
-                <div id="preview-condiciones" class="mt-3"></div> --}}
+                <div id="preview-condiciones" class="mt-3"></div>
             </div>
         </div>
 
@@ -457,51 +458,13 @@ $(document).ready(function () {
             <button type="button" id="add-logo" class="btn btn-primary btn-block">Agregar otra imagen</button>
         </div>
 
-        {{-- RUBROS Y SUBRUBROS (tienen que ser variables y uno por sucursal seleccionada) --}}
-        {{-- <div class="vch-card p-3 mb-3 card-custom rubros-card">
+        <div class="vch-card p-3 mb-3">
             <h6 class="fw-bold mb-2">Rubros y subrubros</h6>
-            <p class="text-muted small mb-3">
-                Seleccioná uno o más rubros para esta sucursal y luego elegí los subrubros correspondientes.
-            </p>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Rubros disponibles</label>
-                <div class="rubros-available-box">
-                    @foreach($rubros as $id => $nombre)
-                        <button type="button" class="rubro-option" data-id="{{ $id }}" data-name="{{ $nombre }}" onclick="addRubroFromOption(this)">
-                            {{ $nombre }}
-                        </button>
-                    @endforeach
-                </div>
+            <div class="col-12">
+                <div id="sucursales-rubros-container" class="mt-4"></div>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Rubros seleccionados</label>
-                <div class="rubros-selected-box selected-rubros">
-                    <span class="rubros-empty-text">No hay rubros seleccionados.</span>
-                </div>
-                <div class="rubros-hidden-inputs"></div>
-            </div>
-
-            <div>
-                <label class="form-label fw-semibold">Subrubros disponibles</label>
-                <div class="subrubros-available-box">
-                    @foreach($subrubros as $subrubro)
-                        <button type="button" class="subrubro-option" data-id="{{ $subrubro['sub_id'] }}" data-rub-id="{{ $subrubro['rub_id'] }}" data-name="{{ $subrubro['sub_nombre'] }}" onclick="addSubrubroFromOption(this)">
-                            {{ $subrubro['sub_nombre'] }}
-                        </button>
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="mt-3">
-                <label class="form-label fw-semibold">Subrubros seleccionados</label>
-                <div class="subrubros-selected-box selected-subrubros">
-                    <span class="subrubros-empty-text">No hay subrubros seleccionados.</span>
-                </div>
-                <div class="subrubros-hidden-inputs"></div>
-            </div>
-        </div> --}}
+        </div>
+        <br>
 
         <div class="d-flex justify-content-between form-actions">
             <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
@@ -514,6 +477,12 @@ $(document).ready(function () {
 <script id="modalidades-campos-json" type="application/json">
 {!! $modalidadesCamposJson !!}
 </script>
+<script>
+    const rubros = @json($rubros);
+    const subrubros = @json($subrubros);
+
+    const URL_SUCURSAL_RUBROS = "{{ route('admin.entidades.rubros_sucursales', ':id') }}";
+</script>
 @endsection
 
 @push('scripts')
@@ -525,8 +494,11 @@ $(document).ready(function () {
         const sucursalSelect = $('#f_domicilios');
         let txt_canje='';
 
-        // sucursalSelect.html('<option value="">Selecciona la sucursal</option>');
         sucursalSelect.html('');
+        // La entidad cambió, por lo tanto eliminamos
+        // los bloques de las sucursales anteriores.
+        $('#sucursales-rubros-container').empty();
+
         let str = '';
 
         $.each(sucursales, function (_, sucursal) {
@@ -534,10 +506,9 @@ $(document).ready(function () {
                 txt_canje = sucursal.ed_canje==0 ? ' - NO RECIBE CANJE' : ' - RECIBE CANJE';
                 direccion = sucursal.ed_direccion+txt_canje;
 
-                str += '<input type="checkbox" name="f_ed_id[]" id="f_ed_id-'+sucursal.ed_id+'" value="'+sucursal.ed_id+'"> <label for="f_ed_id-'+sucursal.ed_id+'">'+direccion+'</label><br>';
+                str += '<input type="checkbox" name="f_ed_id[]" id="f_ed_id-'+sucursal.ed_id+'" value="'+sucursal.ed_id+'" class="f_ed_id"> <label for="f_ed_id-'+sucursal.ed_id+'">'+direccion+'</label><br>';
             }
         });
-        // console.log(str)
         sucursalSelect.html(str);
 
         $('#f_telefonos').html('');
@@ -605,70 +576,6 @@ $(document).ready(function () {
         const checked = oldValues[campo.mca_codigo] == 1 || oldValues[campo.mca_codigo] === '1';
 
         let html = '';
-
-        // if (campo.mca_tipo === 'textarea') {
-        //     html = `
-        //         <textarea
-        //             name="modalidad_valores[${campo.mca_codigo}]"
-        //             class="form-control"
-        //             rows="3"
-        //             placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-        //             ${campo.mca_requerido ? 'required' : ''}
-        //         >${escapeHtml(value)}</textarea>
-        //     `;
-        // } else if (campo.mca_tipo === 'select') {
-        //     const opciones = (campo.mca_opciones || '')
-        //         .split(',')
-        //         .map(item => item.trim())
-        //         .filter(item => item !== '');
-
-        //     html = `
-        //         <select
-        //             name="modalidad_valores[${campo.mca_codigo}]"
-        //             class="form-select"
-        //             ${campo.mca_requerido ? 'required' : ''}
-        //         >
-        //             <option value="">Seleccionar...</option>
-        //             ${opciones.map(opcion => `
-        //                 <option value="${escapeHtml(opcion)}" ${value == opcion ? 'selected' : ''}>
-        //                     ${escapeHtml(opcion)}
-        //                 </option>
-        //             `).join('')}
-        //         </select>
-        //     `;
-        // } else if (campo.mca_tipo === 'boolean') {
-        //     html = `
-        //         <div class="form-check form-switch mt-2">
-        //             <input
-        //                 class="form-check-input"
-        //                 type="checkbox"
-        //                 name="modalidad_valores[${campo.mca_codigo}]"
-        //                 value="1"
-        //                 ${checked ? 'checked' : ''}
-        //             >
-        //             <label class="form-check-label">Sí</label>
-        //         </div>
-        //     `;
-        // } else {
-        //     let inputType = 'text';
-
-        //     if (campo.mca_tipo === 'number') inputType = 'number';
-        //     if (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') inputType = 'number';
-
-        //     const step = (campo.mca_tipo === 'decimal' || campo.mca_tipo === 'money') ? 'step="0.01"' : '';
-
-        //     html = `
-        //         <input
-        //             type="${inputType}"
-        //             name="modalidad_valores[${campo.mca_codigo}]"
-        //             class="form-control"
-        //             value="${escapeHtml(value)}"
-        //             placeholder="${escapeHtml(campo.mca_placeholder || '')}"
-        //             ${step}
-        //             ${campo.mca_requerido ? 'required' : ''}
-        //         >
-        //     `;
-        // }
 
         if (campo.mca_tipo === 'number') {
             let inputType = 'number';
@@ -835,11 +742,11 @@ $(document).ready(function () {
 
                 $("#f_fecha_fin").val(`${yyyy}-${mm}-${dd}`);
 
-                fpFechaIni[0].set("maxDate", fecha);
+                fpFechaIni.set("maxDate", fecha);
 
-                let fechaIniSeleccionada = fpFechaIni[0].selectedDates[0];
+                let fechaIniSeleccionada = fpFechaIni.selectedDates[0];
                 if (fechaIniSeleccionada && fechaIniSeleccionada > fecha) {
-                    fpFechaIni[0].clear();
+                    fpFechaIni.clear();
                     $("#f_fecha_ini").val("");
                 }
             } else {
@@ -863,17 +770,17 @@ $(document).ready(function () {
                 $("#f_fecha_ini").val(`${yyyy}-${mm}-${dd}`);
 
                 // La fecha fin no puede ser menor a la fecha inicio
-                fpFechaFin[0].set("minDate", fecha);
+                fpFechaFin.set("minDate", fecha);
 
                 // Si la fecha fin actual quedó inválida, la limpiamos
-                let fechaFinSeleccionada = fpFechaFin[0].selectedDates[0];
+                let fechaFinSeleccionada = fpFechaFin.selectedDates[0];
                 if (fechaFinSeleccionada && fechaFinSeleccionada < fecha) {
-                    fpFechaFin[0].clear();
+                    fpFechaFin.clear();
                     $("#f_fecha_fin").val("");
                 }
             } else {
                 $("#f_fecha_ini").val("");
-                fpFechaFin[0].set("minDate", null);
+                fpFechaFin.set("minDate", null);
             }
         }
     });
@@ -909,263 +816,637 @@ $(document).ready(function () {
                 .map(item => $.trim(item))
                 .filter(item => item !== '');
 
-            let html = '<ul>';
+            let html = '';
 
             $.each(items, function(index, item) {
-                item = item.replace(/<<FECHA_INICIO>>/g, '<i>FECHA DE INICIO</i>');
-                item = item.replace(/<<FECHA_FIN>>/g, '<i>FECHA DE VENCIMIENTO</i>');
-                item = item.replace(/<<SUCURSALES>>/g, '<i>SUCURSALES</i>');
+                item = item.replace(/<<FECHA_INICIO>>/g, '<<FECHA_ACTUAL>>');
+                item = item.replace(/<<FECHA_FIN>>/g, '<<FECHA_VENCIMIENTO>>');
+                item = item.replace(/<<SUCURSALES>>/g, '<<SUCURSALES>>');
 
-                html += '<li>' + item + '</li>';
+                html += item + ';;';
             });
 
-            html += '</ul>';
+            $('#vou_modalidad_condiciones').val(html);
 
-            $('#f_mod_condiciones').html(html);
+            actualizar_preview_condiciones()
 
         } else {
-            $('#f_mod_condiciones').html('');
+            $('#vou_modalidad_condiciones').html('');
         }
 
     });
 
-    // $('#vou_modalidad_condiciones').on('input', function () {
-    //     let texto = $(this).val();
+    function actualizar_preview_condiciones() {
+        let texto = $('#vou_modalidad_condiciones').val();
 
-    //     // Escapar HTML introducido por el usuario
-    //     texto = $('<div>').text(texto).html();
+        // Escapar HTML
+        texto = $('<div>').text(texto).html();
 
-    //     // Resaltar variables
-    //     texto = texto.replace(
-    //         /(&lt;&lt;FECHA_INICIO&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        // Resaltar variables
+        texto = texto.replace(/&lt;&lt;FECHA_ACTUAL&gt;&gt;/g, '<span class="variable-condicion">FECHA ACTUAL</span>');
+        texto = texto.replace(/&lt;&lt;FECHA_VENCIMIENTO&gt;&gt;/g, '<span class="variable-condicion">FECHA VENCIMIENTO</span>');
+        texto = texto.replace(/&lt;&lt;SUCURSALES&gt;&gt;/g, '<span class="variable-condicion">SUCURSALES</span>');
 
-    //     texto = texto.replace(
-    //         /(&lt;&lt;FECHA_FIN&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        // Separar condiciones
+        let condiciones = texto.split(';;');
 
-    //     texto = texto.replace(
-    //         /(&lt;&lt;SUCURSALES&gt;&gt;)/g,
-    //         '<span class="variable-condicion">$1</span>'
-    //     );
+        let html = '<ul>';
+        condiciones.forEach(function (condicion) {
+            condicion = condicion.trim();
 
-    //     // Separar condiciones
-    //     let condiciones = texto.split(';;');
+            if (condicion !== '') {
+                html += '<li>' + condicion + '</li>';
+            }
+        });
+        html += '</ul>';
 
-    //     let html = '<ul>';
+        $('#preview-condiciones').html(html);
+    }
 
-    //     condiciones.forEach(function (condicion) {
+    $('#vou_modalidad_condiciones').on('input', function () {
+        actualizar_preview_condiciones();
+    });
 
-    //         condicion = condicion.trim();
-
-    //         if (condicion !== '') {
-    //             html += '<li>' + condicion + '</li>';
-    //         }
-
-    //     });
-
-    //     html += '</ul>';
-
-    //     $('#preview-condiciones').html(html);
-
-    // });
+    if ($('#vou_modalidad_condiciones').val()!='') {
+        actualizar_preview_condiciones();
+    }
 
 });
 </script>
 
-{{-- <script>
-function getSucursalIndex(sucursal) {
-    return sucursal.getAttribute('data-index');
-}
+<script>
+$(document).on('change', '.f_ed_id', function () {
+    const edId = Number($(this).val());
 
-function updateAvailableRubrosState(sucursal) {
-    const selectedRubros = getSelectedRubros(sucursal);
-    const buttons = sucursal.querySelectorAll('.rubro-option');
+    if ($(this).is(':checked')) {
+        cargarRubrosSucursal(edId);
+    } else {
+        eliminarBloqueSucursal(edId);
+    }
 
-    buttons.forEach(button => {
-        const id = Number(button.dataset.id);
-        const isSelected = selectedRubros.some(rubro => rubro.id === id);
-        button.classList.toggle('is-disabled', isSelected);
+});
+
+function cargarRubrosSucursal(edId) {
+
+    // Si ya existe, no volver a cargar
+    if ($(`.sucursal[data-ed-id="${edId}"]`).length) {
+        return;
+    }
+
+    let url = `{{ route('admin.entidades.rubros_sucursales', ':edId') }}`;
+    url = url.replace(':edId', edId);
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function () {},
+        success: function (response) {
+            agregarBloqueSucursal(edId, response.rubros, response.subrubros);
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $(`#f_ed_id-${edId}`).prop('checked', false);
+        }
     });
 }
 
-function updateAvailableSubrubrosState(sucursal) {
-    const selectedRubros = getSelectedRubros(sucursal).map(item => item.id);
-    const selectedSubrubros = getSelectedSubrubros(sucursal);
-    const buttons = sucursal.querySelectorAll('.subrubro-option');
+function agregarBloqueSucursal(edId, rubrosSeleccionados = [], subrubrosSeleccionados = []) {
 
-    buttons.forEach(button => {
-        const subId = Number(button.dataset.id);
-        const rubId = Number(button.dataset.rubId);
-        const isSelected = selectedSubrubros.some(sub => sub.id === subId);
-        const rubroHabilitado = selectedRubros.includes(rubId);
-
-        button.classList.toggle('is-disabled', isSelected || !rubroHabilitado);
-    });
-}
-
-function getSelectedRubros(sucursal) {
-    return JSON.parse(sucursal.dataset.selectedRubros || '[]');
-}
-
-function setSelectedRubros(sucursal, data) {
-    sucursal.dataset.selectedRubros = JSON.stringify(data);
-}
-
-function getSelectedSubrubros(sucursal) {
-    return JSON.parse(sucursal.dataset.selectedSubrubros || '[]');
-}
-
-function setSelectedSubrubros(sucursal, data) {
-    sucursal.dataset.selectedSubrubros = JSON.stringify(data);
-}
-
-function renderSelectedRubros(sucursal) {
-    const index = getSucursalIndex(sucursal);
-    const selectedBox = sucursal.querySelector('.selected-rubros');
-    const hiddenInputs = sucursal.querySelector('.rubros-hidden-inputs');
-    const selectedRubros = getSelectedRubros(sucursal);
-
-    selectedBox.innerHTML = '';
-    hiddenInputs.innerHTML = '';
-
-    if (selectedRubros.length === 0) {
-        selectedBox.innerHTML = '<span class="rubros-empty-text">No hay rubros seleccionados.</span>';
-    } else {
-        selectedRubros.forEach(rubro => {
-            const chip = document.createElement('span');
-            chip.className = 'rubro-selected';
-            chip.innerHTML = `
-                <span>${rubro.name}</span>
-                <button type="button" class="rubro-remove-btn" onclick="removeRubro(this, ${rubro.id})">&times;</button>
-            `;
-            selectedBox.appendChild(chip);
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = `sucursales[${index}][rubros][]`;
-            input.value = rubro.id;
-            hiddenInputs.appendChild(input);
-        });
+    if ($(`.sucursal[data-ed-id="${edId}"]`).length) {
+        return;
     }
 
-    sanitizeSubrubrosByRubros(sucursal);
-    updateAvailableRubrosState(sucursal);
-    updateAvailableSubrubrosState(sucursal);
-}
-
-function renderSelectedSubrubros(sucursal) {
-    const index = getSucursalIndex(sucursal);
-    const selectedBox = sucursal.querySelector('.selected-subrubros');
-    const hiddenInputs = sucursal.querySelector('.subrubros-hidden-inputs');
-    const selectedSubrubros = getSelectedSubrubros(sucursal);
-
-    selectedBox.innerHTML = '';
-    hiddenInputs.innerHTML = '';
-
-    if (selectedSubrubros.length === 0) {
-        selectedBox.innerHTML = '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>';
-    } else {
-        selectedSubrubros.forEach(subrubro => {
-            const chip = document.createElement('span');
-            chip.className = 'subrubro-selected';
-            chip.innerHTML = `
-                <span>${subrubro.name}</span>
-                <button type="button" class="subrubro-remove-btn" onclick="removeSubrubro(this, ${subrubro.id})">&times;</button>
-            `;
-            selectedBox.appendChild(chip);
-
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = `sucursales[${index}][subrubros][]`;
-            input.value = subrubro.id;
-            hiddenInputs.appendChild(input);
-        });
-    }
-
-    updateAvailableSubrubrosState(sucursal);
-}
-
-function sanitizeSubrubrosByRubros(sucursal) {
-    const selectedRubros = getSelectedRubros(sucursal).map(item => item.id);
-    let selectedSubrubros = getSelectedSubrubros(sucursal);
-
-    selectedSubrubros = selectedSubrubros.filter(subrubro =>
-        selectedRubros.includes(Number(subrubro.rub_id))
+    const sucursal = sucursales.find(
+        item => Number(item.ed_id) === Number(edId)
     );
 
-    setSelectedSubrubros(sucursal, selectedSubrubros);
-    renderSelectedSubrubros(sucursal);
-}
-
-function addRubroFromOption(button) {
-    const sucursal = button.closest('.sucursal');
-    const selectedRubros = getSelectedRubros(sucursal);
-    const id = Number(button.dataset.id);
-    const name = button.dataset.name;
-
-    if (selectedRubros.some(rubro => rubro.id === id)) {
+    if (!sucursal) {
         return;
     }
 
-    selectedRubros.push({ id, name });
-    setSelectedRubros(sucursal, selectedRubros);
-    renderSelectedRubros(sucursal);
+    rubrosSeleccionados = normalizarRubros(rubrosSeleccionados);
+
+    subrubrosSeleccionados = normalizarSubrubros(subrubrosSeleccionados);
+
+    const html = `
+    <div class="sucursal mb-4" data-ed-id="${sucursal.ed_id}" data-selected-rubros='${jsonToAttribute(rubrosSeleccionados)}' data-selected-subrubros='${jsonToAttribute(subrubrosSeleccionados)}'>
+
+        <input type="hidden" name="sucursales[${sucursal.ed_id}][ed_id]" value="${sucursal.ed_id}">
+        <div class="card card-custom p-3 mb-3 rubros-card">
+
+            <h6 class="fw-bold mb-2">${escapeHtml(sucursal.ed_direccion)}</h6>
+            <p class="text-muted small mb-3">
+                Seleccioná los rubros y subrubros asociados a esta sucursal.
+            </p>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Rubros disponibles</label>
+                <div class="rubros-available-box">
+                    ${generarRubrosDisponibles()}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Rubros seleccionados</label>
+                <div class="rubros-selected-box selected-rubros"></div>
+                <div class="rubros-hidden-inputs"></div>
+            </div>
+            <div>
+                <label class="form-label fw-semibold">Subrubros disponibles</label>
+                <div class="subrubros-available-box">
+                    ${generarSubrubrosDisponibles()}
+                </div>
+            </div>
+            <div class="mt-3">
+                <label class="form-label fw-semibold">Subrubros seleccionados</label>
+                <div class="subrubros-selected-box selected-subrubros"></div>
+                <div class="subrubros-hidden-inputs"></div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    $('#sucursales-rubros-container').append(html);
+
+    const $sucursal =$(`.sucursal[data-ed-id="${edId}"]`);
+
+    renderSucursal($sucursal);
 }
 
-function removeRubro(button, rubroId) {
-    const sucursal = button.closest('.sucursal');
-    let selectedRubros = getSelectedRubros(sucursal);
+function generarRubrosDisponibles() {
 
-    selectedRubros = selectedRubros.filter(rubro => rubro.id !== rubroId);
-    setSelectedRubros(sucursal, selectedRubros);
-    renderSelectedRubros(sucursal);
+    let html = '';
+
+    $.each(rubros, function (id, nombre) {
+
+        html += `
+            <button
+                type="button"
+                class="rubro-option"
+                data-id="${id}"
+                data-name="${escapeHtml(nombre)}"
+            >
+                ${escapeHtml(nombre)}
+            </button>
+        `;
+    });
+
+    return html;
 }
 
-function addSubrubroFromOption(button) {
-    const sucursal = button.closest('.sucursal');
-    const selectedSubrubros = getSelectedSubrubros(sucursal);
-    const selectedRubros = getSelectedRubros(sucursal).map(item => item.id);
+function generarSubrubrosDisponibles() {
 
-    const id = Number(button.dataset.id);
-    const name = button.dataset.name;
-    const rubId = Number(button.dataset.rubId);
+    let html = '';
 
-    if (!selectedRubros.includes(rubId)) {
+    $.each(subrubros, function (_, subrubro) {
+
+        html += `
+            <button
+                type="button"
+                class="subrubro-option"
+                data-id="${subrubro.sub_id}"
+                data-rub-id="${subrubro.rub_id}"
+                data-name="${escapeHtml(subrubro.sub_nombre)}"
+            >
+                ${escapeHtml(subrubro.sub_nombre)}
+            </button>
+        `;
+    });
+
+    return html;
+}
+
+function getSelectedRubros($sucursal) {
+
+    let data = $sucursal.attr('data-selected-rubros');
+
+    if (!data) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
+}
+
+function setSelectedRubros($sucursal, data) {
+
+    $sucursal.attr(
+        'data-selected-rubros',
+        JSON.stringify(data)
+    );
+}
+
+function getSelectedSubrubros($sucursal) {
+
+    let data = $sucursal.attr('data-selected-subrubros');
+
+    if (!data) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
+}
+
+function setSelectedSubrubros($sucursal, data) {
+
+    $sucursal.attr(
+        'data-selected-subrubros',
+        JSON.stringify(data)
+    );
+}
+
+function jsonToAttribute(data) {
+
+    return escapeHtml(JSON.stringify(data));
+}
+
+$(document).on('click', '.rubro-option', function () {
+
+    const $button = $(this);
+
+    if ($button.hasClass('is-disabled')) {
         return;
     }
 
-    if (selectedSubrubros.some(subrubro => subrubro.id === id)) {
+    const $sucursal = $button.closest('.sucursal');
+
+    const id = Number($button.data('id'));
+    const name = $button.data('name');
+
+    let seleccionados = getSelectedRubros($sucursal);
+
+    if (
+        seleccionados.some(
+            rubro => Number(rubro.id) === id
+        )
+    ) {
         return;
     }
 
-    selectedSubrubros.push({ id, name, rub_id: rubId });
-    setSelectedSubrubros(sucursal, selectedSubrubros);
-    renderSelectedSubrubros(sucursal);
-}
+    seleccionados.push({
+        id: id,
+        name: name
+    });
 
-function removeSubrubro(button, subrubroId) {
-    const sucursal = button.closest('.sucursal');
-    let selectedSubrubros = getSelectedSubrubros(sucursal);
+    setSelectedRubros(
+        $sucursal,
+        seleccionados
+    );
 
-    selectedSubrubros = selectedSubrubros.filter(subrubro => subrubro.id !== subrubroId);
-    setSelectedSubrubros(sucursal, selectedSubrubros);
-    renderSelectedSubrubros(sucursal);
-}
+    renderSucursal($sucursal);
+});
 
-function initSucursalState(sucursal) {
-    if (!sucursal.dataset.selectedRubros) {
-        setSelectedRubros(sucursal, []);
+$(document).on('click', '.rubro-remove-btn', function () {
+
+    const $sucursal = $(this).closest('.sucursal');
+
+    const rubroId = Number(
+        $(this).data('id')
+    );
+
+    let rubrosSeleccionados =
+        getSelectedRubros($sucursal);
+
+    rubrosSeleccionados =
+        rubrosSeleccionados.filter(
+            rubro => Number(rubro.id) !== rubroId
+        );
+
+    setSelectedRubros(
+        $sucursal,
+        rubrosSeleccionados
+    );
+
+    /*
+     * Si eliminamos un rubro también eliminamos
+     * automáticamente sus subrubros.
+     */
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    subrubrosSeleccionados =
+        subrubrosSeleccionados.filter(
+            sub => Number(sub.rub_id) !== rubroId
+        );
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+$(document).on('click', '.subrubro-option', function () {
+
+    const $button = $(this);
+
+    if ($button.hasClass('is-disabled')) {
+        return;
     }
 
-    if (!sucursal.dataset.selectedSubrubros) {
-        setSelectedSubrubros(sucursal, []);
+    const $sucursal = $button.closest('.sucursal');
+
+    const id = Number($button.data('id'));
+    const rubId = Number($button.data('rub-id'));
+    const name = $button.data('name');
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal);
+
+    /*
+     * El subrubro solamente se puede seleccionar
+     * si su rubro está seleccionado.
+     */
+    const existeRubro =
+        rubrosSeleccionados.some(
+            rubro => Number(rubro.id) === rubId
+        );
+
+    if (!existeRubro) {
+        return;
     }
 
-    renderSelectedRubros(sucursal);
-    renderSelectedSubrubros(sucursal);
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    if (
+        subrubrosSeleccionados.some(
+            sub => Number(sub.id) === id
+        )
+    ) {
+        return;
+    }
+
+    subrubrosSeleccionados.push({
+        id: id,
+        name: name,
+        rub_id: rubId
+    });
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+$(document).on('click', '.subrubro-remove-btn', function () {
+
+    const $sucursal = $(this).closest('.sucursal');
+
+    const subrubroId = Number(
+        $(this).data('id')
+    );
+
+    let seleccionados =
+        getSelectedSubrubros($sucursal);
+
+    seleccionados =
+        seleccionados.filter(
+            sub => Number(sub.id) !== subrubroId
+        );
+
+    setSelectedSubrubros(
+        $sucursal,
+        seleccionados
+    );
+
+    renderSucursal($sucursal);
+});
+
+function renderSelectedRubros($sucursal) {
+
+    const edId = $sucursal.data('ed-id');
+
+    const $selectedBox =
+        $sucursal.find('.selected-rubros');
+
+    const $hiddenInputs =
+        $sucursal.find('.rubros-hidden-inputs');
+
+    const seleccionados =
+        getSelectedRubros($sucursal);
+
+    $selectedBox.empty();
+    $hiddenInputs.empty();
+
+    if (!seleccionados.length) {
+
+        $selectedBox.html(`
+            <span class="rubros-empty-text">
+                No hay rubros seleccionados.
+            </span>
+        `);
+
+        return;
+    }
+
+    $.each(seleccionados, function (_, rubro) {
+
+        $selectedBox.append(`
+            <span class="rubro-selected">
+
+                <span>
+                    ${escapeHtml(rubro.name)}
+                </span>
+
+                <button
+                    type="button"
+                    class="rubro-remove-btn"
+                    data-id="${rubro.id}"
+                >
+                    &times;
+                </button>
+
+            </span>
+        `);
+
+        $hiddenInputs.append(`
+            <input
+                type="hidden"
+                name="sucursales[${edId}][rubros][]"
+                value="${rubro.id}"
+            >
+        `);
+    });
 }
-</script> --}}
+
+function renderSelectedSubrubros($sucursal) {
+
+    const edId = $sucursal.data('ed-id');
+
+    const $selectedBox =
+        $sucursal.find('.selected-subrubros');
+
+    const $hiddenInputs =
+        $sucursal.find('.subrubros-hidden-inputs');
+
+    const seleccionados =
+        getSelectedSubrubros($sucursal);
+
+    $selectedBox.empty();
+    $hiddenInputs.empty();
+
+    if (!seleccionados.length) {
+
+        $selectedBox.html(`
+            <span class="subrubros-empty-text">
+                No hay subrubros seleccionados.
+            </span>
+        `);
+
+        return;
+    }
+
+    $.each(seleccionados, function (_, subrubro) {
+
+        $selectedBox.append(`
+            <span class="subrubro-selected">
+
+                <span>
+                    ${escapeHtml(subrubro.name)}
+                </span>
+
+                <button
+                    type="button"
+                    class="subrubro-remove-btn"
+                    data-id="${subrubro.id}"
+                >
+                    &times;
+                </button>
+
+            </span>
+        `);
+
+        $hiddenInputs.append(`
+            <input
+                type="hidden"
+                name="sucursales[${edId}][subrubros][]"
+                value="${subrubro.id}"
+            >
+        `);
+    });
+}
+
+function updateAvailableRubrosState($sucursal) {
+
+    const seleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    $sucursal.find('.rubro-option').each(function () {
+
+        const id = Number($(this).data('id'));
+
+        $(this).toggleClass(
+            'is-disabled',
+            seleccionados.includes(id)
+        );
+    });
+}
+
+function updateAvailableSubrubrosState($sucursal) {
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    const subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal)
+            .map(sub => Number(sub.id));
+
+    $sucursal.find('.subrubro-option').each(function () {
+
+        const $button = $(this);
+
+        const subId =
+            Number($button.data('id'));
+
+        const rubId =
+            Number($button.data('rub-id'));
+
+        const seleccionado =
+            subrubrosSeleccionados.includes(subId);
+
+        const rubroHabilitado =
+            rubrosSeleccionados.includes(rubId);
+
+        $button.toggleClass(
+            'is-disabled',
+            seleccionado || !rubroHabilitado
+        );
+    });
+}
+
+function renderSucursal($sucursal) {
+
+    sanitizarSubrubros($sucursal);
+
+    renderSelectedRubros($sucursal);
+
+    renderSelectedSubrubros($sucursal);
+
+    updateAvailableRubrosState($sucursal);
+
+    updateAvailableSubrubrosState($sucursal);
+}
+
+function sanitizarSubrubros($sucursal) {
+
+    const rubrosSeleccionados =
+        getSelectedRubros($sucursal)
+            .map(rubro => Number(rubro.id));
+
+    let subrubrosSeleccionados =
+        getSelectedSubrubros($sucursal);
+
+    subrubrosSeleccionados =
+        subrubrosSeleccionados.filter(function (sub) {
+
+            return rubrosSeleccionados.includes(
+                Number(sub.rub_id)
+            );
+        });
+
+    setSelectedSubrubros(
+        $sucursal,
+        subrubrosSeleccionados
+    );
+}
+
+function eliminarBloqueSucursal(edId) {
+
+    $(`.sucursal[data-ed-id="${edId}"]`).remove();
+}
+
+function normalizarRubros(items) {
+    return $.map(items, function (item) {
+
+        return {
+            id: Number(item.rub_id),
+            name: item.rub_nombre
+        };
+    });
+}
+
+function normalizarSubrubros(items) {
+    return $.map(items, function (item) {
+
+        return {
+            id: Number(item.sub_id),
+            rub_id: Number(item.rub_id),
+            name: item.sub_nombre
+        };
+    });
+}
+</script>
+
 @endpush

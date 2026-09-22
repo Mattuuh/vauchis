@@ -58,6 +58,7 @@ $(document).ready(function () {
             com_documento: {
                 required: true,
                 number: true,
+                digits: true,
                 minlength: 6
             },
             com_nombre_fantasia: {
@@ -75,6 +76,7 @@ $(document).ready(function () {
             com_telefono: {
                 required: true,
                 number: true,
+                digits: true,
                 minlength: 8,
                 maxlength: 10
             },

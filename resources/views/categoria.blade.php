@@ -289,6 +289,7 @@
             margin: 0;
             font-size: 11px;
             color: #4c5665;
+            white-space: pre-line;
         }
 
         .vo-price {
