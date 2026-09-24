@@ -521,7 +521,7 @@
         }
     }
 
-    @media (max-width: 420px) {
+    /* @media (max-width: 420px) {
         .vs-gift-shell {
             padding-right: 20px;
             padding-left: 20px;
@@ -545,7 +545,7 @@
             left: 20px;
             right: 20px;
         }
-    }
+    } */
 
 @media (max-width: 768px) {
     .v-mobile-navbar {

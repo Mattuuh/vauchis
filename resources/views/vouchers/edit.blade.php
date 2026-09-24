@@ -712,19 +712,21 @@ $(document).ready(function () {
                 html = `
                 <div class="col-12 col-md-6">
                     <label class="form-label">Monto minimo</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_minimo)}" disabled>
+                    <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_monto_minimo]" value="${formatear_numero_input(value.vmv_monto_minimo)}">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control mod_montos_var" value="${formatear_numero_input(value.vmv_monto_minimo)}" disabled>
                     <div class="form-text">Monto minimo a introducir por el cliente</div>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="form-label">Monto maximo</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_maximo)}" disabled>
+                    <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_monto_maximo]" value="${formatear_numero_input(value.vmv_monto_maximo)}">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control mod_montos_var" value="${formatear_numero_input(value.vmv_monto_maximo)}" disabled>
                     <div class="form-text">Monto maximo a introducir por el cliente</div>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="form-label">Stock</label>
+                    <label class="form-label">Stock. <span class="fw-bold">Stock actual: ${value.vmv_stock}</span></label>
                     <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
-                    <div class="form-text">Stock de vouchers</div>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="0" disabled>
+                    <div class="form-text">Stock de vouchers.</div>
                 </div>
                 `;
             } else if (campo.mca_tipo_numero=='FIJ') {
@@ -734,14 +736,15 @@ $(document).ready(function () {
                 html = `
                 <div class="col-12 col-md-6">
                     <label class="form-label">Monto total</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
+                    <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_monto_total]" value="${formatear_numero_input(value.vmv_monto_fijo)}">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos_fij" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
                     <div class="form-text">Monto total a pagar por el cliente</div>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="form-label">Stock</label>
+                    <label class="form-label">Stock. <span class="fw-bold">Stock actual: ${value.vmv_stock}</span></label>
                     <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
-                    <div class="form-text">Stock de vouchers</div>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="0" disabled>
+                    <div class="form-text">Stock de vouchers.</div>
                 </div>
                 `;
             }
@@ -754,14 +757,15 @@ $(document).ready(function () {
             html = `
             <div class="col-12 col-md-6">
                 <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
-                <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" placeholder="1000" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
+                <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_monto_total]" value="${formatear_numero_input(value.vmv_monto_fijo)}">
+                <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos_fij" placeholder="1000" value="${formatear_numero_input(value.vmv_monto_fijo)}" disabled>
                 <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
             </div>
             <div class="col-12 col-md-6">
-                <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
+                <label class="form-label required-label">Stock para boton #${campo.mca_orden}. <span class="fw-bold">Stock actual: ${value.vmv_stock}</span></label>
                 <input type="hidden" name="modalidad_valores[${campo.mca_id}][old_stock]" value="${value.vmv_stock}">
-                <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="${value.vmv_stock}" disabled>
-                <div class="form-text">Stock de vouchers para este boton</div>
+                <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="10" value="0" disabled>
+                <div class="form-text">Stock de vouchers para este boton.</div>
             </div>
             `;
         } else {
@@ -1083,11 +1087,12 @@ $(document).ready(function () {
 
     $('#btn_modificar_valores').on('click', function () {
         $('#mod_bandera').val(1);
-        $('.mod_montos').prop('disabled', false);
+        $('.mod_montos_var').prop('disabled', false);
+        $('.mod_montos_fij').prop('disabled', false);
         $('.mod_stock').prop('disabled', false);
         $('#btn_cancelar_valores').prop('hidden', false);
 
-        $('.mod_montos').each(function () {
+        $('.mod_montos_var, .mod_montos_fij').each(function () {
             $(this).rules('add', {
                 required: true,
                 digits: true,
@@ -1115,11 +1120,12 @@ $(document).ready(function () {
 
     $('#btn_cancelar_valores').on('click', function () {
         $('#mod_bandera').val(0);
-        $('.mod_montos').prop('disabled', true);
+        $('.mod_montos_var').prop('disabled', true);
+        $('.mod_montos_fij').prop('disabled', true);
         $('.mod_stock').prop('disabled', true);
         $('#btn_cancelar_valores').prop('hidden', true);
 
-        $('.mod_montos').each(function () {
+        $('.mod_montos_var, .mod_montos_fij').each(function () {
             $(this).rules('remove');
         });
 
@@ -1243,16 +1249,10 @@ function generarRubrosDisponibles() {
     let html = '';
 
     $.each(rubros, function (id, nombre) {
-
         html += `
-            <button
-                type="button"
-                class="rubro-option"
-                data-id="${id}"
-                data-name="${escapeHtml(nombre)}"
-            >
-                ${escapeHtml(nombre)}
-            </button>
+        <button type="button" class="rubro-option" data-id="${id}" data-name="${escapeHtml(nombre)}">
+            ${escapeHtml(nombre)}
+        </button>
         `;
     });
 
@@ -1264,17 +1264,10 @@ function generarSubrubrosDisponibles() {
     let html = '';
 
     $.each(subrubros, function (_, subrubro) {
-
         html += `
-            <button
-                type="button"
-                class="subrubro-option"
-                data-id="${subrubro.sub_id}"
-                data-rub-id="${subrubro.rub_id}"
-                data-name="${escapeHtml(subrubro.sub_nombre)}"
-            >
-                ${escapeHtml(subrubro.sub_nombre)}
-            </button>
+        <button type="button" class="subrubro-option" data-id="${subrubro.sub_id}" data-rub-id="${subrubro.rub_id}" data-name="${escapeHtml(subrubro.sub_nombre)}">
+            ${escapeHtml(subrubro.sub_nombre)}
+        </button>
         `;
     });
 
@@ -1320,7 +1313,6 @@ function getSelectedSubrubros($sucursal) {
 }
 
 function setSelectedSubrubros($sucursal, data) {
-
     $sucursal.attr(
         'data-selected-subrubros',
         JSON.stringify(data)
@@ -1328,7 +1320,6 @@ function setSelectedSubrubros($sucursal, data) {
 }
 
 function jsonToAttribute(data) {
-
     return escapeHtml(JSON.stringify(data));
 }
 
@@ -1360,10 +1351,7 @@ $(document).on('click', '.rubro-option', function () {
         name: name
     });
 
-    setSelectedRubros(
-        $sucursal,
-        seleccionados
-    );
+    setSelectedRubros($sucursal, seleccionados);
 
     renderSucursal($sucursal);
 });
@@ -1371,40 +1359,29 @@ $(document).on('click', '.rubro-option', function () {
 $(document).on('click', '.rubro-remove-btn', function () {
 
     const $sucursal = $(this).closest('.sucursal');
+    const rubroId = Number($(this).data('id'));
 
-    const rubroId = Number(
-        $(this).data('id')
-    );
-
-    let rubrosSeleccionados =
-        getSelectedRubros($sucursal);
+    let rubrosSeleccionados = getSelectedRubros($sucursal);
 
     rubrosSeleccionados =
         rubrosSeleccionados.filter(
             rubro => Number(rubro.id) !== rubroId
         );
 
-    setSelectedRubros(
-        $sucursal,
-        rubrosSeleccionados
-    );
+    setSelectedRubros($sucursal, rubrosSeleccionados);
 
     /*
      * Si eliminamos un rubro también eliminamos
      * automáticamente sus subrubros.
      */
-    let subrubrosSeleccionados =
-        getSelectedSubrubros($sucursal);
+    let subrubrosSeleccionados = getSelectedSubrubros($sucursal);
 
     subrubrosSeleccionados =
         subrubrosSeleccionados.filter(
             sub => Number(sub.rub_id) !== rubroId
         );
 
-    setSelectedSubrubros(
-        $sucursal,
-        subrubrosSeleccionados
-    );
+    setSelectedSubrubros($sucursal, subrubrosSeleccionados);
 
     renderSucursal($sucursal);
 });
@@ -1423,8 +1400,7 @@ $(document).on('click', '.subrubro-option', function () {
     const rubId = Number($button.data('rub-id'));
     const name = $button.data('name');
 
-    const rubrosSeleccionados =
-        getSelectedRubros($sucursal);
+    const rubrosSeleccionados = getSelectedRubros($sucursal);
 
     /*
      * El subrubro solamente se puede seleccionar
@@ -1439,8 +1415,7 @@ $(document).on('click', '.subrubro-option', function () {
         return;
     }
 
-    let subrubrosSeleccionados =
-        getSelectedSubrubros($sucursal);
+    let subrubrosSeleccionados = getSelectedSubrubros($sucursal);
 
     if (
         subrubrosSeleccionados.some(
@@ -1456,61 +1431,38 @@ $(document).on('click', '.subrubro-option', function () {
         rub_id: rubId
     });
 
-    setSelectedSubrubros(
-        $sucursal,
-        subrubrosSeleccionados
-    );
+    setSelectedSubrubros($sucursal, subrubrosSeleccionados);
 
     renderSucursal($sucursal);
 });
 
 $(document).on('click', '.subrubro-remove-btn', function () {
-
     const $sucursal = $(this).closest('.sucursal');
+    const subrubroId = Number($(this).data('id'));
 
-    const subrubroId = Number(
-        $(this).data('id')
-    );
-
-    let seleccionados =
-        getSelectedSubrubros($sucursal);
+    let seleccionados = getSelectedSubrubros($sucursal);
 
     seleccionados =
         seleccionados.filter(
             sub => Number(sub.id) !== subrubroId
         );
 
-    setSelectedSubrubros(
-        $sucursal,
-        seleccionados
-    );
+    setSelectedSubrubros($sucursal, seleccionados);
 
     renderSucursal($sucursal);
 });
 
 function renderSelectedRubros($sucursal) {
-
     const edId = $sucursal.data('ed-id');
-
-    const $selectedBox =
-        $sucursal.find('.selected-rubros');
-
-    const $hiddenInputs =
-        $sucursal.find('.rubros-hidden-inputs');
-
-    const seleccionados =
-        getSelectedRubros($sucursal);
+    const $selectedBox = $sucursal.find('.selected-rubros');
+    const $hiddenInputs = $sucursal.find('.rubros-hidden-inputs');
+    const seleccionados = getSelectedRubros($sucursal);
 
     $selectedBox.empty();
     $hiddenInputs.empty();
 
     if (!seleccionados.length) {
-
-        $selectedBox.html(`
-            <span class="rubros-empty-text">
-                No hay rubros seleccionados.
-            </span>
-        `);
+        $selectedBox.html(`<span class="rubros-empty-text">No hay rubros seleccionados.</span>`);
 
         return;
     }
@@ -1518,56 +1470,27 @@ function renderSelectedRubros($sucursal) {
     $.each(seleccionados, function (_, rubro) {
 
         $selectedBox.append(`
-            <span class="rubro-selected">
-
-                <span>
-                    ${escapeHtml(rubro.name)}
-                </span>
-
-                <button
-                    type="button"
-                    class="rubro-remove-btn"
-                    data-id="${rubro.id}"
-                >
-                    &times;
-                </button>
-
-            </span>
+        <span class="rubro-selected">
+            <span>${escapeHtml(rubro.name)}</span>
+            <button type="button" class="rubro-remove-btn" data-id="${rubro.id}">&times;</button>
+        </span>
         `);
 
-        $hiddenInputs.append(`
-            <input
-                type="hidden"
-                name="sucursales[${edId}][rubros][]"
-                value="${rubro.id}"
-            >
-        `);
+        $hiddenInputs.append(`<input type="hidden" name="sucursales[${edId}][rubros][]" value="${rubro.id}">`);
     });
 }
 
 function renderSelectedSubrubros($sucursal) {
-
     const edId = $sucursal.data('ed-id');
-
-    const $selectedBox =
-        $sucursal.find('.selected-subrubros');
-
-    const $hiddenInputs =
-        $sucursal.find('.subrubros-hidden-inputs');
-
-    const seleccionados =
-        getSelectedSubrubros($sucursal);
+    const $selectedBox = $sucursal.find('.selected-subrubros');
+    const $hiddenInputs = $sucursal.find('.subrubros-hidden-inputs');
+    const seleccionados = getSelectedSubrubros($sucursal);
 
     $selectedBox.empty();
     $hiddenInputs.empty();
 
     if (!seleccionados.length) {
-
-        $selectedBox.html(`
-            <span class="subrubros-empty-text">
-                No hay subrubros seleccionados.
-            </span>
-        `);
+        $selectedBox.html(`<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>`);
 
         return;
     }
@@ -1575,30 +1498,13 @@ function renderSelectedSubrubros($sucursal) {
     $.each(seleccionados, function (_, subrubro) {
 
         $selectedBox.append(`
-            <span class="subrubro-selected">
-
-                <span>
-                    ${escapeHtml(subrubro.name)}
-                </span>
-
-                <button
-                    type="button"
-                    class="subrubro-remove-btn"
-                    data-id="${subrubro.id}"
-                >
-                    &times;
-                </button>
-
-            </span>
+        <span class="subrubro-selected">
+            <span>${escapeHtml(subrubro.name)}</span>
+            <button type="button" class="subrubro-remove-btn" data-id="${subrubro.id}">&times;</button>
+        </span>
         `);
 
-        $hiddenInputs.append(`
-            <input
-                type="hidden"
-                name="sucursales[${edId}][subrubros][]"
-                value="${subrubro.id}"
-            >
-        `);
+        $hiddenInputs.append(`<input type="hidden" name="sucursales[${edId}][subrubros][]" value="${subrubro.id}">`);
     });
 }
 
@@ -1632,18 +1538,10 @@ function updateAvailableSubrubrosState($sucursal) {
     $sucursal.find('.subrubro-option').each(function () {
 
         const $button = $(this);
-
-        const subId =
-            Number($button.data('id'));
-
-        const rubId =
-            Number($button.data('rub-id'));
-
-        const seleccionado =
-            subrubrosSeleccionados.includes(subId);
-
-        const rubroHabilitado =
-            rubrosSeleccionados.includes(rubId);
+        const subId = Number($button.data('id'));
+        const rubId = Number($button.data('rub-id'));
+        const seleccionado = subrubrosSeleccionados.includes(subId);
+        const rubroHabilitado = rubrosSeleccionados.includes(rubId);
 
         $button.toggleClass(
             'is-disabled',
@@ -1671,8 +1569,7 @@ function sanitizarSubrubros($sucursal) {
         getSelectedRubros($sucursal)
             .map(rubro => Number(rubro.id));
 
-    let subrubrosSeleccionados =
-        getSelectedSubrubros($sucursal);
+    let subrubrosSeleccionados = getSelectedSubrubros($sucursal);
 
     subrubrosSeleccionados =
         subrubrosSeleccionados.filter(function (sub) {
@@ -1682,14 +1579,10 @@ function sanitizarSubrubros($sucursal) {
             );
         });
 
-    setSelectedSubrubros(
-        $sucursal,
-        subrubrosSeleccionados
-    );
+    setSelectedSubrubros($sucursal, subrubrosSeleccionados);
 }
 
 function eliminarBloqueSucursal(edId) {
-
     $(`.sucursal[data-ed-id="${edId}"]`).remove();
 }
 

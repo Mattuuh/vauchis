@@ -832,6 +832,7 @@ class VoucherController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd('Entró al store', $request->all());
         $voucher = DB::table('vouchers')
             ->where('vou_id', $id)
             ->first();
@@ -921,7 +922,7 @@ class VoucherController extends Controller
                     ->orderBy('vd_secuencia','desc')
                     ->first();
 
-                $secuencia = $detalle->vd_secuencia+1;
+                $secuencia = !is_null($detalle) ? $detalle->vd_secuencia+1 : 0;
 
                 // MODALIDADES
                 $camposModalidad = ModalidadCampo::where('mod_id', $request->f_mod_id)
@@ -936,18 +937,30 @@ class VoucherController extends Controller
 
                     // if ($valor['stock'] > $valor['old_stock']) {
                     if ($valor['stock'] > 0) {
-                        DB::table('vouchers_modalidad_valores')->insert([
-                            'vou_id' => $id,
-                            'mca_id' => $campo->mca_id,
-                            'vmv_valor' => null,
-                            'vmv_monto_minimo' => $valor['monto_minimo'] ?? 0,
-                            'vmv_monto_maximo' => $valor['monto_maximo'] ?? 0,
-                            'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
-                            'vmv_stock' => $valor['stock'] ?? 0,
-                            'vmv_estado' => 1,
-                            'vmv_fecha_alta' => now(),
-                            'vmv_usu_alta' => $usuario_id,
-                        ]);
+                        $nuevo_stock = (int) $valor['stock'] + (int) $valor['old_stock'];
+
+                        if ($campo->mca_tipo_numero=='FIJ') {
+                            DB::table('vouchers_modalidad_valores')
+                                ->where('vou_id', $id)
+                                ->where('mca_id', $campo->mca_id)
+                                ->update([
+                                    // 'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
+                                    'vmv_stock' => $nuevo_stock,
+                                    'vmv_fecha_mod' => now(),
+                                    'vmv_usu_mod' => $usuario_id,
+                                ]);
+                        } else {
+                            DB::table('vouchers_modalidad_valores')
+                                ->where('vou_id', $id)
+                                ->where('mca_id', $campo->mca_id)
+                                ->update([
+                                    'vmv_monto_minimo' => $valor['monto_minimo'],
+                                    'vmv_monto_maximo' => $valor['monto_maximo'],
+                                    'vmv_stock' => $nuevo_stock,
+                                    'vmv_fecha_mod' => now(),
+                                    'vmv_usu_mod' => $usuario_id,
+                                ]);
+                        }
 
                         $detalles = [];
                         $voucher_stock = $valor['stock'] ?? $request->stock;
@@ -964,7 +977,7 @@ class VoucherController extends Controller
                                 'cli_id' => null,
                                 'vd_codigo_interno' => $codigoInterno,
                                 'vd_codigo' => $codigoPublico,
-                                'vd_secuencia' => $i,
+                                'vd_secuencia' => $secuencia,
                                 'vd_variante_nombre_de' => null,
                                 'vd_variante_mensaje' => null,
                                 'vd_monto_total' => $valor['monto_total'] ?? 0,
@@ -974,9 +987,44 @@ class VoucherController extends Controller
                                 'vd_fecha_alta' => now(),
                                 'vd_usu_alta' => $usuario_id,
                             ];
+
+                            $secuencia+=1;
                         }
 
                         DB::table('vouchers_detalles')->insert($detalles);
+
+                    } elseif ($campo->mca_tipo_numero=='FIJ') {
+                        if (($valor['monto_total']!=$valor['old_monto_total'])) {
+                            DB::table('vouchers_modalidad_valores')
+                                ->where('vou_id', $id)
+                                ->where('mca_id', $campo->mca_id)
+                                ->update([
+                                    'vmv_monto_fijo' => $valor['monto_total'] ?? 0,
+                                    'vmv_fecha_mod' => now(),
+                                    'vmv_usu_mod' => $usuario_id,
+                                ]);
+
+                            DB::table('vouchers_detalles')
+                                ->where('vou_id', $id)
+                                ->where('mca_id', $campo->mca_id)
+                                ->update([
+                                    'vd_monto_total' => $valor['monto_total'] ?? 0,
+                                    'vd_fecha_mod' => now(),
+                                    'vd_usu_mod' => $usuario_id,
+                                ]);
+                        }
+                    } elseif ($campo->mca_tipo_numero=='VAR') {
+                        if (($valor['monto_minimo']!=$valor['old_monto_minimo']) || ($valor['monto_maximo']!=$valor['old_monto_maximo'])) {
+                            DB::table('vouchers_modalidad_valores')
+                                ->where('vou_id', $id)
+                                ->where('mca_id', $campo->mca_id)
+                                ->update([
+                                    'vmv_monto_minimo' => $valor['monto_minimo'],
+                                    'vmv_monto_maximo' => $valor['monto_maximo'],
+                                    'vmv_fecha_mod' => now(),
+                                    'vmv_usu_mod' => $usuario_id,
+                                ]);
+                        }
                     }
                 }
 
@@ -1157,7 +1205,7 @@ class VoucherController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             
-            // dd($e->getMessage());
+            dd($e->getMessage());
 
             return redirect()
                 ->back()

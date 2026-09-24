@@ -582,24 +582,34 @@ $(document).ready(function () {
 
             if (campo.mca_tipo_numero=='VAR') {
                 html = `
-                    <div class="col-12 col-md-6">
-                        <label class="form-label required-label">Monto minimo</label>
-                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control" placeholder="1.01" min="1" value="1">
-                        <div class="form-text">Monto minimo a introducir por el cliente</div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label required-label">Monto maximo</label>
-                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control" placeholder="10.01" min="10" value="10">
-                        <div class="form-text">Monto maximo a introducir por el cliente</div>
-                    </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto minimo</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_minimo]" class="form-control mod_montos" placeholder="1" min="1" value="1">
+                    <div class="form-text">Monto minimo a introducir por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto maximo</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_maximo]" class="form-control mod_montos" placeholder="10" min="10" value="10">
+                    <div class="form-text">Monto maximo a introducir por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="1" min="1" value="1">
+                    <div class="form-text">Stock de vouchers para este boton</div>
+                </div>
                 `;
             } else if (campo.mca_tipo_numero=='FIJ') {
                 html = `
-                    <div class="col-12 col-md-6">
-                        <label class="form-label required-label">Monto total</label>
-                        <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="1">
-                        <div class="form-text">Monto total a pagar por el cliente</div>
-                    </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Monto total</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" placeholder="1" min="1" value="1">
+                    <div class="form-text">Monto total a pagar por el cliente</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Stock</label>
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="1" min="1" value="1">
+                    <div class="form-text">Stock de vouchers para este boton</div>
+                </div>
                 `;
             }
             else {
@@ -609,12 +619,12 @@ $(document).ready(function () {
             html = `
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Monto para boton #${campo.mca_orden}</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control" placeholder="1.01" min="1" value="1">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][monto_total]" class="form-control mod_montos" placeholder="1" min="1" value="1">
                     <div class="form-text">Monto a seleccionar para pagar por el cliente</div>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Stock para boton #${campo.mca_orden}</label>
-                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control" placeholder="1.01" min="1" value="1">
+                    <input type="text" name="modalidad_valores[${campo.mca_id}][stock]" class="form-control mod_stock" placeholder="1" min="1" value="1">
                     <div class="form-text">Stock de vouchers para este boton</div>
                 </div>
             `;
@@ -643,6 +653,39 @@ $(document).ready(function () {
                 ${campos.map(campo => renderCampoInput(campo, oldValues)).join('')}
             </div>
         `;
+
+
+        $('.mod_montos').each(function () {
+            $(this).rules('remove');
+        });
+
+        $('.mod_stock').each(function () {
+            $(this).rules('remove');
+        });
+
+        $('.mod_montos').each(function () {
+            $(this).rules('add', {
+                required: true,
+                digits: true,
+                min: 1,
+                messages: {
+                    required: 'Este campo es obligatorio.',
+                    digits: 'Ingrese únicamente números enteros.'
+                }
+            });
+        });
+
+        $('.mod_stock').each(function () {
+            $(this).rules('add', {
+                required: true,
+                digits: true,
+                min: 0,
+                messages: {
+                    required: 'Este campo es obligatorio.',
+                    digits: 'Ingrese únicamente números enteros.'
+                }
+            });
+        });
     }
 
     function addEtiquetaExistente(button) {
