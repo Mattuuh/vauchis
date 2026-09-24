@@ -273,7 +273,7 @@
     width: 100%;
     height: 100%;
     /* object-position: left top; */
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-info {
