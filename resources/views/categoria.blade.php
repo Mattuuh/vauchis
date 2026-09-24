@@ -266,7 +266,7 @@
         .vo-card-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: fill;
             display: block;
         }
 
@@ -526,7 +526,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px 8px;
         padding: 10px 15px 20px;
-        background: #eef3ff;
+        /* background: #eef3ff; */
     }
 
     .vo-card {
@@ -578,8 +578,8 @@
         width: 100%;
         height: 100%;
         display: block;
-        object-fit: cover;
-        object-position: center;
+        object-fit: fill;
+        /* object-position: center; */
     }
 
     .vo-card-body {

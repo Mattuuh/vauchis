@@ -1965,7 +1965,7 @@ a{
          */
         aspect-ratio: 1 / 1;
 
-        object-fit: cover;
+        object-fit: fill;
 
         display: block;
 
