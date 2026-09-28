@@ -858,7 +858,7 @@ class EntidadController extends Controller
         //         ]);
         // }
 
-        $destacado = $request->destacado;
+        $destacado = $request->destacado ?? 0;
         $orden = $request->input('orden', []);
 
         if ($destacado==1) {
@@ -875,7 +875,7 @@ class EntidadController extends Controller
         } else {
             foreach ($orden as $index => $ent_id) {
                 Entidad::where('ent_id', $ent_id)
-                    ->where('ent_destacado', $destacado)
+                    // ->where('ent_destacado', $destacado)
                     ->update([
                         'ent_orden' => $index + 1,
                         'ent_fecha_mod' => now(),

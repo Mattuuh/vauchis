@@ -152,10 +152,8 @@
 
             <section class="vp-products-section">
                 <h2>Vouchers sugeridos</h2>
-                {{-- <p>Regala vouchers de productos específicos seleccionados por el comercio</p> --}}
 
                 <div class="vp-products-wrap">
-                    {{-- <button class="vp-products-arrow vp-products-arrow--left" type="button">‹</button> --}}
                     <img class="vp-products-arrow vp-products-arrow--left" src="{{ asset('images/chevron-left.png') }}" alt="Fecha izquierda">
 
                     <div class="vp-products-grid">
@@ -187,7 +185,6 @@
                         @endforeach
                     </div>
 
-                    {{-- <button class="vp-products-arrow vp-products-arrow--right" type="button">›</button> --}}
                     <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/chevron-right.png') }}" alt="Fecha derecha">
                 </div>
             </section>
@@ -310,7 +307,7 @@
 .vp-brand-logo img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-logo span {
@@ -535,9 +532,20 @@
 }
 
 .vp-products-grid {
-    display: grid;
+    /* display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 26px; */
+
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 52px) / 3); /* 3 tarjetas, 2 espacios de 26px */
     gap: 26px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 5px;
+
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
 }
 
 .vp-product-card {
@@ -605,11 +613,11 @@
 }
 
 .vp-product-footer {
-    flex: 1;
-    display: flex;
+    /* flex: 1; */
+    /* display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 15px;
+    gap: 15px; */
     min-width: 0;
 }
 
@@ -620,17 +628,17 @@
     line-height: 14px;
     font-weight: 400;
     color: #333;
-    max-width: 70%;
+    /* max-width: 70%; */
     white-space: pre-line;
 }
 
 .vp-product-price {
-    margin-left: auto;
+    /* margin-left: auto; */
     font-size: 12px;
     line-height: 14px;
-    font-weight: 400;
+    font-weight: 900;
     white-space: nowrap;
-    color: #333;
+    color: #000;
 }
 
 .vp-products-arrow {
@@ -1006,12 +1014,12 @@
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
 
-        overflow: hidden;
+        /* overflow: hidden; */
     }
 
-    .vp-product-footer {
+    /* .vp-product-footer {
         gap: 6px;
-    }
+    } */
 
     .vp-product-description {
         max-width: 65%;
@@ -1328,6 +1336,22 @@ $(document).ready(function () {
         $('#d_horario_atencion').html('');
     });
 
+    $(document).on('click', '.vp-products-arrow', function () {
+        const $wrap = $(this).closest('.vp-products-wrap');
+        const $grid = $wrap.find('.vp-products-grid');
+        const $card = $grid.find('.vp-product-card').first();
+
+        if (!$card.length) return;
+
+        const gap = parseFloat($grid.css('column-gap')) || 0;
+        const paso = $card.outerWidth() + gap;
+        const direccion = $(this).hasClass('vp-products-arrow--right') ? 1 : -1;
+
+        $grid[0].scrollBy({
+            left: direccion * paso,
+            behavior: 'smooth'
+        });
+    });
 });
 </script>
 @endpush

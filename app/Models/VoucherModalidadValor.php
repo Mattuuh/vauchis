@@ -18,6 +18,7 @@ class VoucherModalidadValor extends Model
         'vmv_monto_minimo',
         'vmv_monto_maximo',
         'vmv_monto_fijo',
+        'vmv_stock',
         'vmv_estado',
         'vmv_fecha_alta',
         'vmv_usu_alta',

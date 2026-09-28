@@ -799,7 +799,7 @@
 
         <div class="vp-action-bar">
             <div class="vp-action-inner">
-                <button href="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</button>
+                <button type="button" data-url="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</button>
                 <div class="vs-checkout-total">TOTAL ${{ number_format($monto, 0, ',', '.') }}ARS</div>
                 <button type="submit" class="vp-action vp-action-primary" id="btn_pagar">Confirmar y pagar</button>
             </div>
@@ -909,6 +909,14 @@ $(function () {
             }
         }
 
+    });
+
+    $(document).on('click', '#btn_editar', function () {
+        const url = $(this).data('url');
+
+        if (url) {
+            window.location.href = url;
+        }
     });
 
 });

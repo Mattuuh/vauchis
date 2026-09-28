@@ -214,7 +214,7 @@
 .vp-brand-hero img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-info {
@@ -251,7 +251,7 @@
 .vp-brand-logo img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-logo span {
@@ -1178,7 +1178,7 @@ body.resumen-compra-visible {
 .vo-card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     display: block;
 }
 
@@ -1280,7 +1280,7 @@ body.resumen-compra-visible {
         width: 100%;
         height: 100%;
         display: block;
-        object-fit: cover;
+        object-fit: fill;
         object-position: center;
     }
 

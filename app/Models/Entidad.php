@@ -31,6 +31,8 @@ class Entidad extends Model
         'ent_descripcion_publica',
         'ent_publico',
         'ent_destacado',
+        'ent_orden',
+        'ent_destacado_orden',
         'ent_estado',
         'ent_estado2',
         'ent_fecha_alta',

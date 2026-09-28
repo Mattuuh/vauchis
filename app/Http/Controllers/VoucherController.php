@@ -22,6 +22,7 @@ use App\Models\Usuario;
 use App\Models\Voucher;
 use App\Models\VoucherDetalle;
 use App\Models\VoucherFile;
+use App\Models\VoucherModalidadValor;
 use App\Models\VoucherPlantilla;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1347,12 +1348,26 @@ class VoucherController extends Controller
     public function delete_voucher_detalle($vou_id, $vd_id) {
         try {
             $detalle = VoucherDetalle::findOrFail($vd_id);
+            $usuario_id = Auth::id() ?? 1;
 
             $detalle->update([
                 'vd_estado' => 0,
                 'vd_fecha_mod' => now(),
                 'vd_usu_mod' => 1
             ]);
+
+            VoucherModalidadValor::where('vou_id', $vou_id)
+                ->where('mca_id', $detalle->mca_id)
+                ->decrement('vmv_stock', 1, [
+                    'vmv_fecha_mod' => now(),
+                    'vmv_usu_mod' => $usuario_id,
+                ]);
+
+            Voucher::findOrFail($vou_id)
+                ->decrement('vou_stock', 1, [
+                    'vou_fecha_mod' => now(),
+                    'vou_usu_mod' => $usuario_id,
+                ]);
 
             // return redirect()
             //     ->route('admin.vouchers.edit', $vou_id)
@@ -1461,14 +1476,16 @@ class VoucherController extends Controller
         //     ->where('vou_estado', 1)
         //     ->get();
 
-        $vouchers = Voucher::with('imagenes')
-            ->with([
+        $vouchers = Voucher::with([
+                'imagenes',
                 'modalidad.campos',
-                'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->withWhereHas('modalidad', function ($query) {
+            ->whereHas('modalidad', function ($query) {
                 $query->where('tipo_mod_id', 3);
+            })
+            ->withWhereHas('modalidadValores', function ($query) {
+                $query->where('vmv_stock', '>', 0);
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
@@ -1481,27 +1498,31 @@ class VoucherController extends Controller
         //     ->where('vd_estado2', 'PE') // opcional: estado "Disponible"
         //     ->first();
 
-        $vouchers_fijos = Voucher::with('imagenes')
-            ->with([
+        $vouchers_fijos = Voucher::with([
+                'imagenes',
                 'modalidad.campos',
-                'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->withWhereHas('modalidad', function ($query) {
+            ->whereHas('modalidad', function ($query) {
                 $query->where('tipo_mod_id', 1);
+            })
+            ->withWhereHas('modalidadValores', function ($query) {
+                $query->where('vmv_stock', '>', 0);
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
             ->get();
 
-        $vouchers_eleccion = Voucher::with('imagenes')
-            ->with([
+        $vouchers_eleccion = Voucher::with([
+                'imagenes',
                 'modalidad.campos',
-                'modalidadValores',
                 'modalidadValores.campo',
             ])
-            ->withWhereHas('modalidad', function ($query) {
+            ->whereHas('modalidad', function ($query) {
                 $query->where('tipo_mod_id', 2);
+            })
+            ->withWhereHas('modalidadValores', function ($query) {
+                $query->where('vmv_stock', '>', 0);
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
@@ -1510,7 +1531,9 @@ class VoucherController extends Controller
             // dd($vouchers_fijos);
             // dd($voucher->toArray());
 
-        $vouchers_montos = Voucher::with('modalidadValores')
+        $vouchers_montos = Voucher::withWhereHas('modalidadValores', function ($query) {
+                $query->where('vmv_stock', '>', 0);
+            })
             ->where('ent_id', $entidad->ent_id)
             ->where('vou_estado', 1)
             ->get();
@@ -1978,7 +2001,8 @@ class VoucherController extends Controller
         $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
         // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
 
-        $nombreArchivo = 'voucher-' . $token . '.pdf';
+        // $nombreArchivo = 'voucher-' . $token . '.pdf';
+        $nombreArchivo = 'voucher_para_'. session('voucher.para') .'.pdf';
         $rutaRelativa = 'vouchers/pdf/' . $nombreArchivo;
         $rutaCompleta = storage_path('app/public/' . $rutaRelativa);
 
@@ -2055,6 +2079,17 @@ class VoucherController extends Controller
 
             'vd_usu_mod' => session('auth.usuario_id') ?? null,
             'vd_fecha_mod' => now(),
+        ]);
+
+        $valores->update([
+            'vmv_stock' => $valores->vmv_stock - 1,
+            // 'vmv_fecha_mod' => now(),
+        ]);
+
+        $voucher->update([
+            'vou_stock' => $voucher->vou_stock - 1,
+            // 'vou_fecha_mod' => now(),
+            // 'vou_usu_mod' => $usuario_id,
         ]);
 
         Mail::to($usuario->usu_email1 ?? $request->email)->send(

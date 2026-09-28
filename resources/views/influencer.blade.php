@@ -220,7 +220,7 @@
 .vp-brand-hero img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-info {
@@ -257,7 +257,7 @@
 .vp-brand-logo img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .vp-brand-logo span {

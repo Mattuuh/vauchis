@@ -183,6 +183,64 @@
         });
     </script> --}}
 
+    @if (request()->routeIs('vouchers.entidad'))
+    <script>
+        $(function () {
+            const $navbar = $('#vNavbar');
+            let ultimoScroll = $(window).scrollTop();
+            let oculto = false;
+            let temporizador;
+
+            $navbar.css('transition', 'transform 250ms ease, opacity 250ms ease');
+
+            function mostrarNavbar() {
+                if (!oculto) return;
+
+                clearTimeout(temporizador);
+                oculto = false;
+
+                $navbar.removeAttr('hidden');
+                $navbar[0].offsetHeight; // Permite que se vea la animación al reaparecer
+
+                $navbar.css({
+                    transform: 'translateY(0)',
+                    opacity: 1
+                });
+            }
+
+            function ocultarNavbar() {
+                if (oculto) return;
+
+                oculto = true;
+                $navbar.css({
+                    transform: 'translateY(-100%)',
+                    opacity: 0
+                });
+
+                temporizador = setTimeout(function () {
+                    if (oculto) $navbar.attr('hidden', 'hidden');
+                }, 250);
+            }
+
+            function controlarNavbar() {
+                const scrollActual = $(window).scrollTop();
+
+                if (window.innerWidth < 992 || scrollActual <= 30) {
+                    mostrarNavbar();
+                } else if (scrollActual > ultimoScroll) {
+                    ocultarNavbar();
+                } else if (scrollActual < ultimoScroll) {
+                    mostrarNavbar();
+                }
+
+                ultimoScroll = scrollActual;
+            }
+
+            $(window).on('scroll resize', controlarNavbar);
+        });
+    </script>
+    @endif
+
     <script>
     $(document).ready(function () {
         $(document).on('click', '.v-mobile-submenu-link', function (e) {

@@ -13,6 +13,8 @@ class VoucherDetalle extends Model
 
     protected $fillable = [
         'vou_id',
+        'mod_id',
+        'mca_id',
         'ent_id',
         'cli_id',
         'vd_cliente_nombre',

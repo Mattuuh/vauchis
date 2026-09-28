@@ -341,7 +341,7 @@ class ColeccionController extends Controller
             ->withWhereHas('modalidad', function ($query) {
                 $query->where('tipo_mod_id', 3);
             })
-            // ->whereIn('ent_id', $entidades)
+            ->where('colecc_id', $id)
             ->where('vou_estado', 1)
             ->get();
 
