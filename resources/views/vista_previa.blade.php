@@ -56,11 +56,11 @@
     $bannerEntidadRelacion = data_get($entidad ?? null, 'imagenPrincipal');
     $imagenVoucher = data_get($bannerEntidadRelacion, 'ef_img_path')
         ? asset('storage/' . data_get($bannerEntidadRelacion, 'ef_img_path'))
-        : asset('images/default-voucher.png');
+        : null;
 
     $imagen_voucher_vou = isset($imagenPrincipal)
         ? asset('storage/' . $imagenPrincipal->vf_img_path)
-        : asset('images/default-voucher.png');
+        : null;
 
     $logoEntidadRelacion = data_get($entidad ?? null, 'logoPrincipal');
     $logoEntidad = data_get($logoEntidadRelacion, 'ef_img_path')
@@ -1530,7 +1530,9 @@
                                 <p class="vp-value-amount">${{ number_format((float) $montoVoucher, 0, ',', '.') }}</p>
                             </div>
                             <div class="vp-value-image">
-                                <img src="{{ $imagenVoucher }}" alt="{{ $nombreVoucher }}">
+                                @if ($imagenVoucher)
+                                    <img src="{{ $imagenVoucher }}" alt="{{ $nombreVoucher }}">
+                                @endif
                             </div>
 
                             @else
@@ -1546,7 +1548,9 @@
                                 <p class="vp-subtitle">{{ $voucher->vou_descripcion }}</p>
                             </div>
                             <div class="vp-value-image">
-                                <img src="{{ $imagen_voucher_vou }}" alt="{{ $nombreVoucher }}">
+                                @if ($imagen_voucher_vou)
+                                    <img src="{{ $imagen_voucher_vou }}" alt="{{ $nombreVoucher }}">
+                                @endif
                             </div>
                             @endif
                             
