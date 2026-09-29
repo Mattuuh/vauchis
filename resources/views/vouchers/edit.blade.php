@@ -187,7 +187,7 @@ $(document).ready(function () {
                 <div class="col-12 col-md-6">
                     <label class="form-label required-label">Entidad:</label>
                     <select name="f_ent_id" id="f_ent_id" class="form-select field-required" required>
-                        <option value="">Selecciona la entidad</option>
+                        {{-- <option value="">Selecciona la entidad</option> --}}
                         @foreach($entidades as $entidad)
                             <option value="{{ $entidad['ent_id'] }}" {{ old('f_ent_id', $voucher->ent_id) == $entidad['ent_id'] ? 'selected' : 'hidden' }}>
                                 {{ $entidad['ent_nombre_fantasia'] }}
@@ -658,7 +658,7 @@ $(document).ready(function () {
             if (sucursal && sucursal.ed_telefono1) {
                 telefonosHtml += `
                 <div>
-                    <input type="radio" name="f_telefono" id="f_telefono-${sucursal.ed_id}" value="${sucursal.ed_telefono1}">
+                    <input type="radio" name="f_telefono" id="f_telefono-${sucursal.ed_id}" value="${sucursal.ed_id}">
                     <label for="f_telefono-${sucursal.ed_id}">${sucursal.ed_telefono1} - ${sucursal.ed_direccion}</label>
                 </div>
                 `;

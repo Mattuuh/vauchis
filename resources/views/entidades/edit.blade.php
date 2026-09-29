@@ -421,9 +421,9 @@ $(document).ready(function () {
 
                             <div class="form-check">
                                 <select name="f_tipo_archivo_id_[]" id="f_tipo_archivo_id_" class="form-select field-required" required>
-                                <option value="">Selecciona el tipo de archivo</option>
+                                {{-- <option value="">Selecciona el tipo de archivo</option> --}}
                                 @foreach($tipos_archivos as $tipo)
-                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : '' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
+                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : 'hidden' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
                                 @endforeach
                             </select>
                             </div>

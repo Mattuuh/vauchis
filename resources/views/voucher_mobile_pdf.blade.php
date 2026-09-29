@@ -273,7 +273,7 @@
         width: 118px;
         height: auto;
         max-height: 34px;
-        object-fit: contain;
+        object-fit: fill;
 }
 
     /* =========================================================
@@ -448,7 +448,7 @@
         display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: fill;
     background: #fff;
 }
 

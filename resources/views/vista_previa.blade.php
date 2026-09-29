@@ -459,7 +459,7 @@
     width: 100%;
     height: 100%;
 
-    object-fit: contain;
+    object-fit: fill;
 
     background: #fff;
 }
@@ -1068,7 +1068,7 @@
         .vp-commerce-logo img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: fill;
         }
 
         .vp-commerce-info {
