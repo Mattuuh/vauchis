@@ -36,6 +36,9 @@ use App\Models\Usuario;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
+// Route::get('/empresas', [AuthController::class, 'mostrar_login_empresa'])->name('empresas');
+// Route::post('/empresas', [AuthController::class, 'login_empresa'])->name('empresas.submit');
+
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 

@@ -393,13 +393,12 @@ $(document).ready(function () {
             <div class="row g-0 align-items-center">
                 <div class="col-lg-6">
                     <section class="hero-section">
-                        <span class="hero-badge">Bienvenido a Vauchis</span>
+                        <span class="hero-badge">Bienvenido a Vauchis - Empresas</span>
 
-                        <h1 class="hero-title">Ingresa a tu cuenta y sigue regalando fácil</h1>
+                        <h1 class="hero-title">Ingresa a tu cuenta y segui tus vouchers</h1>
 
                         <p class="hero-text">
-                            Accede a tu panel para comprar, enviar y gestionar vouchers de marcas,
-                            negocios y ONGs locales en un solo lugar.
+                            Accede al panel para seguir el estado de tus vouchers en un solo lugar.
                         </p>
 
                         <div>
@@ -465,24 +464,6 @@ $(document).ready(function () {
                                         {{-- <a href="{{ route('home') }}" class="btn btn-vauchis btn-lg">Ingresar</a> --}}
                                     </div>
                                 </form>
-
-                                <div class="separator">
-                                    <span>o continúa con</span>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <button type="button" class="btn btn-outline-soft w-100">Google</button>
-                                    </div>
-                                    {{-- <div class="col-6">
-                                        <button type="button" class="btn btn-outline-soft w-100">Facebook</button>
-                                    </div> --}}
-                                </div>
-
-                                <p class="signup-text">
-                                    ¿No tienes cuenta?
-                                    <a href="{{ route('register') }}" class="link-pink">Crear cuenta</a>
-                                </p>
                             </div>
                         </div>
                     </section>

@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VerificarAdministrador
 {
-    private const TIEMPO_MAXIMO_INACTIVIDAD = 600; // 10 minutos en segundos
 
     /**
      * Handle an incoming request.
@@ -48,11 +47,12 @@ class VerificarAdministrador
          * Verificar tiempo de inactividad.
          */
         $ultimaActividad = $request->session()->get('ultima_actividad');
+        $tiempoMaximoInactividad = config('session.lifetime') * 60;
 
         if (
             $ultimaActividad !== null &&
             now()->timestamp - (int) $ultimaActividad
-                > self::TIEMPO_MAXIMO_INACTIVIDAD
+                > $tiempoMaximoInactividad
         ) {
             $request->session()->flush();
             $request->session()->invalidate();

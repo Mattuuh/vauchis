@@ -238,4 +238,112 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+
+    public function mostrar_login_empresa(): View
+    {
+        $previous_path = parse_url(url()->previous(), PHP_URL_PATH);
+
+        if (str_starts_with($previous_path, '/compra/')) {
+            session(['registro_url_anterior' => $previous_path]);
+        } elseif (str_starts_with($previous_path, '/voucher/canjear/')) {
+            session(['registro_url_anterior' => $previous_path]);
+        }
+
+        return view('auth.empresas');
+    }
+
+    public function login_empresa(Request $request): RedirectResponse
+    {
+        DB::table('logs_auth')->insert([
+            'log_data_json' => json_encode($request->all()),
+            'log_ip' => request()->ip(),
+            'log_browser' => request()->userAgent(),
+            'log_fecha_alta' => now(),
+        ]);
+
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:6'],
+        ], [
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Ingresa un correo electrónico válido.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+        ]);
+
+        $remember = $request->boolean('remember');
+
+        $usuario = Usuario::where('usu_email1', $request->email)
+            ->where('usu_estado', 1)
+            ->first();
+
+        if (!$usuario) {
+
+            AccessLog::create([
+                'usu_web_id' => null,
+                'usu_web_nick' => null,
+                'usu_web_ipacceso' => request()->ip(),
+                'sesion_id' => null,
+                'acc_web_observacion' => "No existe Usuario \r".$request->email,
+                'acc_web_browser' => request()->userAgent(),
+                'acc_web_fecha_alta' => now(),
+            ]);
+
+            return back()
+                ->withErrors(['email' => 'Credenciales incorrectas.'])
+                ->withInput();
+        }
+
+        if ($usuario->tu_id==2 || $usuario->ref_id=='') {
+            return back()
+                    ->withErrors(['email' => 'Usuario no aceptado.'])
+                    ->withInput();
+        }
+
+        if (!Hash::check($request->password, $usuario->usu_clave)) {
+
+            AccessLog::create([
+                'usu_web_id' => null,
+                'usu_web_nick' => null,
+                'usu_web_ipacceso' => request()->ip(),
+                'sesion_id' => null,
+                'acc_web_observacion' => "No valida Password \r".$request->email,
+                'acc_web_browser' => request()->userAgent(),
+                'acc_web_fecha_alta' => now(),
+            ]);
+
+            return back()
+                ->withErrors(['email' => 'Credenciales incorrectas.'])
+                ->withInput();
+        }
+
+        session([
+            'auth' => [
+                'usuario_id' => $usuario->usu_id,
+                'ent_id' => $usuario->ref_id,
+                'tu_id' => $usuario->tu_id,
+                'nombre' => $usuario->usu_nombre,
+                'email' => $usuario->usu_email1,
+            ]
+        ]);
+
+        $request->session()->regenerate();
+        $request->session()->put('ultima_actividad', now()->timestamp);
+
+        AccessLog::create([
+            'usu_web_id' => $usuario->usu_id,
+            'usu_web_nick' => $usuario->usu_email1,
+            'usu_web_ipacceso' => request()->ip(),
+            'acc_web_login_fecha' => now(),
+            'acc_web_sesion_id' => session()->getId(),
+            'acc_web_observacion' => 'Login OK',
+            'acc_web_browser' => request()->userAgent(),
+            'acc_web_fecha_alta' => now(),
+        ]);
+
+        // return redirect()->route('home');
+        $url_anterior = session()->pull('registro_url_anterior');
+
+        return redirect(route('clientes.index'));
+    }
 }
