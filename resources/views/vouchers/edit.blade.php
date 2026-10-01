@@ -65,9 +65,15 @@ $(document).ready(function () {
             f_ent_id: {
                 required: true,
             },
-            f_ed_id: {
+            "f_ed_id[]": {
                 required: true,
             },
+            f_telefono: {
+                required: true,
+            },
+            // f_ed_id: {
+            //     required: true,
+            // },
             com_documento: {
                 required: true,
                 number: true,

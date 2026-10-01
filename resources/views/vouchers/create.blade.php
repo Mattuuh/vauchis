@@ -52,9 +52,15 @@ $(document).ready(function () {
             f_ent_id: {
                 required: true,
             },
-            f_ed_id: {
+            "f_ed_id[]": {
                 required: true,
             },
+            f_telefono: {
+                required: true,
+            },
+            // f_ed_id: {
+            //     required: true,
+            // },
             com_documento: {
                 required: true,
                 number: true,
@@ -65,6 +71,9 @@ $(document).ready(function () {
                 required: true,
             },
             f_cv_id: {
+                required: true,
+            },
+            f_colecc_id: {
                 required: true,
             },
             f_fecha_ini_lab: {
@@ -92,6 +101,9 @@ $(document).ready(function () {
                 required: false,
             },
             f_mod_id: {
+                required: true,
+            },
+            vou_modalidad_condiciones: {
                 required: true,
             },
             "imagenes[]": {
