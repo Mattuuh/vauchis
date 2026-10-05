@@ -210,7 +210,7 @@ class ModalidadController extends Controller
 
         return redirect()
             ->route('admin.modalidades.index')
-            ->with('success', 'Modalidad eliminada correctamente');
+            ->with('success', 'Modalidad bloqueada correctamente');
     }
 
     public function listado(Request $request)

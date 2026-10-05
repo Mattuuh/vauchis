@@ -282,7 +282,7 @@ class ColeccionController extends Controller
 
             return redirect()
                 ->route('admin.colecciones.index')
-                ->with('success', 'Coleccion eliminada correctamente');
+                ->with('success', 'Coleccion bloqueada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

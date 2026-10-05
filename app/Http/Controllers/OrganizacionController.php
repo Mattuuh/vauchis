@@ -500,7 +500,7 @@ class OrganizacionController extends Controller
 
             return redirect()
                 ->route('admin.organizacion.index')
-                ->with('success', 'Organizacion eliminada correctamente');
+                ->with('success', 'Organizacion bloqueada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

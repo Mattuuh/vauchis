@@ -158,7 +158,7 @@ class EtiquetaController extends Controller
 
             return redirect()
                 ->route('etiqueta.index')
-                ->with('success', 'Etiqueta eliminada correctamente');
+                ->with('success', 'Etiqueta bloqueada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

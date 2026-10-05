@@ -93,7 +93,7 @@ class TipoEntidadController extends Controller
 
             return redirect()
                 ->route('admin.tipos-entidad.index')
-                ->with('success', 'Tipo entidad eliminado correctamente');
+                ->with('success', 'Tipo entidad bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

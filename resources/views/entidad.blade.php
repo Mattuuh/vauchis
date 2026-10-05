@@ -154,7 +154,7 @@
                 <h2>Vouchers sugeridos</h2>
 
                 <div class="vp-products-wrap">
-                    <img class="vp-products-arrow vp-products-arrow--left" src="{{ asset('images/chevron-left.png') }}" alt="Fecha izquierda">
+                    {{-- <img class="vp-products-arrow vp-products-arrow--left" src="{{ asset('images/chevron-left.png') }}" alt="Fecha izquierda"> --}}
 
                     <div class="vp-products-grid">
                         @foreach($productVouchers as $voucher)
@@ -185,7 +185,7 @@
                         @endforeach
                     </div>
 
-                    <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/chevron-right.png') }}" alt="Fecha derecha">
+                    {{-- <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/chevron-right.png') }}" alt="Fecha derecha"> --}}
                 </div>
             </section>
 
@@ -532,20 +532,9 @@
 }
 
 .vp-products-grid {
-    /* display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 26px; */
-
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: calc((100% - 52px) / 3); /* 3 tarjetas, 2 espacios de 26px */
+    grid-template-columns: repeat(3, 1fr);
     gap: 26px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 5px;
-
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;
 }
 
 .vp-product-card {
@@ -954,28 +943,9 @@
     }
 
     .vp-products-grid {
-        display: flex;
-        grid-template-columns: none;
-
-        gap: 12px;
-
-        width: 100%;
-
-        overflow-x: auto;
-        overflow-y: hidden;
-
-        padding: 4px 16px 14px;
-
-        scroll-snap-type: x proximity;
-        scroll-behavior: smooth;
-
-        -webkit-overflow-scrolling: touch;
-
-        scrollbar-width: none;
-    }
-
-    .vp-products-grid::-webkit-scrollbar {
-        display: none;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 26px;
     }
 
     .vp-product-card {

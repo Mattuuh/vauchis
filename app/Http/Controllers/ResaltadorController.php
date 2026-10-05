@@ -211,7 +211,7 @@ class ResaltadorController extends Controller
 
             return redirect()
                 ->route('admin.resaltadores.index')
-                ->with('success', 'Resaltador eliminado correctamente');
+                ->with('success', 'Resaltador bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

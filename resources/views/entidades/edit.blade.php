@@ -172,29 +172,6 @@ $(document).ready(function () {
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/entidades/entidades.css') }}">
-
-<style>
-    .color-selector {
-      display: flex;
-      gap: 10px;
-    }
-
-    .color-option {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 3px solid #000;
-      cursor: pointer;
-    }
-
-    .color-option:hover {
-      transform: scale(1.1);
-    }
-
-    .color-option.selected {
-        border-color: #ff0000;
-    }
-</style>
 @endpush
 
 @section('content')
@@ -415,12 +392,12 @@ $(document).ready(function () {
                                 <label class="form-check-label" for="imagen-delete-{{ $imagen->ef_id }}">Eliminar imagen</label>
                             </div>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="imagen_principal_{{ $imagen->tipo_archivo_id }}" value="{{ $imagen->ef_id }}" id="imagen-principal-{{ $imagen->ef_id }}-{{ $imagen->tipo_archivo_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
+                                <input class="form-check-input f_principal_old" type="radio" name="imagen_principal_{{ $imagen->tipo_archivo_id }}" value="{{ $imagen->ef_id }}" data-tipo="{{ $imagen->tipo_archivo_id }}" id="imagen-principal-{{ $imagen->ef_id }}-{{ $imagen->tipo_archivo_id }}" {{ $imagen->ef_principal == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="imagen-principal-{{ $imagen->ef_id }}-{{ $imagen->tipo_archivo_id }}">Imagen principal</label>
                             </div>
 
                             <div class="form-check">
-                                <select name="f_tipo_archivo_id_[]" id="f_tipo_archivo_id_" class="form-select field-required" required>
+                                <select name="f_tipo_archivo_id_[]" id="f_tipo_archivo_id_{{ $imagen->ef_id }}" class="form-select field-required">
                                 {{-- <option value="">Selecciona el tipo de archivo</option> --}}
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ $tipo['tipo_archivo_id']==$imagen->tipo_archivo_id ? 'selected' : 'hidden' }}>{{ $tipo['tipo_archivo_nombre'] }}</option>
@@ -436,11 +413,12 @@ $(document).ready(function () {
                 <label class="form-label required-label">Imagen/es</label>
                 <div id="logos-container">
                     <div class="row logo-item mb-2">
-                        <div class="col-sm-8">
-                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        <input type="hidden" name="f_num_imagenes" id="f_num_imagenes" value="0">
+                        <div class="col-sm-7">
+                            <input type="file" name="imagenes[]" id="f_imagen-0" accept="image/*" class="form-control">
                         </div>
-                        <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
+                        <div class="col-sm-2">
+                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-0" class="form-select field-required f_tipo_archivo">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -448,6 +426,12 @@ $(document).ready(function () {
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input f_principal" type="radio" name="f_principal" id="f_principal-0" value="0">
+                                <label class="form-check-label" for="f_principal-0">Principal</label>
+                            </div>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center"></div>
                     </div>
@@ -1230,15 +1214,16 @@ $(document).on('click', '#btn_eliminar', function (e) {
 $(document).ready(function () {
 
     $('#add-logo').on('click', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())+1;
 
         let html = `
             <div class="row logo-item mb-2">
-                <div class="col-sm-8">
-                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                <div class="col-sm-7">
+                    <input type="file" name="imagenes[]" id="f_imagen-${f_num_imagenes}" accept="image/*" class="form-control">
                 </div>
-                <div class="col-sm-3">
-                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required" required>
-                        <option value="">Selecciona el tipo de archivo</option>
+                <div class="col-sm-2">
+                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-${f_num_imagenes}" class="form-select field-required f_tipo_archivo">
+                        <option value="">Selecciona el tipo</option>
                         @foreach($tipos_archivos as $tipo)
                             <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
                                 {{ $tipo['tipo_archivo_nombre'] }}
@@ -1246,41 +1231,80 @@ $(document).ready(function () {
                         @endforeach
                     </select>
                 </div>
+                <div class="col-sm-2">
+                    <div class="form-check">
+                        <input class="form-check-input f_principal" type="radio" name="f_principal" id="f_principal-${f_num_imagenes}" value="0">
+                        <label class="form-check-label" for="f_principal-${f_num_imagenes}">Principal</label>
+                    </div>
+                </div>
                 <div class="col-sm-1 d-flex align-items-center">
                     <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
                 </div>
             </div>
         `;
 
+        $('#f_num_imagenes').val(f_num_imagenes);
         $('#logos-container').append(html);
     });
 
     $(document).on('click', '.remove-logo', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())-1;
+        $('#f_num_imagenes').val(f_num_imagenes);
+
         $(this).closest('.logo-item').remove();
     });
 
-});
-</script>
+    $(document).on('change', '.f_tipo_archivo', function () {
+        const f_id=$(this).attr('id').split('-')[1];
+        const tipo = $(this).val();
 
-<script>
-    const colors = document.querySelectorAll(".color-option");
-    const selectedColor = document.getElementById("selectedColor");
+        const $principal = $('#f_principal-' + f_id);
 
-    colors.forEach(color => {
-        color.addEventListener("click", () => {
+        $principal.prop('checked', false);
 
-        // Sacar selección anterior
-        colors.forEach(c => c.classList.remove("selected"));
+        if (tipo) {
+            $principal.attr('name', 'f_principal_' + tipo);
+        } else {
+            $principal.removeAttr('name');
+        }
 
-        // Marcar seleccionado
-        color.classList.add("selected");
+    });
 
-        // Guardar el color
-        selectedColor.value = color.dataset.color;
+    $(document).on('change', '.f_principal', function () {
+        if (!$(this).is(':checked')) {
+            return;
+        }
 
-        // console.log("Color seleccionado:", selectedColor.value);
+        const $item = $(this).closest('.logo-item');
+        const tipoArchivoId = $item.find('.f_tipo_archivo').val();
+
+        if (!tipoArchivoId) {
+            return;
+        }
+
+        $('.f_principal_old[data-tipo="' + tipoArchivoId + '"]').prop('checked', false);
+
+    });
+
+    $(document).on('change', '.f_principal_old', function () {
+        if (!$(this).is(':checked')) {
+            return;
+        }
+
+        const tipoArchivoId = $(this).data('tipo');
+
+        $('.logo-item').each(function () {
+            const $item = $(this);
+            const tipoNuevo = $item.find('.f_tipo_archivo').val();
+
+            if (tipoNuevo == tipoArchivoId) {
+                $item.find('.f_principal').prop('checked', false);
+            }
+
         });
     });
+
+});
 </script>
 
 @endsection

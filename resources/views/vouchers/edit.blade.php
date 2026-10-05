@@ -454,7 +454,7 @@ $(document).ready(function () {
                                 <label class="form-check-label" for="imagen-delete-{{ $imagen->vf_id }}">Eliminar imagen</label>
                             </div>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="imagen_principal" value="{{ $imagen->vf_id }}" id="imagen-principal-{{ $imagen->vf_id }}" {{ $imagen->vf_principal == 1 ? 'checked' : '' }}>
+                                <input class="form-check-input f_principal_old" type="radio" name="imagen_principal" value="{{ $imagen->vf_id }}" id="imagen-principal-{{ $imagen->vf_id }}" {{ $imagen->vf_principal == 1 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="imagen-principal-{{ $imagen->vf_id }}">Imagen principal</label>
                             </div>
                         </div>
@@ -466,19 +466,16 @@ $(document).ready(function () {
                 <label class="form-label required-label">Imagen/es</label>
                 <div id="logos-container">
                     <div class="row logo-item mb-2">
-                        <div class="col-sm-11">
-                            <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                        <input type="hidden" name="f_num_imagenes" id="f_num_imagenes" value="0">
+                        <div class="col-sm-9">
+                            <input type="file" name="imagenes[]" id="f_imagen-0" accept="image/*" class="form-control">
                         </div>
-                        {{-- <div class="col-sm-3">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id" class="form-select field-required">
-                                <option value="">Selecciona el tipo de archivo</option>
-                                @foreach($tipos_archivos as $tipo)
-                                    <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
-                                        {{ $tipo['tipo_archivo_nombre'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
+                        <div class="col-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input f_principal" type="radio" name="f_principal" id="f_principal-0" value="0">
+                                <label class="form-check-label" for="f_principal-0">Principal</label>
+                            </div>
+                        </div>
                         <div class="col-sm-1 d-flex align-items-center"></div>
                     </div>
 
@@ -567,8 +564,11 @@ $(document).ready(function () {
         </div>
 
         <div class="d-flex justify-content-between form-actions">
-            <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
+            <button type="button" class="btn btn-danger" data-id="{{ $voucher->vou_id }}" data-url="{{ route('admin.vouchers.delete', $voucher->vou_id) }}" id="btn_eliminar">Bloquear</button>
+            <div>
+                <a href="{{ route('admin.vouchers.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success" id="btn_actualizar">Actualizar</button>
+            </div>
         </div>
         <br>
     </form>
@@ -1005,11 +1005,18 @@ $(document).ready(function () {
     });
 
     $('#add-logo').on('click', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())+1;
 
         let html = `
             <div class="row logo-item mb-2">
-                <div class="col-sm-11">
-                    <input type="file" name="imagenes[]" accept="image/*" class="form-control">
+                <div class="col-sm-9">
+                    <input type="file" name="imagenes[]" id="f_imagen-${f_num_imagenes}" accept="image/*" class="form-control">
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-check">
+                        <input class="form-check-input f_principal" type="radio" name="f_principal" id="f_principal-${f_num_imagenes}" value="0">
+                        <label class="form-check-label" for="f_principal-${f_num_imagenes}">Principal</label>
+                    </div>
                 </div>
                 <div class="col-sm-1 d-flex align-items-center">
                     <button type="button" class="btn btn-danger btn-sm remove-logo">X</button>
@@ -1017,11 +1024,23 @@ $(document).ready(function () {
             </div>
         `;
 
+        $('#f_num_imagenes').val(f_num_imagenes);
         $('#logos-container').append(html);
     });
 
     $(document).on('click', '.remove-logo', function () {
+        let f_num_imagenes = Number($('#f_num_imagenes').val())-1;
+        $('#f_num_imagenes').val(f_num_imagenes);
+
         $(this).closest('.logo-item').remove();
+    });
+
+    $(document).on('click', '.f_principal', function () {
+        $('.f_principal_old').prop('checked', false);
+    });
+
+    $(document).on('click', '.f_principal_old', function () {
+        $('.f_principal').prop('checked', false);
     });
 
     $(document).on('change', '#f_mod_id', function () {
@@ -1137,6 +1156,33 @@ $(document).ready(function () {
 
         $('.mod_stock').each(function () {
             $(this).rules('remove');
+        });
+    });
+
+    $(document).on('click', '#btn_eliminar', function (e) {
+        e.preventDefault();
+
+        let url = $(this).data('url');
+
+        Swal.fire({
+            title: '¿Bloquear voucher?',
+            text: "Esta acción lo desactivará",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#5cb85c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.post(url, {
+                    _token: "{{ csrf_token() }}"
+                }).done(function () {
+                    window.location.href = "{{ route('admin.vouchers.index') }}";
+                });
+
+            }
         });
     });
 });

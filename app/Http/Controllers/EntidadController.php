@@ -522,7 +522,6 @@ class EntidadController extends Controller
         try {
             // $this->validarEntidad($request);
 
-
             DB::beginTransaction();
 
             $entidad = Entidad::findOrFail($id);
@@ -667,9 +666,7 @@ class EntidadController extends Controller
 
             
             /*
-            |--------------------------------------------------------------------------
             | Eliminar logos marcados
-            |--------------------------------------------------------------------------
             */
             if ($request->filled('delete_imagenes')) {
 
@@ -727,6 +724,9 @@ class EntidadController extends Controller
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
+                $principalBanner = $request->input('f_principal_2');
+                $principalLogo = $request->input('f_principal_1');
+
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
                     // $path = $imagen->storeAs('logos', $filename, 'public');
@@ -739,6 +739,31 @@ class EntidadController extends Controller
                     $format = $imagen->getClientOriginalExtension();
                     $path = $imagen->store('logos', 'public');
 
+                    $es_principal = 0;
+
+                    if ($tipo_archivo_id == 2 && $principalBanner == $index) {
+                        $es_principal = 1;
+
+                        EntidadImagen::where('ent_id', $id)
+                            ->where('tipo_archivo_id', 2)
+                            ->where('ef_estado', 1)
+                            ->update([
+                                'ef_principal' => 0,
+                            ]);
+
+                    }
+                    if ($tipo_archivo_id == 1 && $principalLogo == $index) {
+                        $es_principal = 1;
+
+                        EntidadImagen::where('ent_id', $id)
+                            ->where('tipo_archivo_id', 1)
+                            ->where('ef_estado', 1)
+                            ->update([
+                                'ef_principal' => 0,
+                            ]);
+
+                    }
+
                     $imagen = EntidadImagen::create([
                         'ent_id' => $id,
                         'tipo_archivo_id' => $tipo_archivo_id,
@@ -748,7 +773,7 @@ class EntidadController extends Controller
                         'ef_img_path' => $path,
                         'ef_img_format' => $format,
                         'ef_img_size' => $size,
-                        'ef_principal' => 0,
+                        'ef_principal' => $es_principal,
                         'ef_estado' => 1,
                         'ef_fecha_alta' => now(),
                         'ef_usu_alta' => $usu,
@@ -781,7 +806,7 @@ class EntidadController extends Controller
 
             return redirect()
                 ->route('admin.entidades.index')
-                ->with('success', 'Entidad eliminada correctamente');
+                ->with('success', 'Entidad bloqueada correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

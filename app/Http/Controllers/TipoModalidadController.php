@@ -97,7 +97,7 @@ class TipoModalidadController extends Controller
 
             return redirect()
                 ->route('admin.tipos_modalidades.index')
-                ->with('success', 'Tipo entidad eliminado correctamente');
+                ->with('success', 'Tipo entidad bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

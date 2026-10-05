@@ -396,7 +396,7 @@ class InfluencerController extends Controller
 
             return redirect()
                 ->route('admin.influencers.index')
-                ->with('success', 'Influencer eliminado correctamente');
+                ->with('success', 'Influencer bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

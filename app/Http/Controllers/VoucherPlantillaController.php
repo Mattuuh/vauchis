@@ -153,7 +153,7 @@ class VoucherPlantillaController extends Controller
 
             return redirect()
                 ->route('admin.voucher_plantillas.index')
-                ->with('success', 'Plantilla eliminado correctamente');
+                ->with('success', 'Plantilla bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }

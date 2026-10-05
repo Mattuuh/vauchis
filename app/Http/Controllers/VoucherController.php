@@ -464,6 +464,7 @@ class VoucherController extends Controller
             // }
 
             if ($request->hasFile('imagenes')) {
+                $imagen_principal = $request->input('f_principal');
 
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
@@ -476,6 +477,12 @@ class VoucherController extends Controller
                     $format = $imagen->getClientOriginalExtension();
                     $path = $imagen->store('vouchers', 'public');
 
+                    $es_principal=0;
+
+                    if ($imagen_principal == $index) {
+                        $es_principal=1;
+                    }
+
                     DB::table('vouchers_files')->insert([
                         'vou_id' => $vouId,
                         'tipo_archivo_id' => 1,
@@ -484,6 +491,7 @@ class VoucherController extends Controller
                         'vf_img_path' => $path,
                         'vf_img_format' => $format,
                         'vf_img_size' => $size,
+                        'vf_principal' => $es_principal,
                         'vf_estado' => 1,
                         'vf_estado2' => null,
                         'vf_fecha_alta' => now(),
@@ -1008,6 +1016,7 @@ class VoucherController extends Controller
                             DB::table('vouchers_detalles')
                                 ->where('vou_id', $id)
                                 ->where('mca_id', $campo->mca_id)
+                                ->where('vd_estado2', 'PE')
                                 ->update([
                                     'vd_monto_total' => $valor['monto_total'] ?? 0,
                                     'vd_fecha_mod' => now(),
@@ -1109,6 +1118,7 @@ class VoucherController extends Controller
                 ->get();
 
             if ($request->hasFile('imagenes')) {
+                $imagen_principal = $request->input('f_principal');
 
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
@@ -1121,6 +1131,12 @@ class VoucherController extends Controller
                     $format = $imagen->getClientOriginalExtension();
                     $path = $imagen->store('vouchers', 'public');
 
+                    $es_principal=0;
+
+                    if ($imagen_principal == $index) {
+                        $es_principal=1;
+                    }
+
                     DB::table('vouchers_files')->insert([
                         'vou_id' => $id,
                         'tipo_archivo_id' => 1,
@@ -1129,6 +1145,7 @@ class VoucherController extends Controller
                         'vf_img_path' => $path,
                         'vf_img_format' => $format,
                         'vf_img_size' => $size,
+                        'vf_principal' => $es_principal,
                         'vf_estado' => 1,
                         'vf_estado2' => null,
                         'vf_fecha_alta' => now(),
@@ -1215,6 +1232,25 @@ class VoucherController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $voucher = Voucher::findOrFail($id);
+
+            $voucher->update([
+                'vou_estado' => 0,
+                'vou_fecha_baja' => now(),
+                'vou_usu_baja' => 1,
+            ]);
+
+            return redirect()
+                ->route('admin.vouchers.index')
+                ->with('success', 'Voucher bloqueado correctamente');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
     public function destroyBanner($id)
     {
         $banner = DB::table('vouchers_files')->where('vf_id', $id)->first();
@@ -1243,7 +1279,7 @@ class VoucherController extends Controller
                 'vf_usu_baja' => 1
             ]);
 
-        return redirect()->back()->with('success', 'Banner eliminado correctamente.');
+        return redirect()->back()->with('success', 'Banner bloqueado correctamente.');
     }
 
     public function previewPlantilla($voucherId, $plantillaId)
@@ -1371,10 +1407,10 @@ class VoucherController extends Controller
 
             // return redirect()
             //     ->route('admin.vouchers.edit', $vou_id)
-            //     ->with('success', 'Detalle eliminado correctamente');
+            //     ->with('success', 'Detalle bloqueado correctamente');
             return response()->json([
                 'icon' => 'success',
-                'title' => 'Detalle eliminado correctamente.',
+                'title' => 'Detalle bloqueado correctamente.',
             ]);
         } catch (\Exception $e) {
             dd($e->getMessage());

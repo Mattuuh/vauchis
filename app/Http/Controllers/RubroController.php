@@ -276,7 +276,7 @@ class RubroController extends Controller
 
             return redirect()
                 ->route('admin.rubros.index')
-                ->with('success', 'Rubro eliminado correctamente');
+                ->with('success', 'Rubro bloqueado correctamente');
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
