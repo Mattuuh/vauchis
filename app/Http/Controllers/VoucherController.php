@@ -2037,8 +2037,8 @@ class VoucherController extends Controller
         $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
         // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
 
-        // $nombreArchivo = 'voucher-' . $token . '.pdf';
-        $nombreArchivo = 'voucher_para_'. session('voucher.para') .'.pdf';
+        $nombreArchivo = 'voucher-' . $token . '.pdf';
+        // $nombreArchivo = 'voucher_para_'. session('voucher.para') .'.pdf';
         $rutaRelativa = 'vouchers/pdf/' . $nombreArchivo;
         $rutaCompleta = storage_path('app/public/' . $rutaRelativa);
 
@@ -2191,9 +2191,10 @@ class VoucherController extends Controller
     // public function descargar_pdf($id)
     public function descargar_pdf($vd_id, Request $request)
     {
-        // $voucher = Voucher::findOrFail($id);
+        $voucher_detalle = VoucherDetalle::findOrFail($vd_id);
 
         $nombreArchivo = 'voucher-' . $vd_id . '.pdf';
+        // $nombreArchivo = $voucher_detalle->vd_pdf_mobile;
         $rutaCompleta = storage_path(
             'app/public/vouchers/pdf/' . $nombreArchivo
         );
@@ -2210,7 +2211,7 @@ class VoucherController extends Controller
 
         return response()->download(
             $rutaCompleta,
-            'voucher-' . $vd_id . '.pdf'
+            'voucher_para_'. $voucher_detalle->vd_variante_nombre_para . '.pdf'
         );
 
     }

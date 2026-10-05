@@ -53,6 +53,8 @@ class VoucherComprado extends Mailable
      */
     public function attachments(): array
     {
+        $nombre_archivo = 'voucher_para_' . $this->voucherDetalle->vd_variante_nombre_para . '.pdf';
+
         return [
             Attachment::fromPath(
                 storage_path('app/public/' . $this->rutaPdf)
