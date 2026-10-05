@@ -59,7 +59,7 @@ class VoucherComprado extends Mailable
             Attachment::fromPath(
                 storage_path('app/public/' . $this->rutaPdf)
             )
-            ->as('voucher.pdf')
+            ->as($nombre_archivo)
             ->withMime('application/pdf'),
         ];
     }
