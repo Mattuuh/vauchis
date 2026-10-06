@@ -225,6 +225,7 @@ Route::middleware(['administrador'])
         Route::get('/vouchers/tipos_modalidades', [VoucherController::class, 'tipos_modalidades'])->name('vouchers.tipos_modalidades');
         Route::post('/vouchers/guardar-orden', [VoucherController::class, 'guardar_orden'])->name('vouchers.guardar_orden');
         Route::get('/vouchers/ordenar', [VoucherController::class, 'ordenar'])->name('vouchers.ordenar');
+        Route::get('/vouchers/por-entidad',[VoucherController::class, 'por_entidad'])->name('vouchers.por_entidad');
         Route::resource('vouchers', VoucherController::class);
         Route::post('/vouchers/{id}/delete', [VoucherController::class, 'delete'])->name('vouchers.delete');
         Route::get('/vouchers/{voucher}/plantillas/{plantilla}/preview', [VoucherController::class, 'previewPlantilla'])->name('vouchers.plantillas.preview');

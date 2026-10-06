@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Rubros')
+@section('title', 'Vouchers')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/commerces/index.css') }}">
@@ -59,6 +59,12 @@ $(document).ready(function () {
 
     $('#lista-items').disableSelection();
 
+    // CAMBIO DE ENTIDAD
+    $('#f_entidad').on('change', function () {
+        let entidad = $(this).val();
+        cargar_vouchers(entidad);
+    });
+
     $('#btn-guardar-orden').on('click', function () {
 
         let orden = [];
@@ -72,6 +78,7 @@ $(document).ready(function () {
             type: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
+                entidad_id: $('#f_entidad').val(),
                 orden: orden
             },
             beforeSend: function () {
@@ -102,6 +109,99 @@ $(document).ready(function () {
         });
 
     });
+
+    function cargar_vouchers(entidad_id) {
+        if (!entidad_id) {
+            $('#lista-items').html('');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('admin.vouchers.por_entidad') }}",
+            type: "GET",
+            data: {
+                entidad_id: entidad_id
+            },
+            beforeSend: function () {
+                $('#lista-items').html(`
+                <tr>
+                    <td colspan="8" class="text-center py-4">Cargando...</td>
+                </tr>
+                `);
+            },
+            success: function (response) {
+                let html = '';
+
+                if (response.vouchers.length === 0) {
+                    html = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4">No hay vouchers para esta entidad.</td>
+                    </tr>
+                    `;
+
+                } else {
+                    $.each(response.vouchers, function (index, voucher) {
+                        html += `
+                        <tr class="commerce-row item" data-id="${voucher.vou_id}">
+                            <td class="commerce-col" data-label="ID">
+                                <span class="commerce-mobile-label">ID</span>
+                                <span>${voucher.vou_id}</span>
+                            </td>
+                            <td class="commerce-col commerce-col--brand" data-label="Nombre">
+                                <span class="commerce-mobile-label">Nombre</span>
+                                <div class="commerce-brand">
+                                    <div class="commerce-brand__text">
+                                        <h3>${voucher.vou_nombre}</h3>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="commerce-col" data-label="Categoria">
+                                <span class="commerce-mobile-label">Categoria</span>
+                                <span>${voucher.categoria}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Modalidad">
+                                <span class="commerce-mobile-label">Modalidad</span>
+                                <span>${voucher.modalidad}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Fecha de alta">
+                                <span class="commerce-mobile-label">Fecha de alta</span>
+                                <span>${voucher.fecha_alta}</span>
+                            </td>
+                            <td class="commerce-col" data-label="Stock">
+                                <span class="commerce-mobile-label">Stock</span>
+                                <span class="commerce-badge-count">${voucher.vou_stock}</span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Estado">
+                                <span class="commerce-mobile-label">Estado</span>
+                                <span class="commerce-status ${voucher.estado_class}" title="${voucher.estado_text}">
+                                    <i class="bi bi-${voucher.estado_icon}"></i>
+                                </span>
+                            </td>
+                            <td class="commerce-col text-center" data-label="Ordenar">
+                                <span class="commerce-mobile-label">Ordenar</span>
+                                <span class="btn-drag" title="Arrastrar para ordenar"><i class="bi bi-grip-vertical"></i></span>
+                            </td>
+                        </tr>
+                        `;
+                    });
+
+                }
+
+                $('#lista-items').html(html);
+
+                // Como cambió el contenido del tbody,
+                // refrescamos sortable
+                $('#lista-items').sortable('refresh');
+            },
+            error: function () {
+                $('#lista-items').html(`
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-danger">Error al cargar los vouchers.</td>
+                </tr>
+                `);
+            }
+        });
+    }
 });
 </script>
 @endpush
@@ -133,6 +233,17 @@ $(document).ready(function () {
     <section class="commerce-list-section">
         <div class="container">
             <div class="commerce-card">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label for="f_entidad" class="form-label">Entidad</label>
+                        <select id="f_entidad" class="form-select">
+                            <option value="" selected>Selecciona una entidad</option>
+                            @foreach($entidades as $entidad)
+                                <option value="{{ $entidad->ent_id }}">{{ $entidad->ent_nombre_fantasia }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="commerce-table-wrap">
                     <table class="commerce-table">
                         <thead>
@@ -149,62 +260,9 @@ $(document).ready(function () {
                         </thead>
 
                         <tbody id="lista-items">
-                            @foreach($vouchers as $voucher)
-                                <tr class="commerce-row item" data-id="{{ $voucher->vou_id }}">
-                                    <td class="commerce-col" data-label="ID">
-                                        <span class="commerce-mobile-label">ID</span>
-                                        <span>{{ $voucher->vou_id }}</span>
-                                    </td>
-
-                                    <td class="commerce-col commerce-col--brand" data-label="Nombre">
-                                        <span class="commerce-mobile-label">Nombre</span>
-
-                                        <div class="commerce-brand">
-                                            <div class="commerce-brand__text">
-                                                <h3>{{ $voucher->vou_nombre }}</h3>
-                                                <p>{{ $voucher->category }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Categoria">
-                                        <span class="commerce-mobile-label">Categoria</span>
-                                        <span>{{ $voucher->categoria->cv_nombre ?? 'Sin categoría' }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Modalidad">
-                                        <span class="commerce-mobile-label">Modalidad</span>
-                                        <span>{{ $voucher->modalidad->mod_codigo ?? 'Sin modalidad' }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Fecha de alta">
-                                        <span class="commerce-mobile-label">Fecha de alta</span>
-                                        <span>{{ $voucher->vou_fecha_alta->format('d/m/Y') }}</span>
-                                    </td>
-
-                                    <td class="commerce-col" data-label="Stock">
-                                        <span class="commerce-mobile-label">Stock</span>
-                                        <span class="commerce-badge-count">{{ $voucher->vou_stock }}</span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Estado">
-                                        <span class="commerce-mobile-label">Estado</span>
-
-                                        @php
-                                            $estado = estado($voucher->vou_estado);
-                                        @endphp
-
-                                        <span class="commerce-status {{ $estado['class'] }}" title="{{ $estado['text'] }}">
-                                            <i class="bi bi-{{ $estado['icon'] }}"></i>
-                                        </span>
-                                    </td>
-
-                                    <td class="commerce-col text-center" data-label="Ordenar">
-                                        <span class="commerce-mobile-label">Ordenar</span>
-                                        <span class="btn-drag" title="Arrastrar para ordenar"><i class="bi bi-grip-vertical"></i></span>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td colspan="8" class="text-center py-4">No hay vouchers para esta entidad.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -1525,6 +1525,8 @@ class VoucherController extends Controller
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
+            ->orderBy('vou_orden')
+            ->orderBy('vou_id')
             ->get();
         
         // $detalle = VoucherDetalle::where('vou_id', $vou_id)
@@ -2168,7 +2170,55 @@ class VoucherController extends Controller
                 'vou_fecha_alta',
             ]);
 
-        return view('vouchers.orden', compact('vouchers'));
+        $entidades = Entidad::where('ent_estado', 1)
+            ->orderBy('ent_id', 'desc')
+            ->get(['ent_nombre_fantasia', 'ent_id']);
+
+        return view('vouchers.orden', compact('vouchers','entidades'));
+    }
+
+    public function por_entidad(Request $request)
+    {
+        $ent_id = $request->entidad_id;
+
+        $vouchers = Voucher::with(['categoria','entidad'])
+            ->whereHas('modalidad', function ($query) {
+                $query->where('tipo_mod_id', 3);
+            })
+            ->where('ent_id', $ent_id)
+            ->where('vou_estado',1)
+            ->orderBy('vou_orden')
+            ->get([
+                'vou_id', 
+                'ent_id', 
+                'cv_id', 
+                'inf_id', 
+                'mod_id', 
+                'vou_nombre', 
+                'vou_stock', 
+                'vou_estado', 
+                'vou_fecha_alta',
+            ])
+            ->map(function ($voucher) {
+                $estado = estado($voucher->vou_estado);
+
+                return [
+                    'vou_id' => $voucher->vou_id,
+                    'vou_nombre' => $voucher->vou_nombre,
+                    'categoria' => $voucher->categoria->cv_nombre ?? 'Sin categoria',
+                    'modalidad' => $voucher->modalidad->mod_codigo ?? 'Sin modalidad',
+                    'vou_stock' => $voucher->vou_stock,
+                    'fecha_alta' => $voucher->vou_fecha_alta->format('d/m/Y'),
+                    'estado_class' => $estado['class'],
+                    'estado_text' => $estado['text'],
+                    'estado_icon' => $estado['icon'],
+                ];
+
+            });
+
+        return response()->json([
+            'vouchers' => $vouchers
+        ]);
     }
 
     public function guardar_orden(Request $request)

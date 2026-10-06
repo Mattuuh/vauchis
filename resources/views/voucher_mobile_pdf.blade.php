@@ -952,7 +952,7 @@
             <div class="vp-community">
 
                 <div class="vp-community-text">
-                    <span>Uníte a la</span>
+                    <span>Unite a la</span>
                     <strong>comunidad</strong>
                     <span>de regalos</span>
                 </div>
