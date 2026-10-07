@@ -43,6 +43,8 @@
 
     <script src="{{ asset('js/commtool.js') }}?r={{ time() }}"></script>
 
+    <link rel="stylesheet" href="{{ asset('css/modal-ayuda.css') }}?r={{ time() }}">
+
     @stack('libs')
 
     @stack('styles')
@@ -277,5 +279,8 @@
     </script>
 
     @stack('scripts')
+
+    @include('components.modal-ayuda')
 </body>
+<script src="{{ asset('js/modal-ayuda.js') }}?r={{ time() }}"></script>
 </html>

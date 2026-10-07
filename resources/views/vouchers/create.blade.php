@@ -345,6 +345,13 @@ $(document).ready(function () {
                 </div> --}}
 
                 <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" name="f_publico" id="f_publico" value="1" {{ old('f_publico') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="f_publico">Publico</label>
+                    </div>
+                </div>
+
+                <div class="col-12">
                     <label class="form-label required-label">Descripción:</label>
                     <textarea id="description" name="description" rows="2" class="form-control voucher-textarea" placeholder="Descripción&#10;Incluye una descripción detallada del voucher.">{{ old('description') }}</textarea>
                 </div>

@@ -293,6 +293,7 @@ class VoucherController extends Controller
                 'vou_vigencia_dias' => $request->f_vigencia,
                 'vou_stock' => $request->stock ?? 0,
                 'vou_destacado' => 0,
+                'vou_publico' => $request->f_publico ?? 0,
                 'vou_porcentaje_comision' => $request->f_comision,
 
                 'vou_terminos_condiciones' => $request->terms ?? null,
@@ -898,10 +899,14 @@ class VoucherController extends Controller
                     'vou_vigencia_dias' => $request->f_vigencia,
                     // 'vou_stock' => $request->stock ?? 0,
                     'vou_porcentaje_comision' => $request->f_comision,
+                    'vou_publico' => $request->f_publico ?? 0,
 
                     'vou_permite_personalizacion' => $request->f_permite_personalizacion,
                     'vou_terminos_condiciones' => $request->terms ?? null,
                     'vou_modalidad_condiciones' => $condiciones,
+
+                    'vou_fecha_mod' => now(),
+                    'vou_usu_mod' => $usuario_id,
                 ]);
             
             if ($request->filled('f_ed_id')) {

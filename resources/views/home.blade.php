@@ -41,7 +41,7 @@
             <input type="text" name="search" placeholder="Negocio, servicio, categoría..." value="{{ request('search') }}">
         </form> --}}
 
-        <button class="vh-help-btn vh-help-btn--mobile" type="button" aria-label="Ayuda">
+        <button class="vh-help-btn vh-help-btn--mobile" type="button" aria-label="Ayuda" data-bs-toggle="modal" data-bs-target="#modalAyuda">
             <img src="{{ asset('images/boton-ayuda.svg') }}" alt="">
         </button>
 
