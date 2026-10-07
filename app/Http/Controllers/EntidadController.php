@@ -331,8 +331,8 @@ class EntidadController extends Controller
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
-                $principalBanner = $request->input('f_principal_BANNER');
-                $principalLogo = $request->input('f_principal_LOGO');
+                $principalBanner = $request->input('f_principal_2');
+                $principalLogo = $request->input('f_principal_1');
 
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
