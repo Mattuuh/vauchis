@@ -1500,12 +1500,14 @@ class VoucherController extends Controller
         $entidad = Entidad::with('imagenPrincipal', 'logoPrincipal', 'resaltador_entidad')
             // ->where('ent_id',$id)
             ->where('ent_estado',1)
+            ->where('ent_publico', 1)
             ->findOrFail($id);
         // dd($entidad);
 
         $domicilios = EntidadDomicilio::with('organizacion','provincia')
             ->where('ent_id', $id)
             ->where('ed_estado', 1)
+            ->where('ed_publico', 1)
             ->get();
 
         if (!$entidad) {
@@ -1530,6 +1532,7 @@ class VoucherController extends Controller
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
+            ->where('vou_publico', 1)
             ->orderBy('vou_orden')
             ->orderBy('vou_id')
             ->get();
@@ -1554,6 +1557,7 @@ class VoucherController extends Controller
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
+            ->where('vou_publico', 1)
             ->get();
 
         $vouchers_eleccion = Voucher::with([
@@ -1569,6 +1573,7 @@ class VoucherController extends Controller
             })
             ->where('ent_id', $id)
             ->where('vou_estado', 1)
+            ->where('vou_publico', 1)
             ->get();
 
             // dd($vouchers_fijos);
@@ -1579,6 +1584,7 @@ class VoucherController extends Controller
             })
             ->where('ent_id', $entidad->ent_id)
             ->where('vou_estado', 1)
+            ->where('vou_publico', 1)
             ->get();
 
         $montosMinimos = [];
