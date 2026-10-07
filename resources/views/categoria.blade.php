@@ -2,16 +2,34 @@
 @extends('layouts.app')
 
 @section('content')
-<main class="vo-page">
+<main class="vo-page {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-page--con-causa' : '' }}">
 
     @include('partials.navbar')
 
-    <section class="vo-hero">
+    <section class="vo-hero {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-hero--con-causa' : '' }}">
 
-        <button class="vh-help-btn" type="button" aria-label="Ayuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
+        @if (isset($categoria->id) && $categoria->id == 3)
+            {{-- Contenedor para la ilustración izquierda.
+                 Colocá tu imagen dentro de este div cuando tengas definido el asset. --}}
+            <div class="vo-causa-image vo-causa-image--left" aria-hidden="true">
+                <img src="{{ asset('images/con_causa_corazon1.png') }}" alt="">
+            </div>
+
+            <div class="vo-shell vo-causa-hero-content">
+                <h1>Regalando vouchers de estas entidades,<br class="d-none d-md-block"> colaborás con las causas que impulsan.</h1>
+                <p>El regalo que hacés puede transformar vidas</p>
+            </div>
+
+            {{-- Contenedor para la ilustración derecha. --}}
+            <div class="vo-causa-image vo-causa-image--right" aria-hidden="true">
+                <img src="{{ asset('images/con_causa_corazon2.png') }}" alt="">
+            </div>
+        @endif
+
+        <button class="vh-help-btn" type="button" aria-label="Ayuda" data-bs-toggle="modal" data-bs-target="#modalAyuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
     </section>
 
-    {{-- <nav class="vo-subnavbar">
+    {{-- <nav class="vo-subnavbar {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-subnavbar--con-causa' : '' }}">
         <div class="vo-shell vo-subnavbar-inner">
             @foreach ($rubros ?? [] as $rubro)
                 <a href="" class="vo-subnavbar-link {{ request('category') == $rubro->rub_id ? 'active' : '' }}">
@@ -21,7 +39,7 @@
         </div>
     </nav> --}}
 
-    <nav class="vo-subnavbar">
+    <nav class="vo-subnavbar {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-subnavbar--con-causa' : '' }}">
         <div class="vo-shell vo-subnavbar-inner">
             <div class="vo-subnavbar-item">
                 <a href="#" class="vo-subnavbar-link">Filtros</a>
@@ -803,6 +821,157 @@
 .vo-subnavbar-inner.is-dragging {
     cursor: grabbing;
 }
+
+
+/* =========================================================
+   CON CAUSA - DISEÑO EXCLUSIVO
+   Solo afecta a la categoría 3.
+   ========================================================= */
+@if (isset($categoria->id) && $categoria->id == 3)
+.vo-page--con-causa .vo-hero--con-causa {
+    min-height: 216px;
+    background: #e91282;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+/*
+ * El navbar está superpuesto sobre el hero. Por eso el contenido
+ * comienza más abajo y no queda escondido detrás de la barra blanca.
+ */
+.vo-page--con-causa .vo-causa-hero-content {
+    min-height: 216px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+    padding: 92px 220px 24px;
+}
+
+.vo-page--con-causa .vo-causa-hero-content h1 {
+    margin: 0;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 24px;
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.vo-page--con-causa .vo-causa-hero-content p {
+    margin: 10px 0 0;
+    color: #fff;
+    font-family: Montserrat, sans-serif;
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+/* Contenedores reservados para las ilustraciones del diseño. */
+.vo-page--con-causa .vo-causa-image {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.vo-page--con-causa .vo-causa-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.vo-page--con-causa .vo-causa-image--left {
+    left: 0;
+    bottom: 0;
+    width: 230px;
+    height: 170px;
+}
+
+.vo-page--con-causa .vo-causa-image--right {
+    right: 0;
+    bottom: 0;
+    width: 245px;
+    height: 175px;
+}
+
+.vo-page--con-causa .vo-subnavbar--con-causa {
+    background: #e91282;
+    border-top: 0;
+    position: relative;
+}
+
+.vo-page--con-causa .vo-subnavbar--con-causa .vo-subnavbar-inner {
+    min-height: 52px;
+    gap: 14px;
+    padding-bottom: 8px;
+}
+
+@media (max-width: 991px) {
+    .vo-page--con-causa .vo-causa-hero-content {
+        padding-inline: 155px;
+    }
+
+    .vo-page--con-causa .vo-causa-image--left {
+        width: 185px;
+        height: 145px;
+    }
+
+    .vo-page--con-causa .vo-causa-image--right {
+        width: 195px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 767px) {
+    .vo-page--con-causa .vo-hero--con-causa {
+        min-height: 220px;
+    }
+
+    .vo-page--con-causa .vo-causa-hero-content {
+        min-height: 220px;
+        padding: 92px 30px 28px;
+    }
+
+    .vo-page--con-causa .vo-causa-hero-content h1 {
+        max-width: 330px;
+        font-size: 20px;
+        line-height: 1.12;
+    }
+
+    .vo-page--con-causa .vo-causa-hero-content p {
+        max-width: 260px;
+        margin-top: 9px;
+        font-size: 9px;
+    }
+
+    .vo-page--con-causa .vo-causa-image--left {
+        left: -22px;
+        width: 120px;
+        height: 112px;
+    }
+
+    .vo-page--con-causa .vo-causa-image--right {
+        right: -22px;
+        width: 125px;
+        height: 115px;
+    }
+
+    .vo-page--con-causa .vo-subnavbar--con-causa .vo-subnavbar-inner {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 14px 8px;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+}
+@endif
+
     </style>
 @endpush
 
