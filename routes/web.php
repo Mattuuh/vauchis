@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Route;
 // routes/web.php
 use App\Http\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::view('/', 'proximamente')->name('proximamente'); // Pantalla pública de próximamente
+
+Route::get('/inicio', [HomeController::class, 'index'])->name('home'); // Home original del sistema
 
 
 use App\Http\Controllers\EntidadController;
