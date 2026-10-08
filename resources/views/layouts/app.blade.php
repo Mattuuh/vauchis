@@ -7,6 +7,11 @@
     {{-- <title>Vauchis</title> --}}
     <title>@yield('title', 'Vauchis')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <meta property="og:title" content="Vauchis | El placer de regalar">
+    <meta property="og:description" content="El placer de regalar, simplificado.">
+    <meta property="og:image" content="{{ asset('images/logo-1.png') }}">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:type" content="website">
 
     {{-- Bootstrap 5.3 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
