@@ -93,7 +93,7 @@ $(document).ready(function () {
                 required: false,
                 maxlength: 255,
             },
-            "f_tipo_archivo_id[]": {
+            "f_tipo_archivo_id[0]": {
                 required: {
                     depends: function () {
                         const ref = $(this).attr('id').split('-').reverse()[0];
