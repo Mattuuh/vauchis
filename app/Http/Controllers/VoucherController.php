@@ -2270,9 +2270,12 @@ class VoucherController extends Controller
         //         'inline; filename="' . $nombreArchivo . '"',
         // ]);
 
+        // $nombre_archivo = 'voucher_para_'. $voucher_detalle->vd_variante_nombre_para . '.pdf';
+        $nombre_archivo = 'Abri tu regalo!.pdf';
+
         return response()->download(
             $rutaCompleta,
-            'voucher_para_'. $voucher_detalle->vd_variante_nombre_para . '.pdf'
+            $nombre_archivo
         );
 
     }

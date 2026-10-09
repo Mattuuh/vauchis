@@ -57,8 +57,9 @@ class CheckoutController extends Controller
         $monto = $valores->vmv_monto_fijo;
 
         $entidad = $voucher->entidad;
-        $cantidad = $request->cantidad;
-        $monto_total = $monto * $cantidad;
+        // $cantidad = $request->cantidad;
+        // $monto_total = $monto * $cantidad;
+        $monto_total = $monto;
         // $monto_total = 10;
 
         // $comprobante_numero
