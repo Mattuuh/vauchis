@@ -93,8 +93,15 @@ $(document).ready(function () {
                 required: false,
                 maxlength: 255,
             },
-            "logos[]": {
-                required: true,
+            "f_tipo_archivo_id[]": {
+                required: {
+                    depends: function () {
+                        const ref = $(this).attr('id').split('-').reverse()[0];
+                        console.log(ref);
+
+                        return $("#f_imagen-"+ref).val() !='' ? true : false;
+                    }
+                },
             },
             "sucursales[][org_id]": {
                 required: false,
@@ -430,10 +437,10 @@ $(document).ready(function () {
                     <div class="row logo-item mb-2">
                         <input type="hidden" name="f_num_imagenes" id="f_num_imagenes" value="0">
                         <div class="col-sm-7">
-                            <input type="file" name="imagenes[]" id="f_imagen-0" accept="image/*" class="form-control">
+                            <input type="file" name="imagenes[0]" id="f_imagen-0" accept="image/*" class="form-control">
                         </div>
                         <div class="col-sm-2">
-                            <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-0" class="form-select field-required f_tipo_archivo">
+                            <select name="f_tipo_archivo_id[0]" id="f_tipo_archivo_id-0" class="form-select field-required f_tipo_archivo">
                                 <option value="">Selecciona el tipo de archivo</option>
                                 @foreach($tipos_archivos as $tipo)
                                     <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -1228,16 +1235,30 @@ $(document).on('click', '#btn_eliminar', function (e) {
 <script>
 $(document).ready(function () {
 
+    function validarTiposArchivos() {
+        $("[name^='f_tipo_archivo_id[']").each(function () {
+            $(this).rules("add", {
+                required: {
+                    depends: function () {
+                        const ref = this.id.split("-").pop();
+
+                        return $("#f_imagen-" + ref).val() !== "";
+                    }
+                }
+            });
+        });
+    }
+
     $('#add-logo').on('click', function () {
         let f_num_imagenes = Number($('#f_num_imagenes').val())+1;
 
         let html = `
             <div class="row logo-item mb-2">
                 <div class="col-sm-7">
-                    <input type="file" name="imagenes[]" id="f_imagen-${f_num_imagenes}" accept="image/*" class="form-control">
+                    <input type="file" name="imagenes[${f_num_imagenes}]" id="f_imagen-${f_num_imagenes}" accept="image/*" class="form-control">
                 </div>
                 <div class="col-sm-2">
-                    <select name="f_tipo_archivo_id[]" id="f_tipo_archivo_id-${f_num_imagenes}" class="form-select field-required f_tipo_archivo">
+                    <select name="f_tipo_archivo_id[${f_num_imagenes}]" id="f_tipo_archivo_id-${f_num_imagenes}" class="form-select field-required f_tipo_archivo">
                         <option value="">Selecciona el tipo</option>
                         @foreach($tipos_archivos as $tipo)
                             <option value="{{ $tipo['tipo_archivo_id'] }}" {{ old('f_tipo_archivo_id') == $tipo['tipo_archivo_id'] ? 'selected' : '' }}>
@@ -1260,6 +1281,7 @@ $(document).ready(function () {
 
         $('#f_num_imagenes').val(f_num_imagenes);
         $('#logos-container').append(html);
+        validarTiposArchivos();
     });
 
     $(document).on('click', '.remove-logo', function () {
