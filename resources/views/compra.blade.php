@@ -411,6 +411,12 @@
 
     .is-invalid { border-color: #d92d20 !important; }
 
+    .vs-checkout-total-sin-impuesto {
+        display: block;
+        color: #aaa;
+        font-size: 12px;
+    }
+
     @media (max-width: 768px) {
         body { background: #fff; }
 
@@ -597,6 +603,8 @@
     $dias_vigencia = $voucher->vou_vigencia_dias!='' ? $voucher->vou_vigencia_dias : 0;
     $fecha_vto_raw->modify("+$dias_vigencia days");
     $fecha_vto = $fecha_vto_raw ? $fecha_vto_raw->format('d/m/Y') : '01/01/99';
+
+    $monto_sin_impuesto = $entidad->ent_porcentaje_iva > 0 ? round($monto / (1 + ($entidad->ent_porcentaje_iva / 100)), 2) : $monto ;
 
     $direcciones_label='';
     if ($sucursales->isNotEmpty()) {
@@ -801,6 +809,7 @@
             <div class="vp-action-inner">
                 <button type="button" data-url="{{ $editarUrl }}" class="vp-action vp-action-secondary" id="btn_editar">Editar mensaje</button>
                 <div class="vs-checkout-total">TOTAL ${{ number_format($monto, 0, ',', '.') }}ARS</div>
+                <div class="vs-checkout-total-sin-impuesto">Total sin impuestos nacionales ${{ number_format($monto_sin_impuesto, 0, ',', '.') }}</div>
                 <button type="submit" class="vp-action vp-action-primary" id="btn_pagar">Confirmar y pagar</button>
             </div>
         </div>

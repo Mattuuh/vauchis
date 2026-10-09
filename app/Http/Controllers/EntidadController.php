@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\TipoDocumento;
 use App\Models\TipoEntidad;
+use App\Models\TipoIva;
 use App\Models\TipoResponsabilidad;
 use App\Models\Usuario;
 use App\Models\Voucher;
@@ -140,6 +141,10 @@ class EntidadController extends Controller
             ->orderBy('tipo_resp_id')
             ->pluck('tipo_resp_nombre', 'tipo_resp_id');
 
+        $tiposIva = TipoIva::where('tipo_iva_estado', 1)
+            ->orderBy('tipo_iva_id')
+            ->pluck('tipo_iva_descripcion', 'tipo_iva_id');
+
         $tiposDocumento = TipoDocumento::where('tipo_doc_estado', 1)
             ->orderBy('tipo_doc_id','desc')
             ->pluck('tipo_doc_nombre', 'tipo_doc_id');
@@ -182,6 +187,7 @@ class EntidadController extends Controller
         return view('entidades.create', compact(
             'tiposEntidad',
             'tiposResponsabilidad',
+            'tiposIva',
             'tiposDocumento',
             'paises',
             'provincias',
@@ -250,6 +256,8 @@ class EntidadController extends Controller
                 'ent_documento' => $request->com_documento,
                 'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                 'ent_razon_social' => $request->com_razon_social,
+                'tipo_iva_id' => $request->tipo_iva_id,
+                'ent_porcentaje_iva' => TipoIva::findOrFail($request->tipo_iva_id)->tipo_iva_valor,
                 'ent_domicilio_fiscal' => $request->com_dom_fiscal,
                 'ent_email' => $request->com_email,
                 'ent_telefono' => $request->com_telefono,
@@ -331,8 +339,9 @@ class EntidadController extends Controller
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
-                $principalBanner = $request->input('f_principal_2');
                 $principalLogo = $request->input('f_principal_1');
+                $principalBanner = $request->input('f_principal_2');
+                $principalDestacado = $request->input('f_principal_3');
 
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
@@ -343,7 +352,8 @@ class EntidadController extends Controller
 
                     if (
                         $principalBanner === $index ||
-                        $principalLogo === $index
+                        $principalLogo === $index ||
+                        $principalDestacado === $index
                     ) {
                         $es_principal = 1;
                     }
@@ -425,6 +435,10 @@ class EntidadController extends Controller
             ->orderBy('tipo_resp_id')
             ->pluck('tipo_resp_nombre', 'tipo_resp_id');
 
+        $tiposIva = TipoIva::where('tipo_iva_estado', 1)
+            ->orderBy('tipo_iva_id')
+            ->pluck('tipo_iva_descripcion', 'tipo_iva_id');
+
         $tiposDocumento = TipoDocumento::where('tipo_doc_estado', 1)
             ->orderBy('tipo_doc_id', 'desc')
             ->pluck('tipo_doc_nombre', 'tipo_doc_id');
@@ -500,6 +514,7 @@ class EntidadController extends Controller
             'entidad',
             'tiposEntidad',
             'tiposResponsabilidad',
+            'tiposIva',
             'tiposDocumento',
             'paises',
             'provincias',
@@ -535,6 +550,8 @@ class EntidadController extends Controller
                     'ent_documento' => $request->com_documento,
                     'ent_nombre_fantasia' => $request->com_nombre_fantasia,
                     'ent_razon_social' => $request->com_razon_social,
+                    'tipo_iva_id' => $request->tipo_iva_id,
+                    'ent_porcentaje_iva' => TipoIva::findOrFail($request->tipo_iva_id)->tipo_iva_valor,
                     // 'ent_logo_url' => $logoPath,
                     'ent_domicilio_fiscal' => $request->com_dom_fiscal,
                     'ent_email' => $request->com_email,
@@ -724,8 +741,9 @@ class EntidadController extends Controller
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
 
-                $principalBanner = $request->input('f_principal_2');
                 $principalLogo = $request->input('f_principal_1');
+                $principalBanner = $request->input('f_principal_2');
+                $principalDestacado = $request->input('f_principal_3');
 
                 foreach ($request->file('imagenes') as $index => $imagen) {
                     // $filename = Str::uuid() . '.' . $imagen->extension();
@@ -741,6 +759,18 @@ class EntidadController extends Controller
 
                     $es_principal = 0;
 
+                    if ($tipo_archivo_id == 1 && $principalLogo == $index) {
+                        $es_principal = 1;
+
+                        EntidadImagen::where('ent_id', $id)
+                            ->where('tipo_archivo_id', 1)
+                            ->where('ef_estado', 1)
+                            ->update([
+                                'ef_principal' => 0,
+                            ]);
+
+                    }
+
                     if ($tipo_archivo_id == 2 && $principalBanner == $index) {
                         $es_principal = 1;
 
@@ -752,11 +782,12 @@ class EntidadController extends Controller
                             ]);
 
                     }
-                    if ($tipo_archivo_id == 1 && $principalLogo == $index) {
+
+                    if ($tipo_archivo_id == 3 && $principalDestacado == $index) {
                         $es_principal = 1;
 
                         EntidadImagen::where('ent_id', $id)
-                            ->where('tipo_archivo_id', 1)
+                            ->where('tipo_archivo_id', 3)
                             ->where('ef_estado', 1)
                             ->update([
                                 'ef_principal' => 0,

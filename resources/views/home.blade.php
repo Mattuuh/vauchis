@@ -103,10 +103,10 @@
                     @foreach ($featuredBrands as $brand)
                         @php
                             $brandImage = $brand->image ?? $brand->banner ?? null;
-                            $banner_imgSrc = $brandImage ? asset('storage/' . $brandImage) : $brandFallbackImages[$loop->index % count($brandFallbackImages)];
+                            $banner_imgSrc = $brandImage ? asset('storage/' . $brandImage) : asset('images/vauchis-og.png');
 
                             $logoImage = $brand->image ?? $brand->logo ?? null;
-                            $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : $logoFallbackImages[$loop->index % count($logoFallbackImages)];
+                            $logo_imgSrc = $logoImage ? asset('storage/' . $logoImage) : asset('images/favicon.png');
 
                             $resaltador = $brand->resaltador ?? null;
                         @endphp
@@ -160,7 +160,7 @@
                 @foreach ($organizations as $organization)
                     <a href="{{ isset($organization->id) ? route('vouchers.organizacion', $organization->id) : '#' }}" class="vh-logo-bubble">
                         @if (!empty($organization->logo))
-                            <img src="{{ asset('storage/' . $organization->logo) }}" alt="{{ $organization->name }}">
+                            <img src="{{ $organization->logo ? asset('storage/' . $organization->logo) : asset('images/favicon.png') }}" alt="{{ $organization->name }}">
                         @else
                             <strong>{{ $organization->name }}</strong>
                         @endif
@@ -193,7 +193,7 @@
                     <div class="vh-card-row vh-card-row--influencers">
                     @foreach ($influencers as $influencer)
                         @php
-                            $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : $influencerFallbackImages[$loop->index % count($influencerFallbackImages)];
+                            $imgSrc = !empty($influencer->photo) ? asset('storage/' . $influencer->photo) : asset('images/vauchis-og.png');
                         @endphp
                         <article class="vh-influencer-card influencer" data-url="{{ isset($influencer->id) ? route('vouchers.influencer', $influencer->id) : '#' }}">
                             <img class="vh-influencer-card__cover" src="{{ $imgSrc }}" alt="{{ $influencer->name }}">
@@ -232,7 +232,7 @@
                 @foreach ($collections as $collection)
                     @php
                         // $imgSrc = !empty($collection->photo) ? asset('images/' . $collection->photo) : '';
-                        $imgSrc = !empty($collection->photo) ? asset('storage/' . $collection->photo) : '';
+                        $imgSrc = !empty($collection->photo) ? asset('storage/' . $collection->photo) : asset('images/vauchis-og.png');
                     @endphp
 
                     <a href="{{ isset($collection->id) ? route('vouchers.coleccion', $collection->id) : '#' }}" class="vh-collection-card">

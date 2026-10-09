@@ -29,24 +29,17 @@
         <button class="vh-help-btn" type="button" aria-label="Ayuda" data-bs-toggle="modal" data-bs-target="#modalAyuda"><img src="{{ asset('images/boton-ayuda.svg') }}" alt="" class=""></button>
     </section>
 
-    {{-- <nav class="vo-subnavbar {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-subnavbar--con-causa' : '' }}">
-        <div class="vo-shell vo-subnavbar-inner">
-            @foreach ($rubros ?? [] as $rubro)
-                <a href="" class="vo-subnavbar-link {{ request('category') == $rubro->rub_id ? 'active' : '' }}">
-                    {{ $rubro->rub_nombre }}
-                </a>
-            @endforeach
-        </div>
-    </nav> --}}
-
     <nav class="vo-subnavbar {{ isset($categoria->id) && $categoria->id == 3 ? 'vo-subnavbar--con-causa' : '' }}">
         <div class="vo-shell vo-subnavbar-inner">
             <div class="vo-subnavbar-item">
                 <a href="#" class="vo-subnavbar-link">Filtros</a>
             </div>
+            <div class="vo-subnavbar-item">
+                <a href="{{ route('categorias', $categoria->id) }}" class="vo-subnavbar-link" id="btn_limpiar filtro">Todo</a>
+            </div>
             @foreach ($rubros ?? [] as $rubro)
                 <div class="vo-subnavbar-item">
-                    <a href="#" class="btn-rubro vo-subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => $categoria->id, 'rubro' => $rubro->rub_id]) }}">
+                    <a href="#" class="btn-rubro vo-subnavbar-link subnavbar-link {{ request('rubro') == $rubro->rub_id ? 'active' : '' }}" data-rubro-id="{{ $rubro->rub_id }}" data-url="{{ route('categorias.rubros.entidades', ['categoria' => $categoria->id, 'rubro' => $rubro->rub_id]) }}">
                         {{ $rubro->rub_nombre }}
                     </a>
 
@@ -82,26 +75,7 @@
     <section class="vo-content entidades-section">
         <div class="vo-shell " id="entidades-container">
 
-            {{-- <aside class="vo-filters">
-                <button class="vo-filter-pill">
-                    <i class="bi bi-sliders"></i>
-                    Filtros
-                </button>
-
-                <a href="#" class="vo-filter-pill">
-                    Entre $10.000 y $40.000
-                    <span>×</span>
-                </a>
-
-                <a href="#" class="vo-filter-pill">
-                    Destacados
-                    <span>×</span>
-                </a>
-            </aside> --}}
-
-            {{-- @include('partials.voucher-grid', ['vouchers' => $vouchers]) --}}
-
-                @include('categorias.partials.entidades', ['entidades' => $entidades])
+            @include('categorias.partials.entidades', ['entidades' => $entidades])
 
         </div>
     </section>
@@ -110,6 +84,239 @@
 
 </main>
 @endsection
+
+@push('scripts')
+<script>
+$(function () {
+
+    let currentDropdown = null;
+
+    /* CERRAR DROPDOWN DE SUBRUBROS */
+    function closeDropdown() {
+        if (currentDropdown) {
+            $(currentDropdown).removeClass('is-open');
+            currentDropdown = null;
+        }
+    }
+
+    /* CARGAR ENTIDADES POR AJAX */
+    function cargarEntidades(url, boton) {
+
+        if (!url) {
+            console.warn('El rubro no tiene una URL para cargar entidades.');
+            return;
+        }
+
+        const $contenedor = $('#entidades-container');
+
+        if (!$contenedor.length) {
+            console.warn('No se encontró #entidades-container.');
+            return;
+        }
+
+        /* Quitamos active tanto de desktop como de mobile. */
+        $('.vo-subnavbar-link, .v-mobile-submenu-link, .vo-subnavbar-sublink').removeClass('active');
+
+
+        if (boton) {
+            $(boton).addClass('active');
+        }
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () {
+                $contenedor.html(`
+                <div class="text-center py-5">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 mb-0">Cargando negocios...</p>
+                </div>
+                `);
+            },
+            success: function (html) {
+                $contenedor.html(html);
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                $contenedor.html(`
+                    <div class="alert alert-danger">
+                        No fue posible cargar los negocios.
+                    </div>
+                `);
+            }
+        });
+
+    }
+
+    /* MOBILE: SI VIENE ?rubro=XX DESDE EL MENÚ MOBILE */
+    const params = new URLSearchParams(window.location.search);
+    const rubroId = params.get('rubro');
+
+    /*
+     * No hacemos return si no existe rubroId.
+     * De esta forma el código desktop sigue inicializándose normalmente.
+     */
+    if (rubroId) {
+        const $botonRubro = $(
+            '.vo-subnavbar-link[data-rubro-id="' + rubroId + '"]'
+        ).first();
+
+        if ($botonRubro.length) {
+            const url = $botonRubro.data('url');
+            cargarEntidades(url, $botonRubro[0]);
+        }
+    }
+
+    /* DESKTOP: PREPARAR RUBROS Y DROPDOWNS */
+    $('.vo-subnavbar-item').each(function () {
+        const $item = $(this);
+        const $link = $item.find('.vo-subnavbar-link').first();
+        const $dropdown = $item.find('.vo-subnavbar-dropdown').first();
+
+        if (!$link.length) {
+            return;
+        }
+
+        /* Guardamos la URL antes de mover el dropdown. */
+        const url = $link.data('url');
+
+        /* Si existe dropdown de subrubros, lo movemos al body. */
+        if ($dropdown.length) {
+            $('body').append($dropdown);
+        }
+
+        /* Guardamos la relación entre el link y su dropdown. */
+        $link.data('dropdown', $dropdown.length ? $dropdown : null);
+        $link.data('ajax-url', url);
+    });
+
+    $(document).on('click', '.subnavbar-link', function (e) {
+
+    });
+
+    /* DESKTOP: CLICK EN RUBRO */
+    $(document).on('click', '.subnavbar-link', function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $link = $(this);
+        const url = $link.data('ajax-url') || $link.data('url');
+        const $dropdown = $link.data('dropdown');
+
+        /* Cargar entidades del rubro. */
+        cargarEntidades(url, this);
+
+        /* Si el rubro no tiene subrubros, simplemente cerramos cualquier dropdown abierto. */
+        if (!$dropdown || !$dropdown.length) {
+            closeDropdown();
+            return;
+        }
+
+        const wasOpen = $dropdown.hasClass('is-open');
+
+        closeDropdown();
+
+        /* Si estaba cerrado, lo abrimos. */
+        if (!wasOpen) {
+            const rect = this.getBoundingClientRect();
+
+            $dropdown.css({
+                top: (rect.bottom + 12) + 'px',
+                left: (rect.left + rect.width / 2) + 'px',
+                transform: 'translateX(-50%)'
+            });
+
+            $dropdown.addClass('is-open');
+            currentDropdown = $dropdown[0];
+        }
+    });
+
+    /* DESKTOP: CLICK EN SUBRUBRO */
+    $(document).on('click', '.vo-subnavbar-sublink', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $subrubro = $(this);
+        const url = $subrubro.data('url');
+
+        cargarEntidades(url, this);
+
+        closeDropdown();
+    });
+
+    /* CERRAR DROPDOWN */
+    $(document).on('click', function () {
+        closeDropdown();
+    });
+
+    $(window).on('scroll resize', function () {
+        closeDropdown();
+    });
+
+    /* SLIDER HORIZONTAL DESKTOP */
+    const $slider = $('.vo-subnavbar-inner');
+    if ($slider.length) {
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let moved = false;
+
+        $slider.on('mousedown', function (e) {
+            isDown = true;
+            moved = false;
+            $(this).addClass('is-dragging');
+            startX = e.pageX - $(this).offset().left;
+            scrollLeft = this.scrollLeft;
+        });
+
+        $slider.on('mouseleave', function () {
+            isDown = false;
+            $(this).removeClass('is-dragging');
+        });
+
+        $slider.on('mouseup', function () {
+            isDown = false;
+            $(this).removeClass('is-dragging');
+        });
+
+        $slider.on('mousemove', function (e) {
+            if (!isDown) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const x = e.pageX - $(this).offset().left;
+            const walk = x - startX;
+            if (Math.abs(walk) > 5) {
+                moved = true;
+            }
+
+            this.scrollLeft = scrollLeft - walk;
+        });
+
+        /*
+         * Evita disparar click cuando
+         * realmente el usuario estaba arrastrando.
+         */
+        $slider.on('click', 'a', function (e) {
+            if (moved) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                moved = false;
+            }
+        });
+    }
+
+});
+</script>
+
+@endpush
 
 @push('styles')
     <style>
@@ -973,296 +1180,4 @@
 @endif
 
     </style>
-@endpush
-
-
-@push('scripts')
-<script>
-// $(function () {
-//     let timer = null;
-
-//     $('#vo-search-input').on('keyup', function () {
-//         clearTimeout(timer);
-
-//         timer = setTimeout(function () {
-//             fetchVouchers();
-//         }, 350);
-//     });
-
-//     $(document).on('click', '.vo-pagination a', function (e) {
-//         e.preventDefault();
-
-//         let url = $(this).attr('href');
-
-//         fetchVouchers(url);
-//     });
-
-//     function fetchVouchers(url = null) {
-//         let search = $('#vo-search-input').val();
-
-//         let currentUrl = new URL(url || "{{ route('vouchers.buscar') }}", window.location.origin);
-
-//         currentUrl.searchParams.set('search', search);
-
-//         const params = new URLSearchParams(window.location.search);
-
-//         ['category', 'min', 'max', 'destacado'].forEach(function (param) {
-//             if (params.has(param) && !currentUrl.searchParams.has(param)) {
-//                 currentUrl.searchParams.set(param, params.get(param));
-//             }
-//         });
-
-//         $.ajax({
-//             url: currentUrl.toString(),
-//             type: 'GET',
-//             beforeSend: function () {
-//                 $('#vo-voucher-results').addClass('is-loading');
-//             },
-//             success: function (response) {
-//                 console.log(response)
-//                 $('#vo-voucher-results').html(response);
-
-//                 window.history.pushState({}, '', currentUrl.toString());
-//             },
-//             complete: function () {
-//                 $('#vo-voucher-results').removeClass('is-loading');
-//             }
-//         });
-//     }
-// });
-</script>
-
-<script>
-$(function () {
-
-    let currentDropdown = null;
-
-    /* CERRAR DROPDOWN DE SUBRUBROS */
-    function closeDropdown() {
-        if (currentDropdown) {
-            $(currentDropdown).removeClass('is-open');
-            currentDropdown = null;
-        }
-    }
-
-    /* CARGAR ENTIDADES POR AJAX */
-    function cargarEntidades(url, boton) {
-
-        if (!url) {
-            console.warn('El rubro no tiene una URL para cargar entidades.');
-            return;
-        }
-
-        const $contenedor = $('#entidades-container');
-
-        if (!$contenedor.length) {
-            console.warn('No se encontró #entidades-container.');
-            return;
-        }
-
-        /* Quitamos active tanto de desktop como de mobile. */
-        $('.vo-subnavbar-link, .v-mobile-submenu-link, .vo-subnavbar-sublink').removeClass('active');
-
-
-        if (boton) {
-            $(boton).addClass('active');
-        }
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'html',
-            beforeSend: function () {
-                $contenedor.html(`
-                    <div class="text-center py-5">
-
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">
-                                Cargando...
-                            </span>
-                        </div>
-
-                        <p class="mt-3 mb-0">
-                            Cargando negocios...
-                        </p>
-
-                    </div>
-                `);
-            },
-            success: function (html) {
-                $contenedor.html(html);
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                $contenedor.html(`
-                    <div class="alert alert-danger">
-                        No fue posible cargar los negocios.
-                    </div>
-                `);
-            }
-        });
-
-    }
-
-    /* MOBILE: SI VIENE ?rubro=XX DESDE EL MENÚ MOBILE */
-    const params = new URLSearchParams(window.location.search);
-    const rubroId = params.get('rubro');
-
-    /*
-     * No hacemos return si no existe rubroId.
-     * De esta forma el código desktop sigue inicializándose normalmente.
-     */
-    if (rubroId) {
-        const $botonRubro = $(
-            '.vo-subnavbar-link[data-rubro-id="' + rubroId + '"]'
-        ).first();
-
-        if ($botonRubro.length) {
-            const url = $botonRubro.data('url');
-            cargarEntidades(url, $botonRubro[0]);
-        }
-    }
-
-    /* DESKTOP: PREPARAR RUBROS Y DROPDOWNS */
-    $('.vo-subnavbar-item').each(function () {
-        const $item = $(this);
-        const $link = $item.find('.vo-subnavbar-link').first();
-        const $dropdown = $item.find('.vo-subnavbar-dropdown').first();
-
-        if (!$link.length) {
-            return;
-        }
-
-        /* Guardamos la URL antes de mover el dropdown. */
-        const url = $link.data('url');
-
-        /* Si existe dropdown de subrubros, lo movemos al body. */
-        if ($dropdown.length) {
-            $('body').append($dropdown);
-        }
-
-        /* Guardamos la relación entre el link y su dropdown. */
-        $link.data('dropdown', $dropdown.length ? $dropdown : null);
-        $link.data('ajax-url', url);
-    });
-
-    /* DESKTOP: CLICK EN RUBRO */
-    $(document).on('click', '.vo-subnavbar-link', function (e) {
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        const $link = $(this);
-        const url = $link.data('ajax-url') || $link.data('url');
-        const $dropdown = $link.data('dropdown');
-
-        /* Cargar entidades del rubro. */
-        cargarEntidades(url, this);
-
-        /* Si el rubro no tiene subrubros, simplemente cerramos cualquier dropdown abierto. */
-        if (!$dropdown || !$dropdown.length) {
-            closeDropdown();
-            return;
-        }
-
-        const wasOpen = $dropdown.hasClass('is-open');
-
-        closeDropdown();
-
-        /* Si estaba cerrado, lo abrimos. */
-        if (!wasOpen) {
-            const rect = this.getBoundingClientRect();
-
-            $dropdown.css({
-                top: (rect.bottom + 12) + 'px',
-                left: (rect.left + rect.width / 2) + 'px',
-                transform: 'translateX(-50%)'
-            });
-
-            $dropdown.addClass('is-open');
-            currentDropdown = $dropdown[0];
-        }
-    });
-
-    /* DESKTOP: CLICK EN SUBRUBRO */
-    $(document).on('click', '.vo-subnavbar-sublink', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const $subrubro = $(this);
-        const url = $subrubro.data('url');
-
-        cargarEntidades(url, this);
-
-        closeDropdown();
-    });
-
-    /* CERRAR DROPDOWN */
-    $(document).on('click', function () {
-        closeDropdown();
-    });
-
-    $(window).on('scroll resize', function () {
-        closeDropdown();
-    });
-
-    /* SLIDER HORIZONTAL DESKTOP */
-    const $slider = $('.vo-subnavbar-inner');
-    if ($slider.length) {
-
-        let isDown = false;
-        let startX = 0;
-        let scrollLeft = 0;
-        let moved = false;
-
-        $slider.on('mousedown', function (e) {
-            isDown = true;
-            moved = false;
-            $(this).addClass('is-dragging');
-            startX = e.pageX - $(this).offset().left;
-            scrollLeft = this.scrollLeft;
-        });
-
-        $slider.on('mouseleave', function () {
-            isDown = false;
-            $(this).removeClass('is-dragging');
-        });
-
-        $slider.on('mouseup', function () {
-            isDown = false;
-            $(this).removeClass('is-dragging');
-        });
-
-        $slider.on('mousemove', function (e) {
-            if (!isDown) {
-                return;
-            }
-
-            e.preventDefault();
-
-            const x = e.pageX - $(this).offset().left;
-            const walk = x - startX;
-            if (Math.abs(walk) > 5) {
-                moved = true;
-            }
-
-            this.scrollLeft = scrollLeft - walk;
-        });
-
-        /*
-         * Evita disparar click cuando
-         * realmente el usuario estaba arrastrando.
-         */
-        $slider.on('click', 'a', function (e) {
-            if (moved) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                moved = false;
-            }
-        });
-    }
-
-});
-</script>
-
 @endpush

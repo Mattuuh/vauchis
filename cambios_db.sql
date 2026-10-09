@@ -646,3 +646,34 @@ ALTER TABLE `subrubros` ADD `sub_orden` INT NULL DEFAULT NULL AFTER `sub_nombre`
 
 
 ALTER TABLE `entidades` ADD `ent_telefono` VARCHAR(50) NULL DEFAULT NULL AFTER `ent_portada_url`;
+
+
+UPDATE `tipos_archivos` SET 
+  `tipo_archivo_nombre` = 'DESTACADO',
+  `tipo_archivo_observacion` = 'DESTACADO',
+  `tipo_archivo_estado` = '1' 
+WHERE `tipo_archivo_id` = 3;
+
+ALTER TABLE `entidades` ADD `tipo_iva_id` INT NULL DEFAULT NULL AFTER `ent_razon_social`, ADD `ent_porcentaje_iva` DECIMAL(24,4) NOT NULL DEFAULT '0' AFTER `tipo_iva_id`;
+
+
+CREATE TABLE `tipos_iva` (
+  `tipo_iva_id` int UNSIGNED NOT NULL,
+  `tipo_iva_descripcion` varchar(50) DEFAULT NULL,
+  `tipo_iva_valor` decimal(24,4) DEFAULT NULL,
+  `tipo_iva_estado` int NOT NULL DEFAULT '1', 
+  `tipo_iva_fecha_alta` datetime DEFAULT NULL,
+  `tipo_iva_usu_alta` int DEFAULT NULL,
+  `tipo_iva_fecha_mod` datetime DEFAULT NULL,
+  `tipo_iva_usu_mod` int DEFAULT NULL,
+  `tipo_iva_fecha_baja` datetime DEFAULT NULL,
+  `tipo_iva_usu_baja` int DEFAULT NULL, 
+  PRIMARY KEY (`tipo_iva_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `tipos_iva` (`tipo_iva_id`, `tipo_iva_descripcion`, `tipo_iva_valor`, `tipo_iva_estado`) VALUES
+(1, 'IVA 21%', '21.0000', 1),
+(2, 'IVA 10.5%', '10.5000', 1),
+(3, 'IVA 27%', '27.0000', 1),
+(4, 'IVA 0.00%', '0.0000', 1);
+

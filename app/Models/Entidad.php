@@ -20,6 +20,8 @@ class Entidad extends Model
         'ent_nombre_fantasia',
         'ent_nombre',
         'ent_razon_social',
+        'tipo_iva_id',
+        'ent_porcentaje_iva',
         'ent_logo_url',
         'ent_portada_url',
         'ent_domicilio_fiscal',
@@ -63,6 +65,11 @@ class Entidad extends Model
         return $this->belongsTo(TipoResponsabilidad::class, 'tipo_resp_id', 'tipo_resp_id');
     }
 
+    public function tipo_iva()
+    {
+        return $this->belongsTo(TipoIva::class, 'tipo_iva_id', 'tipo_iva_id');
+    }
+
     public function domicilios()
     {
         return $this->hasMany(EntidadDomicilio::class, 'ent_id', 'ent_id')->where('ed_estado', 1);
@@ -97,6 +104,11 @@ class Entidad extends Model
     public function logoPrincipal()
     {
         return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1)->where('tipo_archivo_id',1);
+    }
+
+    public function imagenDestacado()
+    {
+        return $this->hasOne(EntidadImagen::class, 'ent_id')->where('ef_principal', 1)->where('tipo_archivo_id',3);
     }
 
     public function rubros()

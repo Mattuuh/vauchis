@@ -155,6 +155,13 @@
         line-height: 1.45;
     }
 
+    .vs-summary-sin-impuesto {
+        display: block;
+        color: #aaa;
+        font-size: 12px;
+        /* line-height: 1.45; */
+    }
+
     .vs-summary-price {
         font-weight: 700;
     }
@@ -430,6 +437,11 @@
             line-height: 1.45;
         }
 
+        .vs-summary-sin-impuesto {
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
         .vs-summary-validity {
             margin-top: 4px;
         }
@@ -635,6 +647,8 @@ $(function () {
     $de = old('de', data_get($dat_voucher ?? null, 'de', ''));
     $mensaje = old('mensaje', data_get($dat_voucher ?? null, 'mensaje', ''));
 
+    $monto_sin_impuesto = $entidad->ent_porcentaje_iva > 0 ? round($valores->vmv_monto_fijo / (1 + ($entidad->ent_porcentaje_iva / 100)), 2) : $valores->vmv_monto_fijo ;
+
     $volverUrl = route('vouchers.entidad', $entidad->ent_id);
 @endphp
 
@@ -734,6 +748,7 @@ $(function () {
                             <span class="vs-summary-name">{{ $voucher->vou_descripcion }}</span>
                         @else
                             <span class="vs-summary-name" style="">Vale por:<strong class="vs-summary-price" style="">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong></span>
+                            <span class="vs-summary-sin-impuesto" style="">Precio sin impuestos nacionales: ${{ number_format($monto_sin_impuesto, 0, ',', '.') }}</span>
                         @endif
 
                         @if ($fechaVencimientoRaw)

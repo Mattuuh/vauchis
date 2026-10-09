@@ -96,7 +96,7 @@ class HomeController extends Controller
         $featuredBrands = Entidad::where('ent_estado', 1)
             ->where('ent_publico',1)
             ->where('ent_destacado',1)
-            ->with('imagenPrincipal')
+            ->with('imagenDestacado')
             ->with('logoPrincipal')
             ->with('resaltador_entidad')
             ->orderBy('ent_destacado_orden')
@@ -105,12 +105,8 @@ class HomeController extends Controller
                 return (object)[
                     'id' => $ent->ent_id,
                     'name' => $ent->ent_nombre_fantasia,
-                    'logo' => $ent->logoPrincipal
-                        ? $ent->logoPrincipal->ef_img_path
-                        : 'default.png',
-                    'banner' => $ent->imagenPrincipal
-                        ? $ent->imagenPrincipal->ef_img_path
-                        : 'default.png',
+                    'logo' => $ent->logoPrincipal ? $ent->logoPrincipal->ef_img_path : '',
+                    'banner' => $ent->imagenDestacado ? $ent->imagenDestacado->ef_img_path : '',
                     'resaltador' => $ent->resaltador_entidad
                 ];
             });
@@ -187,6 +183,7 @@ class HomeController extends Controller
         //     // ],
         // ]);
         $collections = Coleccion::with('logoPrincipal')
+            ->where('colecc_estado', 1)
             ->where('colecc_publico', 1)
             ->orderBy('colecc_orden')
             ->get()
@@ -194,9 +191,7 @@ class HomeController extends Controller
                 return (object)[
                     'id' => $coleccion->colecc_id,
                     'name' => $coleccion->colecc_nombre,
-                    'photo' => $coleccion->logoPrincipal
-                        ? $coleccion->logoPrincipal->cf_img_path
-                        : 'default.png',
+                    'photo' => $coleccion->logoPrincipal ? $coleccion->logoPrincipal->cf_img_path : '',
                     'description' => $coleccion->colecc_descripcion,
                 ];
             });
@@ -215,6 +210,7 @@ class HomeController extends Controller
         // ]);
 
         $influencers = Influencer::with('imagenPrincipal')
+            ->where('inf_estado', 1)
             ->where('inf_publico', 1)
             ->orderBy('inf_orden')
             ->get()
@@ -222,9 +218,7 @@ class HomeController extends Controller
                 return (object)[
                     'id' => $inf->inf_id,
                     'name' => $inf->inf_nombre_fantasia,
-                    'photo' => $inf->imagenPrincipal
-                        ? $inf->imagenPrincipal->if_img_path
-                        : 'default.png',
+                    'photo' => $inf->imagenPrincipal ? $inf->imagenPrincipal->if_img_path : '',
                     'description' => $inf->inf_descripcion_publica,
                 ];
             });

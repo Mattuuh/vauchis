@@ -52,6 +52,9 @@ $(document).ready(function () {
             tipo_resp_id: {
                 required: true,
             },
+            tipo_iva_id: {
+                required: true,
+            },
             tipo_doc_id: {
                 required: true,
             },
@@ -248,6 +251,18 @@ $(document).ready(function () {
                 </div>
 
                 <div class="col-12 col-md-6">
+                    <label class="form-label required-label">Porcentaje IVA aplicado:</label>
+                    <select name="tipo_iva_id" class="form-select field-required">
+                        <option value="">Selecciona una opcion</option>
+                        @foreach($tiposIva as $id => $nombre)
+                            <option value="{{ $id }}" {{ old('tipo_iva_id') == $id ? 'selected' : '' }}>
+                                {{ $nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-6">
                     <label class="form-label required-label">Tipo de documento</label>
                     <select name="tipo_doc_id" class="form-select form-control-custom">
                         <option value="">Selecciona el tipo de documento</option>
@@ -262,7 +277,7 @@ $(document).ready(function () {
                     <input type="text" name="com_documento" class="form-control form-control-custom">
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-12">
                     <label class="form-label required-label">Nombre de fantasía</label>
                     <input type="text" name="com_nombre_fantasia" class="form-control form-control-custom">
                 </div>
