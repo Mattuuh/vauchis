@@ -737,6 +737,24 @@ class EntidadController extends Controller
                         'ef_usu_mod' => $usu,
                     ]);
             }
+            // DESTACADO PRINCIPAL
+            if ($request->filled('imagen_principal_3')) {
+                EntidadImagen::where('ent_id', $id)
+                    ->where('tipo_archivo_id', 3)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 0,
+                    ]);
+
+                EntidadImagen::where('ent_id', $id)
+                    ->where('ef_id', $request->imagen_principal_3)
+                    ->where('ef_estado', 1)
+                    ->update([
+                        'ef_principal' => 1,
+                        'ef_fecha_mod' => now(),
+                        'ef_usu_mod' => $usu,
+                    ]);
+            }
 
             if ($request->hasFile('imagenes')) {
                 $tiposArchivos = $request->input('f_tipo_archivo_id', []);
