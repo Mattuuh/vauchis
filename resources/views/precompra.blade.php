@@ -745,6 +745,7 @@ $(function () {
                         @if ($modalidad->tipo_mod_id==3)
                             <strong class="vs-summary-price" style="">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong>
                             <span class="vs-summary-name" style="">Vale por: {{ strtoupper($voucher->vou_nombre) }}</span>
+                            <span class="vs-summary-sin-impuesto" style="">Precio sin impuestos nacionales: ${{ number_format($monto_sin_impuesto, 0, ',', '.') }}</span>
                             <span class="vs-summary-name">{{ $voucher->vou_descripcion }}</span>
                         @else
                             <span class="vs-summary-name" style="">Vale por:<strong class="vs-summary-price" style="">${{ number_format($valores->vmv_monto_fijo, 0, ',', '.') }}</strong></span>

@@ -264,16 +264,29 @@
 }
 
 .vp-brand-hero {
-    height: 265px;
+    /* height: 265px;
     overflow: hidden;
+    background-color: #07378C; */
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    height: auto;
+    overflow: hidden;
+    position: relative;
     background-color: #07378C;
 }
 
 .vp-brand-hero img {
+    /* width: 100%;
+    height: 100%;
+    object-fit: fill; */
+
+    display: block;
     width: 100%;
     height: 100%;
-    /* object-position: left top; */
-    object-fit: fill;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    object-position: center;
 }
 
 .vp-brand-info {
