@@ -137,6 +137,6 @@ class Voucher extends Model
 
     public function imagen_principal()
     {
-        return $this->hasMany(VoucherFile::class, 'vou_id', 'vou_id')->where('vf_principal',1);
+        return $this->hasMany(VoucherFile::class, 'vou_id', 'vou_id')->where('vf_principal',1)->where('vf_estado',1);
     }
 }

@@ -107,7 +107,8 @@ class HomeController extends Controller
                     'name' => $ent->ent_nombre_fantasia,
                     'logo' => $ent->logoPrincipal ? $ent->logoPrincipal->ef_img_path : '',
                     'banner' => $ent->imagenDestacado ? $ent->imagenDestacado->ef_img_path : '',
-                    'resaltador' => $ent->resaltador_entidad
+                    'resaltador' => $ent->resaltador_entidad,
+                    'descripcion' => $ent->ent_descripcion_publica
                 ];
             });
 

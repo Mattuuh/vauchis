@@ -150,6 +150,7 @@
                 </article>
             @endforeach
 
+            @if ($productVouchers->isNotEmpty())
             <section class="vp-products-section">
                 <h2>Vouchers sugeridos</h2>
 
@@ -188,6 +189,8 @@
                     {{-- <img class="vp-products-arrow vp-products-arrow--right" src="{{ asset('images/chevron-right.png') }}" alt="Fecha derecha"> --}}
                 </div>
             </section>
+            @endif
+            
 
         </div>
     </section>
