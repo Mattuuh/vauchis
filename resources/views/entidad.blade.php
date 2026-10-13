@@ -268,10 +268,8 @@
     overflow: hidden;
     background-color: #07378C; */
     width: 100%;
-    aspect-ratio: 2 / 1;
     height: auto;
     overflow: hidden;
-    position: relative;
     background-color: #07378C;
 }
 
@@ -282,9 +280,9 @@
 
     display: block;
     width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 2 / 1;
     object-fit: cover;
     object-position: center;
 }
@@ -671,7 +669,8 @@
 
 @media (max-width: 768px) {
     .vp-brand-hero {
-        height: 190px;
+        /* height: 190px; */
+        height: auto;
         margin-top: 80px;
     }
 
