@@ -2061,7 +2061,7 @@ class VoucherController extends Controller
 
         // $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
         $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','sucursal_telefono','modalidad','qrImagen'))->render();
-        // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
+        // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','sucursal_telefono','modalidad','qrImagen'));
 
         $nombreArchivo = 'voucher-' . $token . '.pdf';
         // $nombreArchivo = 'voucher_para_'. session('voucher.para') .'.pdf';

@@ -19,16 +19,6 @@ class CheckoutController extends Controller
 
     public function crearPreferencia(Request $request, int $vou_id, int $vmv_id)
     {
-        // if (true) {
-        //     return redirect()->route('mercadopago.success');
-        // }
-
-        // if (!session()->has('auth')) {
-        //     session(['url.intended' => url()->previous()]);
-
-        //     return redirect()->route('login')->with('warning', 'Debés iniciar sesión para continuar con el pago.');
-        // }
-
         // $usuario = Auth::id();
         $usuario = 1;
         $cliente = Cliente::findOrFail(1);
@@ -57,8 +47,6 @@ class CheckoutController extends Controller
         $monto = $valores->vmv_monto_fijo;
 
         $entidad = $voucher->entidad;
-        // $cantidad = $request->cantidad;
-        // $monto_total = $monto * $cantidad;
         $monto_total = $monto;
         // $monto_total = 10;
 

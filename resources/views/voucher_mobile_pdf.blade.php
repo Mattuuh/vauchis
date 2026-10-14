@@ -398,25 +398,25 @@
 }
 
 .vp-value-image {
-    /* width: 100%;
-    height: 185px;
-    overflow: hidden; */
-
+    width: 100%;
     height: 185px;
     overflow: hidden;
-    position: relative;
+
+    /* height: 185px;
+    overflow: hidden;
+    position: relative; */
 }
 
 .vp-value-image img {
-    /* display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: fill; */
-
     display: block;
     width: 100%;
+    height: 100%;
+    object-fit: fill;
+
+    /* display: block;
+    width: 100%;
     height: auto;
-    object-fit: contain;
+    object-fit: contain; */
 }
 
     /* =========================================================
