@@ -904,6 +904,6 @@
     z-index: 10010 !important;
 }
 
-.modal-backdrop.show {
+body.modal-ayuda-activo .modal-backdrop.show {
     z-index: 10000 !important;
 }

@@ -390,14 +390,24 @@
     }
 
     .vp-value-image {
+        /* flex: 1;
+        min-height: 105px; */
+
         flex: 1;
         min-height: 105px;
+        overflow: hidden;
+        position: relative;
     }
 
     .vp-value-image img {
-        width: 100%;
+        /* width: 100%;
         height: 100%;
-        object-fit: fill;
+        object-fit: fill; */
+        
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
     }
     
     .vp-commerce-row {
@@ -1151,7 +1161,7 @@
         .vp-whatsapp {
             width: 100%;
             min-width: 0;
-            height: clamp(72px, 18vw, 96px);
+            height: clamp(72px, 18vw, 46px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1247,98 +1257,6 @@
 
             background: #fff;
         }
-
-        /* =========================
-        TARJETA QR
-        ========================= */
-
-        /* .vp-qr-column {
-            width: 100%;
-
-            display: flex;
-            justify-content: center;
-        }
-
-        .vp-qr-card {
-            width: 110px;
-            min-height: 165px;
-
-            padding: 10px 10px 12px;
-
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            gap: 6px;
-
-            background: #fff;
-
-            box-shadow:
-                0 2px 2px rgba(0, 0, 0, .18),
-                0 1px 2px rgba(0, 0, 0, .08);
-        }
-
-        .vp-qr {
-            width: 65px;
-            height: 65px;
-
-            margin: 0 auto;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .vp-qr img {
-            width: 65px;
-            height: 65px;
-
-            object-fit: contain;
-        }
-
-        .vp-qr-info {
-            width: 100%;
-
-            display: flex;
-            flex-direction: column;
-
-            align-items: flex-start;
-
-            font-family: Montserrat, Arial, sans-serif;
-
-            color: #111;
-
-            line-height: 1.05;
-        }
-
-        .vp-voucher-code,
-        .vp-qr-info > span:first-child {
-            margin-bottom: 5px;
-
-            font-size: 9px;
-            font-weight: 600;
-        }
-
-        .vp-qr-info strong {
-            margin-bottom: 1px;
-
-            font-size: 10px;
-            line-height: 1.05;
-
-            font-weight: 700;
-
-            text-transform: uppercase;
-        }
-
-        .vp-qr-info > span:last-child {
-            font-size: 10px;
-            line-height: 1.05;
-
-            font-weight: 400;
-
-            text-transform: uppercase;
-        } */
-
 
         /* =========================
         COMUNIDAD

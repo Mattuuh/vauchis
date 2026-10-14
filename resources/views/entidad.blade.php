@@ -209,41 +209,41 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal_sucursal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Sucursal</h5>
-                    <button type="button" class="btn-close btn_cerrar_modal" data-bs-dismiss="modal"></button>
+</main>
+
+<div class="modal fade" id="modal_sucursal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sucursal</h5>
+                <button type="button" class="btn-close btn_cerrar_modal" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {{-- <div class="mb-3">
+                </div> --}}
+                <div class="form-group">
+                    <label for="" class="text-black fw-bold">Direccion:</label>
+                    <span id="d_direccion"></span>
                 </div>
-                <div class="modal-body">
-                    {{-- <div class="mb-3">
-                    </div> --}}
-                    <div class="form-group">
-                        <label for="" class="text-black fw-bold">Direccion:</label>
-                        <span id="d_direccion"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="text-black fw-bold">Ciudad:</label>
-                        <span id="d_ciudad"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="text-black fw-bold">Provincia:</label>
-                        <span id="d_provincia"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="text-black fw-bold">Horario de atenci&oacute;n:</label>
-                        <span id="d_horario_atencion"></span>
-                    </div>
+                <div class="form-group">
+                    <label for="" class="text-black fw-bold">Ciudad:</label>
+                    <span id="d_ciudad"></span>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn_cerrar_modal" data-bs-dismiss="modal">Cerrar</button>
+                <div class="form-group">
+                    <label for="" class="text-black fw-bold">Provincia:</label>
+                    <span id="d_provincia"></span>
                 </div>
+                <div class="form-group">
+                    <label for="" class="text-black fw-bold">Horario de atenci&oacute;n:</label>
+                    <span id="d_horario_atencion"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn_cerrar_modal" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-
-</main>
+</div>
 
 @include('partials.footer')
 

@@ -9,6 +9,14 @@
     let personalizeTimer = null;
     let paymentTimer = null;
 
+    $('#modalAyuda').on('show.bs.modal', function () {
+        $('body').addClass('modal-ayuda-activo');
+    });
+
+    $('#modalAyuda').on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-ayuda-activo');
+    });
+
     function clearStepTimers() {
         if (personalizeTimer) {
             clearInterval(personalizeTimer);

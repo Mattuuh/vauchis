@@ -1891,6 +1891,18 @@ class VoucherController extends Controller
 
         $sucursales = $voucher->sucursales;
 
+        $sucursales_seleccionadas = DB::table('vouchers_sucursales')
+            ->where('vou_id', $vou_id)
+            ->where('vou_suc_estado', 1)
+            ->orderBy('vou_suc_id')
+            ->pluck('ed_id')
+            ->toArray();
+
+        $sucursales = EntidadDomicilio::where('ed_estado',1)
+            ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->orderBy('ent_id', 'desc')
+            ->get();
+
         if ($valores->vmv_monto_fijo==0 && $request->monto!=0) {
             $valores->vmv_monto_fijo=$request->monto;
         }
@@ -1993,7 +2005,8 @@ class VoucherController extends Controller
         if ($modalidad->tipo_mod_id==1 || $modalidad->tipo_mod_id==2) {
             $imagen_voucher = $imagenes->first()?->vf_img_path;
         } else {
-            $imagen_voucher = $entidad->logoPrincipal->ef_img_path;
+            // $imagen_voucher = $entidad->logoPrincipal->ef_img_path ?? asset('images/favicon.png');
+            $imagen_voucher = $entidad->logoPrincipal->ef_img_path ?? null;
         }
 
         $direcciones_label='';
@@ -2047,7 +2060,7 @@ class VoucherController extends Controller
         ];
 
         // $html = view('voucher_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
-        $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'))->render();
+        $html = view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','sucursal_telefono','modalidad','qrImagen'))->render();
         // return view('voucher_mobile_pdf', compact('voucher','entidad','imagenes','valores','sucursales','modalidad','qrImagen'));
 
         $nombreArchivo = 'voucher-' . $token . '.pdf';
@@ -2068,7 +2081,7 @@ class VoucherController extends Controller
                 ->paperSize(60, 340, 'mm')
                 ->margins(0, 0, 0, 0)
                 ->deviceScaleFactor(1)
-                ->timeout(120)
+                ->timeout(240)
                 ->savePdf($rutaCompleta);
 
             // $pdf = Browsershot::html($html)
