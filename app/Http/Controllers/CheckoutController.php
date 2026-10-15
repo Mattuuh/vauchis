@@ -47,8 +47,8 @@ class CheckoutController extends Controller
         $monto = $valores->vmv_monto_fijo;
 
         $entidad = $voucher->entidad;
-        $monto_total = $monto;
-        // $monto_total = 10;
+        // $monto_total = $monto;
+        $monto_total = 10;
 
         // $comprobante_numero
         $op = OrdenPago::create([
