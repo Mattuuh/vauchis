@@ -68,6 +68,14 @@ class MercadoPagoOAuthController extends Controller
             'mp_code_verifier' => $verifier,
         ]);
 
+        Log::info('OAuth Mercado Pago - REDIRECT', [
+            'session_id' => session()->getId(),
+            'entidad_id' => session('mp_entidad_id'),
+            'has_state' => !empty(session('mp_oauth_state')),
+            'has_verifier' => !empty(session('mp_code_verifier')),
+            'host' => request()->getHost(),
+        ]);
+
         $params = http_build_query([
             'client_id' => config('services.mercadopago.client_id'),
             'response_type' => 'code',
@@ -108,9 +116,18 @@ class MercadoPagoOAuthController extends Controller
 
     public function callback(Request $request)
     {
+        Log::info('OAuth Mercado Pago - CALLBACK', [
+            'session_id' => session()->getId(),
+            'entidad_id' => session('mp_entidad_id'),
+            'has_state' => !empty(session('mp_oauth_state')),
+            'has_verifier' => !empty(session('mp_code_verifier')),
+            'host' => request()->getHost(),
+        ]);
+
         $baseUrl = rtrim(config('app.url'), '/');
 
-        $redirectUri = $baseUrl . '/mercadopago/callback';
+        // $redirectUri = $baseUrl . '/mercadopago/callback';
+        $redirectUri = 'https://vauchis.com/mercadopago/callback';
 
         // Recuperar información almacenada al iniciar OAuth
         $entidadId = session('mp_entidad_id');
