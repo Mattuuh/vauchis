@@ -248,7 +248,8 @@ class MercadoPagoOAuthController extends Controller
             ]);
 
             return redirect()
-                ->route('admin.entidades.edit', $entidadId)
+                // ->route('admin.entidades.edit', $entidadId)
+                ->route('clientes.index')
                 ->with('success', 'Mercado Pago conectado correctamente.');
 
         } catch (\Throwable $e) {

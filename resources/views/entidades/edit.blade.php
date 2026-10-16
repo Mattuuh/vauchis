@@ -392,7 +392,7 @@ $(document).ready(function () {
                     <div class="row g-3">
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
-                            <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Vincular Mercado Pago</a>
+                            {{-- <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Vincular Mercado Pago</a> --}}
                         </div>
                     </div>
                 @endif
