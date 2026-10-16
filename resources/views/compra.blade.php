@@ -591,8 +591,8 @@
 
     $volverUrl = $volverUrl ?? url()->previous();
     $editarUrl = route('vouchers.precompra', ['voucher' => $voucher->vou_id, 'modalidadCampo' => $valores->vmv_id]);
-    $actionUrl = $actionUrl ?? route('checkout.voucher', [
-    // $actionUrl = $actionUrl ?? route('vouchers.postcompra', [
+    // $actionUrl = $actionUrl ?? route('checkout.voucher', [
+    $actionUrl = $actionUrl ?? route('vouchers.postcompra', [
         'voucher' => data_get($voucher ?? null, 'vou_id'),
         'modalidadCampo' => data_get($valores ?? null, 'vmv_id'),
     ]);
