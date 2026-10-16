@@ -96,6 +96,14 @@ $(document).ready(function () {
                             <span>Responsabilidad ante IVA</span>
                             <strong>{{ $entidad->tipo_responsabilidad->tipo_resp_nombre ?? '-' }}</strong>
                         </div>
+                        <div class="mv-entity-data__item">
+                            <span>Mercadopago</span>
+                            @if ($entidad->mp_user_id!='')
+                                <strong>Vinculado</strong>
+                            @else
+                                <a href="{{ route('mp.conectar', $entidad->ent_id) }}" class="btn btn-success btn-block col-md-12">Vincular cuenta</a>
+                            @endif
+                        </div>
                     </div>
                 </article>
 
