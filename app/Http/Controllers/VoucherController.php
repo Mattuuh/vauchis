@@ -1816,6 +1816,7 @@ class VoucherController extends Controller
 
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->where('ed_canje',1)
             ->orderBy('ent_id', 'desc')
             ->get();
 
@@ -1900,6 +1901,7 @@ class VoucherController extends Controller
 
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->where('ed_canje',1)
             ->orderBy('ent_id', 'desc')
             ->get();
 
@@ -1972,6 +1974,7 @@ class VoucherController extends Controller
 
         $sucursales = EntidadDomicilio::where('ed_estado',1)
             ->whereIn('ed_id', $sucursales_seleccionadas)
+            ->where('ed_canje',1)
             ->orderBy('ent_id', 'desc')
             ->get();
 

@@ -78,8 +78,8 @@ class CheckoutController extends Controller
         ]);
 
 
-        // $vendedorAccessToken = $entidad->mp_access_token;
-        $vendedorAccessToken = config('services.mercadopago.access_token');
+        $vendedorAccessToken = $entidad->mp_access_token ?? config('services.mercadopago.access_token');
+        // $vendedorAccessToken = config('services.mercadopago.access_token');
 
         MercadoPagoConfig::setAccessToken($vendedorAccessToken);
 
@@ -105,7 +105,7 @@ class CheckoutController extends Controller
                         'unit_price' => $precio,
                     ]
                 ],
-                // 'marketplace_fee' => $comisionMarketplace,
+                'marketplace_fee' => $comisionMarketplace,
                 'external_reference' => 'PAGOVOUCHER_'. $op->op_id .'_'. $voucher->vou_id .'_'. $entidad->ent_id .'_'. $cliente->cli_id,
                 // 'external_reference' => 'TEST_' . time(),
                 'notification_url' => $baseUrl . '/webhooks/mercadopago',
