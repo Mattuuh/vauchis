@@ -918,7 +918,12 @@ class EntidadController extends Controller
                 'ent_fecha_alta',
             ]);
 
-        return view('entidades.orden', compact('entidades'));
+        $rubros = Rubro::with('subrubros')
+            ->where('rub_estado',1)
+            ->where('rub_publico',1)
+            ->get();
+
+        return view('entidades.orden', compact('entidades','rubros'));
     }
 
     public function guardar_orden(Request $request)
@@ -965,22 +970,54 @@ class EntidadController extends Controller
         ]);
     }
 
-    public function por_destacado(Request $request)
+    public function cargar_entidades_orden(Request $request)
     {
-        $destacado = $request->destacado;
+        // dd($request->all());
+        $filtro = $request->filtro;
+        $rubro_id = $request->rubro_id;
+        $subrubro_id = $request->subrubro_id;
+
+        $entidades_ids=[];
+        if ($filtro==2) {
+            if ($rubro_id!='' && $rubro_id>0) {
+                if ($subrubro_id!='' && $subrubro_id>0) {
+                    $entidades_ids = DB::table('entidades_subrubros')
+                        ->where('rub_id', $rubro_id)
+                        ->where('subrubro_id', $subrubro_id)
+                        ->pluck('ent_id')
+                        ->toArray();
+                } else {
+                    $entidades_ids = DB::table('entidades_rubros')
+                        ->where('rub_id', $rubro_id)
+                        ->where('er_estado', 1)
+                        ->pluck('ent_id')
+                        ->toArray();
+                }
+
+            } else {
+                $entidades_ids = DB::table('entidades_rubros')
+                    ->where('er_estado', 1)
+                    ->pluck('ent_id')
+                    ->toArray();
+            }
+        }
+
 
         $entidades = Entidad::with('tipo_entidad','tipo_responsabilidad')
             ->withCount('domicilios')
             ->withCount('vouchersActivos')
-            ->when($destacado == 1, function ($query) use ($destacado) {
-                $query->where('ent_destacado', $destacado);
+            ->when($filtro == 1, function ($query) {
+                $query->where('ent_destacado', 1);
+            })
+            ->when($filtro == 2, function ($query) use ($entidades_ids) {
+                $query->whereIn('ent_id', $entidades_ids);
             })
             ->where('ent_publico',1)
             ->where('ent_estado',1)
             ->orderByRaw('CASE WHEN ent_orden IS NULL OR ent_orden = 0 THEN 1 ELSE 0 END')
             // ->orderBy('ent_orden')
             ->when(
-                $destacado == 1, 
+                $filtro == 1, 
                 function ($query) { // IF
                     $query->orderBy('ent_destacado_orden');
                 },

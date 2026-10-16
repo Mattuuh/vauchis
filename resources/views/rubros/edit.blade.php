@@ -63,7 +63,7 @@
         color: #fff;
     }
 
-    .subrubro-remove-btn, .subrubro-nuevo-remove-btn {
+    .subrubro-remove-btn, .subrubro-nuevo-remove-btn, .subrubro-edit-btn {
         border: none;
         background: transparent;
         color: #fff;
@@ -74,9 +74,15 @@
         opacity: 0.9;
     }
 
-    .subrubro-remove-btn:hover, .subrubro-nuevo-remove-btn:hover {
+    .subrubro-remove-btn:hover, .subrubro-nuevo-remove-btn:hover, .subrubro-edit-btn:hover {
         opacity: 1;
     }
+
+    .subrubro-available-item { display: inline-flex; align-items: center; gap: 4px; border: 1px solid #d7e4ff; background: #eef4ff; border-radius: 999px; padding-right: 9px; }
+    .subrubro-available-item .subrubro-option { border: 0; background: transparent; }
+    .subrubro-available-item .subrubro-edit-btn { color: #2f6fed; padding: 5px; }
+    .subrubro-edit-btn { display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; cursor: pointer; }
+    .subrubro-available-item .subrubro-option.is-disabled { pointer-events: none; }
 </style>
 @endpush
 
@@ -256,6 +262,7 @@ $(document).ready(function () {
                 <div id="subrubros-nuevos-hidden-inputs"></div>
                 {{-- ORDEN --}}
                 <div id="subrubros-orden-hidden-inputs"></div>
+                <div id="subrubros-editados-hidden-inputs"></div>
             </div>
 
             {{-- DISPONIBLES --}}
@@ -263,9 +270,10 @@ $(document).ready(function () {
                 <label class="form-label fw-semibold">Subrubros disponibles</label>
                 <div class="subrubros-available-box">
                     @foreach($subrubrosDisponibles as $subrubro)
-                        <button type="button" class="subrubro-option" data-id="{{ $subrubro->sub_id }}" data-name="{{ $subrubro->sub_nombre }}" onclick="addSubrubroExistente(this)">
-                            {{ $subrubro->sub_nombre }}
-                        </button>
+                        <span class="subrubro-available-item" data-id="{{ $subrubro->sub_id }}">
+                            <button type="button" class="subrubro-option" data-id="{{ $subrubro->sub_id }}" data-name="{{ $subrubro->sub_nombre }}">{{ $subrubro->sub_nombre }}</button>
+                            <button type="button" class="subrubro-edit-btn" data-tipo="existente" data-id="{{ $subrubro->sub_id }}" data-publico="{{ (int) $subrubro->sub_publico }}" aria-label="Editar subrubro" title="Editar subrubro"><i class="bi bi-pencil"></i><span class="visually-hidden">Editar</span></button>
+                        </span>
                     @endforeach
                 </div>
             </div>
@@ -280,11 +288,71 @@ $(document).ready(function () {
             </div>
         </div>
     </form>
+    <div class="modal fade" id="modalEditarSubrubro" tabindex="-1" aria-labelledby="tituloEditarSubrubro" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloEditarSubrubro">Editar subrubro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="editar-subrubro-nombre" class="form-label">Nombre del subrubro</label>
+                    <input type="text" class="form-control" id="editar-subrubro-nombre" maxlength="255" autocomplete="off">
+                    <div class="invalid-feedback">Ingresá un nombre válido.</div>
+                    <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="editar-subrubro-publico" value="1">
+                        <label class="form-check-label" for="editar-subrubro-publico">Público</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-edicion-subrubro">Guardar cambio</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
     let subrubrosExistentes = @json(old('subrubros', $subrubrosSeleccionados ?? []));
     let subrubrosNuevos = @json(old('subrubros_nuevos', []));
+    let subrubrosEditados = @json(old('subrubros_editados', []));
+    let subrubrosPublico = @json(old('subrubros_publico', []));
+    let subrubrosNuevosPublico = @json(old('subrubros_nuevos_publico', []));
+    const publicoInicial = {{ Illuminate\Support\Js::from(
+        collect($subrubrosDisponibles)
+            ->mapWithKeys(fn($s) => [
+                $s->sub_id => (int) $s->sub_publico
+            ])
+            ->all()
+    ) }};
+
+    const publicoSeleccionados = {{ Illuminate\Support\Js::from(
+        collect($subrubrosSeleccionados ?? [])
+            ->mapWithKeys(fn($s) => [
+                data_get($s, 'id') => (int) data_get($s, 'publico', 0)
+            ])
+            ->all()
+    ) }};
+
+    let edicionActual = null;
+    const iconoLapiz = '<i class="bi bi-pencil"></i>';
+    function nombreExistente(id) {
+        const editado = subrubrosEditados[id];
+        if (editado !== undefined) return editado;
+        const item = subrubrosExistentes.find(x => Number(x.id) === Number(id));
+        return item ? item.name : $('.subrubro-option').filter(function(){ return Number($(this).attr('data-id')) === Number(id); }).attr('data-name');
+    }
+    function escaparTexto(valor) { return $('<div>').text(valor ?? '').html(); }
+    function actualizarEdicionesOcultas() {
+        const box = $('#subrubros-editados-hidden-inputs').empty();
+        Object.entries(subrubrosPublico).forEach(([id, valor]) => {
+            $('<input>', {type:'hidden', name:`subrubros_publico[${id}]`, value:valor}).appendTo(box);
+        });
+        Object.entries(subrubrosEditados).forEach(([id, nombre]) => {
+            $('<input>', {type:'hidden', name:`subrubros_editados[${id}]`, value:nombre}).appendTo(box);
+        });
+    }
 
     function renderSubrubros() {
         const $box = $('#selected-subrubros');
@@ -294,12 +362,19 @@ $(document).ready(function () {
         $box.empty();
         $hiddenExistentes.empty();
         $hiddenNuevos.empty();
+        // Estado público de cada subrubro nuevo, sincronizado por índice.
+        subrubrosNuevos.forEach((nombre, index) => {
+            $('<input>', {type:'hidden', name:`subrubros_nuevos_publico[${index}]`, value:subrubrosNuevosPublico[index] ?? 1}).appendTo($hiddenNuevos);
+        });
 
         if (subrubrosExistentes.length === 0 && subrubrosNuevos.length === 0) {
             $box.html(
                 '<span class="subrubros-empty-text">No hay subrubros seleccionados.</span>'
             );
 
+            actualizarDisponibles();
+            actualizarEdicionesOcultas();
+            actualizarOrden();
             return;
         }
 
@@ -308,7 +383,8 @@ $(document).ready(function () {
             const $chip = $(`
                 <span class="subrubro-selected" data-tipo="existente" data-id="${item.id}">
                     <span class="subrubro-order"></span>
-                    <span class="subrubro-name">${item.name}</span>
+                    <span class="subrubro-name">${escaparTexto(nombreExistente(item.id))}</span>
+                    <button type="button" class="subrubro-edit-btn" data-tipo="existente" data-id="${item.id}" title="Editar" aria-label="Editar subrubro">${iconoLapiz}</button>
                     <button type="button" class="subrubro-remove-btn" data-id="${item.id}">&times;</button>
                 </span>
             `);
@@ -327,7 +403,8 @@ $(document).ready(function () {
             const $chip = $(`
                 <span class="subrubro-selected" data-tipo="nuevo" data-index="${index}">
                     <span class="subrubro-order"></span>
-                    <span class="subrubro-name">${nombre}</span>
+                    <span class="subrubro-name">${escaparTexto(nombre)}</span>
+                    <button type="button" class="subrubro-edit-btn" data-tipo="nuevo" data-index="${index}" title="Editar" aria-label="Editar subrubro">${iconoLapiz}</button>
                     <button type="button" class="subrubro-nuevo-remove-btn" data-index="${index}">&times;</button>
                 </span>
             `);
@@ -342,6 +419,7 @@ $(document).ready(function () {
         });
 
         actualizarDisponibles();
+        actualizarEdicionesOcultas();
         activarSortable();
         actualizarOrden();
     }
@@ -350,10 +428,10 @@ $(document).ready(function () {
     // AGREGAR SUBRUBRO EXISTENTE
     $(document).on('click', '.subrubro-option', function() {
         const id = Number($(this).data('id'));
-        const name = $(this).data('name');
+        const name = nombreExistente(id);
 
         const existe = subrubrosExistentes.some(function(item) {
-            return item.id === id;
+            return Number(item.id) === id;
         });
 
         if (existe) {
@@ -395,6 +473,7 @@ $(document).ready(function () {
         }
 
         subrubrosNuevos.push(nombre);
+        subrubrosNuevosPublico.push(1);
         $input.val('');
 
         renderSubrubros();
@@ -405,6 +484,7 @@ $(document).ready(function () {
     $(document).on('click', '.subrubro-nuevo-remove-btn', function() {
         const index = Number($(this).data('index'));
         subrubrosNuevos.splice(index, 1);
+        subrubrosNuevosPublico.splice(index, 1);
 
         renderSubrubros();
     });
@@ -417,13 +497,52 @@ $(document).ready(function () {
             const id = Number($btn.data('id'));
 
             const seleccionado = subrubrosExistentes.some(function(item) {
-                return item.id === id;
+                return Number(item.id) === id;
             });
 
             $btn.toggleClass('is-disabled', seleccionado);
+            $btn.text(nombreExistente(id));
         });
     }
 
+    // EDICIÓN DESDE SELECCIONADOS O DISPONIBLES
+    $(document).on('click', '.subrubro-edit-btn', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        const $btn = $(this);
+        const tipo = $btn.attr('data-tipo');
+        const id = tipo === 'nuevo' ? Number($btn.attr('data-index')) : Number($btn.attr('data-id'));
+        edicionActual = {tipo, id};
+        const nombre = tipo === 'nuevo' ? subrubrosNuevos[id] : nombreExistente(id);
+        $('#editar-subrubro-nombre').val(nombre).removeClass('is-invalid');
+        const publico = tipo === 'nuevo'
+            ? (subrubrosNuevosPublico[id] ?? 1)
+            : (subrubrosPublico[id] ?? publicoInicial[id] ?? publicoSeleccionados[id] ?? 0);
+        $('#editar-subrubro-publico').prop('checked', Number(publico) === 1);
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEditarSubrubro')).show();
+    });
+
+    $('#guardar-edicion-subrubro').on('click', function() {
+        if (!edicionActual) return;
+        const nombre = $('#editar-subrubro-nombre').val().trim();
+        const publico = $('#editar-subrubro-publico').is(':checked') ? 1 : 0;
+        if (!nombre) { $('#editar-subrubro-nombre').addClass('is-invalid').focus(); return; }
+        if (edicionActual.tipo === 'nuevo') {
+            subrubrosNuevos[edicionActual.id] = nombre;
+            subrubrosNuevosPublico[edicionActual.id] = publico;
+        } else {
+            subrubrosEditados[edicionActual.id] = nombre;
+            subrubrosPublico[edicionActual.id] = publico;
+            subrubrosExistentes.forEach(item => {
+                if (Number(item.id) === edicionActual.id) item.name = nombre;
+            });
+        }
+        bootstrap.Modal.getInstance(document.getElementById('modalEditarSubrubro')).hide();
+        edicionActual = null;
+        renderSubrubros();
+    });
+    $('#editar-subrubro-nombre').on('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); $('#guardar-edicion-subrubro').trigger('click'); }
+    });
     // ACTIVAR ORDEN
     function activarSortable() {
         $('#selected-subrubros').sortable({
@@ -467,6 +586,7 @@ $(document).ready(function () {
 
     // AL CARGAR LA PÁGINA
     $(function() {
+        $('.subrubro-available-item .subrubro-edit-btn').html(iconoLapiz);
         renderSubrubros();
     });
 </script>

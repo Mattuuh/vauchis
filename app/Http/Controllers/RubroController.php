@@ -155,18 +155,19 @@ class RubroController extends Controller
                 ->orWhere('rub_id', $id);
             })
             ->orderBy('sub_nombre')
-            ->get(['sub_id', 'sub_nombre', 'rub_id']);
+            ->get(['sub_id', 'sub_nombre', 'sub_publico', 'rub_id']);
 
         $subrubrosSeleccionados = Subrubro::where('rub_id', $id)
             ->where('sub_estado', 1)
             ->orderBy('sub_orden')
-            ->get(['sub_id', 'sub_nombre'])
+            ->get(['sub_id', 'sub_nombre', 'sub_publico'])
             ->map(fn ($item) => [
                 'id' => $item->sub_id,
                 'name' => $item->sub_nombre,
+                'publico' => (int) $item->sub_publico,
             ])
             ->values()
-            ->toArray();
+            ->all();
 
         return view('rubros.edit', compact(
             'rubro',
@@ -176,14 +177,15 @@ class RubroController extends Controller
             ));
     }
 
+    
     public function update(Request $request, $id)
     {
+        $usuario_id = 1;
+
         try {
-            // $this->validarRubro($request);
-
             $rubro = Rubro::findOrFail($id);
-            $usuario_id=1;
 
+            // ACTUALIZAR RUBRO
             $rubro->update([
                 'cv_id' => $request->f_categoria,
                 'rub_codigo' => $request->f_codigo,
@@ -195,19 +197,31 @@ class RubroController extends Controller
                 'rub_usu_mod' => $usuario_id,
             ]);
 
-            $subrubrosOrden = $request->input('subrubros_orden', []);
+            $subrubrosOrden = $datos['subrubros_orden'] ?? [];
+
+            $nombresEditados = $datos['subrubros_editados'] ?? [];
+            $publicosEditados = $datos['subrubros_publico'] ?? [];
+            $publicosNuevos = $datos['subrubros_nuevos_publico'] ?? [];
+
             $subrubrosIds = [];
 
-            // OBTENER IDs EXISTENTES
+            // OBTENER IDS EXISTENTES
             foreach ($subrubrosOrden as $item) {
-                [$tipo, $valor] = explode(':', $item, 2);
 
-                if ($tipo === 'existente') {
+                [$tipo, $valor] = array_pad(
+                    explode(':', $item, 2),
+                    2,
+                    null
+                );
+
+                if ($tipo === 'existente' && ctype_digit((string) $valor)) {
                     $subrubrosIds[] = (int) $valor;
                 }
             }
 
-            // DESVINCULAR LOS QUE YA NO ESTÁN
+            $subrubrosIds = array_unique($subrubrosIds);
+
+            // DESVINCULAR LOS QUE YA NO ESTAN
             $query = Subrubro::where('rub_id', $id);
 
             if (!empty($subrubrosIds)) {
@@ -221,13 +235,23 @@ class RubroController extends Controller
                 'sub_usu_mod' => $usuario_id,
             ]);
 
-
             // VINCULAR / CREAR RESPETANDO EL ORDEN
             foreach ($subrubrosOrden as $index => $item) {
-                [$tipo, $valor] = explode(':', $item, 2);
+
+                [$tipo, $valor] = array_pad(
+                    explode(':', $item, 2),
+                    2,
+                    null
+                );
 
                 $orden = $index + 1;
+
                 if ($tipo === 'existente') {
+
+                    if (!ctype_digit((string) $valor)) {
+                        continue;
+                    }
+
                     Subrubro::where('sub_id', (int) $valor)
                         ->update([
                             'rub_id' => $id,
@@ -237,15 +261,24 @@ class RubroController extends Controller
                         ]);
 
                 } elseif ($tipo === 'nuevo') {
-                    $nombre = trim($valor);
+
+                    $nombre = trim((string) $valor);
 
                     if ($nombre === '') {
                         continue;
                     }
 
+                    // El indice corresponde al subrubro nuevo
+                    // dentro de subrubros_nuevos[]
+                    $nuevos = $request->input('subrubros_nuevos', []);
+                    $indiceNuevo = array_search($nombre, $nuevos, true);
+
+                    $publico = $indiceNuevo !== false ? (int) ($publicosNuevos[$indiceNuevo] ?? 1) : 1;
+
                     Subrubro::create([
                         'rub_id' => $id,
                         'sub_nombre' => $nombre,
+                        'sub_publico' => $publico,
                         'sub_orden' => $orden,
                         'sub_estado' => 1,
                         'sub_fecha_alta' => now(),
@@ -254,12 +287,55 @@ class RubroController extends Controller
                 }
             }
 
+            // EDITAR SUBRUBROS EXISTENTES
+            // INCLUYE SELECCIONADOS Y DISPONIBLES
+            $idsEditados = array_unique(array_merge(
+                array_keys($nombresEditados),
+                array_keys($publicosEditados)
+            ));
+
+            foreach ($idsEditados as $subId) {
+
+                if (!ctype_digit((string) $subId)) {
+                    continue;
+                }
+
+                $subrubro = Subrubro::where('sub_id', $subId)->first();
+
+                if (!$subrubro) {
+                    continue;
+                }
+
+                $modificado = false;
+
+                if (array_key_exists($subId, $nombresEditados)) {
+                    $subrubro->sub_nombre = trim($nombresEditados[$subId]);
+                    $modificado = true;
+                }
+
+                if (array_key_exists($subId, $publicosEditados)) {
+                    $subrubro->sub_publico = (int) $publicosEditados[$subId];
+                    $modificado = true;
+                }
+
+                if ($modificado) {
+                    $subrubro->sub_fecha_mod = now();
+                    $subrubro->sub_usu_mod = $usuario_id;
+                    $subrubro->save();
+                }
+            }
+
             return redirect()
                 ->route('admin.rubros.edit', $id)
                 ->with('success', 'Rubro actualizado correctamente');
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
+
+            report($e);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Ocurrió un error al actualizar el rubro.');
         }
     }
 

@@ -60,9 +60,22 @@ $(document).ready(function () {
     $('#lista-items').disableSelection();
 
     // CAMBIO DE CATEGORÍA
-    $('#f_destacado').on('change', function () {
-        let destacado = $(this).val();
-        cargar_entidades(destacado);
+    $('#f_filtro').on('change', function () {
+        let filtro = $(this).val();
+
+        if (filtro == 2) {
+            $('.rubro').prop('hidden',false);
+            $('.subrubro').prop('hidden',false);
+        } else {
+            $('.rubro').prop('hidden',true);
+            $('.subrubro').prop('hidden',true);
+        }
+
+        cargar_entidades(filtro);
+    });
+
+    $('#f_rubro').on('change', function () {
+        cargar_entidades($('#f_filtro').val());
     });
 
     $('#btn-guardar-orden').on('click', function () {
@@ -110,17 +123,20 @@ $(document).ready(function () {
     });
 
     
-    function cargar_entidades(destacado) {
-        if (!destacado) {
+    function cargar_entidades(filtro) {
+        console.log(filtro)
+        if (!filtro) {
             $('#lista-items').html('');
             return;
         }
 
         $.ajax({
-            url: "{{ route('admin.entidades.por_destacado') }}",
+            url: "{{ route('admin.entidades.cargar_entidades_orden') }}",
             type: "GET",
             data: {
-                destacado: destacado
+                filtro: filtro,
+                rubro_id: $('#f_rubro').val(),
+                subrubro_id: $('#f_subrubro').val(),
             },
             beforeSend: function () {
                 $('#lista-items').html(`
@@ -233,11 +249,28 @@ $(document).ready(function () {
             <div class="commerce-card">
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label for="f_destacado" class="form-label">Categoría</label>
-                        <select id="f_destacado" class="form-select">
+                        <label for="f_filtro" class="form-label">Categoría</label>
+                        <select id="f_filtro" class="form-select">
                             <option value="" selected>Selecciona una categoria</option>
                             <option value="0">Normal</option>
                             <option value="1">Destacado</option>
+                            <option value="2">Rubros</option>
+                            {{-- <option value="3">Subrubros</option> --}}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="f_rubro" class="form-label rubro" hidden>Rubros</label>
+                        <select id="f_rubro" class="form-select rubro" hidden>
+                            <option value="" selected>Selecciona un rubro</option>
+                            @foreach ($rubros as $rubro)
+                                <option value="{{ $rubro->rub_id }}">{{ $rubro->rub_nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="f_subrubro" class="form-label subrubro" hidden>Subrubros</label>
+                        <select id="f_subrubro" class="form-select subrubro" hidden>
+                            <option value="" selected>Todos</option>
                         </select>
                     </div>
                 </div>

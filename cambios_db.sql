@@ -677,3 +677,5 @@ INSERT INTO `tipos_iva` (`tipo_iva_id`, `tipo_iva_descripcion`, `tipo_iva_valor`
 (3, 'IVA 27%', '27.0000', 1),
 (4, 'IVA 0.00%', '0.0000', 1);
 
+
+ALTER TABLE `subrubros` ADD `sub_publico` INT NULL DEFAULT '1' AFTER `sub_orden`;
